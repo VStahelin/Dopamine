@@ -168,6 +168,8 @@ export type SpecialKind = 'frenzy' | 'emulsion' | 'uptake';
 /** Especial do agente, disparado pelo jogador. */
 export interface SpecialDef {
   name: string;
+  /** Nome curto, embaixo do botão do especial na HUD. */
+  shortName: string;
   kind: SpecialKind;
   description: string;
   cooldownSeconds: number;
@@ -320,6 +322,17 @@ export interface EconomyConfig {
     inheritedPointsExponent: number;
     /** Dificuldade do indivíduo k = factor^k. */
     individualDifficultyFactor: number;
+  };
+  /** ATP na run (aba Economia): moedas que as moléculas decompostas soltam no chão. */
+  runCurrency: {
+    /** Chance de uma molécula comum soltar ATP; elites usam `eliteDropChance`. */
+    dropChance: number;
+    eliteDropChance: number;
+    /** Valor do ATP do chefe, em múltiplos do valor normal. */
+    bossValueMultiplier: number;
+    /** Valor = baseValue × (1 + valuePerMinute × minutos de run), com Rendimento. */
+    baseValue: number;
+    valuePerMinute: number;
   };
   meta: {
     /** Teto da soma de bônus permanentes de dano e vida. */

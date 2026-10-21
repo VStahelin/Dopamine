@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { defaultSave, migrateSave, recordRun, SAVE_VERSION } from './saveData';
 
-const defaults = { showFps: true };
+const defaults = { showFps: true, showDamageNumbers: true };
 
 describe('migrateSave', () => {
   it('devolve o padrão para save vazio ou inválido', () => {
@@ -29,16 +29,19 @@ describe('recordRun', () => {
       timeSeconds: 100,
       level: 5,
       kills: 50,
+      atp: 12,
       seen: ['glucose'],
     }).save;
     const { save, newRecords } = recordRun(start, {
       timeSeconds: 80,
       level: 7,
       kills: 50,
+      atp: 30,
       seen: ['ldl', 'glucose'],
     });
     expect(newRecords).toEqual(['level']);
     expect(save.records).toEqual({ bestTimeSeconds: 100, bestLevel: 7, mostKills: 50, runs: 2 });
     expect(save.seen.sort()).toEqual(['glucose', 'ldl']);
+    expect(save.atp).toBe(42);
   });
 });

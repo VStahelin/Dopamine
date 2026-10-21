@@ -89,6 +89,14 @@ export interface Pulse {
   source: WeaponId;
 }
 
+/** ATP no chão, coletado como as gemas. */
+export interface Coin {
+  x: number;
+  y: number;
+  value: number;
+  attracted: boolean;
+}
+
 export interface Gem {
   x: number;
   y: number;
@@ -123,8 +131,10 @@ export type RunEvent =
   | { type: 'levelUp'; level: number };
 
 export interface SpecialState {
-  /** Segundos até poder usar de novo. */
+  /** Segundos até ganhar mais uma carga (0 = cargas cheias). */
   cooldown: number;
+  /** Usos guardados do especial (atributo Cargas). */
+  charges: number;
   /** Segundos de efeito restantes (Pico de recompensa). */
   active: number;
   /** Segundos de queda depois do Pico. */
@@ -152,6 +162,9 @@ export interface RunState {
   zones: Zone[];
   pulses: Pulse[];
   gems: Gem[];
+  coins: Coin[];
+  /** ATP coletado nesta run. */
+  atp: number;
   weapons: WeaponInstance[];
   special: SpecialState;
   passives: PassiveLevels;
@@ -187,6 +200,8 @@ export interface RunResult {
   timeSeconds: number;
   level: number;
   kills: number;
+  /** ATP coletado na run, que vai para o save. */
+  atp: number;
   seen: EnemyKind[];
 }
 
@@ -215,8 +230,15 @@ export function createRun(
     zones: [],
     pulses: [],
     gems: [],
+    coins: [],
+    atp: 0,
     weapons: [newWeapon(rules.agents[agentId].action as WeaponId)],
-    special: { cooldown: 0, active: 0, crash: 0 },
+    special: {
+      cooldown: 0,
+      active: 0,
+      crash: 0,
+      charges: Math.max(1, Math.floor(rules.stats.special.charges?.base ?? 1)),
+    },
     passives: {},
     stats,
     pendingLevelUps: 0,
@@ -274,6 +296,7 @@ export function runResult(state: RunState): RunResult {
     timeSeconds: state.time,
     level: state.level,
     kills: state.kills,
+    atp: Math.floor(state.atp),
     seen: [...state.seen],
   };
 }

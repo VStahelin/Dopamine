@@ -36,5 +36,12 @@
   "meta": {
     "permanentPowerCap": 0.5,
     "caseStarMinutes": [5, 10, 15]
+  },
+  "runCurrency": {
+    "dropChance": 0.15,
+    "eliteDropChance": 1,
+    "bossValueMultiplier": 20,
+    "baseValue": 1,
+    "valuePerMinute": 0.25
   }
 }

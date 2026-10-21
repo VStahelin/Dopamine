@@ -1,5 +1,5 @@
 {
-  "tileSizePx": 16,
+  "tileSizePx": 40,
   "minVisibleShortSidePx": 360,
   "spriteDetails": [2, 3],
   "uiMinShortSidePx": 320,

@@ -36,3 +36,41 @@ describe('números da run para a pausa', () => {
     expect(drainEvents(run)).toContainEqual({ type: 'heal', amount: 3 });
   });
 });
+
+describe('ATP na run', () => {
+  it('elite sempre solta ATP, e coletar soma com Rendimento', () => {
+    const run = createRun(1, rulesWithoutSpawn());
+    run.weapons = [];
+    const e = addEnemy(run, 'triglyceride', 0, 0);
+    e.elite = true;
+    hitEnemy(run, e, 1e6);
+    expect(run.coins).toHaveLength(1);
+    run.stats.currencyGain = 2;
+    const value = run.coins[0]!.value;
+    stepRun(run, STILL, DT);
+    expect(run.coins).toHaveLength(0);
+    expect(run.atp).toBeCloseTo(value * 2);
+  });
+});
+
+describe('cargas do especial', () => {
+  it('com 2 cargas usa duas vezes seguidas e recarrega uma por vez', () => {
+    const rules = rulesWithoutSpawn();
+    const special = {
+      ...rules.stats.special,
+      charges: { ...rules.stats.special.charges!, base: 2 },
+    };
+    const run = createRun(1, { ...rules, stats: { ...rules.stats, special } });
+    expect(run.special.charges).toBe(2);
+    stepRun(run, { ...STILL, special: true }, DT);
+    stepRun(run, STILL, DT);
+    stepRun(run, { ...STILL, special: true }, DT);
+    expect(run.special.charges).toBe(0);
+    stepRun(run, { ...STILL, special: true }, DT);
+    expect(run.special.charges).toBe(0);
+    run.special.cooldown = DT / 2;
+    stepRun(run, STILL, DT);
+    expect(run.special.charges).toBe(1);
+    expect(run.special.cooldown).toBeGreaterThan(0);
+  });
+});

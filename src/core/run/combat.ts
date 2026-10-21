@@ -85,6 +85,7 @@ export function damageEnemy(
   state.kills++;
   state.events.push({ type: 'kill', x: e.x, y: e.y, kind: e.kind });
   dropGem(state, e.x, e.y, e.xp);
+  dropCoin(state, e);
   // Absorção: chance de recuperar 1 interação ao decompor.
   if (state.rng.next() < state.stats.lifesteal) heal(state, 1);
   for (const w of state.weapons) {
@@ -120,6 +121,16 @@ export function heal(state: RunState, amount: number): void {
   state.agent.interactions = Math.min(state.stats.maxInteractions, before + amount);
   const gained = state.agent.interactions - before;
   if (gained > 0) state.events.push({ type: 'heal', amount: gained });
+}
+
+/** ATP no chão: chance por molécula, sempre nas elites; vale mais com o tempo de run. */
+function dropCoin(state: RunState, e: Enemy): void {
+  const c = state.rules.economy.runCurrency;
+  const chance = e.elite || e.boss ? c.eliteDropChance : c.dropChance;
+  if (state.rng.next() >= chance) return;
+  let value = c.baseValue * (1 + (c.valuePerMinute * state.time) / 60);
+  if (e.boss) value *= c.bossValueMultiplier;
+  state.coins.push({ x: e.x, y: e.y, value, attracted: false });
 }
 
 function dropGem(state: RunState, x: number, y: number, value: number): void {

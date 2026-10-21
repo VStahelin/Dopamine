@@ -48,6 +48,7 @@ export function stepRun(state: RunState, input: StepInput, dt: number): void {
   updateZones(state, dt, grid);
   touchAgent(state, dt);
   updateGems(state, dt);
+  updateCoins(state, dt);
   removeDead(state);
 }
 
@@ -205,6 +206,31 @@ function touchAgent(state: RunState, dt: number): void {
     return;
   }
   state.over = true;
+}
+
+/** ATP no chão: atraído pelo mesmo raio de coleta das gemas, com Rendimento ao coletar. */
+function updateCoins(state: RunState, dt: number): void {
+  const { agent, rules, stats } = state;
+  const pull = rules.run.agent.pickupRadiusPx * stats.magnet;
+  const speed = rules.run.gems.attractSpeedPxPerSecond;
+  for (let i = state.coins.length - 1; i >= 0; i--) {
+    const c = state.coins[i]!;
+    const dx = agent.x - c.x;
+    const dy = agent.y - c.y;
+    const dist = Math.hypot(dx, dy);
+    if (dist <= rules.run.gems.collectRadiusPx) {
+      state.atp += c.value * stats.currencyGain;
+      state.coins[i] = state.coins[state.coins.length - 1]!;
+      state.coins.pop();
+      continue;
+    }
+    if (dist < pull) c.attracted = true;
+    if (c.attracted) {
+      const step = Math.min(speed * dt, dist);
+      c.x += (dx / dist) * step;
+      c.y += (dy / dist) * step;
+    }
+  }
 }
 
 function updateGems(state: RunState, dt: number): void {

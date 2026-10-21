@@ -6,6 +6,7 @@
     "affinity": {},
     "special": {
       "name": "Pico de recompensa",
+      "shortName": "PICO",
       "kind": "frenzy",
       "description": "Por alguns segundos, pulsos muito mais rápidos e maiores. Depois vem a queda.",
       "cooldownSeconds": 30,
@@ -30,6 +31,7 @@
     },
     "special": {
       "name": "Emulsão",
+      "shortName": "EMULSÃO",
       "kind": "emulsion",
       "description": "Espalha uma área no chão que deixa os lipídios dentro dela frágeis.",
       "cooldownSeconds": 25,
@@ -53,6 +55,7 @@
     },
     "special": {
       "name": "Captação",
+      "shortName": "CAPTAÇÃO",
       "kind": "uptake",
       "description": "Puxa todos os açúcares da tela de uma vez e causa dano neles.",
       "cooldownSeconds": 30,

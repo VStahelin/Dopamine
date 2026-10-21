@@ -15,6 +15,8 @@ export interface Records {
 
 export interface Options {
   showFps: boolean;
+  /** Números de dano no campo (docs/ui-cronico.md). */
+  showDamageNumbers: boolean;
 }
 
 export interface SaveData {
@@ -25,6 +27,8 @@ export interface SaveData {
   selectedAgent: string;
   /** Moléculas já vistas em alguma run, para o Compêndio. */
   seen: string[];
+  /** ATP guardado, ganho nas runs (gastar entra na fase 3). */
+  atp: number;
 }
 
 export type RecordKind = 'time' | 'level' | 'kills';
@@ -36,6 +40,7 @@ export function defaultSave(options: Options): SaveData {
     options: { ...options },
     selectedAgent: 'dopamine',
     seen: [],
+    atp: 0,
   };
 }
 
@@ -52,6 +57,7 @@ export function migrateSave(raw: unknown, defaults: Options): SaveData {
     options: Partial<Options>;
     selectedAgent: unknown;
     seen: unknown;
+    atp: unknown;
   }>;
   const r = data.records ?? {};
   const o = data.options ?? {};
@@ -65,9 +71,14 @@ export function migrateSave(raw: unknown, defaults: Options): SaveData {
     },
     options: {
       showFps: typeof o.showFps === 'boolean' ? o.showFps : base.options.showFps,
+      showDamageNumbers:
+        typeof o.showDamageNumbers === 'boolean'
+          ? o.showDamageNumbers
+          : base.options.showDamageNumbers,
     },
     selectedAgent: typeof data.selectedAgent === 'string' ? data.selectedAgent : base.selectedAgent,
     seen: Array.isArray(data.seen) ? data.seen.filter((k) => typeof k === 'string') : [],
+    atp: num(data.atp, 0),
   };
 }
 
@@ -91,6 +102,7 @@ export function recordRun(
         runs: r.runs + 1,
       },
       seen: [...new Set([...save.seen, ...result.seen])],
+      atp: save.atp + result.atp,
     },
     newRecords,
   };
