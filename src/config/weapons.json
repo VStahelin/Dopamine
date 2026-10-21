@@ -1,0 +1,22 @@
+{
+  "radical": {
+    "name": "Radical Livre",
+    "damage": 6,
+    "cooldownSeconds": 0.9,
+    "projectileSpeedPxPerSecond": 220,
+    "rangePx": 200,
+    "projectiles": 1,
+    "pierce": 0,
+    "projectileRadiusPx": 3,
+    "spreadDegrees": 12,
+    "levels": [
+      { "damage": 3 },
+      { "projectiles": 1 },
+      { "cooldownSeconds": -0.1 },
+      { "damage": 3 },
+      { "pierce": 1 },
+      { "projectiles": 1 },
+      { "damage": 5 }
+    ]
+  }
+}

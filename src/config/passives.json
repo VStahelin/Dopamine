@@ -1,0 +1,13 @@
+{
+  "reactivity": { "name": "Reatividade", "stat": "damage", "perLevel": 0.1, "maxLevel": 5 },
+  "metabolism": { "name": "Metabolismo", "stat": "cooldown", "perLevel": -0.08, "maxLevel": 5 },
+  "mobility": { "name": "Mobilidade", "stat": "moveSpeed", "perLevel": 0.1, "maxLevel": 5 },
+  "magnet": { "name": "Raio de coleta", "stat": "magnet", "perLevel": 0.25, "maxLevel": 5 },
+  "interactions": {
+    "name": "Interações",
+    "stat": "maxInteractions",
+    "perLevel": 20,
+    "maxLevel": 5
+  },
+  "learning": { "name": "Aprendizado", "stat": "xpGain", "perLevel": 0.1, "maxLevel": 5 }
+}

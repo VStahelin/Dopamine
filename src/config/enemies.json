@@ -1,0 +1,38 @@
+{
+  "glucose": {
+    "name": "Glicose",
+    "type": "sugar",
+    "hp": 4,
+    "speedPxPerSecond": 85,
+    "contactDamage": "common",
+    "xp": 1,
+    "radiusPx": 8,
+    "unlockMinute": 0,
+    "spawnWeight": 3,
+    "groupSize": 4
+  },
+  "fattyAcid": {
+    "name": "Ácido graxo",
+    "type": "lipid",
+    "hp": 10,
+    "speedPxPerSecond": 50,
+    "contactDamage": "common",
+    "xp": 2,
+    "radiusPx": 9,
+    "unlockMinute": 1,
+    "spawnWeight": 2,
+    "groupSize": 1
+  },
+  "triglyceride": {
+    "name": "Triglicerídeo",
+    "type": "lipid",
+    "hp": 40,
+    "speedPxPerSecond": 30,
+    "contactDamage": "strong",
+    "xp": 6,
+    "radiusPx": 15,
+    "unlockMinute": 3,
+    "spawnWeight": 1,
+    "groupSize": 1
+  }
+}

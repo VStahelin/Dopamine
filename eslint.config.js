@@ -28,6 +28,11 @@ export default tseslint.config(
         },
       ],
       'no-restricted-globals': ['error', 'window', 'document', 'localStorage', 'indexedDB'],
+      // Decisão 0012: aleatoriedade só pelo Rng com semente.
+      'no-restricted-properties': [
+        'error',
+        { object: 'Math', property: 'random', message: 'Use o Rng de src/core/random.ts.' },
+      ],
     },
   },
 );

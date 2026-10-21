@@ -1,7 +1,19 @@
 {
-  "arena": { "widthPx": 1600, "heightPx": 1600 },
-  "agent": { "moveSpeedPxPerSecond": 80, "pickupRadiusPx": 32 },
+  "ticksPerSecond": 60,
+  "agent": { "radiusPx": 7, "moveSpeedPxPerSecond": 80, "pickupRadiusPx": 32 },
   "contactDamage": { "common": 5, "strong": 15, "boss": 30 },
   "affinity": { "strong": 1.5, "neutral": 1, "weak": 0.5 },
-  "minDamageTaken": 1
+  "minDamageTaken": 1,
+  "spawn": {
+    "baseEnemiesPerSecond": 1.2,
+    "maxEnemies": 300,
+    "marginOutsideViewPx": 24,
+    "groupSpreadPx": 18
+  },
+  "separation": { "strength": 40 },
+  "gems": {
+    "maxOnField": 150,
+    "attractSpeedPxPerSecond": 260,
+    "collectRadiusPx": 10
+  }
 }

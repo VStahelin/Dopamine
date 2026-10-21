@@ -17,3 +17,4 @@ As decisões de design tomadas antes deste registro continuam marcadas como "dec
 | [0009](0009-grade-16px-zoom-inteiro.md) | Tamanho do pixel e zoom inteiro pelo lado menor da tela | técnica | em aberto |
 | [0010](0010-orientacao-livre.md) | Orientação livre no celular, pensada para vertical | técnica | proposta |
 | [0011](0011-rodar-localmente.md) | Rodar localmente durante o desenvolvimento | técnica | proposta |
+| [0012](0012-passo-fixo-e-semente.md) | Simulação em passo fixo, com aleatoriedade por semente | técnica | proposta |

@@ -31,20 +31,95 @@ export interface StatsConfig {
   special: StatGroup;
 }
 
+export type ContactDamageKind = 'common' | 'strong' | 'boss';
+
 export interface RunConfig {
-  arena: { widthPx: number; heightPx: number };
+  /** Passos de simulação por segundo (passo fixo, decisão 0012). */
+  ticksPerSecond: number;
   agent: {
+    /** Raio de colisão do agente. */
+    radiusPx: number;
     /** Velocidade com Mobilidade 100%. */
     moveSpeedPxPerSecond: number;
-    /** Raio de coleta com Ímã 100%. */
+    /** Raio de onde as gemas começam a ser puxadas, com Raio de coleta 100%. */
     pickupRadiusPx: number;
   };
   /** Interações que cada tipo de inimigo tira ao encostar. */
-  contactDamage: { common: number; strong: number; boss: number };
+  contactDamage: Record<ContactDamageKind, number>;
   /** Multiplicador de dano por afinidade entre agente e tipo de molécula. */
   affinity: { strong: number; neutral: number; weak: number };
   /** Dano recebido nunca fica abaixo disto, mesmo com Membrana. */
   minDamageTaken: number;
+  spawn: {
+    /** Inimigos por segundo com dificuldade 1×; multiplicado por D(t) e pelos picos. */
+    baseEnemiesPerSecond: number;
+    maxEnemies: number;
+    /** Os inimigos nascem fora da tela, a esta distância além da borda visível. */
+    marginOutsideViewPx: number;
+    /** Espalhamento dos inimigos que nascem em grupo. */
+    groupSpreadPx: number;
+  };
+  /** Empurrão entre inimigos encostados, para não virarem uma pilha só. */
+  separation: { strength: number };
+  gems: {
+    /** Acima disto, o XP de gemas novas soma na gema mais antiga. */
+    maxOnField: number;
+    attractSpeedPxPerSecond: number;
+    /** Distância do agente em que a gema é coletada. */
+    collectRadiusPx: number;
+  };
+}
+
+export type MoleculeType = 'lipid' | 'sugar' | 'radical' | 'stress' | 'toxin' | 'inflammation';
+
+export interface EnemyDef {
+  name: string;
+  type: MoleculeType;
+  /** Vida com dificuldade 1×; multiplicada por D(t) no nascimento. */
+  hp: number;
+  speedPxPerSecond: number;
+  contactDamage: ContactDamageKind;
+  xp: number;
+  radiusPx: number;
+  /** Minuto da run a partir do qual o inimigo pode nascer. */
+  unlockMinute: number;
+  spawnWeight: number;
+  /** Quantos nascem juntos. */
+  groupSize: number;
+}
+
+export interface WeaponLevel {
+  damage?: number;
+  cooldownSeconds?: number;
+  projectiles?: number;
+  pierce?: number;
+}
+
+export interface WeaponDef {
+  name: string;
+  damage: number;
+  cooldownSeconds: number;
+  projectileSpeedPxPerSecond: number;
+  rangePx: number;
+  projectiles: number;
+  pierce: number;
+  projectileRadiusPx: number;
+  /** Ângulo entre projéteis do mesmo disparo. */
+  spreadDegrees: number;
+  /** O que cada nível a partir do 2 soma aos valores base. */
+  levels: WeaponLevel[];
+}
+
+/** Atributos que os modificadores passivos mexem na run. */
+export type PassiveStat =
+  'damage' | 'cooldown' | 'moveSpeed' | 'magnet' | 'maxInteractions' | 'xpGain';
+
+export interface PassiveDef {
+  name: string;
+  stat: PassiveStat;
+  /** Quanto cada nível soma ao atributo, na unidade do atributo em stats.json. */
+  perLevel: number;
+  maxLevel: number;
 }
 
 export interface EconomyConfig {
@@ -62,9 +137,12 @@ export interface EconomyConfig {
     /** Limiar programável t*: a partir dele soma cubic × (t − t*)³. */
     thresholdMinute: number;
     cubic: number;
+    /** A cada `peakEveryMinutes` vem um pico de `peakDurationSeconds` e depois um respiro. */
     peakEveryMinutes: number;
     peakMultiplier: number;
+    peakDurationSeconds: number;
     respiteSeconds: number;
+    respiteMultiplier: number;
   };
   upgrades: {
     /** custo(n) = base × rate^n. */
@@ -105,5 +183,8 @@ export interface DisplayConfig {
   tileSizePx: number;
   /** O zoom inteiro é o maior que ainda mostra pelo menos isto de pixels lógicos no lado menor da tela. */
   minVisibleShortSidePx: number;
+  /** O mesmo, para as telas de interface (menu, HUD). */
+  uiMinShortSidePx: number;
+  /** Valor inicial da opção "mostrar FPS", antes de o jogador mudar nas Opções. */
   showFps: boolean;
 }

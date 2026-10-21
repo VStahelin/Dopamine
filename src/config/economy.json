@@ -7,6 +7,8 @@
     "cubic": 0.002,
     "peakEveryMinutes": 5,
     "peakMultiplier": 1.5,
+    "peakDurationSeconds": 20,
+    "respiteMultiplier": 0.5,
     "respiteSeconds": 25
   },
   "upgrades": { "runCostRate": 1.15, "idleCostRate": 1.08, "runMaxLevelsPerUpgrade": 10 },
