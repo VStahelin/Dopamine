@@ -14,7 +14,7 @@ As decisões de design tomadas antes deste registro continuam marcadas como "dec
 | [0006](0006-deploy-github-pages.md) | Deploy no GitHub Pages pelo GitHub Actions | técnica | substituída por 0011 |
 | [0007](0007-roadmap-run-primeiro.md) | Desenvolver a run primeiro, depois o resto | processo | proposta |
 | [0008](0008-v01-menu-e-run.md) | A primeira versão (v0.1) tem menu e uma run jogável | processo | proposta |
-| [0009](0009-grade-16px-zoom-inteiro.md) | Tamanho do pixel e zoom inteiro pelo lado menor da tela | técnica | em aberto |
+| [0009](0009-grade-16px-zoom-inteiro.md) | Resolução nativa com pixel art detalhado | técnica | proposta |
 | [0010](0010-orientacao-livre.md) | Orientação livre no celular, pensada para vertical | técnica | proposta |
 | [0011](0011-rodar-localmente.md) | Rodar localmente durante o desenvolvimento | técnica | proposta |
 | [0012](0012-passo-fixo-e-semente.md) | Simulação em passo fixo, com aleatoriedade por semente | técnica | proposta |

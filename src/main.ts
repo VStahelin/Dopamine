@@ -13,15 +13,30 @@ import { loadFonts } from './game/ui/theme';
 
 await loadFonts();
 
-new Phaser.Game({
+/**
+ * O canvas tem a resolução real da tela (decisão 0009): numa tela 3×, um canvas de 390 px de
+ * largura em CSS tem 1170 px de verdade. Sem isso o navegador estica a imagem e tudo fica
+ * em baixa resolução, inclusive os textos.
+ */
+function screenSize() {
+  const ratio = Math.min(window.devicePixelRatio || 1, 4);
+  return {
+    width: Math.round(window.innerWidth * ratio),
+    height: Math.round(window.innerHeight * ratio),
+  };
+}
+
+const initial = screenSize();
+const game = new Phaser.Game({
   type: Phaser.AUTO,
   parent: 'game',
   backgroundColor: PALETTE_CSS.night,
   pixelArt: true,
   scale: {
-    mode: Phaser.Scale.RESIZE,
-    width: window.innerWidth,
-    height: window.innerHeight,
+    // FIT encaixa o canvas de alta resolução no tamanho CSS da página e ajusta o toque.
+    mode: Phaser.Scale.FIT,
+    width: initial.width,
+    height: initial.height,
   },
   input: {
     activePointers: 2,
@@ -39,3 +54,11 @@ new Phaser.Game({
     GameOverScene,
   ],
 });
+
+const onResize = () => {
+  const { width, height } = screenSize();
+  if (width !== game.scale.width || height !== game.scale.height)
+    game.scale.setGameSize(width, height);
+};
+window.addEventListener('resize', onResize);
+window.visualViewport?.addEventListener('resize', onResize);

@@ -179,11 +179,17 @@ export interface IdleConfig {
 }
 
 export interface DisplayConfig {
-  /** Grade base dos sprites, em pixels lógicos (decisão 0009). */
+  /** Tamanho do ladrilho do chão, em unidades do mundo (decisão 0009). */
   tileSizePx: number;
-  /** O zoom inteiro é o maior que ainda mostra pelo menos isto de pixels lógicos no lado menor da tela. */
+  /** Área visível que a escala do mundo tenta mostrar no lado menor da tela, em unidades do mundo. */
   minVisibleShortSidePx: number;
-  /** O mesmo, para as telas de interface (menu, HUD). */
+  /**
+   * Pixels de arte por unidade do mundo com que os sprites podem ser desenhados. A escala do
+   * mundo escolhe um deles conforme a tela, para cada pixel de arte ser um número inteiro de
+   * pixels da tela.
+   */
+  spriteDetails: number[];
+  /** Menor lado da tela de interface (menu, HUD), em unidades; o zoom inteiro sai daqui. */
   uiMinShortSidePx: number;
   /** Valor inicial da opção "mostrar FPS", antes de o jogador mudar nas Opções. */
   showFps: boolean;

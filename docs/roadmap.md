@@ -149,7 +149,7 @@ O que dá para começar já, em ordem:
 
 Perguntas em aberto das outras abas que precisam de resposta antes da fase indicada.
 
-- [ ] **Fase 1:** tamanho base do pixel? Em aberto, tendência a um pixel mais detalhado; 16 px provisório ([0009](decisoes/0009-grade-16px-zoom-inteiro.md)).
+- [x] **Fase 1:** tamanho base do pixel? → resolução nativa com pixel art detalhado ([0009](decisoes/0009-grade-16px-zoom-inteiro.md)).
 - [x] **Fase 0:** orientação no celular para a run (vertical, horizontal ou as duas)? → as duas ([0010](decisoes/0010-orientacao-livre.md), proposta)
 - [x] **Fase 1:** quantas interações o agente tem no início, e existe forma de recuperar na run? → 100 (aba Parâmetros); recupera pelo modificador Interações e pela opção "Nova dose" quando não sobra upgrade.
 - [x] **Fase 1:** qual agente e quais três inimigos entram no protótipo? → Dopamina; glicose, ácido graxo e triglicerídeo.

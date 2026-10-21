@@ -5,8 +5,8 @@ import { createRun, drainEvents, runResult, type RunState } from '../../core/run
 import { stepRun } from '../../core/run/step';
 import { KeyboardMove } from '../input/keyboardMove';
 import { PALETTE_CSS } from '../render/palette';
-import { integerZoom } from '../render/pixelScale';
-import { ENEMY_TEXTURES, TEXTURES } from '../render/textures';
+import { worldScale } from '../render/pixelScale';
+import { ENEMY_TEXTURES, TEXTURES, textureKey } from '../render/textures';
 import { getSave, setSave } from '../storage/saveStore';
 import { impactText } from '../ui/theme';
 import type { HudScene } from './HudScene';
@@ -38,6 +38,9 @@ export class RunScene extends Phaser.Scene {
   private gemSprites: Phaser.GameObjects.Image[] = [];
   private floaters: Floater[] = [];
   private keyboard!: KeyboardMove;
+  /** Pixels de arte por unidade do mundo das texturas em uso (decisão 0009). */
+  private detail = 1;
+  private zoom = 1;
 
   constructor() {
     super(SCENES.run);
@@ -54,8 +57,9 @@ export class RunScene extends Phaser.Scene {
     this.gemSprites = [];
     this.floaters = [];
 
-    this.ground = this.add.tileSprite(0, 0, 1, 1, TEXTURES.ground).setOrigin(0).setDepth(-10);
-    this.agentSprite = this.add.image(0, 0, TEXTURES.agent).setDepth(10);
+    this.detail = 0;
+    this.ground = this.add.tileSprite(0, 0, 1, 1, '__DEFAULT').setOrigin(0).setDepth(-10);
+    this.agentSprite = this.add.image(0, 0, '__DEFAULT').setDepth(10);
 
     this.cameras.main.startFollow(this.agentSprite, true);
     this.applyZoom();
@@ -146,17 +150,23 @@ export class RunScene extends Phaser.Scene {
     this.drawGround();
 
     sync(this, this.enemySprites, this.run.enemies, 5, (s, e) => {
-      s.setTexture(ENEMY_TEXTURES[e.kind])
+      s.setTexture(this.tex(ENEMY_TEXTURES[e.kind]))
+        .setScale(1 / this.detail)
         .setPosition(e.x, e.y)
         .setFlipX(e.x > agent.x);
       if (e.hitFlash > 0) s.setTint(0xffffff).setTintMode(Phaser.TintModes.FILL);
       else s.clearTint();
     });
     sync(this, this.projectileSprites, this.run.projectiles, 8, (s, p) => {
-      s.setTexture(TEXTURES.projectile).setPosition(p.x, p.y).setRotation(Math.atan2(p.vy, p.vx));
+      s.setTexture(this.tex(TEXTURES.projectile))
+        .setScale(1 / this.detail)
+        .setPosition(p.x, p.y)
+        .setRotation(Math.atan2(p.vy, p.vx));
     });
     sync(this, this.gemSprites, this.run.gems, 2, (s, g) => {
-      s.setTexture(TEXTURES.gem).setPosition(g.x, g.y);
+      s.setTexture(this.tex(TEXTURES.gem))
+        .setScale(1 / this.detail)
+        .setPosition(g.x, g.y);
     });
 
     for (const ev of drainEvents(this.run)) {
@@ -182,7 +192,11 @@ export class RunScene extends Phaser.Scene {
     if (!floater) {
       if (this.floaters.length < DAMAGE_TEXT_POOL) {
         const text = this.add
-          .text(0, 0, '', { ...impactText(8), stroke: PALETTE_CSS.interaction })
+          .text(0, 0, '', {
+            ...impactText(8),
+            stroke: PALETTE_CSS.interaction,
+            resolution: this.zoom,
+          })
           .setOrigin(0.5)
           .setDepth(20);
         floater = { text, life: 0 };
@@ -229,10 +243,25 @@ export class RunScene extends Phaser.Scene {
     }
   }
 
+  private tex(name: string): string {
+    return textureKey(name, this.detail);
+  }
+
+  /** Escala do mundo: zoom da câmera e texturas com o detalhe certo para a tela (decisão 0009). */
   private applyZoom(): void {
-    this.cameras.main.setZoom(
-      integerZoom(this.scale.width, this.scale.height, DISPLAY.minVisibleShortSidePx),
+    const scale = worldScale(
+      this.scale.width,
+      this.scale.height,
+      DISPLAY.minVisibleShortSidePx,
+      DISPLAY.spriteDetails,
     );
+    this.zoom = scale.zoom;
+    this.cameras.main.setZoom(scale.zoom);
+    for (const f of this.floaters) f.text.setResolution(scale.zoom);
+    if (scale.detail === this.detail) return;
+    this.detail = scale.detail;
+    this.ground.setTexture(this.tex(TEXTURES.ground)).setTileScale(1 / this.detail);
+    this.agentSprite.setTexture(this.tex(TEXTURES.agent)).setScale(1 / this.detail);
   }
 }
 
@@ -245,7 +274,7 @@ function sync<T>(
   apply: (sprite: Phaser.GameObjects.Image, item: T) => void,
 ): void {
   while (pool.length < items.length) {
-    pool.push(scene.add.image(0, 0, TEXTURES.gem).setDepth(depth));
+    pool.push(scene.add.image(0, 0, '__DEFAULT').setDepth(depth));
   }
   for (let i = 0; i < pool.length; i++) {
     const sprite = pool[i]!;

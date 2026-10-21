@@ -18,6 +18,17 @@ export async function loadFonts(): Promise<void> {
 
 type TextStyle = Phaser.Types.GameObjects.Text.TextStyle;
 
+/**
+ * Resolução com que os textos são desenhados. As telas de interface ampliam tudo com zoom
+ * inteiro; o texto precisa nascer já nessa resolução para sair nítido, e não ampliado.
+ * `setupUiLayout` atualiza este valor antes de montar cada tela.
+ */
+let textResolution = 1;
+
+export function setTextResolution(resolution: number): void {
+  textResolution = resolution;
+}
+
 /** Texto de impacto: grosso, com contorno escuro (logo, títulos, números grandes). */
 export function impactText(size: number, color: string = PALETTE_CSS.hydrogen): TextStyle {
   return {
@@ -27,12 +38,19 @@ export function impactText(size: number, color: string = PALETTE_CSS.hydrogen): 
     color,
     stroke: PALETTE_CSS.outline,
     strokeThickness: Math.max(2, Math.round(size / 6)),
+    resolution: textResolution,
   };
 }
 
 /** Texto de interface e nomes. */
 export function bodyText(size: number, color: string = PALETTE_CSS.hydrogen): TextStyle {
-  return { fontFamily: FONT_MAIN, fontStyle: '600', fontSize: `${size}px`, color };
+  return {
+    fontFamily: FONT_MAIN,
+    fontStyle: '600',
+    fontSize: `${size}px`,
+    color,
+    resolution: textResolution,
+  };
 }
 
 /** Rótulo com contorno, para ler sobre o campo de batalha (HUD). */
@@ -42,7 +60,7 @@ export function hudLabelText(size: number, color: string = PALETTE_CSS.hydrogen)
 
 /** Rótulos curtos em caixa alta. */
 export function labelText(size: number, color: string = PALETTE_CSS.hydrogen): TextStyle {
-  return { fontFamily: FONT_LABEL, fontSize: `${size}px`, color };
+  return { fontFamily: FONT_LABEL, fontSize: `${size}px`, color, resolution: textResolution };
 }
 
 export function formatTime(seconds: number): string {

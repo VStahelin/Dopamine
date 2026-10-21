@@ -3,8 +3,12 @@ import { PALETTE } from './palette';
 
 /**
  * Sprites de molécula montados com átomos e ligações (aba Design): cada átomo é um círculo
- * pixelado com contorno escuro e um ponto de brilho; ligações são barras escuras entre os
- * centros. As moléculas são versões simplificadas das reais, com só alguns hidrogênios.
+ * pixelado com contorno escuro, sombra em meia-lua e um ponto de brilho; ligações são barras
+ * escuras entre os centros. As moléculas são versões simplificadas das reais.
+ *
+ * As coordenadas e tamanhos estão em unidades do mundo; o desenho multiplica tudo por `detail`
+ * (pixels de arte por unidade, decisão 0009), então o mesmo sprite sai com mais pixels sem
+ * mudar de tamanho no mundo.
  */
 export type Element = 'C' | 'H' | 'O' | 'N';
 
@@ -120,8 +124,16 @@ function hydroxyl(): MoleculeDef {
 
 export const MOLECULES = { dopamine, glucose, fattyAcid, triglyceride, hydroxyl } as const;
 
+/** Escurece uma cor RGB pelo fator (0 a 1). */
+export function shade(color: number, factor: number): number {
+  const r = Math.round(((color >> 16) & 0xff) * factor);
+  const g = Math.round(((color >> 8) & 0xff) * factor);
+  const b = Math.round((color & 0xff) * factor);
+  return (r << 16) | (g << 8) | b;
+}
+
 /** Desenha um círculo pixelado de diâmetro `d` com canto superior esquerdo em (x, y). */
-function pixelCircle(g: Phaser.GameObjects.Graphics, x: number, y: number, d: number) {
+export function pixelCircle(g: Phaser.GameObjects.Graphics, x: number, y: number, d: number) {
   const r = d / 2;
   for (let row = 0; row < d; row++) {
     const dy = row + 0.5 - r;
@@ -148,64 +160,96 @@ function pixelLine(
   }
 }
 
-/** Gera a textura `key` a partir da molécula. Devolve o tamanho gerado. */
+/**
+ * Átomo pixelado: contorno escuro, corpo na cor do elemento com sombra em meia-lua embaixo à
+ * direita e um brilho no canto superior esquerdo.
+ */
+function drawAtom(
+  g: Phaser.GameObjects.Graphics,
+  x: number,
+  y: number,
+  size: number,
+  color: number,
+  outline: number,
+) {
+  g.fillStyle(PALETTE.outline);
+  pixelCircle(g, x, y, size);
+  const inner = size - outline * 2;
+  g.fillStyle(shade(color, 0.7));
+  pixelCircle(g, x + outline, y + outline, inner);
+  const lit = Math.round(inner * 0.8);
+  g.fillStyle(color);
+  pixelCircle(g, x + outline, y + outline, lit);
+  const spot = Math.max(1, Math.round(size / 7));
+  g.fillStyle(0xffffff, 0.9);
+  g.fillRect(
+    x + outline + Math.round(inner * 0.22),
+    y + outline + Math.round(inner * 0.2),
+    spot,
+    spot,
+  );
+}
+
+/**
+ * Gera a textura `key` a partir da molécula, com `detail` pixels de arte por unidade do mundo.
+ * Mostre o sprite com escala `1 / detail` para ele ter o tamanho certo no mundo.
+ */
 export function createMoleculeTexture(
   scene: Phaser.Scene,
   key: string,
   def: MoleculeDef,
-): { width: number; height: number } {
-  const pad = 2;
+  detail: number,
+): void {
+  const pad = detail * 2;
   let minX = Infinity;
   let minY = Infinity;
   let maxX = -Infinity;
   let maxY = -Infinity;
   for (const a of def.atoms) {
-    const r = ELEMENT[a.el].size / 2;
-    minX = Math.min(minX, a.x - r);
-    minY = Math.min(minY, a.y - r);
-    maxX = Math.max(maxX, a.x + r);
-    maxY = Math.max(maxY, a.y + r);
+    const r = (ELEMENT[a.el].size * detail) / 2;
+    minX = Math.min(minX, a.x * detail - r);
+    minY = Math.min(minY, a.y * detail - r);
+    maxX = Math.max(maxX, a.x * detail + r);
+    maxY = Math.max(maxY, a.y * detail + r);
   }
-  const ox = Math.ceil(-minX) + pad;
-  const oy = Math.ceil(-minY) + pad;
-  const width = Math.ceil(maxX - minX) + pad * 2 + 1;
-  const height = Math.ceil(maxY - minY) + pad * 2 + 1;
+  // Centro da textura no centro geométrico da molécula, para o sprite girar e alinhar certo.
+  const halfW = Math.ceil(Math.max(-minX, maxX)) + pad;
+  const halfH = Math.ceil(Math.max(-minY, maxY)) + pad;
+  const at = (v: number, half: number) => v * detail + half;
 
   const g = scene.make.graphics({}, false);
+  const bond = Math.max(2, Math.round(1.7 * detail));
+  const thin = Math.max(1, Math.round(0.7 * detail));
   g.fillStyle(PALETTE.outline);
   for (const [a, b, order] of def.bonds) {
     const p = def.atoms[a]!;
     const q = def.atoms[b]!;
+    const [px, py, qx, qy] = [at(p.x, halfW), at(p.y, halfH), at(q.x, halfW), at(q.y, halfH)];
     if (order === 2) {
-      const len = Math.hypot(q.x - p.x, q.y - p.y);
-      const nx = (-(q.y - p.y) / len) * 1.5;
-      const ny = ((q.x - p.x) / len) * 1.5;
-      pixelLine(g, p.x + ox + nx, p.y + oy + ny, q.x + ox + nx, q.y + oy + ny, 1);
-      pixelLine(g, p.x + ox - nx, p.y + oy - ny, q.x + ox - nx, q.y + oy - ny, 1);
+      const len = Math.hypot(qx - px, qy - py);
+      const nx = (-(qy - py) / len) * 1.2 * detail;
+      const ny = ((qx - px) / len) * 1.2 * detail;
+      pixelLine(g, px + nx, py + ny, qx + nx, qy + ny, thin);
+      pixelLine(g, px - nx, py - ny, qx - nx, qy - ny, thin);
     } else {
-      pixelLine(g, p.x + ox, p.y + oy, q.x + ox, q.y + oy, 2);
+      pixelLine(g, px, py, qx, qy, bond);
     }
   }
 
   // De trás para a frente: átomos mais abaixo ficam por cima.
   for (const a of [...def.atoms].sort((p, q) => p.y - q.y)) {
     const { color, size } = ELEMENT[a.el];
-    const x = Math.round(a.x + ox - size / 2);
-    const y = Math.round(a.y + oy - size / 2);
-    g.fillStyle(PALETTE.outline);
-    pixelCircle(g, x, y, size);
-    g.fillStyle(color);
-    pixelCircle(g, x + 1, y + 1, size - 2);
-    g.fillStyle(0xffffff, 0.85);
-    g.fillRect(
-      x + Math.floor(size / 3),
-      y + Math.floor(size / 4),
-      size > 6 ? 2 : 1,
-      size > 6 ? 2 : 1,
+    const d = size * detail;
+    drawAtom(
+      g,
+      Math.round(at(a.x, halfW) - d / 2),
+      Math.round(at(a.y, halfH) - d / 2),
+      d,
+      color,
+      detail,
     );
   }
 
-  g.generateTexture(key, width, height);
+  g.generateTexture(key, halfW * 2, halfH * 2);
   g.destroy();
-  return { width, height };
 }

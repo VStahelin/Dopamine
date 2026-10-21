@@ -1,6 +1,7 @@
 import * as Phaser from 'phaser';
 import { DISPLAY } from '../../config';
 import { integerZoom } from '../render/pixelScale';
+import { setTextResolution } from './theme';
 
 /**
  * Prepara a câmera de uma cena de interface com zoom inteiro a partir do canto superior
@@ -15,6 +16,7 @@ export function setupUiLayout(
     const { width, height } = scene.scale;
     const zoom = integerZoom(width, height, DISPLAY.uiMinShortSidePx);
     scene.cameras.main.setOrigin(0, 0).setZoom(zoom);
+    setTextResolution(zoom);
     layout(Math.floor(width / zoom), Math.floor(height / zoom));
   };
   apply();

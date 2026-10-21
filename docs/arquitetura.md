@@ -14,7 +14,7 @@ Como o código do Dopamina Blaster é organizado. Este arquivo descreve **o esta
 | Build e servidor local | Vite 8 | [0003](decisoes/0003-camadas-core-game-config.md) |
 | Testes | Vitest 4 | [0003](decisoes/0003-camadas-core-game-config.md) |
 | Lint e formatação | ESLint 10 (typescript-eslint) e Prettier | [0003](decisoes/0003-camadas-core-game-config.md) |
-| Tela e pixel art | Canvas em tela cheia, zoom inteiro; grade em aberto (16 px provisório) | [0009](decisoes/0009-grade-16px-zoom-inteiro.md), [0010](decisoes/0010-orientacao-livre.md) |
+| Tela e pixel art | Canvas na resolução real da tela; sprites com 2 ou 3 pixels de arte por unidade, pixel de arte inteiro | [0009](decisoes/0009-grade-16px-zoom-inteiro.md), [0010](decisoes/0010-orientacao-livre.md) |
 | Save | IndexedDB, com backup exportável | [0005](decisoes/0005-save-local-indexeddb.md) |
 | Onde roda (desenvolvimento) | Localmente (`npm run dev`), celular pela rede local; distribuição ainda não decidida | [0011](decisoes/0011-rodar-localmente.md) |
 

@@ -1,5 +1,10 @@
 {
-  "xp": { "base": 5, "increment": 10, "incrementStepEveryLevels": 20, "incrementStep": 3 },
+  "xp": {
+    "base": 5,
+    "increment": 10,
+    "incrementStepEveryLevels": 20,
+    "incrementStep": 3
+  },
   "difficulty": {
     "linear": 0.15,
     "quadratic": 0.01,
@@ -11,7 +16,11 @@
     "respiteMultiplier": 0.5,
     "respiteSeconds": 25
   },
-  "upgrades": { "runCostRate": 1.15, "idleCostRate": 1.08, "runMaxLevelsPerUpgrade": 10 },
+  "upgrades": {
+    "runCostRate": 1.15,
+    "idleCostRate": 1.08,
+    "runMaxLevelsPerUpgrade": 10
+  },
   "health": {
     "sectorMin": 0,
     "sectorMax": 100,
@@ -24,5 +33,7 @@
     "inheritedPointsExponent": 0.5,
     "individualDifficultyFactor": 1.25
   },
-  "meta": { "permanentPowerCap": 0.5 }
+  "meta": {
+    "permanentPowerCap": 0.5
+  }
 }

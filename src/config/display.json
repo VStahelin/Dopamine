@@ -1,6 +1,7 @@
 {
   "tileSizePx": 16,
   "minVisibleShortSidePx": 360,
+  "spriteDetails": [2, 3],
   "uiMinShortSidePx": 320,
   "showFps": true
 }
