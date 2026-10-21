@@ -1,6 +1,6 @@
 # NNNN. Título curto da decisão
 
-- **Status:** proposta | aceita | substituída por NNNN
+- **Status:** proposta | em aberto | aceita | substituída por NNNN
 - **Data:** AAAA-MM-DD
 - **Área:** técnica | design | processo
 

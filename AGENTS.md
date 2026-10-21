@@ -24,12 +24,14 @@ Dopamina Blaster: roguelike incremental de auto-battle idle, em que agentes (rem
 
 ## Registrar decisões (obrigatório)
 
-Toda decisão que muda o rumo do projeto vira um arquivo em `docs/decisoes/`, mesmo que tenha sido tomada numa conversa. A memória da sessão se perde; o repositório não.
+Só as decisões **importantes**, que têm impacto na construção do jogo, viram um arquivo em `docs/decisoes/`, mesmo que tenham sido tomadas numa conversa. A memória da sessão se perde; o repositório não. O registro tem que continuar curto: decisão pequena não entra.
 
-- **Conta como decisão:** escolha de tecnologia ou biblioteca, estrutura de pastas, padrão de código, formato de dados ou de save, regra de jogo, número de balanceamento que deixa de ser chute, mudança de escopo ou de ordem no roadmap, resposta a uma pergunta em aberto dos docs.
-- **Não conta:** detalhe de implementação que só afeta um arquivo, nome de variável, correção de bug.
+- **Teste:** se uma sessão nova não souber disso, ela vai construir algo errado ou desfazer trabalho? Se não, não registre.
+- **Entra:** tecnologia ou biblioteca central, arquitetura e camadas, formato de dados e de save, mecânica central que o código precisa seguir, escopo ou ordem das fases do roadmap.
+- **Não entra:** valores de balanceamento (ficam nos JSON de `src/config/`; mudar número não é decisão), respostas de design que cabem no próprio doc da aba, detalhe de implementação, nomes, estilo de código, correção de bug, escolha que se desfaz em minutos.
+- **Na dúvida:** pergunte ao Vitor antes de criar o arquivo.
 - **Como:** copie [docs/decisoes/_modelo.md](docs/decisoes/_modelo.md) para o próximo número livre (`NNNN-titulo-curto.md`), preencha e adicione uma linha no índice [docs/decisoes/README.md](docs/decisoes/README.md).
-- **Status:** `proposta` (sugerida, falta o Vitor aprovar), `aceita`, `substituída por NNNN`. Agentes criam decisões como `proposta`; só passam para `aceita` quando o Vitor confirmar.
+- **Status:** `proposta` (sugerida, falta o Vitor aprovar), `em aberto` (o Vitor ainda não decidiu; o código usa um valor provisório), `aceita`, `substituída por NNNN`. Agentes criam decisões como `proposta`; só passam para `aceita` quando o Vitor confirmar.
 - **Nunca apague nem reescreva** uma decisão aceita. Para mudar, crie uma nova e marque a antiga como `substituída por NNNN`.
 - **Propague:** se a decisão muda a arquitetura, atualize [docs/arquitetura.md](docs/arquitetura.md); se responde uma pergunta em aberto de um doc de design, marque a pergunta no doc com o link da decisão.
 
@@ -43,5 +45,5 @@ Toda decisão que muda o rumo do projeto vira um arquivo em `docs/decisoes/`, me
 
 - **Idioma:** documentação, mensagens de commit e textos do jogo em português do Brasil. Código (nomes de variáveis, funções, tipos) em inglês.
 - **Lógica separada do desenho:** nada em `src/core/` importa Phaser. Veja [docs/arquitetura.md](docs/arquitetura.md).
-- **Números de balanceamento** ficam só em `src/config/`, nunca soltos no código.
+- **Parâmetros** ficam só nos JSON de `src/config/`, lidos por `src/config/index.ts`, nunca soltos no código. Parâmetro novo: adicione no JSON e no tipo em `src/config/types.ts`.
 - **Commits** pequenos, um assunto por commit. Trabalhe em branch e abra PR para a `main`.

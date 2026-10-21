@@ -9,8 +9,11 @@ As decisões de design tomadas antes deste registro continuam marcadas como "dec
 | [0001](0001-registrar-decisoes.md) | Registrar decisões em arquivos numerados | processo | aceita |
 | [0002](0002-phaser-4-typescript-pwa.md) | Phaser 4 + TypeScript, jogo web instalável (PWA) | técnica | aceita |
 | [0003](0003-camadas-core-game-config.md) | Camadas config, core e game, com Vite e Vitest | técnica | proposta |
-| [0004](0004-parametros-centralizados.md) | Números de balanceamento num lugar só | técnica | proposta |
+| [0004](0004-parametros-centralizados.md) | Parâmetros em arquivos JSON tipados | técnica | proposta |
 | [0005](0005-save-local-indexeddb.md) | Save local no IndexedDB, sem sincronização por enquanto | técnica | proposta |
-| [0006](0006-deploy-github-pages.md) | Deploy no GitHub Pages pelo GitHub Actions | técnica | proposta |
+| [0006](0006-deploy-github-pages.md) | Deploy no GitHub Pages pelo GitHub Actions | técnica | substituída por 0011 |
 | [0007](0007-roadmap-run-primeiro.md) | Desenvolver a run primeiro, depois o resto | processo | proposta |
 | [0008](0008-v01-menu-e-run.md) | A primeira versão (v0.1) tem menu e uma run jogável | processo | proposta |
+| [0009](0009-grade-16px-zoom-inteiro.md) | Tamanho do pixel e zoom inteiro pelo lado menor da tela | técnica | em aberto |
+| [0010](0010-orientacao-livre.md) | Orientação livre no celular, pensada para vertical | técnica | proposta |
+| [0011](0011-rodar-localmente.md) | Rodar localmente durante o desenvolvimento | técnica | proposta |
