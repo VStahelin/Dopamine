@@ -1,0 +1,14 @@
+# Documentação do Dopamina Blaster
+
+Documento de conceito do jogo, um arquivo por aba do [documento original](https://claude.ai/code/artifact/931f649e-d98f-4019-a7fb-8643946bc1c5). Tudo aqui ainda é proposta em evolução; cada arquivo termina com o que falta decidir.
+
+| Arquivo | Conteúdo |
+| --- | --- |
+| [conceito.md](conceito.md) | Visão geral, pilares de design, loop de gameplay, campo crônico (run), campo longo (idle), organismo, meta-progressão e próximos passos |
+| [personagens.md](personagens.md) | Tipos de molécula ofensora, inimigos e chefes, agentes da run e do idle, matriz de efetividade e desbloqueios |
+| [mecanicas.md](mecanicas.md) | Mecânica geral do mundo: ciclo, os quatro pontos de saúde, os dois campos, eixos qualidade/dose/potência, decomposição e reset |
+| [economia.md](economia.md) | Moeda (ATP), fórmulas de XP, dificuldade, custo de upgrades, produção do idle, saúde e reset, botões de ajuste |
+| [parametros.md](parametros.md) | Todos os atributos do jogo com base, teto na run e teto meta (ofensivos, defensivos, mobilidade, level up, especial, idle, inimigos) |
+| [plataforma.md](plataforma.md) | Engine (Phaser 4 + TypeScript, PWA), comparação de engines, arquitetura, controles, salvamento e desempenho |
+| [design.md](design.md) | Identidade visual: direção de arte, paleta, tipografia, sprites de moléculas e componentes da tela de batalha |
+| [armas.md](armas.md) | Arquétipos de arma do Vampire Survivors, as 7 armas iniciais, evoluções e como a arma chega ao jogador |
