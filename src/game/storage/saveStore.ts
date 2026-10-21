@@ -2,6 +2,9 @@ import type * as Phaser from 'phaser';
 import { DISPLAY } from '../../config';
 import { migrateSave, type SaveData } from '../../core/save/saveData';
 
+/** Uma cena ou o jogo: os dois dividem o mesmo registro. */
+type HasRegistry = { registry: Phaser.Data.DataManager };
+
 /** Save no IndexedDB do navegador (decisão 0005). */
 const DB_NAME = 'dopamina-blaster';
 const STORE = 'save';
@@ -53,14 +56,14 @@ async function writeSave(save: SaveData): Promise<void> {
 }
 
 /** Save em uso, guardado no registro do jogo para todas as cenas lerem. */
-export function getSave(scene: Phaser.Scene): SaveData {
+export function getSave(scene: HasRegistry): SaveData {
   return scene.registry.get(REGISTRY_KEY) as SaveData;
 }
 
 /** Última gravação em andamento, para esperar antes de recarregar o jogo. */
 let lastWrite: Promise<void> = Promise.resolve();
 
-export function setSave(scene: Phaser.Scene, save: SaveData): void {
+export function setSave(scene: HasRegistry, save: SaveData): void {
   scene.registry.set(REGISTRY_KEY, save);
   lastWrite = lastWrite.then(() => writeSave(save));
 }
@@ -70,6 +73,6 @@ export function flushSave(): Promise<void> {
   return lastWrite;
 }
 
-export function initSave(scene: Phaser.Scene, save: SaveData): void {
+export function initSave(scene: HasRegistry, save: SaveData): void {
   scene.registry.set(REGISTRY_KEY, save);
 }

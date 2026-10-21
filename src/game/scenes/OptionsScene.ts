@@ -135,7 +135,8 @@ export class OptionsScene extends Phaser.Scene {
         label: `MOSTRAR FPS: ${yesNo(save.options.showFps)}`,
         variant: 'secondary' as const,
         onClick: () => {
-          setSave(this, { ...save, options: { ...save.options, showFps: !save.options.showFps } });
+          const now = getSave(this);
+          setSave(this, { ...now, options: { ...now.options, showFps: !now.options.showFps } });
           this.build();
         },
       },
@@ -143,9 +144,10 @@ export class OptionsScene extends Phaser.Scene {
         label: `NÚMEROS DE DANO: ${yesNo(save.options.showDamageNumbers)}`,
         variant: 'secondary' as const,
         onClick: () => {
+          const now = getSave(this);
           setSave(this, {
-            ...save,
-            options: { ...save.options, showDamageNumbers: !save.options.showDamageNumbers },
+            ...now,
+            options: { ...now.options, showDamageNumbers: !now.options.showDamageNumbers },
           });
           this.build();
         },

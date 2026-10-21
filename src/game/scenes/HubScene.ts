@@ -32,7 +32,10 @@ import {
 import { SCREENS, TAB_SECTIONS, TABS, type SectionDef, type TabId } from '../ui/menuContent';
 import { renderSection } from '../ui/sectionView';
 import { bodyText, formatTime, impactText, labelText, withShadow } from '../ui/theme';
-import { setupUiLayout } from '../ui/uiLayout';
+import { addDim, setupUiLayout } from '../ui/uiLayout';
+import { addButton } from '../ui/button';
+import { collect, type OfflineGain } from '../../core/idle/progress';
+import { idleRunner } from '../idle/idleRunner';
 import { updates } from '../update/updateManager';
 import { SCENES } from './keys';
 
@@ -74,6 +77,8 @@ export class HubScene extends Phaser.Scene {
   /** Rolagem de cada aba, para voltar ao mesmo ponto depois de uma compra. */
   private scrollOffsets: Partial<Record<TabId, number>> = {};
   private scrollTab?: TabId;
+  /** Relatório do progresso offline, mostrado uma vez ao abrir o Hub. */
+  private awayReport?: OfflineGain;
   /** Nó do Laboratório mostrado no painel de detalhe. */
   private labSelected = 'interactions';
   private size = { w: 0, h: 0 };
@@ -83,6 +88,7 @@ export class HubScene extends Phaser.Scene {
   }
 
   create(): void {
+    this.awayReport = idleRunner.takeReport();
     this.input.keyboard?.on('keydown-ESC', () => this.scene.start(SCENES.title));
     // Aviso de versão nova: só aqui nos menus, uma vez por visita ao hub.
     const unsubscribe = updates.subscribe(() => this.maybePromptUpdate());
@@ -249,8 +255,57 @@ export class HubScene extends Phaser.Scene {
       out.push(...this.tabContent(w, midTop, midBottom));
     }
     out.push(...this.tabBar(g, w, h, colX, colW));
+    if (this.awayReport) out.push(...this.awayPanel(w, h, this.awayReport));
     this.root = this.add.container(0, 0, out);
     this.scroll?.isolate();
+  }
+
+  /** Painel "Enquanto você estava fora": o que o campo longo produziu com o jogo fechado. */
+  private awayPanel(w: number, h: number, report: OfflineGain): Obj[] {
+    const pw = Math.min(w - 32, 320);
+    const ph = 190;
+    const x = Math.floor((w - pw) / 2);
+    const y = Math.floor((h - ph) / 2);
+    const g = this.add.graphics();
+    g.fillStyle(PALETTE.outline).fillRect(x, y, pw, ph);
+    g.fillStyle(PALETTE.woodDark).fillRect(x + 4, y + 4, pw - 8, ph - 8);
+    g.fillStyle(PALETTE.panel).fillRect(x + 8, y + 8, pw - 16, ph - 16);
+    const hours = Math.floor(report.seconds / 3600);
+    const minutes = Math.floor((report.seconds % 3600) / 60);
+    const time = hours > 0 ? `${hours} h ${minutes} min` : `${minutes} min`;
+    return [
+      addDim(this, w, h, 0.7),
+      g,
+      this.add
+        .text(w / 2, y + 20, 'ENQUANTO VOCÊ ESTAVA FORA', labelText(11, PALETTE_CSS.cyan))
+        .setOrigin(0.5, 0),
+      this.add
+        .text(
+          w / 2,
+          y + 44,
+          `+${report.atp.toLocaleString('pt-BR')} ATP`,
+          impactText(30, PALETTE_CSS.gold),
+        )
+        .setOrigin(0.5, 0),
+      this.add
+        .text(w / 2, y + 88, `O campo longo trabalhou ${time}.`, bodyText(11, PALETTE_CSS.cream))
+        .setOrigin(0.5, 0),
+      addButton(this, {
+        x: x + 20,
+        y: y + ph - 62,
+        width: pw - 40,
+        height: 44,
+        label: 'COLETAR',
+        fontSize: 16,
+        onClick: () => {
+          const save = getSave(this);
+          const c = collect(save.idle, save.atp);
+          setSave(this, { ...save, idle: c.idle, atp: c.atp });
+          this.awayReport = undefined;
+          this.build();
+        },
+      }),
+    ];
   }
 
   /** Retrato do organismo, indivíduo, saúde por setor e ATP. */
@@ -524,17 +579,29 @@ export class HubScene extends Phaser.Scene {
       g.fillStyle(PALETTE.carbon).fillRect(x + 3, fy + 10 + t, 8, 8);
       g.fillStyle(PALETTE.water).fillRect(x + 3, fy + 56, 8, 4);
     });
-    const tag = this.add
-      .text(lx + 40, fy - 10, 'FASE 4', { ...bodyText(12, PALETTE_CSS.outline), fontStyle: '700' })
-      .setOrigin(0.5, 0);
-    g.fillStyle(PALETTE.outline).fillRect(lx + 40 - tag.width / 2 - 8, fy - 13, tag.width + 16, 21);
-    g.fillStyle(PALETTE.gold).fillRect(lx + 40 - tag.width / 2 - 5, fy - 10, tag.width + 10, 15);
+    // ATP produzido pelo idle esperando coleta: selo com o valor, como no menu.md.
+    const pending = Math.floor(getSave(this).idle.pending);
+    if (pending > 0) {
+      const tag = this.add
+        .text(lx + 40, fy - 10, `+${pending}`, {
+          ...bodyText(12, PALETTE_CSS.outline),
+          fontStyle: '700',
+        })
+        .setOrigin(0.5, 0);
+      g.fillStyle(PALETTE.outline).fillRect(
+        lx + 40 - tag.width / 2 - 8,
+        fy - 13,
+        tag.width + 16,
+        21,
+      );
+      g.fillStyle(PALETTE.gold).fillRect(lx + 40 - tag.width / 2 - 5, fy - 10, tag.width + 10, 15);
+      out.push(tag);
+    }
     out.push(
-      tag,
       this.add
         .text(lx + 40, fy + 76, 'CAMPO LONGO', labelText(9, PALETTE_CSS.text))
         .setOrigin(0.5, 0),
-      this.zone(lx, fy - 14, 80, 106, () => this.open(SCREENS.idle)),
+      this.zone(lx, fy - 14, 80, 106, () => this.scene.start(SCENES.idle)),
     );
 
     // Agente escolhido.

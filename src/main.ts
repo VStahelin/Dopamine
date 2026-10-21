@@ -7,6 +7,7 @@ import { PALETTE_CSS } from './game/render/palette';
 import { BootScene } from './game/scenes/BootScene';
 import { GameOverScene } from './game/scenes/GameOverScene';
 import { HudScene } from './game/scenes/HudScene';
+import { IdleScene } from './game/scenes/IdleScene';
 import { LevelUpScene } from './game/scenes/LevelUpScene';
 import { CatalogScene } from './game/scenes/CatalogScene';
 import { HubScene } from './game/scenes/HubScene';
@@ -59,6 +60,7 @@ const game = new Phaser.Game({
     PlaceholderScene,
     CatalogScene,
     RecordsScene,
+    IdleScene,
     OptionsScene,
     RunScene,
     HudScene,
