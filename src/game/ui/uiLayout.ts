@@ -11,10 +11,14 @@ import { setTextResolution } from './theme';
 export function setupUiLayout(
   scene: Phaser.Scene,
   layout: (width: number, height: number) => void,
+  /** Tamanho lógico mínimo que a tela precisa; sem ele, vale `uiMinShortSidePx` no lado menor. */
+  minSize?: { width: number; height: number },
 ): void {
   const apply = () => {
     const { width, height } = scene.scale;
-    const zoom = integerZoom(width, height, DISPLAY.uiMinShortSidePx);
+    const zoom = minSize
+      ? Math.max(1, Math.floor(Math.min(width / minSize.width, height / minSize.height)))
+      : integerZoom(width, height, DISPLAY.uiMinShortSidePx);
     scene.cameras.main.setOrigin(0, 0).setZoom(zoom);
     setTextResolution(zoom);
     layout(Math.floor(width / zoom), Math.floor(height / zoom));

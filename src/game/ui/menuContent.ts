@@ -1,3 +1,5 @@
+import type { IconName } from './icons';
+
 /**
  * Textos do menu principal e conteúdo de exemplo dos placeholders (docs/menu.md). Os nomes de
  * agentes e armas vêm das abas Personagens e Armas; viram configuração de verdade quando a fase
@@ -14,6 +16,8 @@ export interface ExampleItem {
 
 export interface SectionDef {
   title: string;
+  /** Ícone grande do placeholder. */
+  icon?: IconName;
   /** Uma frase sobre o que vai ter ali. */
   text: string;
   /** Fase em que ganha conteúdo; ausente quando ainda não há fase. */
@@ -49,13 +53,14 @@ export const TABS: { id: TabId; label: string }[] = [
   { id: 'arsenal', label: 'ARSENAL' },
   { id: 'case', label: 'CASO' },
   { id: 'lab', label: 'LAB.' },
-  { id: 'organism', label: 'ORGAN.' },
+  { id: 'organism', label: 'ORGANISMO' },
 ];
 
 /** Conteúdo das abas que ainda são placeholder (a aba Caso é o hub). */
 export const TAB_SECTIONS: Record<Exclude<TabId, 'case'>, SectionDef> = {
   agents: {
     title: 'AGENTES',
+    icon: 'agents',
     text: 'O elenco da run e do idle, com a ficha de cada agente e o desbloqueio.',
     phase: 'FASES 2 E 3',
     examples: [
@@ -65,6 +70,7 @@ export const TAB_SECTIONS: Record<Exclude<TabId, 'case'>, SectionDef> = {
   },
   arsenal: {
     title: 'ARSENAL',
+    icon: 'arsenal',
     text: 'As armas, seus níveis, as evoluções e o reagente que cada evolução pede.',
     phase: 'FASES 2 E 3',
     examples: [
@@ -84,6 +90,7 @@ export const TAB_SECTIONS: Record<Exclude<TabId, 'case'>, SectionDef> = {
   },
   lab: {
     title: 'LABORATÓRIO',
+    icon: 'lab',
     text: 'As árvores de upgrades permanentes, compradas com ATP entre as runs.',
     phase: 'FASES 3 E 4',
     examples: [
@@ -98,6 +105,7 @@ export const TAB_SECTIONS: Record<Exclude<TabId, 'case'>, SectionDef> = {
   },
   organism: {
     title: 'ORGANISMO',
+    icon: 'organism',
     text: 'O indivíduo em tratamento: os 4 setores de saúde, o efeito de cada um e o reset.',
     phase: 'FASE 5',
     examples: [
@@ -118,12 +126,14 @@ export const TAB_SECTIONS: Record<Exclude<TabId, 'case'>, SectionDef> = {
 export const SCREENS = {
   idle: {
     title: 'CAMPO LONGO',
+    icon: 'idle',
     text: 'O idle: agentes fixos na base disparam nas moléculas que descem e geram ATP, inclusive com o jogo fechado.',
     phase: 'FASE 4',
     examples: [{ label: 'AGENTES DO IDLE', items: IDLE_AGENTS }],
   },
   compendium: {
     title: 'COMPÊNDIO',
+    icon: 'book',
     text: 'Tudo o que você já encontrou: moléculas inimigas, modificadores e raridades.',
     phase: 'FASE 2',
     examples: [
@@ -141,6 +151,16 @@ export const SCREENS = {
   },
   achievements: {
     title: 'CONQUISTAS',
+    icon: 'medal',
     text: 'Metas de longo prazo, como curar um indivíduo ou decompor 10 mil moléculas.',
   },
 } satisfies Record<string, SectionDef>;
+
+/** Escolha do agente: hoje só a Dopamina; os outros chegam na fase 2. */
+export const AGENT_SELECT: SectionDef = {
+  title: 'AGENTE',
+  icon: 'agents',
+  text: 'Escolha o agente da run. Os outros chegam com a profundidade da run.',
+  phase: 'FASE 2',
+  examples: [{ label: 'AGENTES DA RUN', items: RUN_AGENTS }],
+};

@@ -53,6 +53,17 @@ export function bodyText(size: number, color: string = PALETTE_CSS.hydrogen): Te
   };
 }
 
+/**
+ * Soma uma sombra dura (sem desfoque) embaixo do texto, como o `text-shadow: 0 Npx` do guia de
+ * estilo.
+ */
+export function withShadow(style: TextStyle, color: string, offsetY: number): TextStyle {
+  return {
+    ...style,
+    shadow: { offsetX: 0, offsetY, color, blur: 0, stroke: true, fill: true },
+  };
+}
+
 /** Rótulo com contorno, para ler sobre o campo de batalha (HUD). */
 export function hudLabelText(size: number, color: string = PALETTE_CSS.hydrogen): TextStyle {
   return { ...labelText(size, color), stroke: PALETTE_CSS.outline, strokeThickness: 3 };

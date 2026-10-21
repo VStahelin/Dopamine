@@ -2,7 +2,7 @@
 
 Como o código do Dopamina Blaster é organizado. Este arquivo descreve **o estado atual**; o porquê de cada escolha fica nas [decisões](decisoes/README.md), ligadas em cada seção. Ao mudar algo aqui, registre a decisão primeiro.
 
-> **Estado:** fase 1 concluída; fase 1.5 (menu) implementada, falta validar no celular. A v0.1 já é jogável: menu, run com inimigos, arma, XP, level up, pausa, fim de run e recordes salvos. As pastas marcadas como "fase N" na estrutura abaixo ainda não existem.
+> **Estado:** fase 1 concluída; fase 1.5 (menu) implementada seguindo o artboard "Menu principal (protótipo)" do canvas de identidade visual, falta validar no celular.
 
 ## Stack
 
