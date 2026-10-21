@@ -5,7 +5,7 @@ import { specialReadiness } from '../../core/run/specials';
 import type { RunState } from '../../core/run/state';
 import { VirtualJoystick } from '../input/virtualJoystick';
 import { PALETTE, PALETTE_CSS } from '../render/palette';
-import { iconTexture } from '../render/textures';
+import { addIcon, iconTexture } from '../render/textures';
 import { getSave } from '../storage/saveStore';
 import {
   IconSlot,
@@ -178,10 +178,13 @@ export class HudScene extends Phaser.Scene {
     this.specialAt = { x: sx, y: sy };
     const run = this.runScene.run;
     const kind = run ? run.rules.agents[run.agentId].special.kind : 'frenzy';
-    this.specialIcon = this.add
-      .image(sx + SPECIAL_SIZE / 2, sy + 14, iconTexture('specials', kind))
-      .setOrigin(0.5, 0)
-      .setScale(2);
+    this.specialIcon = addIcon(
+      this,
+      sx + SPECIAL_SIZE / 2 - 16,
+      sy + 14,
+      iconTexture('specials', kind),
+      32,
+    );
     this.specialCount = this.add
       .text(sx + SPECIAL_SIZE / 2, sy + 22, '', {
         ...impactText(20, PALETTE_CSS.white),

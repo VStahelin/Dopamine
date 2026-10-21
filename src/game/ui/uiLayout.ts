@@ -1,6 +1,7 @@
 import * as Phaser from 'phaser';
 import { DISPLAY } from '../../config';
 import { integerZoom } from '../render/pixelScale';
+import { loadIconsForZoom } from '../render/textures';
 import { setTextResolution } from './theme';
 
 /**
@@ -22,6 +23,8 @@ export function setupUiLayout(
     scene.cameras.main.setOrigin(0, 0).setZoom(zoom);
     setTextResolution(zoom);
     layout(Math.floor(width / zoom), Math.floor(height / zoom));
+    // Zoom novo: carrega os ícones desse tamanho e monta a tela de novo quando chegarem.
+    loadIconsForZoom(scene, zoom, apply);
   };
   apply();
   scene.scale.on(Phaser.Scale.Events.RESIZE, apply);

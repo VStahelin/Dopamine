@@ -4,4 +4,3 @@ package-lock.json
 *.md
 releases
 .certs
-sprites-export

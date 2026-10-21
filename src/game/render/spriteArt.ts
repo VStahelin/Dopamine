@@ -1,8 +1,11 @@
 import {
   BOND_COLOR,
   ELEMENTS,
+  FRAMES,
   ICON_PALETTE,
+  ICON_SIZE,
   WORLD_SPRITES,
+  type FrameKind,
   type MoleculeDef,
   type OrbStyle,
   type PixelGrid,
@@ -234,5 +237,42 @@ export function paintGem(p: Painter, detail: number): Size {
     spot,
     spot,
   );
+  return { width: size, height: size };
+}
+
+/** Espessura da borda e do filete da moldura em cada escala do ícone. */
+export function frameLine(scale: number): number {
+  return scale >= 3 ? 3 : 2;
+}
+
+/** Lado do espaço com moldura para um ícone de 16×16 em `scale` (1 → 24, 2 → 40, 3 → 60). */
+export function slotSize(scale: number): number {
+  return ICON_SIZE * scale + frameLine(scale) * 4;
+}
+
+/** Moldura de um espaço de ícone (prancheta "Crônico: ícones, dano e paisagem"). */
+export function paintFrame(p: Painter, kind: FrameKind, scale: number): Size {
+  const f = FRAMES[kind];
+  const size = slotSize(scale);
+  const line = frameLine(scale);
+  const border = paletteColor(f.border);
+  if (f.dashed) {
+    p.fillStyle(paletteColor(f.fill)).fillRect(0, 0, size, size);
+    p.fillStyle(border);
+    const dash = line * 2;
+    for (let i = 0; i < size; i += dash * 2) {
+      const len = Math.min(dash, size - i);
+      p.fillRect(i, 0, len, line).fillRect(i, size - line, len, line);
+      p.fillRect(0, i, line, len).fillRect(size - line, i, line, len);
+    }
+    return { width: size, height: size };
+  }
+  p.fillStyle(border).fillRect(0, 0, size, size);
+  let inner = line;
+  if (f.inset) {
+    p.fillStyle(paletteColor(f.inset)).fillRect(line, line, size - line * 2, size - line * 2);
+    inner += line;
+  }
+  p.fillStyle(paletteColor(f.fill)).fillRect(inner, inner, size - inner * 2, size - inner * 2);
   return { width: size, height: size };
 }

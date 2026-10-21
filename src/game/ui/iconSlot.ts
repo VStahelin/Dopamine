@@ -1,47 +1,24 @@
 import * as Phaser from 'phaser';
-import { FRAMES, ICON_SIZE, type FrameKind } from '../../assets/sprites';
+import { ICON_SIZE, type FrameKind } from '../../assets/sprites';
 import { PASSIVES, WEAPONS, type PassiveId, type WeaponId } from '../../config';
 import type { WeaponInstance } from '../../core/run/state';
 import type { UpgradeChoice } from '../../core/run/upgrades';
 import { weaponMaxLevel } from '../../core/run/weaponParams';
-import { PALETTE_CSS, paletteColor } from '../render/palette';
-import { iconTexture, LOCKED_ICON } from '../render/textures';
+import { PALETTE_CSS } from '../render/palette';
+import { frameLine, slotSize } from '../render/spriteArt';
+import { frameKey, iconKey, iconTexture, LOCKED_ICON, type IconRef } from '../render/textures';
 import { labelText } from './theme';
 
 /** O que um espaço de ícone mostra: moldura, ícone e o rótulo do canto (nível, MAX, EVO). */
 export interface SlotContent {
   frame: FrameKind;
-  icon?: string;
+  icon?: IconRef;
   label?: string;
   /** Rótulo dourado (MAX, EVO). */
   gold?: boolean;
 }
 
-/** Espessura da borda e do filete da moldura em cada escala do ícone. */
-function frameLine(scale: number): number {
-  return scale >= 3 ? 3 : 2;
-}
-
-/** Lado do espaço com moldura para um ícone de 16×16 em `scale` (1 → 24, 2 → 40, 3 → 60). */
-export function slotSize(scale: number): number {
-  return ICON_SIZE * scale + frameLine(scale) * 4;
-}
-
-/**
- * Textura da moldura de um tipo e escala, desenhada uma vez e reaproveitada por todos os espaços.
- * Um Graphics por espaço era redesenhado a cada quadro e travava listas grandes (Arsenal).
- */
-function frameTexture(scene: Phaser.Scene, kind: FrameKind, scale: number): string {
-  const key = `frame-${kind}-${scale}`;
-  if (!scene.textures.exists(key)) {
-    const size = slotSize(scale);
-    const g = scene.make.graphics({}, false);
-    drawFrame(g, 0, 0, size, frameLine(scale), kind);
-    g.generateTexture(key, size, size);
-    g.destroy();
-  }
-  return key;
-}
+export { slotSize };
 
 /**
  * Espaço de ícone com moldura do tipo (prancheta "Crônico: ícones, dano e paisagem"): arma,
@@ -70,7 +47,6 @@ export class IconSlot {
     this.image = scene.add
       .image(x + inset, y + inset, '__DEFAULT')
       .setOrigin(0)
-      .setScale(scale)
       .setVisible(false);
     this.objects = [this.frame, this.image];
     if (withLabel) {
@@ -94,9 +70,15 @@ export class IconSlot {
     this.text?.setText('');
     if (!content) return this;
 
-    this.frame.setTexture(frameTexture(this.scene, content.frame, this.scale)).setVisible(true);
+    this.frame.setTexture(frameKey(content.frame, this.scale)).setVisible(true);
     const icon = content.frame === 'locked' ? LOCKED_ICON : content.icon;
-    if (icon) this.image.setTexture(icon).setVisible(true);
+    if (icon) {
+      const px = ICON_SIZE * this.scale;
+      this.image
+        .setTexture(iconKey(this.scene, icon, px))
+        .setDisplaySize(px, px)
+        .setVisible(true);
+    }
     this.text
       ?.setText(content.label ?? '')
       .setColor(content.gold ? PALETTE_CSS.goldIcon : PALETTE_CSS.white);
@@ -111,47 +93,6 @@ export class IconSlot {
     }
     return this;
   }
-}
-
-/** Desenha a moldura de um espaço de ícone. */
-export function drawFrame(
-  g: Phaser.GameObjects.Graphics,
-  x: number,
-  y: number,
-  size: number,
-  line: number,
-  kind: FrameKind,
-): void {
-  const f = FRAMES[kind];
-  const border = paletteColor(f.border);
-  if (f.dashed) {
-    g.fillStyle(paletteColor(f.fill)).fillRect(x, y, size, size);
-    g.fillStyle(border);
-    const dash = line * 2;
-    for (let i = 0; i < size; i += dash * 2) {
-      const len = Math.min(dash, size - i);
-      g.fillRect(x + i, y, len, line).fillRect(x + i, y + size - line, len, line);
-      g.fillRect(x, y + i, line, len).fillRect(x + size - line, y + i, line, len);
-    }
-    return;
-  }
-  g.fillStyle(border).fillRect(x, y, size, size);
-  let inner = line;
-  if (f.inset) {
-    g.fillStyle(paletteColor(f.inset)).fillRect(
-      x + line,
-      y + line,
-      size - line * 2,
-      size - line * 2,
-    );
-    inner += line;
-  }
-  g.fillStyle(paletteColor(f.fill)).fillRect(
-    x + inner,
-    y + inner,
-    size - inner * 2,
-    size - inner * 2,
-  );
 }
 
 /** Ícone de uma arma da run: nível, MAX (pronta para evoluir) ou EVO. */

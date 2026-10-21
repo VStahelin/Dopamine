@@ -142,7 +142,7 @@ Juntar toda a pixel art numa pasta de dados e aplicar os ícones que o Vitor des
 - [x] Números na tela com as cores do guia: dano, crítico (catálise), afinidade forte e fraca, interações perdidas, recuperação e imune.
 - [x] Pausa com status: cabeçalho, faixa de interações, abas Arsenal, Atributos e Run, e os botões Continuar, Opções e Desistir.
 - [x] Menu: abas Agentes e Arsenal com os ícones das armas, das ações e dos especiais; os modificadores aparecem com ícone no fim do Arsenal (todos, já que ainda não guardamos quais o jogador viu). As listas longas do menu rolam.
-- [x] `npm run sprites:export`: gera PNG e SVG de todos os sprites em `sprites-export/` (fora do git), com o mesmo código de desenho do jogo, para ver os sprites fora do jogo e comparar textura gerada com imagem pronta.
+- [x] PNGs dos sprites em `public/sprites/`, em pastas por tamanho, gerados por `npm run sprites:build` a partir dos dados ([decisão 0020](decisoes/0020-sprites-em-png-por-tamanho.md)).
 - [ ] Validar no celular, em pé e deitado.
 
 **Critério de saída:** nenhuma pixel art fica fora de `src/assets/sprites/`; toda arma, modificador, reagente, evolução e especial aparece com o seu ícone do canvas no level up, na HUD, na pausa e no menu, no celular em pé e deitado.

@@ -12,7 +12,13 @@ import {
   type WeaponKind,
 } from '../../config';
 import { PALETTE, PALETTE_CSS } from '../render/palette';
-import { AGENT_TEXTURES, ENEMY_TEXTURES, iconTexture, textureKey } from '../render/textures';
+import {
+  addIcon,
+  AGENT_TEXTURES,
+  ENEMY_TEXTURES,
+  iconTexture,
+  textureKey,
+} from '../render/textures';
 import { addIconSlot, passiveSlot, slotSize, weaponIcon } from './iconSlot';
 import { drawCreamSlot, drawInkBox, drawLock, drawWoodFrame } from './icons';
 import { IDLE_AGENTS, RUN_AGENTS } from './menuContent';
@@ -93,11 +99,9 @@ export function renderAgents(
     }
     const action = WEAPONS[a.action as WeaponId].name;
     out.push(
-      scene.add
-        .image(left + 78, cy + 28, iconTexture('weapons', a.action as WeaponId))
-        .setOrigin(0),
+      addIcon(scene, left + 78, cy + 28, iconTexture('weapons', a.action as WeaponId)),
       scene.add.text(left + 98, cy + 30, `Ação: ${action}`, bodyText(10, PALETTE_CSS.text)),
-      scene.add.image(left + 78, cy + 46, iconTexture('specials', a.special.kind)).setOrigin(0),
+      addIcon(scene, left + 78, cy + 46, iconTexture('specials', a.special.kind)),
       scene.add.text(
         left + 98,
         cy + 48,

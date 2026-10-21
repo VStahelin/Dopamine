@@ -363,4 +363,11 @@ export interface DisplayConfig {
   uiMinShortSidePx: number;
   /** Valor inicial da opção "mostrar FPS", antes de o jogador mudar nas Opções. */
   showFps: boolean;
+  /**
+   * Tamanhos em que os ícones de 16×16 são gerados como PNG (pastas de public/sprites/icons).
+   * O jogo carrega o tamanho que bate com o zoom da tela (decisão 0020).
+   */
+  iconSizesPx: number[];
+  /** Escalas das molduras dos espaços de ícone geradas como PNG. */
+  frameScales: number[];
 }

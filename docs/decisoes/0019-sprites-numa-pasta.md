@@ -1,6 +1,6 @@
 # 0019. Todos os sprites como dados numa pasta única
 
-- **Status:** proposta
+- **Status:** substituída em parte por [0020](0020-sprites-em-png-por-tamanho.md) (a geração das texturas)
 - **Data:** 2026-10-21
 - **Área:** técnica
 

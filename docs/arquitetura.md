@@ -86,7 +86,7 @@ src/
   main.ts        ponto de entrada
 public/          favicon; manifest do PWA e fontes na fase 6
 tools/sim/       simulador (fase 3)
-tools/sprites/   exportador de sprites para PNG e SVG
+tools/sprites/   gerador dos PNGs de sprite
 .github/         workflow de CI (verificações, sem deploy)
 docs/            design, roadmap, arquitetura e decisões
 ```
@@ -95,7 +95,9 @@ Os testes ficam ao lado do código, como `*.test.ts`.
 
 ## Sprites
 
-Toda a pixel art fica em `src/assets/sprites/` como dados ([0019](decisoes/0019-sprites-numa-pasta.md)): grades de caracteres para os ícones (as mesmas do canvas de identidade visual), átomos e ligações para as moléculas, números para chão, gema e elétron. [spriteArt.ts](../src/game/render/spriteArt.ts) pinta esses dados com retângulos num `Painter`, sem depender do Phaser; [textures.ts](../src/game/render/textures.ts) usa um `Graphics` como pintor e guarda as texturas no começo do jogo, e o exportador ([tools/sprites/export.mjs](../tools/sprites/export.mjs)) usa um buffer de pixels para gerar PNG e SVG. Ícones saem com 1 pixel de textura por pixel de arte e crescem só em escala inteira; sprites do mundo saem uma vez por detail ([0009](decisoes/0009-grade-16px-zoom-inteiro.md)). Um teste confere que toda arma, modificador, especial, agente e inimigo tem sprite.
+Toda a pixel art fica em `src/assets/sprites/` como dados ([0019](decisoes/0019-sprites-numa-pasta.md)): grades de caracteres para os ícones (as mesmas do canvas de identidade visual), átomos e ligações para as moléculas, números para chão, gema, elétron, disparo e moeda, e as molduras. [spriteArt.ts](../src/game/render/spriteArt.ts) pinta esses dados com retângulos num `Painter`, sem depender do Phaser.
+
+Os PNGs ficam em `public/sprites/`, gerados por `npm run sprites:build` ([0020](decisoes/0020-sprites-em-png-por-tamanho.md)): ícones em pastas por tamanho (16 a 128 px), molduras por escala e sprites do mundo por detail ([0009](decisoes/0009-grade-16px-zoom-inteiro.md)). A lista de arquivos está em [spriteFiles.ts](../src/game/render/spriteFiles.ts); [textures.ts](../src/game/render/textures.ts) carrega no `preload` da abertura só os tamanhos de ícone que o zoom da tela usa. `npm run sprites:check` confere que os PNGs batem com os dados, e um teste confere que toda arma, modificador, especial, agente e inimigo tem sprite.
 
 ## Princípios
 
@@ -118,7 +120,8 @@ Precisa de Node 20.19 ou mais novo.
 | `npm run build` | Checa os tipos e gera o build em `dist/` |
 | `npm run preview` | Serve o build de `dist/` localmente, para testar a versão final |
 | `npm run release` | Check completo e publicação local atômica em `releases/` ([atualizacoes.md](atualizacoes.md)) |
-| `npm run sprites:export` | Gera PNG e SVG de todos os sprites em `sprites-export/` (fora do git), com o mesmo desenho do jogo |
+| `npm run sprites:build` | Gera os PNGs de `public/sprites/` a partir dos dados de `src/assets/sprites/` |
+| `npm run sprites:check` | Confere se os PNGs estão iguais aos dados (faz parte do `npm run check`) |
 | `npm run serve` | Serve a build publicada localmente, em HTTPS, para testar atualizações no PC |
 | `npm version minor` + `git push --follow-tags` | Gera uma versão: dispara o deploy no GitHub Pages (skills `criar-versao` e `publicar-versao`) |
 | `npm run check` | Lint, formatação, testes e build de uma vez; rode antes de abrir um PR |

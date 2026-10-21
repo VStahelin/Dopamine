@@ -1,7 +1,25 @@
 {
   "tileSizePx": 40,
   "minVisibleShortSidePx": 360,
-  "spriteDetails": [2, 3],
+  "spriteDetails": [
+    2,
+    3
+  ],
   "uiMinShortSidePx": 320,
-  "showFps": true
+  "showFps": true,
+  "iconSizesPx": [
+    16,
+    32,
+    48,
+    64,
+    80,
+    96,
+    112,
+    128
+  ],
+  "frameScales": [
+    1,
+    2,
+    3
+  ]
 }

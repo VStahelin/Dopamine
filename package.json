@@ -15,10 +15,11 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check": "npm run lint && npm run format:check && npm test && npm run build",
+    "check": "npm run lint && npm run sprites:check && npm run format:check && npm test && npm run build",
     "release": "node tools/release/release.mjs",
     "serve": "node tools/serve/serve.mjs",
-    "sprites:export": "node tools/sprites/export.mjs"
+    "sprites:build": "node tools/sprites/build.mjs",
+    "sprites:check": "node tools/sprites/build.mjs --check"
   },
   "dependencies": {
     "@fontsource/pixelify-sans": "5.3.0",
