@@ -4,6 +4,11 @@ import * as Phaser from 'phaser';
 const FAR_X = 100_000;
 
 export interface ScrollArea {
+  /**
+   * Separa as câmeras: a principal deixa de desenhar o conteúdo rolável e a da área deixa de
+   * desenhar o resto da tela. Chame depois de montar a tela inteira.
+   */
+  isolate(): void;
   destroy(): void;
 }
 
@@ -60,6 +65,11 @@ export function addScrollArea(
   }
 
   return {
+    isolate() {
+      scene.cameras.main.ignore(container);
+      const others = scene.children.list.filter((o) => o !== container);
+      cam.ignore(others);
+    },
     destroy() {
       scene.input.off('wheel', onWheel);
       scene.input.off('pointerdown', onDown);

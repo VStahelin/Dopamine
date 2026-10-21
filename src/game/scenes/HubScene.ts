@@ -162,6 +162,7 @@ export class HubScene extends Phaser.Scene {
     }
     out.push(...this.tabBar(g, w, h, colX, colW));
     this.root = this.add.container(0, 0, out);
+    this.scroll?.isolate();
   }
 
   /** Retrato do organismo, indivíduo, saúde por setor e ATP. */

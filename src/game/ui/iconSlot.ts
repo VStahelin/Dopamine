@@ -28,63 +28,87 @@ export function slotSize(scale: number): number {
 }
 
 /**
+ * Textura da moldura de um tipo e escala, desenhada uma vez e reaproveitada por todos os espaços.
+ * Um Graphics por espaço era redesenhado a cada quadro e travava listas grandes (Arsenal).
+ */
+function frameTexture(scene: Phaser.Scene, kind: FrameKind, scale: number): string {
+  const key = `frame-${kind}-${scale}`;
+  if (!scene.textures.exists(key)) {
+    const size = slotSize(scale);
+    const g = scene.make.graphics({}, false);
+    drawFrame(g, 0, 0, size, frameLine(scale), kind);
+    g.generateTexture(key, size, size);
+    g.destroy();
+  }
+  return key;
+}
+
+/**
  * Espaço de ícone com moldura do tipo (prancheta "Crônico: ícones, dano e paisagem"): arma,
  * pronta para evoluir, evoluída, reagente, efeito, efeito negativo, livre e bloqueado. Fica
- * pronto para ser atualizado a cada quadro: só redesenha quando o conteúdo muda.
+ * pronto para ser atualizado a cada quadro: só troca as texturas quando o conteúdo muda.
  */
 export class IconSlot {
   readonly size: number;
   readonly objects: Phaser.GameObjects.GameObject[];
-  private readonly g: Phaser.GameObjects.Graphics;
+  private readonly frame: Phaser.GameObjects.Image;
   private readonly image: Phaser.GameObjects.Image;
-  private readonly text: Phaser.GameObjects.Text;
+  /** Rótulo do canto; só existe em espaços que mostram nível (texto custa uma textura). */
+  private readonly text?: Phaser.GameObjects.Text;
   private current = '';
 
   constructor(
-    scene: Phaser.Scene,
+    private readonly scene: Phaser.Scene,
     readonly x: number,
     readonly y: number,
     readonly scale: number,
+    withLabel = true,
   ) {
     this.size = slotSize(scale);
     const inset = frameLine(scale) * 2;
-    this.g = scene.add.graphics();
+    this.frame = scene.add.image(x, y, '__DEFAULT').setOrigin(0).setVisible(false);
     this.image = scene.add
       .image(x + inset, y + inset, '__DEFAULT')
       .setOrigin(0)
       .setScale(scale)
       .setVisible(false);
-    this.text = scene.add
-      .text(x + this.size + 3, y + this.size + 4, '', {
-        ...labelText(scale >= 2 ? 9 : 8),
-        stroke: PALETTE_CSS.ink,
-        strokeThickness: 2,
-      })
-      .setOrigin(1, 1);
-    this.objects = [this.g, this.image, this.text];
+    this.objects = [this.frame, this.image];
+    if (withLabel) {
+      this.text = scene.add
+        .text(x + this.size + 3, y + this.size + 4, '', {
+          ...labelText(scale >= 2 ? 9 : 8),
+          stroke: PALETTE_CSS.ink,
+          strokeThickness: 2,
+        })
+        .setOrigin(1, 1);
+      this.objects.push(this.text);
+    }
   }
 
   set(content: SlotContent | undefined): this {
     const key = content ? JSON.stringify(content) : '';
     if (key === this.current) return this;
     this.current = key;
-    this.g.clear();
+    this.frame.setVisible(false);
     this.image.setVisible(false);
-    this.text.setText('');
+    this.text?.setText('');
     if (!content) return this;
 
-    drawFrame(this.g, this.x, this.y, this.size, frameLine(this.scale), content.frame);
+    this.frame.setTexture(frameTexture(this.scene, content.frame, this.scale)).setVisible(true);
     const icon = content.frame === 'locked' ? LOCKED_ICON : content.icon;
     if (icon) this.image.setTexture(icon).setVisible(true);
     this.text
-      .setText(content.label ?? '')
+      ?.setText(content.label ?? '')
       .setColor(content.gold ? PALETTE_CSS.goldIcon : PALETTE_CSS.white);
     return this;
   }
 
   setVisible(visible: boolean): this {
     for (const o of this.objects) (o as Phaser.GameObjects.Image).setVisible(visible);
-    if (visible && !this.current) this.image.setVisible(false);
+    if (visible && !this.current) {
+      this.frame.setVisible(false);
+      this.image.setVisible(false);
+    }
     return this;
   }
 }
@@ -195,5 +219,5 @@ export function addIconSlot(
   scale: number,
   content: SlotContent,
 ): IconSlot {
-  return new IconSlot(scene, x, y, scale).set(content);
+  return new IconSlot(scene, x, y, scale, Boolean(content.label)).set(content);
 }
