@@ -74,6 +74,10 @@ Componentes:
 - **Moeda:** ícone pixelado dourado mais o número com sombra dura.
 - **Slot de agente:** moldura de madeira e fundo creme #F2D9A8.
 
+## Menu principal
+
+O protótipo do hub está no canvas, na prancheta "Menu principal (protótipo)", na mesma base de 390×844 e com os mesmos componentes: barra de status, faixa de objetivo, palco com o organismo pixelado, linha de ação com o botão JOGAR em madeira e barra de 5 abas. As regras do menu estão em [menu.md](menu.md).
+
 ## Regras e decisões em aberto
 
 Regras da v0:
