@@ -26,3 +26,4 @@ As decisões de design tomadas antes deste registro continuam marcadas como "dec
 | [0018](0018-jogo-no-pages-servidor-futuro.md) | O jogo roda só no GitHub Pages; o servidor fica para contas e ranking | técnica | aceita |
 | [0019](0019-sprites-numa-pasta.md) | Todos os sprites como dados numa pasta única | técnica | substituída em parte por 0020 |
 | [0020](0020-sprites-em-png-por-tamanho.md) | Sprites em PNG, gerados por tamanho a partir dos dados | técnica | proposta |
+| [0021](0021-meta-progressao.md) | Meta-progressão: Laboratório em árvore, desbloqueios com ATP e baú das estrelas | design | proposta |

@@ -2,7 +2,7 @@
 
 Como o código do Dopamina Blaster é organizado. Este arquivo descreve **o estado atual**; o porquê de cada escolha fica nas [decisões](decisoes/README.md), ligadas em cada seção. Ao mudar algo aqui, registre a decisão primeiro.
 
-> **Estado:** fases 0 a 2.5 implementadas; fases 2.6 (sprites numa pasta e ícones do canvas) e 2.7 (campo crônico com a cara do canvas, ATP na run) implementadas, falta validar no celular.
+> **Estado:** fases 0 a 2.5 implementadas; fases 2.6, 2.7 e 3 (meta-progressão) implementadas, falta validar no celular.
 
 ## Stack
 
@@ -59,7 +59,7 @@ As telas de interface usam [uiLayout.ts](../src/game/ui/uiLayout.ts): zoom intei
 
 Fora dessas camadas:
 
-- **`tools/sim/`**: simulador sem tela que roda milhares de runs usando o `core` e gera as curvas de progressão (fase 3).
+- **`tools/sim/`**: `npm run sim` roda o simulador de `src/core/sim/` (um robô joga runs seguidas e compra entre elas) e mostra a curva de progressão da meta.
 - **`tests/`** ou arquivos `*.test.ts` ao lado do código: testes do `core`.
 
 ## Estrutura de pastas
@@ -75,17 +75,18 @@ src/
     run/         campo crônico: agente, inimigos, armas, XP, level up
     idle/        campo longo: produção, offline (fase 4)
     organism/    setores de saúde, reset (fase 5)
-    meta/        moeda, upgrades, desbloqueios (fase 3)
+    meta/        Laboratório, desbloqueios, estrelas e baú; regras da run com o progresso (fase 3)
+    sim/         robô e simulador de progressão (npm run sim)
     save/        formato do save, migrações e recordes
   game/
     scenes/      cenas do Phaser
     render/      paleta, zoom, spriteArt.ts (desenho dos sprites a partir dos dados), fxArt.ts (efeitos das armas em pixels de arte) e textures.ts (gerador único de texturas)
     input/       teclado e joystick virtual
     ui/          tema (fontes, textos), botões, layout das telas, textos dos upgrades, espaços de ícone, conteúdo da pausa, números de dano, rolagem
-    storage/     save no IndexedDB
+    storage/     save no IndexedDB e backup (código e arquivo)
   main.ts        ponto de entrada
 public/          favicon; manifest do PWA e fontes na fase 6
-tools/sim/       simulador (fase 3)
+tools/sim/       simulador de progressão
 tools/sprites/   gerador dos PNGs de sprite
 .github/         workflow de CI (verificações, sem deploy)
 docs/            design, roadmap, arquitetura e decisões
@@ -120,6 +121,7 @@ Precisa de Node 20.19 ou mais novo.
 | `npm run build` | Checa os tipos e gera o build em `dist/` |
 | `npm run preview` | Serve o build de `dist/` localmente, para testar a versão final |
 | `npm run release` | Check completo e publicação local atômica em `releases/` ([atualizacoes.md](atualizacoes.md)) |
+| `npm run sim` | Simulador de progressão: runs seguidas com um robô, compras entre elas, primeiro desbloqueio e paredes de grind (`-- --runs 30 --max 360`) |
 | `npm run sprites:build` | Gera os PNGs de `public/sprites/` a partir dos dados de `src/assets/sprites/` |
 | `npm run sprites:check` | Confere se os PNGs estão iguais aos dados (faz parte do `npm run check`) |
 | `npm run serve` | Serve a build publicada localmente, em HTTPS, para testar atualizações no PC |

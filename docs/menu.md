@@ -235,7 +235,7 @@ O hub cresce junto com o roadmap. Cada fase acende uma parte; o que ainda não e
 
 ## O que falta decidir
 
-- As estrelas são metas de tempo (5, 10, 15 min), de decompostas, ou de nível?
+- [x] As estrelas são metas de tempo (5, 10, 15 min), de decompostas, ou de nível? → tempo, e cada estrela nova enche o baú com ATP ([decisão 0021](decisoes/0021-meta-progressao.md)).
 - Os nomes Caso, Laboratório, Compêndio e Arsenal funcionam, ou prefere nomes diretos (Campanha, Upgrades, Bestiário, Armas)?
 - A tela de título continua existindo, ou o jogo abre direto no hub?
 - Conquistas entram, e em que fase?

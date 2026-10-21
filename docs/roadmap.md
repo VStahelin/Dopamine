@@ -21,7 +21,7 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | 2.5 | Jogo offline e atualizações controladas | O jogo roda sem internet e só muda de versão quando o jogador aceita? | 2 | concluída |
 | 2.6 | Sprites e ícones da identidade visual | Todo sprite está numa pasta e cada arma, modificador e especial aparece com o ícone do canvas? | 2 | implementada, falta validar no celular |
 | 2.7 | Campo crônico com a cara do canvas | A run, do chão aos efeitos, parece com as pranchetas do modo crônico? | 2.6 | implementada, falta validar no celular |
-| 3 | Meta-progressão e save | Dá vontade de jogar mais uma run? | 2, 2.5, 2.6, 2.7 | não iniciada |
+| 3 | Meta-progressão e save | Dá vontade de jogar mais uma run? | 2, 2.5, 2.6, 2.7 | implementada, falta validar no celular |
 | 4 | Campo longo (idle) | O idle ajuda a run sem substituí-la? | 3 | não iniciada |
 | 5 | Organismo | Cuidar do corpo muda o jeito de jogar? | 3, 4 | não iniciada |
 | 6 | Arte, polimento e lançamento | Dá para mandar o link para os amigos? | 1 a 5 | não iniciada |
@@ -191,12 +191,15 @@ Fica para quando a mecânica existir: efeitos temporários de inimigos e itens (
 
 Fazer cada run deixar algo para a próxima.
 
-- [ ] Moeda (ATP) ganha na run.
-- [ ] Preencher Laboratório (árvore da run), moeda no hub e desbloqueios em Agentes e Arsenal ([menu.md](menu.md)).
-- [ ] Árvore de upgrades da run, com custo exponencial e teto de poder permanente.
-- [ ] Desbloqueio de agentes e armas com ATP.
-- [ ] Save no IndexedDB, com backup exportável por arquivo ou código.
-- [ ] Simulador sem tela que roda milhares de runs com o código de `src/core/` e gera as curvas de progressão.
+Decisões: [0021](decisoes/0021-meta-progressao.md). Tudo em `src/config/meta.json`.
+
+- [x] Moeda (ATP) ganha na run (fase 2.7) e guardada no save.
+- [x] Laboratório em árvore: raiz e seis caminhos (Força, Química, Corpo, Coleta, Controle, Especial), com painel do nó, custo exponencial (×1,15 por nível) e teto de poder permanente conferido ao carregar.
+- [x] Desbloqueio de agentes (Lipase, Insulina) e armas (Poça, Reação em Cadeia, Raio UV) com ATP; começa com a Dopamina e 4 armas; arma bloqueada não aparece no level up.
+- [x] Estrelas do caso (5, 10 e 15 min) enchem o baú do Hub com ATP; selos "!" nas abas quando dá para comprar algo.
+- [x] Save no IndexedDB com o progresso da meta, e backup nas Opções: exportar copia um código e baixa um arquivo, importar aceita os dois.
+- [x] Simulador sem tela (`npm run sim`): um robô joga runs seguidas com o código de `src/core/`, compra entre elas e mostra a curva. No perfil casual (runs de até 6 min), o primeiro desbloqueio chega na run 2 e nenhuma compra passa de 3 runs médias.
+- [ ] Validar no celular e jogar algumas runs para ajustar custos e a queda de ATP.
 
 **Critério de saída:** o primeiro desbloqueio chega em 2 ou 3 runs, e o simulador não mostra nenhuma parede de grind (upgrade custando mais que 3 runs médias).
 
