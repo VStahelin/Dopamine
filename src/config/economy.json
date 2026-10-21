@@ -34,6 +34,7 @@
     "individualDifficultyFactor": 1.25
   },
   "meta": {
-    "permanentPowerCap": 0.5
+    "permanentPowerCap": 0.5,
+    "caseStarMinutes": [5, 10, 15]
   }
 }

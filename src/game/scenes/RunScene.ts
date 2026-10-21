@@ -108,7 +108,7 @@ export class RunScene extends Phaser.Scene {
 
   exitToMenu(): void {
     this.stopOverlays();
-    this.scene.start(SCENES.menu);
+    this.scene.start(SCENES.hub);
   }
 
   private stopOverlays(): void {

@@ -12,7 +12,7 @@ export class BootScene extends Phaser.Scene {
     createTextures(this);
     void loadSave().then((save) => {
       initSave(this, save);
-      this.scene.start(SCENES.menu);
+      this.scene.start(SCENES.title);
     });
   }
 }

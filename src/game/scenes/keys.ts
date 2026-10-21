@@ -1,6 +1,8 @@
 export const SCENES = {
   boot: 'boot',
-  menu: 'menu',
+  title: 'title',
+  hub: 'hub',
+  placeholder: 'placeholder',
   records: 'records',
   options: 'options',
   run: 'run',

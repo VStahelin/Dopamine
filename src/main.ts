@@ -4,11 +4,14 @@ import { BootScene } from './game/scenes/BootScene';
 import { GameOverScene } from './game/scenes/GameOverScene';
 import { HudScene } from './game/scenes/HudScene';
 import { LevelUpScene } from './game/scenes/LevelUpScene';
-import { MenuScene } from './game/scenes/MenuScene';
+import { HubScene } from './game/scenes/HubScene';
+import { PlaceholderScene } from './game/scenes/PlaceholderScene';
+import { TitleScene } from './game/scenes/TitleScene';
 import { OptionsScene } from './game/scenes/OptionsScene';
 import { PauseScene } from './game/scenes/PauseScene';
 import { RecordsScene } from './game/scenes/RecordsScene';
 import { RunScene } from './game/scenes/RunScene';
+import './game/ui/textFix';
 import { loadFonts } from './game/ui/theme';
 
 await loadFonts();
@@ -44,7 +47,9 @@ const game = new Phaser.Game({
   // A ordem define as camadas: cenas mais abaixo na lista são desenhadas por cima.
   scene: [
     BootScene,
-    MenuScene,
+    TitleScene,
+    HubScene,
+    PlaceholderScene,
     RecordsScene,
     OptionsScene,
     RunScene,

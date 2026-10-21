@@ -15,7 +15,7 @@ export class RecordsScene extends Phaser.Scene {
   }
 
   create(): void {
-    const back = () => this.scene.start(SCENES.menu);
+    const back = () => this.scene.start(SCENES.hub);
     this.input.keyboard?.on('keydown-ESC', back);
 
     setupUiLayout(this, (w, h) => {

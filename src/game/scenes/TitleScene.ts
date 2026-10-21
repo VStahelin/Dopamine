@@ -6,12 +6,12 @@ import { impactText, labelText } from '../ui/theme';
 import { setupUiLayout } from '../ui/uiLayout';
 import { SCENES } from './keys';
 
-/** Tela de título: logo, Jogar, Recordes e Opções. */
-export class MenuScene extends Phaser.Scene {
+/** Tela de título: logo e um botão que leva ao hub. */
+export class TitleScene extends Phaser.Scene {
   private root?: Phaser.GameObjects.Container;
 
   constructor() {
-    super(SCENES.menu);
+    super(SCENES.title);
   }
 
   create(): void {
@@ -20,8 +20,8 @@ export class MenuScene extends Phaser.Scene {
 
     setupUiLayout(this, (w, h) => {
       this.root?.destroy();
-      // Logo (140) + 3 botões (140): o bloco todo fica centralizado na vertical.
-      const logoTop = Math.max(16, Math.floor((h - 280) / 2) - 10);
+      // Logo (140) + botão (40): o bloco todo fica centralizado na vertical.
+      const logoTop = Math.max(16, Math.floor((h - 190) / 2) - 10);
       const cx = Math.floor(w / 2);
 
       // Faixa vermelha inclinada atrás de DOPAMINA, como na referência da aba Design.
@@ -40,9 +40,7 @@ export class MenuScene extends Phaser.Scene {
         .setOrigin(0.5);
 
       const { buttons } = addButtonColumn(this, w, logoTop + 140, [
-        { label: 'JOGAR', onClick: () => this.play() },
-        { label: 'RECORDES', onClick: () => this.scene.start(SCENES.records) },
-        { label: 'OPÇÕES', onClick: () => this.scene.start(SCENES.options) },
+        { label: 'COMEÇAR', onClick: () => this.play() },
       ]);
       const version = this.add
         .text(cx, h - 16, 'V0.1 · PROTÓTIPO', labelText(8, PALETTE_CSS.cream))
@@ -53,6 +51,6 @@ export class MenuScene extends Phaser.Scene {
   }
 
   private play(): void {
-    this.scene.start(SCENES.run);
+    this.scene.start(SCENES.hub);
   }
 }

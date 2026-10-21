@@ -2,7 +2,7 @@
 
 Como o código do Dopamina Blaster é organizado. Este arquivo descreve **o estado atual**; o porquê de cada escolha fica nas [decisões](decisoes/README.md), ligadas em cada seção. Ao mudar algo aqui, registre a decisão primeiro.
 
-> **Estado:** fase 1 concluída, fase 1.5 (menu) em andamento. A v0.1 já é jogável: menu, run com inimigos, arma, XP, level up, pausa, fim de run e recordes salvos. As pastas marcadas como "fase N" na estrutura abaixo ainda não existem.
+> **Estado:** fase 1 concluída; fase 1.5 (menu) implementada, falta validar no celular. A v0.1 já é jogável: menu, run com inimigos, arma, XP, level up, pausa, fim de run e recordes salvos. As pastas marcadas como "fase N" na estrutura abaixo ainda não existem.
 
 ## Stack
 
@@ -37,8 +37,10 @@ A regra de dependência é verificada pelo ESLint (`no-restricted-imports` em [e
 
 | Cena | Arquivo | Papel |
 | --- | --- | --- |
-| `boot` | [BootScene.ts](../src/game/scenes/BootScene.ts) | Gera as texturas, carrega o save e abre o menu |
-| `menu` | [MenuScene.ts](../src/game/scenes/MenuScene.ts) | Título, Jogar, Recordes e Opções |
+| `boot` | [BootScene.ts](../src/game/scenes/BootScene.ts) | Gera as texturas, carrega o save e abre o título |
+| `title` | [TitleScene.ts](../src/game/scenes/TitleScene.ts) | Logo e Começar |
+| `hub` | [HubScene.ts](../src/game/scenes/HubScene.ts) | Menu principal ([menu.md](menu.md)): status, caso com estrelas, JOGAR, trilhos e as 5 abas |
+| `placeholder` | [PlaceholderScene.ts](../src/game/scenes/PlaceholderScene.ts) | Telas abertas pelo hub que ainda não têm conteúdo, no formato comum ([sectionView.ts](../src/game/ui/sectionView.ts)) |
 | `records`, `options` | [RecordsScene.ts](../src/game/scenes/RecordsScene.ts), [OptionsScene.ts](../src/game/scenes/OptionsScene.ts) | Recordes salvos; opções (FPS, tela cheia) |
 | `run` | [RunScene.ts](../src/game/scenes/RunScene.ts) | Chama o `stepRun` do `core` em passos fixos e desenha o estado (sprites reaproveitados, números de dano); abre as telas por cima |
 | `hud` | [HudScene.ts](../src/game/scenes/HudScene.ts) | Por cima da run: XP, nível, tempo, interações, decompostas, pausa, joystick e FPS |

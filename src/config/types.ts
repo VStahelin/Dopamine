@@ -247,6 +247,8 @@ export interface EconomyConfig {
   meta: {
     /** Teto da soma de bônus permanentes de dano e vida. */
     permanentPowerCap: number;
+    /** Metas de tempo (minutos) das 3 estrelas de cada caso no hub. */
+    caseStarMinutes: number[];
   };
 }
 

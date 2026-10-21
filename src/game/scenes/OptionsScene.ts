@@ -17,7 +17,7 @@ export class OptionsScene extends Phaser.Scene {
   }
 
   create(): void {
-    this.input.keyboard?.on('keydown-ESC', () => this.scene.start(SCENES.menu));
+    this.input.keyboard?.on('keydown-ESC', () => this.scene.start(SCENES.hub));
     setupUiLayout(this, (w, h) => {
       this.size = { w, h };
       this.build();
@@ -50,7 +50,7 @@ export class OptionsScene extends Phaser.Scene {
         variant: 'secondary',
         onClick: () => this.scale.toggleFullscreen(),
       },
-      { label: 'VOLTAR', onClick: () => this.scene.start(SCENES.menu) },
+      { label: 'VOLTAR', onClick: () => this.scene.start(SCENES.hub) },
     ]);
     this.root = this.add.container(0, 0, [
       this.add.text(w / 2, top, 'OPÇÕES', impactText(24)).setOrigin(0.5, 0),
