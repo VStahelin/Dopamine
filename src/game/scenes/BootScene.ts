@@ -1,5 +1,6 @@
 import * as Phaser from 'phaser';
-import { createPlaceholderTextures } from '../render/textures';
+import { createTextures } from '../render/textures';
+import { initSave, loadSave } from '../storage/saveStore';
 import { SCENES } from './keys';
 
 export class BootScene extends Phaser.Scene {
@@ -8,7 +9,10 @@ export class BootScene extends Phaser.Scene {
   }
 
   create(): void {
-    createPlaceholderTextures(this);
-    this.scene.start(SCENES.run);
+    createTextures(this);
+    void loadSave().then((save) => {
+      initSave(this, save);
+      this.scene.start(SCENES.menu);
+    });
   }
 }

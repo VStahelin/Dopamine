@@ -2,7 +2,7 @@
 
 Como o código do Dopamina Blaster é organizado. Este arquivo descreve **o estado atual**; o porquê de cada escolha fica nas [decisões](decisoes/README.md), ligadas em cada seção. Ao mudar algo aqui, registre a decisão primeiro.
 
-> **Estado:** fase 0 concluída, fase 1 em andamento. Já existem as três camadas, a cena da run com o agente andando (teclado e joystick), testes, lint e o CI. As pastas marcadas como "fase N" na estrutura abaixo ainda não existem.
+> **Estado:** fase 1 em andamento. A v0.1 já é jogável: menu, run com inimigos, arma, XP, level up, pausa, fim de run e recordes salvos. As pastas marcadas como "fase N" na estrutura abaixo ainda não existem.
 
 ## Stack
 
@@ -37,9 +37,23 @@ A regra de dependência é verificada pelo ESLint (`no-restricted-imports` em [e
 
 | Cena | Arquivo | Papel |
 | --- | --- | --- |
-| `boot` | [BootScene.ts](../src/game/scenes/BootScene.ts) | Gera as texturas e abre a run |
-| `run` | [RunScene.ts](../src/game/scenes/RunScene.ts) | Mundo da run, com câmera e zoom inteiro; lê teclado ou joystick e chama o `core` |
-| `hud` | [HudScene.ts](../src/game/scenes/HudScene.ts) | Interface por cima da run, sem zoom: joystick virtual e FPS |
+| `boot` | [BootScene.ts](../src/game/scenes/BootScene.ts) | Gera as texturas, carrega o save e abre o menu |
+| `menu` | [MenuScene.ts](../src/game/scenes/MenuScene.ts) | Título, Jogar, Recordes e Opções |
+| `records`, `options` | [RecordsScene.ts](../src/game/scenes/RecordsScene.ts), [OptionsScene.ts](../src/game/scenes/OptionsScene.ts) | Recordes salvos; opções (FPS, tela cheia) |
+| `run` | [RunScene.ts](../src/game/scenes/RunScene.ts) | Chama o `stepRun` do `core` em passos fixos e desenha o estado (sprites reaproveitados, números de dano); abre as telas por cima |
+| `hud` | [HudScene.ts](../src/game/scenes/HudScene.ts) | Por cima da run: XP, nível, tempo, interações, decompostas, pausa, joystick e FPS |
+| `levelUp`, `pause`, `gameOver` | [LevelUpScene.ts](../src/game/scenes/LevelUpScene.ts), [PauseScene.ts](../src/game/scenes/PauseScene.ts), [GameOverScene.ts](../src/game/scenes/GameOverScene.ts) | Telas por cima da run |
+
+As telas de interface usam [uiLayout.ts](../src/game/ui/uiLayout.ts): zoom inteiro a partir do canto superior esquerdo e layout refeito a cada redimensionamento.
+
+## A run no `core`
+
+- [state.ts](../src/core/run/state.ts): estado da run (agente, inimigos, disparos, gemas, nível) e `createRun(semente)`.
+- [step.ts](../src/core/run/step.ts): `stepRun` avança um passo: movimento, nascimento de inimigos, perseguição, arma, dano, contato e gemas. Usa uma [grade espacial](../src/core/run/spatialGrid.ts) para achar vizinhos.
+- [upgrades.ts](../src/core/run/upgrades.ts): opções de level up e aplicação da escolha.
+- [stats.ts](../src/core/run/stats.ts) e [progression.ts](../src/core/run/progression.ts): atributos com modificadores, arma por nível, XP e dificuldade.
+- [rules.ts](../src/core/run/rules.ts): as regras chegam como parâmetro (`RunRules`), com os JSON como padrão.
+- O `core` registra acontecimentos (`events`) que a cena lê para efeitos, sem o `core` saber de desenho.
 
 Fora dessas camadas:
 
@@ -50,19 +64,21 @@ Fora dessas camadas:
 
 ```
 src/
-  config/        JSON de parâmetros (stats, run, economy, idle, display), types.ts e index.ts
+  config/        JSON de parâmetros (stats, run, enemies, weapons, passives, economy, idle, display), types.ts e index.ts
   core/
     math/        vetores e utilidades
+    random.ts    gerador aleatório com semente
     run/         campo crônico: agente, inimigos, armas, XP, level up
     idle/        campo longo: produção, offline (fase 4)
     organism/    setores de saúde, reset (fase 5)
     meta/        moeda, upgrades, desbloqueios (fase 3)
-    save/        formato do save e migrações (fase 1)
+    save/        formato do save, migrações e recordes
   game/
     scenes/      cenas do Phaser
-    render/      paleta, texturas, zoom e, na fase 1, o gerador de moléculas
+    render/      paleta, texturas, zoom e o gerador de sprites de molécula
     input/       teclado e joystick virtual
-    ui/          telas de level up e menu (fase 1)
+    ui/          tema (fontes, textos), botões, layout das telas, textos dos upgrades
+    storage/     save no IndexedDB
   main.ts        ponto de entrada
 public/          favicon; manifest do PWA e fontes na fase 6
 tools/sim/       simulador (fase 3)
@@ -74,8 +90,8 @@ Os testes ficam ao lado do código, como `*.test.ts`.
 
 ## Princípios
 
-- **Simulação com passo fixo.** O `core` avança em passos de tempo fixos, independentes do FPS, para que a run se comporte igual no PC e no celular e o simulador reproduza os mesmos resultados. *(proposta, decidir na fase 1)*
-- **Aleatoriedade com semente.** O `core` usa um gerador de números aleatórios com semente, nunca `Math.random()` direto, para dar para repetir uma run nos testes. *(proposta, decidir na fase 1)*
+- **Simulação com passo fixo.** O `core` avança em passos de tempo fixos, independentes do FPS, para que a run se comporte igual no PC e no celular e o simulador reproduza os mesmos resultados. ([0012](decisoes/0012-passo-fixo-e-semente.md))
+- **Aleatoriedade com semente.** O `core` usa um gerador de números aleatórios com semente, nunca `Math.random()` direto, para dar para repetir uma run nos testes. O lint barra `Math.random()` no `core` ([0012](decisoes/0012-passo-fixo-e-semente.md)).
 - **Reaproveitamento de objetos.** Inimigos, disparos e gemas saem de pools, sem criar e destruir a cada quadro.
 - **Pixel art em escala inteira.** Escala 1×, 2× ou 3×, sem suavização.
 

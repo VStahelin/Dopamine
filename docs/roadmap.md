@@ -43,25 +43,27 @@ A primeira versão que parece um jogo: abre num menu, entra numa run jogável e 
 
 **Menu**
 
-- [ ] Tela de título com o logo (DOPAMINA / BLASTER) e o fundo do jogo.
-- [ ] Botão Jogar, que leva direto à run.
-- [ ] Recordes: melhor tempo, maior nível e mais inimigos decompostos.
-- [ ] Opções: volume, tela cheia e mostrar FPS.
-- [ ] Save mínimo para guardar recordes e opções entre sessões (começo do save da [decisão 0005](decisoes/0005-save-local-indexeddb.md)).
-- [ ] Pausa na run, com Continuar e Voltar ao menu.
+- [x] Tela de título com o logo (DOPAMINA / BLASTER) e o fundo do jogo.
+- [x] Botão Jogar, que leva direto à run.
+- [x] Recordes: melhor tempo, maior nível e mais inimigos decompostos.
+- [x] Opções: tela cheia e mostrar FPS. O volume entra quando o jogo tiver som (fase 6).
+- [x] Save mínimo para guardar recordes e opções entre sessões (começo do save da [decisão 0005](decisoes/0005-save-local-indexeddb.md)).
+- [x] Pausa na run, com Continuar e Voltar ao menu.
 
 **Run**
 
-- [ ] Mapa aberto visto de cima, câmera seguindo o agente.
-- [ ] Um agente jogável, só com movimento.
-- [ ] Uma arma: Radical Livre (mira automática).
-- [ ] Três inimigos simples que perseguem o agente, sem cascata.
-- [ ] Vida como interações: cada inimigo que encosta consome interações; quando acabam, a run termina.
-- [ ] Gemas de XP, level up com a fórmula da aba Economia e tela com 3 opções (upgrades da única arma e 2 ou 3 passivos).
-- [ ] Dificuldade D(t) da aba Economia controlando vida e quantidade de inimigos.
-- [ ] Reaproveitamento de objetos (inimigos, disparos e gemas) e limite de gemas na tela.
-- [ ] Gerador de sprite de molécula: átomos, ligações e escala, como na aba Design.
-- [ ] Tela de fim de run com tempo, nível e inimigos decompostos, avisando se bateu recorde, com Jogar de novo e Menu.
+- [x] Mapa aberto visto de cima, câmera seguindo o agente.
+- [x] Um agente jogável, só com movimento: a Dopamina.
+- [x] Uma arma: Radical Livre (mira automática).
+- [x] Três inimigos simples que perseguem o agente, sem cascata: glicose, ácido graxo e triglicerídeo.
+- [x] Vida como interações: cada inimigo que encosta consome interações; quando acabam, a run termina.
+- [x] Gemas de XP, level up com a fórmula da aba Economia e tela com 3 opções (upgrades da única arma e 2 ou 3 passivos).
+- [x] Dificuldade D(t) da aba Economia controlando vida e quantidade de inimigos.
+- [x] Reaproveitamento de objetos (inimigos, disparos e gemas) e limite de gemas na tela.
+- [x] Gerador de sprite de molécula: átomos, ligações e escala, como na aba Design.
+- [x] Tela de fim de run com tempo, nível e inimigos decompostos, avisando se bateu recorde, com Jogar de novo e Menu.
+
+- [ ] Jogar e ajustar os números até a run de 10 minutos ficar divertida (os valores estão nos JSON de `src/config/`).
 
 **Critério de saída:** o ciclo menu → run → fim → menu funciona no PC e no celular, e uma run de 10 minutos é jogada até o fim por vontade própria, a 60 FPS num celular intermediário (testar no Safari do iPhone).
 
@@ -149,8 +151,8 @@ Perguntas em aberto das outras abas que precisam de resposta antes da fase indic
 
 - [ ] **Fase 1:** tamanho base do pixel? Em aberto, tendência a um pixel mais detalhado; 16 px provisório ([0009](decisoes/0009-grade-16px-zoom-inteiro.md)).
 - [x] **Fase 0:** orientação no celular para a run (vertical, horizontal ou as duas)? → as duas ([0010](decisoes/0010-orientacao-livre.md), proposta)
-- [ ] **Fase 1:** quantas interações o agente tem no início, e existe forma de recuperar na run?
-- [ ] **Fase 1:** qual agente e quais três inimigos entram no protótipo?
+- [x] **Fase 1:** quantas interações o agente tem no início, e existe forma de recuperar na run? → 100 (aba Parâmetros); recupera pelo modificador Interações e pela opção "Nova dose" quando não sobra upgrade.
+- [x] **Fase 1:** qual agente e quais três inimigos entram no protótipo? → Dopamina; glicose, ácido graxo e triglicerídeo.
 - [ ] **Fase 2:** a arma é do agente ou do jogador? Quantas armas e qual nível máximo por run?
 - [ ] **Fase 2:** quais moléculas fortes geram quais fragmentos na cascata?
 - [ ] **Fase 2:** um agente por run, ou dá para trocar durante a run?
