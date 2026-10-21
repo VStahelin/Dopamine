@@ -97,6 +97,8 @@ function availableWeapons(state: RunState): UpgradeChoice[] {
     const owned = new Set(state.weapons.map((w) => w.id));
     for (const id of Object.keys(weapons) as WeaponId[]) {
       if (weapons[id].source !== 'pool' || owned.has(id)) continue;
+      // Armas ainda não desbloqueadas no menu não aparecem.
+      if (state.rules.unlockedWeapons && !state.rules.unlockedWeapons.includes(id)) continue;
       // Uma arma evoluída ocupa o lugar da original: a original não volta.
       if (state.weapons.some((w) => weapons[id].evolution?.into === w.id)) continue;
       if (state.banished.includes(`weapon:${id}`)) continue;

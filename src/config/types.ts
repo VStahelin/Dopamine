@@ -371,3 +371,30 @@ export interface DisplayConfig {
   /** Escalas das molduras dos espaços de ícone geradas como PNG. */
   frameScales: number[];
 }
+
+/** Nó da árvore do Laboratório: um atributo que sobe por nível, comprado com ATP (meta.json). */
+export interface LabNode {
+  /** Atributo de stats.json; os do especial vêm como `special.<chave>`. */
+  stat: string;
+  /** Quanto cada nível soma ao valor base do atributo. */
+  perLevel: number;
+  maxLevel: number;
+  /** Custo do primeiro nível; os seguintes custam baseCost × runCostRate^nível (economy.json). */
+  baseCost: number;
+  /** Posição na árvore: coluna (fracionária no nó raiz) e linha. */
+  col: number;
+  row: number;
+  /** Nós que precisam ter pelo menos um nível antes deste. */
+  requires: string[];
+}
+
+/** Meta-progressão (aba Economia, docs/menu.md): o que começa liberado, desbloqueios, estrelas. */
+export interface MetaConfig {
+  /** Agentes e armas do pool liberados num save novo. */
+  start: { agents: string[]; weapons: string[] };
+  /** ATP para desbloquear cada agente e arma que não começa liberado. */
+  unlockCost: { agents: Record<string, number>; weapons: Record<string, number> };
+  /** ATP do baú por estrela do caso, na ordem das metas de `caseStarMinutes`. */
+  starRewards: number[];
+  lab: { columns: string[]; nodes: Record<string, LabNode> };
+}

@@ -34,6 +34,8 @@ export interface RunRules {
   passives: Record<PassiveId, PassiveDef>;
   rarities: RarityConfig;
   agents: Record<AgentId, AgentDef>;
+  /** Armas do pool liberadas na meta-progressão; sem a lista, todas. */
+  unlockedWeapons?: readonly WeaponId[];
 }
 
 export const DEFAULT_RULES: RunRules = {

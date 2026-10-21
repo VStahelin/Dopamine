@@ -19,7 +19,8 @@
     "release": "node tools/release/release.mjs",
     "serve": "node tools/serve/serve.mjs",
     "sprites:build": "node tools/sprites/build.mjs",
-    "sprites:check": "node tools/sprites/build.mjs --check"
+    "sprites:check": "node tools/sprites/build.mjs --check",
+    "sim": "node tools/sim/sim.mjs"
   },
   "dependencies": {
     "@fontsource/pixelify-sans": "5.3.0",

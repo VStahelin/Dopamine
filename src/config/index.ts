@@ -10,6 +10,7 @@ import displayJson from './display.json';
 import economyJson from './economy.json';
 import enemiesJson from './enemies.json';
 import idleJson from './idle.json';
+import metaJson from './meta.json';
 import passivesJson from './passives.json';
 import raritiesJson from './rarities.json';
 import runJson from './run.json';
@@ -24,6 +25,7 @@ import {
   type EconomyConfig,
   type EnemyDef,
   type IdleConfig,
+  type MetaConfig,
   type MoleculeType,
   type PassiveDef,
   type RarityConfig,
@@ -195,3 +197,61 @@ for (const [id, def] of Object.entries(AGENTS)) {
     throw new Error(`Configuração inválida em agents.json ${id}.action: a arma não é de agente`);
   }
 }
+
+/** Confere meta.json: ids que existem, atributos do Laboratório e os tetos permanentes. */
+function loadMeta(): MetaConfig {
+  const meta: MetaConfig = metaJson;
+  for (const id of meta.start.agents) exists(id, agentsJson, 'meta.json start.agents');
+  for (const id of meta.start.weapons) exists(id, weaponsJson, 'meta.json start.weapons');
+  for (const id of Object.keys(meta.unlockCost.agents))
+    exists(id, agentsJson, 'meta.json unlockCost.agents');
+  for (const id of Object.keys(meta.unlockCost.weapons))
+    exists(id, weaponsJson, 'meta.json unlockCost.weapons');
+  for (const id of Object.keys(AGENTS)) {
+    if (!meta.start.agents.includes(id) && !(id in meta.unlockCost.agents)) {
+      throw new Error(`Configuração inválida em meta.json: agente "${id}" sem início nem custo`);
+    }
+  }
+  for (const [id, w] of Object.entries(WEAPONS)) {
+    if (w.source !== 'pool') continue;
+    if (!meta.start.weapons.includes(id) && !(id in meta.unlockCost.weapons)) {
+      throw new Error(`Configuração inválida em meta.json: arma "${id}" sem início nem custo`);
+    }
+  }
+  if (meta.starRewards.length !== ECONOMY.meta.caseStarMinutes.length) {
+    throw new Error('Configuração inválida em meta.json starRewards: uma recompensa por estrela');
+  }
+  let power = 0;
+  for (const [id, node] of Object.entries(meta.lab.nodes)) {
+    const where = `meta.json lab.nodes.${id}`;
+    for (const r of node.requires) exists(r, meta.lab.nodes, `${where}.requires`);
+    const [group, key] = node.stat.startsWith('special.')
+      ? ['special', node.stat.slice('special.'.length)]
+      : [
+          (Object.keys(STATS) as (keyof StatsConfig)[]).find(
+            (g) => g !== 'special' && node.stat in STATS[g],
+          ),
+          node.stat,
+        ];
+    const stat = group ? STATS[group as keyof StatsConfig][key] : undefined;
+    if (!stat) throw new Error(`Configuração inválida em ${where}.stat: "${node.stat}" não existe`);
+    const total = node.perLevel * node.maxLevel;
+    if (
+      Math.abs(total) > Math.abs(stat.metaCap) + 1e-9 ||
+      Math.sign(total) !== Math.sign(stat.metaCap)
+    ) {
+      throw new Error(
+        `Configuração inválida em ${where}: soma ${total} passa do metaCap ${stat.metaCap}`,
+      );
+    }
+    // Teto de poder permanente: dano e interações somados, em fração da base.
+    if (node.stat === 'damage') power += total / stat.base;
+    if (node.stat === 'maxInteractions') power += total / stat.base;
+  }
+  if (power > ECONOMY.meta.permanentPowerCap + 1e-9) {
+    throw new Error(`Configuração inválida em meta.json: poder permanente ${power} passa do teto`);
+  }
+  return meta;
+}
+
+export const META: MetaConfig = loadMeta();

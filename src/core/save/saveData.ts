@@ -1,4 +1,5 @@
 import type { RunResult } from '../run/state';
+import { defaultProgress, type MetaProgress } from '../meta/progress';
 
 /**
  * Formato do save (decisão 0005). Na v0.1 guarda só recordes e opções; a fase 3 soma moeda e
@@ -27,8 +28,10 @@ export interface SaveData {
   selectedAgent: string;
   /** Moléculas já vistas em alguma run, para o Compêndio. */
   seen: string[];
-  /** ATP guardado, ganho nas runs (gastar entra na fase 3). */
+  /** ATP guardado, ganho nas runs e gasto no Laboratório e nos desbloqueios. */
   atp: number;
+  /** Laboratório, desbloqueios e estrelas do caso (fase 3). */
+  meta: MetaProgress;
 }
 
 export type RecordKind = 'time' | 'level' | 'kills';
@@ -41,6 +44,7 @@ export function defaultSave(options: Options): SaveData {
     selectedAgent: 'dopamine',
     seen: [],
     atp: 0,
+    meta: defaultProgress(),
   };
 }
 
@@ -58,6 +62,7 @@ export function migrateSave(raw: unknown, defaults: Options): SaveData {
     selectedAgent: unknown;
     seen: unknown;
     atp: unknown;
+    meta: unknown;
   }>;
   const r = data.records ?? {};
   const o = data.options ?? {};
@@ -79,6 +84,7 @@ export function migrateSave(raw: unknown, defaults: Options): SaveData {
     selectedAgent: typeof data.selectedAgent === 'string' ? data.selectedAgent : base.selectedAgent,
     seen: Array.isArray(data.seen) ? data.seen.filter((k) => typeof k === 'string') : [],
     atp: num(data.atp, 0),
+    meta: migrateProgress(data.meta),
   };
 }
 
@@ -105,5 +111,28 @@ export function recordRun(
       atp: save.atp + result.atp,
     },
     newRecords,
+  };
+}
+
+const strings = (v: unknown): string[] | undefined =>
+  Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : undefined;
+
+/** Progresso da meta lido de um save; o que faltar volta ao começo (só os liberados no início). */
+function migrateProgress(raw: unknown): MetaProgress {
+  const base = defaultProgress();
+  if (typeof raw !== 'object' || raw === null) return base;
+  const m = raw as Partial<Record<keyof MetaProgress, unknown>>;
+  const lab: Record<string, number> = {};
+  if (typeof m.lab === 'object' && m.lab !== null) {
+    for (const [id, level] of Object.entries(m.lab)) {
+      if (typeof level === 'number' && level > 0) lab[id] = Math.floor(level);
+    }
+  }
+  return {
+    lab,
+    agents: [...new Set([...base.agents, ...(strings(m.agents) ?? [])])],
+    weapons: [...new Set([...base.weapons, ...(strings(m.weapons) ?? [])])],
+    stars: Math.min(3, num(m.stars, 0)),
+    chest: num(m.chest, 0),
   };
 }

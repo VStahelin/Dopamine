@@ -1,0 +1,337 @@
+{
+  "start": {
+    "agents": ["dopamine"],
+    "weapons": ["radical", "acidJet", "electronCloud", "catalyst"]
+  },
+  "unlockCost": {
+    "agents": { "lipase": 600, "insulin": 900 },
+    "weapons": { "solventPool": 250, "chainReaction": 350, "uvRay": 450 }
+  },
+  "starRewards": [40, 80, 160],
+  "lab": {
+    "columns": ["FORÇA", "QUÍMICA", "CORPO", "COLETA", "CONTROLE", "ESPECIAL"],
+    "nodes": {
+      "interactions": {
+        "stat": "maxInteractions",
+        "perLevel": 4,
+        "maxLevel": 5,
+        "baseCost": 15,
+        "col": 2.5,
+        "row": 0,
+        "requires": []
+      },
+
+      "damage": {
+        "stat": "damage",
+        "perLevel": 0.05,
+        "maxLevel": 5,
+        "baseCost": 25,
+        "col": 0,
+        "row": 1,
+        "requires": ["interactions"]
+      },
+      "critChance": {
+        "stat": "critChance",
+        "perLevel": 0.02,
+        "maxLevel": 5,
+        "baseCost": 40,
+        "col": 0,
+        "row": 2,
+        "requires": ["damage"]
+      },
+      "critDamage": {
+        "stat": "critDamage",
+        "perLevel": 0.05,
+        "maxLevel": 5,
+        "baseCost": 60,
+        "col": 0,
+        "row": 3,
+        "requires": ["critChance"]
+      },
+      "eliteDamage": {
+        "stat": "eliteDamage",
+        "perLevel": 0.02,
+        "maxLevel": 5,
+        "baseCost": 90,
+        "col": 0,
+        "row": 4,
+        "requires": ["critDamage"]
+      },
+      "pierce": {
+        "stat": "pierce",
+        "perLevel": 1,
+        "maxLevel": 1,
+        "baseCost": 220,
+        "col": 0,
+        "row": 5,
+        "requires": ["eliteDamage"]
+      },
+      "projectiles": {
+        "stat": "projectiles",
+        "perLevel": 1,
+        "maxLevel": 1,
+        "baseCost": 320,
+        "col": 0,
+        "row": 6,
+        "requires": ["pierce", "duration"]
+      },
+
+      "cooldown": {
+        "stat": "cooldown",
+        "perLevel": -0.01,
+        "maxLevel": 5,
+        "baseCost": 25,
+        "col": 1,
+        "row": 1,
+        "requires": ["interactions"]
+      },
+      "area": {
+        "stat": "area",
+        "perLevel": 0.02,
+        "maxLevel": 5,
+        "baseCost": 40,
+        "col": 1,
+        "row": 2,
+        "requires": ["cooldown"]
+      },
+      "range": {
+        "stat": "range",
+        "perLevel": 0.04,
+        "maxLevel": 5,
+        "baseCost": 60,
+        "col": 1,
+        "row": 3,
+        "requires": ["area"]
+      },
+      "projectileSpeed": {
+        "stat": "projectileSpeed",
+        "perLevel": 0.04,
+        "maxLevel": 5,
+        "baseCost": 90,
+        "col": 1,
+        "row": 4,
+        "requires": ["range"]
+      },
+      "duration": {
+        "stat": "duration",
+        "perLevel": 0.06,
+        "maxLevel": 5,
+        "baseCost": 120,
+        "col": 1,
+        "row": 5,
+        "requires": ["projectileSpeed"]
+      },
+      "effectChance": {
+        "stat": "effectChance",
+        "perLevel": 0.02,
+        "maxLevel": 5,
+        "baseCost": 160,
+        "col": 1,
+        "row": 6,
+        "requires": ["duration"]
+      },
+
+      "armor": {
+        "stat": "armor",
+        "perLevel": 1,
+        "maxLevel": 3,
+        "baseCost": 30,
+        "col": 2,
+        "row": 1,
+        "requires": ["interactions"]
+      },
+      "regen": {
+        "stat": "regenPerSecond",
+        "perLevel": 0.1,
+        "maxLevel": 5,
+        "baseCost": 40,
+        "col": 2,
+        "row": 2,
+        "requires": ["armor"]
+      },
+      "dodge": {
+        "stat": "dodge",
+        "perLevel": 0.02,
+        "maxLevel": 5,
+        "baseCost": 60,
+        "col": 2,
+        "row": 3,
+        "requires": ["regen"]
+      },
+      "tolerance": {
+        "stat": "invulnerabilitySeconds",
+        "perLevel": 0.04,
+        "maxLevel": 5,
+        "baseCost": 90,
+        "col": 2,
+        "row": 4,
+        "requires": ["dodge"]
+      },
+      "lifesteal": {
+        "stat": "lifesteal",
+        "perLevel": 0.006,
+        "maxLevel": 5,
+        "baseCost": 120,
+        "col": 2,
+        "row": 5,
+        "requires": ["tolerance"]
+      },
+      "revives": {
+        "stat": "revives",
+        "perLevel": 1,
+        "maxLevel": 1,
+        "baseCost": 320,
+        "col": 2,
+        "row": 6,
+        "requires": ["lifesteal"]
+      },
+
+      "magnet": {
+        "stat": "magnet",
+        "perLevel": 0.1,
+        "maxLevel": 5,
+        "baseCost": 20,
+        "col": 3,
+        "row": 1,
+        "requires": ["interactions"]
+      },
+      "xpGain": {
+        "stat": "xpGain",
+        "perLevel": 0.03,
+        "maxLevel": 5,
+        "baseCost": 40,
+        "col": 3,
+        "row": 2,
+        "requires": ["magnet"]
+      },
+      "currencyGain": {
+        "stat": "currencyGain",
+        "perLevel": 0.05,
+        "maxLevel": 5,
+        "baseCost": 50,
+        "col": 3,
+        "row": 3,
+        "requires": ["xpGain"]
+      },
+      "moveSpeed": {
+        "stat": "moveSpeed",
+        "perLevel": 0.02,
+        "maxLevel": 5,
+        "baseCost": 80,
+        "col": 3,
+        "row": 4,
+        "requires": ["currencyGain"]
+      },
+      "luck": {
+        "stat": "luck",
+        "perLevel": 0.06,
+        "maxLevel": 5,
+        "baseCost": 110,
+        "col": 3,
+        "row": 5,
+        "requires": ["moveSpeed"]
+      },
+      "curse": {
+        "stat": "curse",
+        "perLevel": 0.1,
+        "maxLevel": 5,
+        "baseCost": 60,
+        "col": 3,
+        "row": 6,
+        "requires": ["luck"]
+      },
+
+      "rerolls": {
+        "stat": "rerolls",
+        "perLevel": 1,
+        "maxLevel": 3,
+        "baseCost": 30,
+        "col": 4,
+        "row": 1,
+        "requires": ["interactions"]
+      },
+      "skips": {
+        "stat": "skips",
+        "perLevel": 1,
+        "maxLevel": 3,
+        "baseCost": 40,
+        "col": 4,
+        "row": 2,
+        "requires": ["rerolls"]
+      },
+      "banishes": {
+        "stat": "banishes",
+        "perLevel": 1,
+        "maxLevel": 3,
+        "baseCost": 60,
+        "col": 4,
+        "row": 3,
+        "requires": ["skips"]
+      },
+      "choices": {
+        "stat": "choices",
+        "perLevel": 1,
+        "maxLevel": 1,
+        "baseCost": 200,
+        "col": 4,
+        "row": 4,
+        "requires": ["banishes"]
+      },
+      "modifierSlots": {
+        "stat": "modifierSlots",
+        "perLevel": 1,
+        "maxLevel": 1,
+        "baseCost": 260,
+        "col": 4,
+        "row": 5,
+        "requires": ["choices"]
+      },
+      "weaponSlots": {
+        "stat": "weaponSlots",
+        "perLevel": 1,
+        "maxLevel": 1,
+        "baseCost": 320,
+        "col": 4,
+        "row": 6,
+        "requires": ["modifierSlots", "charges"]
+      },
+
+      "specialCooldown": {
+        "stat": "special.cooldown",
+        "perLevel": -0.02,
+        "maxLevel": 5,
+        "baseCost": 25,
+        "col": 5,
+        "row": 1,
+        "requires": ["interactions"]
+      },
+      "specialPower": {
+        "stat": "special.power",
+        "perLevel": 0.04,
+        "maxLevel": 5,
+        "baseCost": 45,
+        "col": 5,
+        "row": 2,
+        "requires": ["specialCooldown"]
+      },
+      "specialDuration": {
+        "stat": "special.duration",
+        "perLevel": 0.04,
+        "maxLevel": 5,
+        "baseCost": 70,
+        "col": 5,
+        "row": 3,
+        "requires": ["specialPower"]
+      },
+      "charges": {
+        "stat": "special.charges",
+        "perLevel": 1,
+        "maxLevel": 1,
+        "baseCost": 240,
+        "col": 5,
+        "row": 4,
+        "requires": ["specialDuration"]
+      }
+    }
+  }
+}
