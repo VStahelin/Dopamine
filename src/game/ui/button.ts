@@ -2,7 +2,7 @@ import type * as Phaser from 'phaser';
 import { PALETTE, PALETTE_CSS } from '../render/palette';
 import { impactText } from './theme';
 
-export type ButtonVariant = 'primary' | 'secondary';
+export type ButtonVariant = 'primary' | 'secondary' | 'danger';
 
 export interface ButtonOptions {
   x: number;
@@ -37,6 +37,16 @@ const STYLE = {
     shade: PALETTE.panelShade,
     drop: PALETTE.ink,
     text: PALETTE_CSS.text,
+    textOutline: PALETTE_CSS.ink,
+  },
+  /** Vinho: ações que encerram algo (Desistir). */
+  danger: {
+    border: PALETTE.ink,
+    fill: PALETTE.wine,
+    hi: PALETTE.wineHi,
+    shade: PALETTE.outline,
+    drop: PALETTE.ink,
+    text: PALETTE_CSS.tagText,
     textOutline: PALETTE_CSS.ink,
   },
 } as const;

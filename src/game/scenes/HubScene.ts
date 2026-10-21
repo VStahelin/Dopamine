@@ -4,6 +4,7 @@ import { PALETTE, PALETTE_CSS } from '../render/palette';
 import { AGENT_TEXTURES, ENEMY_TEXTURES, textureKey } from '../render/textures';
 import { getSave, setSave } from '../storage/saveStore';
 import { renderAgents, renderArsenal } from '../ui/catalogViews';
+import { addScrollArea, type ScrollArea } from '../ui/scrollArea';
 import {
   BODY_SIZE,
   drawBody,
@@ -58,6 +59,7 @@ type Obj = Phaser.GameObjects.GameObject;
  */
 export class HubScene extends Phaser.Scene {
   private root?: Phaser.GameObjects.Container;
+  private scroll?: ScrollArea;
   private size = { w: 0, h: 0 };
 
   constructor() {
@@ -129,6 +131,8 @@ export class HubScene extends Phaser.Scene {
 
   private build(): void {
     this.root?.destroy();
+    this.scroll?.destroy();
+    this.scroll = undefined;
     const { w, h } = this.size;
     const colW = Math.min(w, COLUMN_W);
     const colX = Math.floor((w - colW) / 2);
@@ -144,6 +148,15 @@ export class HubScene extends Phaser.Scene {
     if (this.tab === 'case') {
       out.push(...this.caseArea(g, colX, colW, midTop, midBottom - ACTION_H));
       out.push(...this.actionRow(g, w, colX, colW, midBottom - ACTION_H));
+    } else if (this.tab === 'agents' || this.tab === 'arsenal') {
+      // Listas longas rolam dentro da área entre as barras.
+      const content = this.tabContent(w, midTop, midBottom);
+      this.scroll = addScrollArea(this, content, {
+        x: 0,
+        y: midTop,
+        width: w,
+        height: midBottom - midTop,
+      });
     } else {
       out.push(...this.tabContent(w, midTop, midBottom));
     }

@@ -6,7 +6,7 @@ import { recordRun } from '../../core/save/saveData';
 import { createRun, drainEvents, runResult, type RunState } from '../../core/run/state';
 import { stepRun } from '../../core/run/step';
 import { KeyboardMove } from '../input/keyboardMove';
-import { PALETTE, PALETTE_CSS } from '../render/palette';
+import { PALETTE } from '../render/palette';
 import { worldScale } from '../render/pixelScale';
 import {
   AGENT_TEXTURES,
@@ -17,13 +17,20 @@ import {
 } from '../render/textures';
 import { getSave, setSave } from '../storage/saveStore';
 import { updates } from '../update/updateManager';
-import { impactText } from '../ui/theme';
+import { hitKind, hitLabel, NUMBER_STYLES, type NumberKind } from '../ui/damageNumbers';
 import type { HudScene } from './HudScene';
 import { SCENES } from './keys';
 
 /** Passos de simulação no máximo por quadro, para não travar depois de uma pausa longa. */
 const MAX_STEPS_PER_FRAME = 8;
 const DAMAGE_TEXT_POOL = 40;
+/** Golpes contínuos e recuperação são somados e mostrados a cada meio segundo. */
+const SUM_EVERY_SECONDS = 0.5;
+/** Barra de interações embaixo do agente, em unidades do mundo. */
+const LIFE_BAR_WIDTH = 30;
+const LIFE_PIPS = 10;
+/** Os números sobem e somem em cerca de 0,6 s. */
+const FLOATER_SECONDS = 0.6;
 
 interface Floater {
   text: Phaser.GameObjects.Text;
@@ -68,6 +75,11 @@ export class RunScene extends Phaser.Scene {
   /** Especial pedido pelo jogador, entregue ao core no próximo passo. */
   private specialQueued = false;
   private floaters: Floater[] = [];
+  /** Dano contínuo somado por região do campo, e recuperação somada. */
+  private areaSums = new Map<string, { x: number; y: number; amount: number }>();
+  private healSum = 0;
+  private sumTimer = 0;
+  private lifeGfx!: Phaser.GameObjects.Graphics;
   private keyboard!: KeyboardMove;
   /** Pixels de arte por unidade do mundo das texturas em uso (decisão 0009). */
   private detail = 1;
@@ -92,12 +104,16 @@ export class RunScene extends Phaser.Scene {
     this.projectileSprites = [];
     this.gemSprites = [];
     this.floaters = [];
+    this.areaSums.clear();
+    this.healSum = 0;
+    this.sumTimer = 0;
 
     this.detail = 0;
     this.ground = this.add.tileSprite(0, 0, 1, 1, '__DEFAULT').setOrigin(0).setDepth(-10);
     this.agentSprite = this.add.image(0, 0, '__DEFAULT').setDepth(10);
     this.fieldGfx = this.add.graphics().setDepth(1);
     this.fxGfx = this.add.graphics().setDepth(9);
+    this.lifeGfx = this.add.graphics().setDepth(11);
 
     this.cameras.main.startFollow(this.agentSprite, true);
     this.applyZoom();
@@ -152,13 +168,22 @@ export class RunScene extends Phaser.Scene {
     this.scene.restart();
   }
 
+  /** Desistir pela pausa: encerra a run e vai para a tela de fim de run. */
+  giveUp(): void {
+    if (this.run.over) return;
+    this.run.over = true;
+    this.paused = false;
+    this.scene.stop(SCENES.pause);
+    this.scene.stop(SCENES.options);
+  }
+
   exitToMenu(): void {
     this.stopOverlays();
     this.scene.start(SCENES.hub);
   }
 
   private stopOverlays(): void {
-    for (const key of [SCENES.hud, SCENES.levelUp, SCENES.pause, SCENES.gameOver]) {
+    for (const key of [SCENES.hud, SCENES.levelUp, SCENES.pause, SCENES.options, SCENES.gameOver]) {
       this.scene.stop(key);
     }
   }
@@ -230,25 +255,82 @@ export class RunScene extends Phaser.Scene {
     for (const ev of drainEvents(this.run)) {
       const { agent: a } = this.run;
       if (ev.type === 'damage') {
-        this.showFloater(ev.x, ev.y, String(Math.round(ev.amount)), ev.crit ? 'crit' : 'damage');
+        const kind = ev.continuous && !ev.crit && ev.affinity > 0 ? 'area' : hitKind(ev);
+        if (kind === 'area') this.addAreaDamage(ev.x, ev.y, ev.amount);
+        else this.showFloater(ev.x, ev.y, hitLabel(kind, ev.amount), kind);
       }
+      if (ev.type === 'heal') this.healSum += ev.amount;
       if (ev.type === 'dodge') this.showFloater(a.x, a.y - 12, 'ESQUIVA', 'info');
       if (ev.type === 'revive') {
         this.showFloater(a.x, a.y - 14, 'SEGUNDA DOSE!', 'info');
         this.cameras.main.flash(250, 57, 211, 240);
       }
-      if (ev.type === 'hurt') this.cameras.main.shake(90, 0.006);
+      if (ev.type === 'hurt') {
+        this.cameras.main.shake(90, 0.006);
+        this.showFloater(a.x, a.y - 14, `-${Math.round(ev.amount)}`, 'hurt');
+        this.agentSprite.setTint(PALETTE.interaction).setTintMode(Phaser.TintModes.FILL);
+        this.time.delayedCall(90, () => this.agentSprite.clearTint());
+      }
       if (ev.type === 'cone') this.addConeFx(ev);
       if (ev.type === 'beam') this.addBeamFx(ev);
       if (ev.type === 'strike') this.addStrikeFx(ev);
       if (ev.type === 'boss') {
         this.cameras.main.shake(400, 0.01);
-        this.showFloater(a.x, a.y - 30, 'CHEFE!', 'crit');
+        this.showFloater(a.x, a.y - 30, 'CHEFE!', 'hurt');
       }
       if (ev.type === 'special') this.cameras.main.flash(200, 255, 179, 71);
     }
+    this.flushSums(dt);
     this.updateFloaters(dt);
     this.drawFx(dt);
+    this.drawLifeBar();
+  }
+
+  /** Soma o dano contínuo por região (célula de 24 unidades) até o próximo número. */
+  private addAreaDamage(x: number, y: number, amount: number): void {
+    const key = `${Math.round(x / 24)},${Math.round(y / 24)}`;
+    const sum = this.areaSums.get(key);
+    if (sum) sum.amount += amount;
+    else this.areaSums.set(key, { x, y, amount });
+  }
+
+  private flushSums(dt: number): void {
+    this.sumTimer += dt;
+    if (this.sumTimer < SUM_EVERY_SECONDS) return;
+    this.sumTimer = 0;
+    for (const sum of this.areaSums.values()) {
+      this.showFloater(sum.x, sum.y, hitLabel('area', sum.amount), 'area');
+    }
+    this.areaSums.clear();
+    if (this.healSum >= 1) {
+      const { agent } = this.run;
+      this.showFloater(agent.x + 10, agent.y - 10, `+${Math.floor(this.healSum)}`, 'heal');
+      this.healSum -= Math.floor(this.healSum);
+    }
+  }
+
+  /** Interações embaixo do agente: 10 segmentos, o parcial em vermelho claro. */
+  private drawLifeBar(): void {
+    const g = this.lifeGfx.clear();
+    const { agent, stats } = this.run;
+    const px = 1 / this.detail;
+    const w = LIFE_BAR_WIDTH;
+    const h = 3 + 4 * px;
+    const x = Math.round(agent.x - w / 2);
+    const y = Math.round(agent.y + this.agentSprite.displayHeight / 2 + 2);
+    g.fillStyle(PALETTE.ink).fillRect(x, y, w, h);
+    const inner = w - 4 * px;
+    const pip = (inner - (LIFE_PIPS - 1) * px) / LIFE_PIPS;
+    const filled = (agent.interactions / stats.maxInteractions) * LIFE_PIPS;
+    for (let i = 0; i < LIFE_PIPS; i++) {
+      const color =
+        i < Math.floor(filled)
+          ? PALETTE.interaction
+          : i < filled
+            ? PALETTE.interactionLight
+            : PALETTE.panel;
+      g.fillStyle(color).fillRect(x + 2 * px + i * (pip + px), y + 2 * px, pip, 3);
+    }
   }
 
   /** Auras, poças e anéis do pulso, embaixo dos inimigos. */
@@ -322,17 +404,13 @@ export class RunScene extends Phaser.Scene {
     this.ground.setPosition(x0, y0).setSize(w + tile * 3, h + tile * 3);
   }
 
-  /** Texto que sobe e some: dano, crítico (dourado e maior) ou aviso. */
-  private showFloater(x: number, y: number, label: string, kind: 'damage' | 'crit' | 'info'): void {
+  /** Número que sobe e some, com a cor e o tamanho do tipo (docs/ui-cronico.md). */
+  private showFloater(x: number, y: number, label: string, kind: NumberKind): void {
     let floater = this.floaters.find((f) => f.life <= 0);
     if (!floater) {
       if (this.floaters.length < DAMAGE_TEXT_POOL) {
         const text = this.add
-          .text(0, 0, '', {
-            ...impactText(8),
-            stroke: PALETTE_CSS.interaction,
-            resolution: this.zoom,
-          })
+          .text(0, 0, '', { fontStyle: '700', resolution: this.zoom })
           .setOrigin(0.5)
           .setDepth(20);
         floater = { text, life: 0 };
@@ -341,17 +419,14 @@ export class RunScene extends Phaser.Scene {
         floater = this.floaters.reduce((a, b) => (a.life < b.life ? a : b));
       }
     }
-    const color =
-      kind === 'crit'
-        ? PALETTE_CSS.gold
-        : kind === 'info'
-          ? PALETTE_CSS.water
-          : PALETTE_CSS.hydrogen;
-    floater.life = 0.5;
+    const style = NUMBER_STYLES[kind];
+    floater.life = FLOATER_SECONDS;
     floater.text
+      .setFontFamily(style.font)
+      .setFontSize(style.size)
+      .setColor(style.color)
+      .setStroke(style.outline, Math.max(2, Math.round(style.size / 5)))
       .setText(label)
-      .setColor(color)
-      .setScale(kind === 'crit' ? 1.4 : 1)
       .setPosition(x + Phaser.Math.Between(-4, 4), y - 6)
       .setVisible(true)
       .setAlpha(1);
@@ -362,7 +437,7 @@ export class RunScene extends Phaser.Scene {
       if (f.life <= 0) continue;
       f.life -= dt;
       f.text.y -= 20 * dt;
-      f.text.setAlpha(Math.max(0, f.life / 0.5));
+      f.text.setAlpha(Math.min(1, Math.max(0, (f.life / FLOATER_SECONDS) * 2)));
       if (f.life <= 0) f.text.setVisible(false);
     }
   }

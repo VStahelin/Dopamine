@@ -12,7 +12,8 @@ import {
   type WeaponKind,
 } from '../../config';
 import { PALETTE, PALETTE_CSS } from '../render/palette';
-import { AGENT_TEXTURES, ENEMY_TEXTURES, textureKey } from '../render/textures';
+import { AGENT_TEXTURES, ENEMY_TEXTURES, iconTexture, textureKey } from '../render/textures';
+import { addIconSlot, passiveSlot, slotSize, weaponIcon } from './iconSlot';
 import { drawCreamSlot, drawInkBox, drawLock, drawWoodFrame } from './icons';
 import { IDLE_AGENTS, RUN_AGENTS } from './menuContent';
 import { bodyText, impactText, labelText, withShadow } from './theme';
@@ -76,7 +77,7 @@ export function renderAgents(
   for (const id of Object.keys(AGENTS) as AgentId[]) {
     const a = AGENTS[id];
     const on = id === selected;
-    const h = 78;
+    const h = 82;
     if (on) drawWoodFrame(g, left, cy, width, h);
     else drawInkBox(g, left, cy, width, h);
     g.fillStyle(PALETTE.panel).fillRect(left + 6, cy + 6, width - 12, h - 12);
@@ -92,10 +93,14 @@ export function renderAgents(
     }
     const action = WEAPONS[a.action as WeaponId].name;
     out.push(
-      scene.add.text(left + 78, cy + 30, `Ação: ${action}`, bodyText(10, PALETTE_CSS.text)),
+      scene.add
+        .image(left + 78, cy + 28, iconTexture('weapons', a.action as WeaponId))
+        .setOrigin(0),
+      scene.add.text(left + 98, cy + 30, `Ação: ${action}`, bodyText(10, PALETTE_CSS.text)),
+      scene.add.image(left + 78, cy + 46, iconTexture('specials', a.special.kind)).setOrigin(0),
       scene.add.text(
-        left + 78,
-        cy + 44,
+        left + 98,
+        cy + 48,
         `Especial: ${a.special.name}`,
         bodyText(10, PALETTE_CSS.text),
       ),
@@ -104,7 +109,7 @@ export function renderAgents(
       .filter(([, v]) => v === 'strong')
       .map(([t]) => TYPE_NAMES[t as MoleculeType]);
     const tag = strong.length ? `FORTE CONTRA ${strong.join(', ')}` : 'MÉDIA CONTRA TUDO';
-    out.push(scene.add.text(left + 78, cy + 60, tag, labelText(7, PALETTE_CSS.cyan)));
+    out.push(scene.add.text(left + 78, cy + 66, tag, labelText(7, PALETTE_CSS.cyan)));
     const zone = scene.add
       .zone(left + width / 2, cy + h / 2, width, h)
       .setInteractive({ useHandCursor: true });
@@ -152,9 +157,12 @@ export function renderArsenal(scene: Phaser.Scene, x: number, y: number, w: numb
     const def = WEAPONS[id];
     const h = 40;
     drawInkBox(g, left, cy, width, h, PALETTE.panel);
+    const icon = addIconSlot(scene, left + 8, cy + 8, 1, weaponIcon(id));
+    const tx = left + 8 + icon.size + 8;
     out.push(
+      ...icon.objects,
       scene.add.text(
-        left + 12,
+        tx,
         cy + 6,
         def.name,
         withShadow(bodyText(12, PALETTE_CSS.text), PALETTE_CSS.ink, 1),
@@ -162,7 +170,7 @@ export function renderArsenal(scene: Phaser.Scene, x: number, y: number, w: numb
       scene.add
         .text(left + width - 12, cy + 8, KIND_NAMES[def.kind], labelText(7, PALETTE_CSS.textSoft))
         .setOrigin(1, 0),
-      scene.add.text(left + 12, cy + 23, sub, labelText(7, color)),
+      scene.add.text(tx, cy + 23, sub, labelText(7, color)),
     );
     cy += h + 4;
   };
@@ -176,8 +184,27 @@ export function renderArsenal(scene: Phaser.Scene, x: number, y: number, w: numb
   out.push(header(scene, left, cy + 6, 'EVOLUÇÕES'));
   cy += 22;
   for (const id of ids.filter((i) => WEAPONS[i].source === 'evolution')) {
-    row(id, WEAPONS[id].description.toUpperCase().slice(0, 48), '#E6CC80');
+    row(id, WEAPONS[id].description.toUpperCase().slice(0, 44), '#E6CC80');
   }
+
+  // Modificadores do level up, com os ícones, em duas colunas.
+  out.push(header(scene, left, cy + 6, 'MODIFICADORES'));
+  cy += 22;
+  const passives = Object.keys(PASSIVES) as PassiveId[];
+  const cols = width >= 300 ? 2 : 1;
+  const cellW = Math.floor((width - (cols - 1) * 6) / cols);
+  const cellH = slotSize(1) + 6;
+  const rows = Math.ceil(passives.length / cols);
+  drawInkBox(g, left, cy, width, rows * cellH + 8, PALETTE.panel);
+  passives.forEach((id, i) => {
+    const cx = left + 6 + (i % cols) * (cellW + 6);
+    const ry = cy + 7 + Math.floor(i / cols) * cellH;
+    const slot = addIconSlot(scene, cx, ry, 1, { ...passiveSlot(id, 0), label: undefined });
+    out.push(
+      ...slot.objects,
+      scene.add.text(cx + slot.size + 6, ry + 5, PASSIVES[id].name, bodyText(10, PALETTE_CSS.text)),
+    );
+  });
   return out;
 }
 

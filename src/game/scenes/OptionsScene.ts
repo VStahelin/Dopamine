@@ -5,7 +5,7 @@ import { impactText, labelText } from '../ui/theme';
 import { PALETTE_CSS } from '../render/palette';
 import { updates } from '../update/updateManager';
 import type { UpdateStatus } from '../update/updateLogic';
-import { setupUiLayout } from '../ui/uiLayout';
+import { addDim, setupUiLayout } from '../ui/uiLayout';
 import { SCENES } from './keys';
 
 const yesNo = (value: boolean) => (value ? 'SIM' : 'NÃO');
@@ -31,18 +31,21 @@ const UPDATE_NOTE: Record<UpdateStatus, string> = {
 
 /**
  * Opções: mostrar FPS (salvo), tela cheia, versão e verificar atualização (decisão 0016).
- * Volume entra quando o jogo tiver som.
+ * Volume entra quando o jogo tiver som. Aberta pela pausa da run, fica por cima dela e volta para
+ * ela, sem o botão de atualização (só nos menus, decisão 0016).
  */
 export class OptionsScene extends Phaser.Scene {
   private root?: Phaser.GameObjects.Container;
   private size = { w: 0, h: 0 };
+  private fromRun = false;
 
   constructor() {
     super(SCENES.options);
   }
 
-  create(): void {
-    this.input.keyboard?.on('keydown-ESC', () => this.scene.start(SCENES.hub));
+  create(data?: { fromRun?: boolean }): void {
+    this.fromRun = data?.fromRun ?? false;
+    this.input.keyboard?.on('keydown-ESC', () => this.back());
     setupUiLayout(this, (w, h) => {
       this.size = { w, h };
       this.build();
@@ -57,16 +60,36 @@ export class OptionsScene extends Phaser.Scene {
     });
   }
 
+  private back(): void {
+    if (!this.fromRun) {
+      this.scene.start(SCENES.hub);
+      return;
+    }
+    this.scene.stop();
+    this.scene.wake(SCENES.pause);
+  }
+
+  private updateButton() {
+    return {
+      label: UPDATE_LABEL[updates.state.status],
+      variant: updates.state.status === 'ready' ? ('primary' as const) : ('secondary' as const),
+      onClick: () => {
+        if (updates.state.status === 'ready') void updates.apply();
+        else void updates.check();
+      },
+    };
+  }
+
   private build(): void {
     this.root?.destroy();
     const { w, h } = this.size;
     const save = getSave(this);
     const top = Math.max(16, Math.floor(h / 2) - 110);
 
-    const { buttons } = addButtonColumn(this, w, top + 44, [
+    const options = [
       {
         label: `MOSTRAR FPS: ${yesNo(save.options.showFps)}`,
-        variant: 'secondary',
+        variant: 'secondary' as const,
         onClick: () => {
           setSave(this, { ...save, options: { ...save.options, showFps: !save.options.showFps } });
           this.build();
@@ -74,31 +97,33 @@ export class OptionsScene extends Phaser.Scene {
       },
       {
         label: `TELA CHEIA: ${yesNo(this.scale.isFullscreen)}`,
-        variant: 'secondary',
+        variant: 'secondary' as const,
         onClick: () => this.scale.toggleFullscreen(),
       },
-      {
-        label: UPDATE_LABEL[updates.state.status],
-        variant: updates.state.status === 'ready' ? 'primary' : 'secondary',
-        onClick: () => {
-          if (updates.state.status === 'ready') void updates.apply();
-          else void updates.check();
-        },
-      },
-      { label: 'VOLTAR', onClick: () => this.scene.start(SCENES.hub) },
-    ]);
+      ...(this.fromRun ? [] : [this.updateButton()]),
+      { label: 'VOLTAR', onClick: () => this.back() },
+    ];
+    const { buttons } = addButtonColumn(this, w, top + 44, options);
     const s = updates.state;
     const info = [
       `VERSÃO ${s.currentVersion} · BUILD ${s.currentBuild}`,
-      UPDATE_NOTE[s.status] +
-        (s.remoteVersion && s.status !== 'upToDate' ? ` · ${s.remoteVersion}` : ''),
+      this.fromRun
+        ? 'ATUALIZAÇÕES SÓ NOS MENUS'
+        : UPDATE_NOTE[s.status] +
+          (s.remoteVersion && s.status !== 'upToDate' ? ` · ${s.remoteVersion}` : ''),
     ];
     this.root = this.add.container(0, 0, [
+      ...(this.fromRun ? [addDim(this, w, h, 0.85)] : []),
       this.add.text(w / 2, top, 'OPÇÕES', impactText(24)).setOrigin(0.5, 0),
       ...buttons,
       ...info.map((line, i) =>
         this.add
-          .text(w / 2, top + 44 + 4 * 50 + 6 + i * 14, line, labelText(8, PALETTE_CSS.textSoft))
+          .text(
+            w / 2,
+            top + 44 + options.length * 50 + 6 + i * 14,
+            line,
+            labelText(8, PALETTE_CSS.textSoft),
+          )
           .setOrigin(0.5, 0),
       ),
     ]);

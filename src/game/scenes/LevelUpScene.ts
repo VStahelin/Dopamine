@@ -11,6 +11,7 @@ import {
 } from '../../core/run/upgrades';
 import { PALETTE, PALETTE_CSS } from '../render/palette';
 import { addButton } from '../ui/button';
+import { addIconSlot, choiceSlot, slotSize } from '../ui/iconSlot';
 import { bodyText, hudLabelText, impactText, labelText } from '../ui/theme';
 import { addDim, setupUiLayout } from '../ui/uiLayout';
 import { describeChoice } from '../ui/upgradeText';
@@ -116,7 +117,21 @@ export class LevelUpScene extends Phaser.Scene {
       g.fillStyle(frame).fillRect(left + 5, y + 5, 4, cardH - 10);
       children.push(g);
 
-      children.push(this.add.text(left + 16, titleY, text.title, impactText(13)));
+      // Ícone na moldura do tipo (arma, evolução, modificador), do tamanho que o cartão comporta.
+      const scale = cardH - 14 >= slotSize(2) ? 2 : 1;
+      const icon = slotSize(scale);
+      children.push(
+        ...addIconSlot(
+          this,
+          left + 14,
+          y + Math.floor((cardH - icon) / 2),
+          scale,
+          choiceSlot(choice),
+        ).objects,
+      );
+      const textX = left + 14 + icon + 8;
+
+      children.push(this.add.text(textX, titleY, text.title, impactText(13)));
       const tag = [text.rarity?.name.toUpperCase(), text.level].filter(Boolean).join(' · ');
       children.push(
         this.add
@@ -129,9 +144,9 @@ export class LevelUpScene extends Phaser.Scene {
           .setOrigin(1, 0),
       );
       children.push(
-        this.add.text(left + 16, titleY + 16 + extra, text.description, {
+        this.add.text(textX, titleY + 16 + extra, text.description, {
           ...bodyText(10, PALETTE_CSS.cream),
-          wordWrap: { width: cardW - 44 },
+          wordWrap: { width: left + cardW - 28 - textX },
         }),
       );
       children.push(
