@@ -75,7 +75,7 @@ O campo longo é um incremental que roda sozinho e bem mais devagar que a run, s
 
 **O que falta decidir**
 
-- O jogador mexe nos agentes da base do idle (posição, composição) ou só melhora com upgrades?
+- [x] O jogador mexe nos agentes da base do idle (posição, composição) ou só melhora com upgrades? → monta o pool (quem fica em cada espaço) e sobe o nível de cada agente ([decisão 0022](decisoes/0022-campo-longo.md)).
 
 ## Organismo (os macros)
 
@@ -124,7 +124,7 @@ O jogo é pensado primeiro para tela vertical, mas precisa se adaptar a qualquer
 
 - Orientação no celular: vertical, horizontal ou as duas? (aba Plataforma)
 - Controle da run: joystick virtual ou toque para mover no celular, teclado no PC? Onde fica o botão do especial?
-- O campo longo aparece na mesma tela da run ou numa tela própria?
+- [x] O campo longo aparece na mesma tela da run ou numa tela própria? → tela própria, rodando o tempo todo; o painel em tela larga fica para a fase 6 ([decisão 0022](decisoes/0022-campo-longo.md)).
 
 ## Inspirações
 

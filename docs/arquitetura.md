@@ -2,7 +2,7 @@
 
 Como o código do Dopamina Blaster é organizado. Este arquivo descreve **o estado atual**; o porquê de cada escolha fica nas [decisões](decisoes/README.md), ligadas em cada seção. Ao mudar algo aqui, registre a decisão primeiro.
 
-> **Estado:** fases 0 a 2.5 implementadas; fases 2.6, 2.7 e 3 (meta-progressão) implementadas, falta validar no celular.
+> **Estado:** fases 0 a 2.5 implementadas; fases 2.6, 2.7, 3 (meta-progressão) e 4 (campo longo) implementadas, falta validar no celular.
 
 ## Stack
 
@@ -44,6 +44,7 @@ A regra de dependência é verificada pelo ESLint (`no-restricted-imports` em [e
 | `records`, `options` | [RecordsScene.ts](../src/game/scenes/RecordsScene.ts), [OptionsScene.ts](../src/game/scenes/OptionsScene.ts) | Recordes salvos; opções (FPS, tela cheia) |
 | `run` | [RunScene.ts](../src/game/scenes/RunScene.ts) | Chama o `stepRun` do `core` em passos fixos e desenha o estado (sprites reaproveitados, números de dano); abre as telas por cima |
 | `hud` | [HudScene.ts](../src/game/scenes/HudScene.ts) | Por cima da run ([ui-cronico.md](ui-cronico.md)): banda com XP, ícones de armas e reagentes, tempo, onda e decompostas; efeitos, chefe e pausa abaixo dela; botão do especial, joystick e FPS |
+| `idle` | [IdleScene.ts](../src/game/scenes/IdleScene.ts) | Campo longo (prancheta "Tela de batalha"): BASE, ondas, pool de agentes, melhorias e x2. A simulação roda no [idleRunner](../src/game/idle/idleRunner.ts), mesmo com a tela fechada |
 | `levelUp`, `pause`, `gameOver` | [LevelUpScene.ts](../src/game/scenes/LevelUpScene.ts), [PauseScene.ts](../src/game/scenes/PauseScene.ts), [GameOverScene.ts](../src/game/scenes/GameOverScene.ts) | Telas por cima da run; a pausa tem as abas Arsenal, Atributos e Run (duas colunas na tela deitada) e abre as Opções por cima |
 
 As telas de interface usam [uiLayout.ts](../src/game/ui/uiLayout.ts): zoom inteiro a partir do canto superior esquerdo e layout refeito a cada redimensionamento.
@@ -73,13 +74,14 @@ src/
     math/        vetores e utilidades
     random.ts    gerador aleatório com semente
     run/         campo crônico: agente, inimigos, armas, XP, level up
-    idle/        campo longo: produção, offline (fase 4)
+    idle/        campo longo: simulação das ondas e da BASE, pool, níveis, melhorias e offline (fase 4)
     organism/    setores de saúde, reset (fase 5)
     meta/        Laboratório, desbloqueios, estrelas e baú; regras da run com o progresso (fase 3)
     sim/         robô e simulador de progressão (npm run sim)
     save/        formato do save, migrações e recordes
   game/
     scenes/      cenas do Phaser
+    idle/        idleRunner: roda o campo longo o tempo todo e paga o offline
     render/      paleta, zoom, spriteArt.ts (desenho dos sprites a partir dos dados), fxArt.ts (efeitos das armas em pixels de arte) e textures.ts (gerador único de texturas)
     input/       teclado e joystick virtual
     ui/          tema (fontes, textos), botões, layout das telas, textos dos upgrades, espaços de ícone, conteúdo da pausa, números de dano, rolagem

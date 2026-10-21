@@ -130,7 +130,7 @@ Cada modificador do level up sorteia uma raridade, que multiplica o valor dele. 
 | --- | --- | --- | --- |
 | Produção | ATP por hora de cada agente na base | por agente | sem teto |
 | Ritmo de disparo | Velocidade de ataque dos agentes na base | 100% | +200% |
-| Espaços na base | Quantos agentes cabem no idle | 3 | 8 |
+| Espaços na base | Quantos agentes cabem no idle | 3 | 5 (o pool da prancheta) |
 | Teto offline | Horas de produção com o jogo fechado | 8 h | 24 h |
 
 ## Inimigos

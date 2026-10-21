@@ -22,7 +22,7 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | 2.6 | Sprites e ícones da identidade visual | Todo sprite está numa pasta e cada arma, modificador e especial aparece com o ícone do canvas? | 2 | implementada, falta validar no celular |
 | 2.7 | Campo crônico com a cara do canvas | A run, do chão aos efeitos, parece com as pranchetas do modo crônico? | 2.6 | implementada, falta validar no celular |
 | 3 | Meta-progressão e save | Dá vontade de jogar mais uma run? | 2, 2.5, 2.6, 2.7 | implementada, falta validar no celular |
-| 4 | Campo longo (idle) | O idle ajuda a run sem substituí-la? | 3 | não iniciada |
+| 4 | Campo longo (idle) | O idle ajuda a run sem substituí-la? | 3 | implementada, falta validar no celular |
 | 5 | Organismo | Cuidar do corpo muda o jeito de jogar? | 3, 4 | não iniciada |
 | 6 | Arte, polimento e lançamento | Dá para mandar o link para os amigos? | 1 a 5 | não iniciada |
 
@@ -207,11 +207,14 @@ Decisões: [0021](decisoes/0021-meta-progressao.md). Tudo em `src/config/meta.js
 
 O lado que farma sozinho.
 
-- [ ] Campo vertical: inimigos descem e agentes fixos na base atacam.
-- [ ] Agentes próprios do idle e árvore de upgrades com custo mais suave.
-- [ ] Produção de ATP por hora.
-- [ ] Progresso offline, com teto inicial de 8 horas e tela de "enquanto você estava fora".
-- [ ] Idle rodando ao mesmo tempo que a run, onde ele aparecer na tela.
+Decisão: [0022](decisoes/0022-campo-longo.md). Layout da prancheta "Tela de batalha (mockup)" do canvas; números em `src/config/idle.json`.
+
+- [x] Campo vertical: moléculas descem até a BASE (10 interações) e os agentes do pool, embaixo, disparam nelas. Ondas sobem de dificuldade; se a BASE zera, o campo volta 3 ondas.
+- [x] Agentes próprios do idle: Ômega-3 (começa liberado), Melatonina, Magnésio, Vitamina D e Endorfina, desbloqueados com ATP, com nível por agente. Melhorias do campo (Ritmo de disparo, Espaços na base, Teto offline) com custo mais suave (×1,08).
+- [x] ATP das moléculas decompostas, a coletar; a tela do campo coleta sozinha e o botão do Hub mostra o valor.
+- [x] Progresso offline com teto inicial de 8 horas e o painel "Enquanto você estava fora" no Hub.
+- [x] Idle rodando o tempo todo (Hub, run e a própria tela), também em segundo plano; botão x2 na tela do campo. O painel ao lado da run em tela larga fica para a fase 6.
+- [ ] Validar no celular e ajustar o ritmo das ondas e o ATP.
 
 **Critério de saída:** abrir o jogo depois de uma noite rende o suficiente para um upgrade, sem tornar a run desnecessária.
 
