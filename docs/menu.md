@@ -1,135 +1,150 @@
 # Menu principal
 
-Esqueleto do menu principal: as telas que o jogo vai ter, como se navega entre elas e o que cada uma mostra. Na [fase 1.5 do roadmap](roadmap.md#fase-15-menu-principal-esqueleto) o esqueleto inteiro entra no jogo, com as telas que ainda não têm conteúdo como **placeholder**: o lugar já existe, mostra o que vai ter ali e em que fase chega. Cada fase seguinte preenche a sua tela, sem mexer na navegação.
+Esqueleto do menu principal, inspirado no hub de jogos mobile de campanha: um botão de jogar dominante no centro, a moeda sempre visível no topo, as seções principais numa barra de abas embaixo e as secundárias em trilhos laterais. Na [fase 1.5 do roadmap](roadmap.md#fase-15-menu-principal-esqueleto) o esqueleto inteiro entra no jogo, com o que ainda não existe como **placeholder**: o lugar já está no menu, explica o que vai ter ali e em que fase chega. Cada fase seguinte preenche a sua parte, sem mexer na navegação.
 
 Tudo aqui é **proposta**: nomes, ordem e agrupamento podem mudar.
 
-## Mapa das telas
+## A referência
 
-```mermaid
-flowchart TD
-    Titulo[Tela de título] --> Hub[Hub]
-    Hub --> Jogar[Jogar: escolha do modo]
-    Jogar --> Cronico[Campo crônico]
-    Jogar --> Longo[Campo longo]
-    Cronico --> Agente[Escolha do agente]
-    Agente --> Run[Run]
-    Run --> Fim[Fim da run] --> Hub
-    Hub --> Agentes[Agentes]
-    Hub --> Arsenal[Arsenal]
-    Hub --> Lab[Laboratório]
-    Hub --> Organismo[Organismo]
-    Hub --> Compendio[Compêndio]
-    Hub --> Recordes[Recordes]
-    Hub --> Opcoes[Opções]
+Print do hub de um jogo mobile de campanha que o Vitor mandou, lido de cima para baixo:
+
+| Zona | O que tem na referência | Para que serve |
+| --- | --- | --- |
+| Barra de status (topo, fixa) | Avatar, nível e XP da conta; poder de combate; energia (196/30); ouro e gemas, cada um com "+" | Recursos e progresso sempre à vista |
+| Faixa de destaque | Carrossel de eventos no centro, menu (≡) à esquerda, Ranking à direita | O que é novo agora |
+| Trilho esquerdo | Ofertas pagas (Cartão de Privilégio, Melhor Preço, oferta com contador) | Monetização |
+| Trilho direito, recolhível | Tarefas, Amigos, eventos, raide da guilda | Social e eventos, fora do caminho |
+| Palco (centro) | Capítulo 26 "Território Carmesim", melhor resultado 49/50, ilustração, 3 estrelas; o capítulo 25 aparece embaixo | Onde o jogador está na campanha; os capítulos rolam como um mapa vertical |
+| Atalhos do capítulo | Caça (patrulha ociosa), baú do capítulo (26–50), Guilda | Recompensas ligadas ao capítulo |
+| Linha de ação | Acampamento (recompensa ociosa) à esquerda; INICIAR grande com custo de 5 de energia; Escada da Briga (PvP) à direita | O botão principal ao alcance do polegar, com os modos irmãos dos lados |
+| Chat | Mensagens passando numa linha | Social |
+| Barra de abas (rodapé) | 5 abas: Loja, Equipamento, Campanha (no centro, maior e destacada), Arena, Itens | As seções principais, sempre a um toque |
+| Selos vermelhos "!" | Em quase todo botão | Puxar o jogador para o que tem novidade |
+
+**O que vale copiar:**
+
+- Um botão principal grande, logo acima do polegar, e nada competindo com ele.
+- O modo principal no centro da tela e na aba do meio.
+- O progresso visível no palco: onde estou, melhor marca, estrelas.
+- Moeda sempre no topo.
+- Seções principais na barra de abas; secundárias nos trilhos.
+- O idle como botão vizinho do principal, mostrando o que acumulou.
+
+**O que fica de fora:** energia para jogar, segunda moeda paga, ofertas e contadores, guilda, chat, amigos, ranking online e selos em tudo. É um jogo pessoal, para amigos e sem servidor ([conceito](conceito.md)). Selo só aparece quando há algo a fazer.
+
+## O hub
+
+O hub é a tela onde o jogador passa entre as runs. Pensado primeiro para o celular em pé:
+
+```
+┌─────────────────────────────────┐
+│ [org] INDIVÍDUO 1   ⚡ATP 1.250  │  barra de status
+│ ▮▮▯ ▮▮▮ ▮▯▯ ▮▮▯  saúde 58%      │  4 setores de saúde
+├─────────────────────────────────┤
+│ ≡                      [RECORD.]│  trilhos: Opções à esquerda,
+│        PRÓXIMO: LIPASE          │  Recordes, Compêndio e
+│        faltam 320 ATP  [COMPÊN.]│  Conquistas à direita
+│                         [CONQ.] │
+│     ┌─────────────────────┐     │
+│     │ CASO 1 · FÍSICA BAIXA│    │  palco: o indivíduo como capítulo
+│     │  [ilustração do      │    │
+│     │   organismo]         │    │
+│     │  MELHOR: 12:40       │    │
+│     │  ★ ★ ☆  5·10·15 min  │    │  estrelas = metas de tempo
+│     └─────────────────────┘     │
+│        [baú das estrelas]       │
+├─────────────────────────────────┤
+│ [CAMPO   ] ┌───────────┐ [AGENTE]│  linha de ação
+│ [LONGO   ] │   JOGAR   │ [DOPAM.]│
+│ [+340 ATP] └───────────┘ [  ▸   ]│
+├─────────────────────────────────┤
+│ AGENTES ARSENAL [CASO] LAB. ORGAN.│  barra de abas
+└─────────────────────────────────┘
 ```
 
-## Telas
+### Barra de status
+
+- **Indivíduo:** um retrato pixelado do organismo e o número do indivíduo atual (o "nível da conta" daqui).
+- **Saúde:** os 4 setores (física, mental, social, executiva) em mini barras e a média. Faz o papel do "poder de combate" da referência: o número que diz como você está indo.
+- **ATP:** a única moeda. Os pontos herdados entram ao lado quando o reset existir (fase 5).
+
+Até as fases 3 e 5, saúde e ATP aparecem com valores de exemplo e o selo "EM BREVE".
+
+### Faixa de objetivo
+
+No lugar do carrossel de eventos, uma faixa com o **próximo objetivo**: o próximo desbloqueio e quanto falta ("PRÓXIMO: LIPASE · faltam 320 ATP"), ou a próxima estrela do caso. Tocar leva à tela certa.
+
+### Trilhos laterais
+
+- **Esquerdo:** só Opções (≡).
+- **Direito:** Recordes, Compêndio e Conquistas (Conquistas é placeholder sem fase definida).
+
+### Palco: o caso atual
+
+O capítulo da referência vira o **caso**: o indivíduo que está sendo tratado.
+
+- Título: "CASO 1" e a "doença" dele (o setor mais baixo, por exemplo "FÍSICA BAIXA").
+- Ilustração do organismo em pixel art, com o setor doente destacado.
+- **Melhor tempo** neste caso.
+- **3 estrelas = metas de tempo** (por exemplo 5, 10 e 15 minutos). Cada estrela nova abre o baú logo abaixo, com ATP (fase 3).
+- Rolando para baixo aparecem os casos anteriores, já curados, como os capítulos da referência. Cada reset (fase 5) acrescenta um caso.
+
+### Linha de ação
+
+- **JOGAR** (centro, o maior botão da tela): começa a run no campo crônico com o agente escolhido. Sem custo de energia.
+- **Campo longo** (esquerda, como o Acampamento): mostra o ATP acumulado no idle e abre o campo longo. Placeholder até a fase 4.
+- **Agente** (direita, no lugar da Escada da Briga): o sprite do agente escolhido; tocar abre a escolha do agente.
+
+### Barra de abas
+
+Cinco abas, com a do meio maior e destacada, como na referência:
+
+| Aba | O que tem | Ganha conteúdo na |
+| --- | --- | --- |
+| Agentes | Elenco da run e do idle, ficha de cada agente, desbloqueio | 2 e 3 |
+| Arsenal | As armas, níveis, evoluções e reagentes ([Armas](armas.md)) | 2 e 3 |
+| **Caso** (centro) | O hub | 1.5 |
+| Laboratório | Árvores de upgrades permanentes: run e idle | 3 e 4 |
+| Organismo | Os 4 setores de saúde, o efeito de cada um, o reset | 5 |
+
+A barra fica visível em todas as abas; trocar de aba não precisa de Voltar.
+
+### Tela larga (PC, celular deitado)
+
+O palco fica no centro, os trilhos nas laterais, a linha de ação embaixo do palco e a barra de abas no rodapé, centralizada com largura máxima.
+
+## As outras telas
 
 | Tela | O que tem | Hoje | Ganha conteúdo na |
 | --- | --- | --- | --- |
 | Tela de título | Logo e "toque para começar" | Existe (o menu atual) | 1.5 |
-| Hub | Centro do menu: moeda, indivíduo, agente atual, botão Jogar e as seções | Novo | 1.5 |
-| Jogar | Escolha do modo: campo crônico, campo longo | Novo | 1.5 (crônico), 4 (longo) |
-| Escolha do agente | Agente da run, com ação, especial e efetividade | Placeholder (só a Dopamina) | 2 |
-| Agentes | Elenco da run e do idle, detalhes e desbloqueio | Placeholder | 2 e 3 |
-| Arsenal | Armas, níveis, evoluções e reagentes | Placeholder | 2 e 3 |
-| Laboratório | Árvores de upgrades permanentes: run e idle | Placeholder | 3 e 4 |
-| Organismo | Indivíduo atual, os 4 setores de saúde, reset | Placeholder | 5 |
-| Compêndio | Moléculas inimigas, modificadores e raridades já vistos | Placeholder | 2 em diante |
+| Escolha do agente | Agentes da run com ação, especial e efetividade; bloqueados com cadeado e custo | Placeholder (só a Dopamina) | 2 |
+| Campo longo | O idle | Placeholder | 4 |
+| Compêndio | Moléculas inimigas (com a cascata), modificadores e raridades já vistos; o resto em silhueta | Placeholder | 2 em diante |
 | Recordes | Melhor tempo, nível, decompostas, runs | Existe | — |
+| Conquistas | Metas de longo prazo | Placeholder | a definir |
 | Opções | FPS, tela cheia; volume com o som | Existe | 6 (volume) |
-
-### Tela de título
-
-O menu atual vira a tela de título: logo DOPAMINA / BLASTER e um botão grande que leva ao hub. Serve de abertura e de lugar para a versão do jogo.
-
-### Hub
-
-A tela onde o jogador passa entre as runs. Pensada primeiro para o celular em pé:
-
-```
-┌───────────────────────────┐
-│ ATP 1.250        INDIV. 1 │  topo: moeda e indivíduo atual
-│ ▮▮▮ ▮▮▯ ▮▯▯ ▮▮▮           │  4 setores de saúde (mini barras)
-├───────────────────────────┤
-│                           │
-│      [sprite do agente]   │  agente escolhido, em destaque
-│         DOPAMINA          │
-│                           │
-│  ┌─────────────────────┐  │
-│  │        JOGAR        │  │  botão principal
-│  └─────────────────────┘  │
-├───────────────────────────┤
-│ ┌───────┐ ┌───────┐ ┌───────┐
-│ │AGENTES│ │ARSENAL│ │ LAB.  │  seções em grade (2 linhas de 3)
-│ └───────┘ └───────┘ └───────┘
-│ ┌───────┐ ┌───────┐ ┌───────┐
-│ │ORGAN. │ │COMPÊN.│ │RECORD.│
-│ └───────┘ └───────┘ └───────┘
-├───────────────────────────┤
-│ OPÇÕES                    │  rodapé
-└───────────────────────────┘
-```
-
-- **Topo:** ATP e o indivíduo atual com os 4 setores. Enquanto não existem (fases 3 e 5), mostram valores fixos de exemplo, marcados como "em breve".
-- **Agente em destaque:** o sprite do agente escolhido, maior. Tocar nele abre Agentes.
-- **Jogar:** abre a escolha do modo.
-- **Seções:** cada uma é um cartão com ícone e nome. Seção que ainda é placeholder aparece com um selo "EM BREVE".
-- **Telas largas (PC, celular deitado):** o agente e o Jogar ficam à esquerda e a grade de seções à direita.
-
-### Jogar: escolha do modo
-
-Dois cartões grandes:
-
-- **Campo crônico:** a run (mundo aberto). Leva à escolha do agente.
-- **Campo longo:** o idle (campo vertical). Placeholder até a fase 4, com a explicação do modo e "EM BREVE · FASE 4".
-
-Se o "modo aberto" da aba [Armas](armas.md) virar um modo separado, ele entra aqui como terceiro cartão.
-
-### Escolha do agente
-
-Lista dos agentes da run ([Personagens](personagens.md)). Cada um mostra sprite, ação, especial, efetividade por tipo e efeito na saúde. Bloqueados aparecem com cadeado e o custo. Até a fase 2, só a Dopamina está liberada; os outros aparecem bloqueados para mostrar o que vem.
-
-### Agentes
-
-Elenco completo, em duas abas: **Run** e **Idle**. Detalhe de cada agente (a mesma ficha da escolha) e o botão de desbloqueio (moeda + nível do agente anterior, fase 3).
-
-### Arsenal
-
-As armas da aba [Armas](armas.md): arquétipo, níveis, evoluções e o reagente que cada evolução pede. Armas bloqueadas com cadeado e custo. Na fase 1.5, mostra o Radical Livre liberado e as outras 6 bloqueadas.
-
-### Laboratório
-
-As árvores de upgrades permanentes da meta-progressão, em duas abas: **Run** (fase 3) e **Idle** (fase 4). Nome temático para "árvore de habilidades": é onde o médico pesquisa melhorias entre um tratamento e outro. Cada nó mostra o atributo, o nível e o custo em ATP.
-
-### Organismo
-
-O indivíduo sendo tratado: os 4 setores de saúde (física, mental, social e executiva) com o efeito de cada um no jogo, e o botão de reset para o próximo indivíduo quando liberar ([Mecânicas](mecanicas.md)). Placeholder até a fase 5.
-
-### Compêndio
-
-Tudo o que o jogador já encontrou: moléculas inimigas (com a cascata de decomposição), modificadores e raridades. O que ainda não foi visto aparece como silhueta. Começa a encher na fase 2.
 
 ## Placeholder
 
-Uma tela placeholder tem sempre o mesmo formato, para ninguém achar que é um bug:
+Toda tela ou botão que ainda não tem conteúdo segue o mesmo formato, para ninguém achar que é um bug:
 
 - Título da seção e ícone.
 - Uma frase sobre o que vai ter ali.
 - Selo "EM BREVE · FASE N".
-- Quando fizer sentido, conteúdo de exemplo (por exemplo, a lista de agentes com todos bloqueados).
-- Botão Voltar.
+- Conteúdo de exemplo quando fizer sentido (a lista de agentes com todos bloqueados, as 7 armas com 6 bloqueadas).
+- Botão Voltar, quando a tela não é uma aba.
 
 ## Navegação
 
-- Toda tela tem **Voltar** (botão e tecla Esc) que leva à tela anterior; do hub, Voltar leva à tela de título.
-- Fim da run tem **Jogar de novo** (mesmo modo e agente) e **Menu** (volta ao hub).
-- A pausa da run tem **Voltar ao menu** (hub).
+- Tela de título → hub (aba Caso).
+- As 5 abas trocam direto pela barra; telas abertas a partir delas (escolha do agente, Compêndio, Recordes, Opções) têm **Voltar** (botão e tecla Esc).
+- JOGAR → run. Fim da run: **Jogar de novo** (mesmo agente) e **Menu** (volta ao hub). A pausa tem **Voltar ao menu**.
+- No hub, Esc volta à tela de título.
 
 ## O que falta decidir
 
-- Os nomes das seções (Laboratório, Compêndio, Arsenal) funcionam, ou prefere nomes diretos (Upgrades, Bestiário, Armas)?
-- O hub mostra o idle rodando ao fundo (como uma janela do campo longo), ou o idle só aparece no modo Campo longo?
+- As estrelas são metas de tempo (5, 10, 15 min), de decompostas, ou de nível?
+- Os nomes Caso, Laboratório, Compêndio e Arsenal funcionam, ou prefere nomes diretos (Campanha, Upgrades, Bestiário, Armas)?
 - A tela de título continua existindo, ou o jogo abre direto no hub?
-- Conquistas entram como seção própria?
+- Conquistas entram, e em que fase?

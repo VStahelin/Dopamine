@@ -71,15 +71,17 @@ A primeira versão que parece um jogo: abre num menu, entra numa run jogável e 
 
 ## Fase 1.5: Menu principal (esqueleto)
 
-Montar o menu principal inteiro, definido em [menu.md](menu.md), antes de aprofundar a run. As áreas que ainda não existem entram como placeholder: o lugar já está no menu, explica o que vai ter ali e em que fase chega. Assim cada fase seguinte só preenche a sua tela.
+Montar o menu principal inteiro, definido em [menu.md](menu.md), antes de aprofundar a run. O modelo é o hub de jogos mobile de campanha: JOGAR dominante no centro, moeda no topo, seções numa barra de abas e secundárias em trilhos laterais. O que ainda não existe entra como placeholder: o lugar já está no menu, explica o que vai ter ali e em que fase chega. Assim cada fase seguinte só preenche a sua parte.
 
 - [ ] Tela de título (o menu atual) levando ao hub.
-- [ ] Hub com moeda, indivíduo, agente em destaque, botão Jogar e a grade de seções.
-- [ ] Jogar: escolha do modo, com Campo crônico funcionando e Campo longo como placeholder.
+- [ ] Barra de status: indivíduo, 4 setores de saúde e ATP (valores de exemplo até as fases 3 e 5).
+- [ ] Faixa de objetivo (próximo desbloqueio ou próxima estrela).
+- [ ] Palco com o caso atual: ilustração do organismo, melhor tempo e 3 estrelas de meta de tempo.
+- [ ] Linha de ação: JOGAR (campo crônico), Campo longo (placeholder) e Agente (abre a escolha do agente).
+- [ ] Barra de abas: Agentes, Arsenal, Caso (o hub), Laboratório e Organismo, com placeholders no formato comum.
+- [ ] Trilhos: Opções à esquerda; Recordes, Compêndio e Conquistas à direita.
 - [ ] Escolha do agente com a Dopamina liberada e os outros agentes bloqueados.
-- [ ] Placeholders de Agentes, Arsenal, Laboratório, Organismo e Compêndio, no formato comum de placeholder.
-- [ ] Recordes e Opções movidos para dentro do hub.
-- [ ] Navegação com Voltar (botão e Esc) em todas as telas; fim da run e pausa voltam ao hub.
+- [ ] Navegação: abas trocam direto, telas abertas por elas têm Voltar (botão e Esc); fim da run e pausa voltam ao hub.
 - [ ] Layout do hub em tela larga (PC, celular deitado).
 
 **Critério de saída:** dá para visitar todas as seções do menu no PC e no celular, e cada uma deixa claro o que vai ter ali.
