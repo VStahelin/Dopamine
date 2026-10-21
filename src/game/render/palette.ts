@@ -47,6 +47,13 @@ export const PALETTE = {
   nitrogen: 0x3f6fe0,
   chlorine: 0x5bc43a,
   sulfur: 0xf2c83a,
+  /** Efeito temporário bom (moldura e barra de tempo). */
+  buff: 0x6cd43f,
+  /** Segmento parcial das interações. */
+  interactionLight: 0xff8a80,
+  /** Botão de desistir. */
+  wine: 0x5a1416,
+  wineHi: 0x7a2a2c,
 } as const;
 
 export const PALETTE_CSS = {
@@ -71,4 +78,27 @@ export const PALETTE_CSS = {
   logoOrange: '#FF9A1F',
   logoGreen: '#6CD43F',
   cream: '#F2D9A8',
+  white: '#FFFFFF',
+  /** Rótulos MAX e EVO, crítico. */
+  goldIcon: '#F2C83A',
+  /** Números na tela (prancheta Crônico: ícones, dano e paisagem). */
+  numberStrong: '#7EF0FF',
+  numberWeak: '#A9ACC2',
+  numberHurt: '#FF6A5A',
+  numberHeal: '#8CF06A',
+  numberHealOutline: '#1A4E12',
+  critOutline: '#6E1E0A',
+  /** Títulos de seção da pausa. */
+  sectionOrange: '#FFB347',
+  muted: '#8A8EB8',
+  goldHi: '#FFE08A',
 } as const;
+
+/**
+ * Cor dos dados de sprite (src/assets/sprites): um nome de `PALETTE` ou `#RRGGBB`. Nome
+ * desconhecido vira magenta, para o erro aparecer na tela.
+ */
+export function paletteColor(name: string): number {
+  if (name.startsWith('#')) return parseInt(name.slice(1), 16);
+  return (PALETTE as Record<string, number>)[name] ?? 0xff00ff;
+}

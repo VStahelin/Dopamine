@@ -1,0 +1,224 @@
+{
+  "icons": {
+    "agents": [
+      "........",
+      ".oo..oo.",
+      ".oo..oo.",
+      "..o..o..",
+      "...oo...",
+      "...oo...",
+      "...oo...",
+      "........"
+    ],
+    "arsenal": [
+      "..oooo..",
+      "...oo...",
+      "...oo...",
+      "..oooo..",
+      ".oooooo.",
+      "oooooooo",
+      "oooooooo",
+      ".oooooo."
+    ],
+    "case": [
+      "...oo...",
+      "...oo...",
+      "...oo...",
+      "oooooooo",
+      "oooooooo",
+      "...oo...",
+      "...oo...",
+      "...oo..."
+    ],
+    "lab": [
+      "o..o..o.",
+      "o..o..o.",
+      "o..o..o.",
+      "o..o..o.",
+      "oo.oo.oo",
+      "oo.oo.oo",
+      "........",
+      "oooooooo"
+    ],
+    "organism": [
+      ".oo..oo.",
+      "oooooooo",
+      "oooooooo",
+      "oooooooo",
+      ".oooooo.",
+      "..oooo..",
+      "...oo...",
+      "........"
+    ],
+    "menu": [
+      "........",
+      "oooooooo",
+      "........",
+      "........",
+      "oooooooo",
+      "........",
+      "........",
+      "oooooooo"
+    ],
+    "trophy": [
+      "oooooooo",
+      "oooooooo",
+      ".oooooo.",
+      "..oooo..",
+      "...oo...",
+      "...oo...",
+      "..oooo..",
+      ".oooooo."
+    ],
+    "book": [
+      ".oooooo.",
+      ".o....o.",
+      ".o.oo.o.",
+      ".o....o.",
+      ".o.oo.o.",
+      ".o....o.",
+      ".oooooo.",
+      "........"
+    ],
+    "medal": [
+      "o......o",
+      ".o....o.",
+      "..oooo..",
+      ".oooooo.",
+      ".oo..oo.",
+      ".oooooo.",
+      "..oooo..",
+      "........"
+    ],
+    "chest": [
+      "........",
+      ".oooooo.",
+      "oooooooo",
+      "oooooooo",
+      "ooo..ooo",
+      "oooooooo",
+      "oooooooo",
+      "........"
+    ],
+    "idle": [
+      "o..o..o.",
+      "o..o..o.",
+      "........",
+      ".o..o..o",
+      ".o..o..o",
+      "........",
+      "oooooooo",
+      "oooooooo"
+    ]
+  },
+  "body": {
+    "colors": { "o": "cyan", "b": "bodyFill", "r": "interaction" },
+    "rows": [
+      "....oooooo....",
+      "...obbbbbbo...",
+      "...obbbbbbo...",
+      "...obbbbbbo...",
+      "....obbbbo....",
+      ".....obbo.....",
+      "..oooobboooo..",
+      ".obbbbbbbbbbo.",
+      "obbbrrrrrrbbbo",
+      "obbbrrrrrrbbbo",
+      "obobrrrrrrbobo",
+      "obobrrrrrrbobo",
+      "obobbbbbbbbobo",
+      "obo.obbbbo.obo",
+      "ooo.obbbbo.ooo",
+      "....obbbbo....",
+      "....obbobbo...",
+      "....obbobbo...",
+      "....obbobbo...",
+      "....obbobbo...",
+      "...obbbobbbo..",
+      "...ooooooooo.."
+    ]
+  },
+  "lock": {
+    "colors": { "#": "outline", "o": "stone" },
+    "rows": [".###.", "#...#", "#...#", "#####", "#ooo#", "#o#o#", "#ooo#", "#####"]
+  },
+  "shapes": {
+    "octagon": [
+      [0.25, 0],
+      [0.75, 0],
+      [0.75, 0.125],
+      [0.875, 0.125],
+      [0.875, 0.25],
+      [1, 0.25],
+      [1, 0.75],
+      [0.875, 0.75],
+      [0.875, 0.875],
+      [0.75, 0.875],
+      [0.75, 1],
+      [0.25, 1],
+      [0.25, 0.875],
+      [0.125, 0.875],
+      [0.125, 0.75],
+      [0, 0.75],
+      [0, 0.25],
+      [0.125, 0.25],
+      [0.125, 0.125],
+      [0.25, 0.125]
+    ],
+    "star": [
+      [0.5, 0],
+      [0.63, 0.35],
+      [1, 0.38],
+      [0.71, 0.6],
+      [0.81, 1],
+      [0.5, 0.78],
+      [0.19, 1],
+      [0.29, 0.6],
+      [0, 0.38],
+      [0.37, 0.35]
+    ],
+    "shield": [
+      [0, 0],
+      [1, 0],
+      [1, 0.62],
+      [0.5, 1],
+      [0, 0.62]
+    ]
+  },
+  "missingIcon": [
+    "................",
+    "..KKKKKKKKKKKK..",
+    ".KAAAAAAAAAAAAK.",
+    ".KAaaaaaaaaaaAK.",
+    ".KAaaaWWWWaaaAK.",
+    ".KAaaWWaaWWaaAK.",
+    ".KAaaaaaaWWaaAK.",
+    ".KAaaaaaWWaaaAK.",
+    ".KAaaaaWWaaaaAK.",
+    ".KAaaaaWWaaaaAK.",
+    ".KAaaaaaaaaaaAK.",
+    ".KAaaaaWWaaaaAK.",
+    ".KAaaaaaaaaaaAK.",
+    ".KAAAAAAAAAAAAK.",
+    "..KKKKKKKKKKKK..",
+    "................"
+  ],
+  "lockedIcon": [
+    "................",
+    "................",
+    "................",
+    "......KKKK......",
+    ".....KAAAAK.....",
+    "....KAK..KAK....",
+    "....KAK..KAK....",
+    "...KKKKKKKKKK...",
+    "...KAAAAAAAAK...",
+    "...KAAAKKAAAK...",
+    "...KAAAKKAAAK...",
+    "...KAAAAKAAAK...",
+    "...KaaaaaaaaK...",
+    "...KKKKKKKKKK...",
+    "................",
+    "................"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "ground": { "colors": ["sand", "sandGrout", "#E4C48E"], "grainDensity": 0.6, "seed": 7 },
+  "gem": {
+    "size": 7,
+    "outline": "outline",
+    "body": "progress",
+    "bodyShade": 0.75,
+    "shine": "water"
+  },
+  "electron": { "size": 7, "layers": ["ink", "progress", "cyan"] }
+}

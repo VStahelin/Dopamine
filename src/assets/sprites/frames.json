@@ -1,0 +1,10 @@
+{
+  "weapon": { "border": "#3A0A0C", "inset": "#E0702A", "fill": "#F2D9A8" },
+  "ready": { "border": "#3A0A0C", "inset": "#F2C83A", "fill": "#F2D9A8" },
+  "evolved": { "border": "#6E500C", "inset": "#F2C83A", "fill": "#FFF2A8" },
+  "passive": { "border": "#07080F", "inset": "#39D3F0", "fill": "#1B1E3A" },
+  "buff": { "border": "#07080F", "inset": "#6CD43F", "fill": "#1B1E3A" },
+  "debuff": { "border": "#07080F", "inset": "#D83A3A", "fill": "#3A0A0C" },
+  "empty": { "border": "#474C85", "fill": "#15172E", "dashed": true },
+  "locked": { "border": "#07080F", "fill": "#0E1024", "lock": true }
+}
