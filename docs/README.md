@@ -12,3 +12,6 @@ Documento de conceito do jogo, um arquivo por aba do [documento original](https:
 | [plataforma.md](plataforma.md) | Engine (Phaser 4 + TypeScript, PWA), comparação de engines, arquitetura, controles, salvamento e desempenho |
 | [design.md](design.md) | Identidade visual: direção de arte, paleta, tipografia, sprites de moléculas e componentes da tela de batalha |
 | [armas.md](armas.md) | Arquétipos de arma do Vampire Survivors, as 7 armas iniciais, evoluções e como a arma chega ao jogador |
+| [roadmap.md](roadmap.md) | Fases de desenvolvimento, do protótipo da run ao lançamento, com status, critérios de saída e decisões que travam cada fase |
+| [arquitetura.md](arquitetura.md) | Estado atual do código: stack, camadas, estrutura de pastas e princípios |
+| [decisoes/](decisoes/README.md) | Registro de decisões técnicas e de design, um arquivo por decisão |
