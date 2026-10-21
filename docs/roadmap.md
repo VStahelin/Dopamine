@@ -16,7 +16,8 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | --- | --- | --- | --- | --- |
 | 0 | Fundação | O projeto roda no PC e no celular? | — | não iniciada |
 | 1 | Primeira versão jogável (v0.1) | Dá para abrir, ir do menu à run e voltar, e a batalha é divertida? | 0 | não iniciada |
-| 2 | Profundidade da run | A run aguenta 20 minutos sem ficar repetitiva? | 1 | não iniciada |
+| 1.5 | Hub do menu principal | O menu já mostra onde cada parte do jogo vai entrar? | 1 | não iniciada (proposta) |
+| 2 | Profundidade da run | A run aguenta 20 minutos sem ficar repetitiva? | 1.5 | não iniciada |
 | 3 | Meta-progressão e save | Dá vontade de jogar mais uma run? | 2 | não iniciada |
 | 4 | Campo longo (idle) | O idle ajuda a run sem substituí-la? | 3 | não iniciada |
 | 5 | Organismo | Cuidar do corpo muda o jeito de jogar? | 3, 4 | não iniciada |
@@ -64,6 +65,20 @@ A primeira versão que parece um jogo: abre num menu, entra numa run jogável e 
 - [ ] Tela de fim de run com tempo, nível e inimigos decompostos, avisando se bateu recorde, com Jogar de novo e Menu.
 
 **Critério de saída:** o ciclo menu → run → fim → menu funciona no PC e no celular, e uma run de 10 minutos é jogada até o fim por vontade própria, a 60 FPS num celular intermediário (testar no Safari do iPhone).
+
+## Fase 1.5: Hub do menu principal
+
+Proposta da [decisão 0009](decisoes/0009-menu-hub-fase-1-5.md). Troca o menu mínimo da v0.1 pelo hub descrito em [menu.md](menu.md), com o layout inteiro e placeholders para o que ainda não existe. Base visual: prancheta "Menu principal (protótipo)" no [canvas de identidade visual](https://claude.ai/artifact/MPV17zZywrhhXBUdfnUs6F).
+
+- [ ] Barra de status com retrato do organismo, indivíduo, mini barras de saúde e ATP (valores de exemplo).
+- [ ] Faixa de objetivo com botão Opções e botão Recordes.
+- [ ] Palco com o caso atual, melhor tempo e 3 estrelas de meta de tempo.
+- [ ] Linha de ação com Campo longo, JOGAR e Agente (os laterais com "EM BREVE").
+- [ ] Barra de 5 abas, com a do meio destacada, e telas de placeholder "EM BREVE · FASE N".
+- [ ] Regras de selo de [menu.md](menu.md#selos-e-avisos) e navegação por teclado (Enter, 1 a 5, Esc).
+- [ ] Layout em 390×844, em celular baixo (375×667) e em tela larga com coluna central.
+
+**Critério de saída:** abrindo no celular, dá para tocar em cada aba e em cada botão do hub e entender o que vai existir ali, e JOGAR continua levando à run em um toque.
 
 ## Fase 2: Profundidade da run
 

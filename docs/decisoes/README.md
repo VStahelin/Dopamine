@@ -14,3 +14,4 @@ As decisões de design tomadas antes deste registro continuam marcadas como "dec
 | [0006](0006-deploy-github-pages.md) | Deploy no GitHub Pages pelo GitHub Actions | técnica | proposta |
 | [0007](0007-roadmap-run-primeiro.md) | Desenvolver a run primeiro, depois o resto | processo | proposta |
 | [0008](0008-v01-menu-e-run.md) | A primeira versão (v0.1) tem menu e uma run jogável | processo | proposta |
+| [0009](0009-menu-hub-fase-1-5.md) | Menu principal em formato de hub, montado numa fase 1.5 | design | proposta |
