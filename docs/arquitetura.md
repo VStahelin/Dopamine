@@ -112,7 +112,7 @@ Precisa de Node 20.19 ou mais novo.
 | `npm run preview` | Serve o build de `dist/` localmente, para testar a versão final |
 | `npm run release` | Check completo e publicação local atômica em `releases/` ([atualizacoes.md](atualizacoes.md)) |
 | `npm run serve` | Serve a build publicada localmente, em HTTPS, para testar atualizações no PC |
-| `npm version minor` + `git push --follow-tags` | Gera uma versão: dispara o deploy no GitHub Pages |
+| `npm version minor` + `git push --follow-tags` | Gera uma versão: dispara o deploy no GitHub Pages (skills `criar-versao` e `publicar-versao`) |
 | `npm run check` | Lint, formatação, testes e build de uma vez; rode antes de abrir um PR |
 
 ## Testes no navegador

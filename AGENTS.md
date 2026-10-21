@@ -41,6 +41,13 @@ Só as decisões **importantes**, que têm impacto na construção do jogo, vira
 - Registre as decisões tomadas durante a tarefa.
 - Rode os testes e o lint antes de dizer que terminou (os comandos estão em [docs/arquitetura.md](docs/arquitetura.md) quando o projeto existir).
 
+## Versões e publicação
+
+Duas skills do repositório cuidam disso (em `.claude/skills/`; quem não usa Claude Code segue o mesmo passo a passo dos arquivos):
+
+- [criar-versao](.claude/skills/criar-versao/SKILL.md): confere a `main`, roda o check e cria a tag `vX.Y.Z` com `npm version`. Não publica.
+- [publicar-versao](.claude/skills/publicar-versao/SKILL.md): envia a `main` e a tag, acompanha o deploy no GitHub Pages e confere a versão no ar.
+
 ## Convenções
 
 - **Idioma:** documentação, mensagens de commit e textos do jogo em português do Brasil. Código (nomes de variáveis, funções, tipos) em inglês.
