@@ -24,3 +24,4 @@ As decisões de design tomadas antes deste registro continuam marcadas como "dec
 | [0016](0016-offline-e-atualizacoes.md) | Jogo offline, com atualização só por build completa e aviso só nos menus | técnica | proposta |
 | [0017](0017-deploy-por-versao.md) | Deploy no GitHub Pages e no Render só ao gerar uma versão | técnica | substituída por 0018 (Render) |
 | [0018](0018-jogo-no-pages-servidor-futuro.md) | O jogo roda só no GitHub Pages; o servidor fica para contas e ranking | técnica | aceita |
+| [0019](0019-sprites-numa-pasta.md) | Todos os sprites como dados numa pasta única | técnica | proposta |

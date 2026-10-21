@@ -108,7 +108,7 @@ A HUD atual (`src/game/scenes/HudScene.ts`) já tem barra de XP no topo, nível,
 ## Perguntas em aberto
 
 - [ ] Interações só embaixo do agente (como o VS), ou também um número fixo na banda?
-- [ ] Os reagentes que evoluem armas (Peróxido, Ozônio) são os mesmos modificadores de atributo da linha de baixo, ou um tipo de item separado?
+- [x] Os reagentes que evoluem armas (Peróxido, Ozônio) são os mesmos modificadores de atributo da linha de baixo, ou um tipo de item separado? → modificadores da linha de baixo marcados como reagente ([decisão 0015](decisoes/0015-acao-do-agente-e-armas.md)).
 - [ ] Os efeitos temporários existem? Quais (itens no chão, especial ativo, efeitos de inimigo)?
-- [ ] O especial tem nome e ícone próprios por agente (a proposta usa "Pico" para a Dopamina)?
+- [x] O especial tem nome e ícone próprios por agente (a proposta usa "Pico" para a Dopamina)? → sim: Pico de recompensa, Emulsão e Captação, com ícones no canvas.
 - [ ] Números de dano ligados por padrão, ou desligados como opção de desempenho no celular?
