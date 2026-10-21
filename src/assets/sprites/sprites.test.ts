@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { AGENTS, ENEMIES, PASSIVES, WEAPONS } from '../../config';
+import { AGENTS, ENEMIES, META, PASSIVES, WEAPONS } from '../../config';
 import { ELEMENTS, ICON_PALETTE, ICON_SIZE, ICONS, MOLECULES, UI_SPRITES, type PixelGrid } from '.';
 
 function badPixels(grid: PixelGrid, size: number, colors: Record<string, unknown>): string[] {
@@ -27,6 +27,15 @@ describe('sprites', () => {
     const missing = Object.values(AGENTS)
       .map((a) => a.special.kind)
       .filter((kind) => !ICONS.specials[kind]);
+    expect(missing).toEqual([]);
+  });
+
+  it('todo nó do Laboratório tem ícone (modificador do mesmo atributo, stats ou especial)', () => {
+    const missing = Object.entries(META.lab.nodes)
+      .filter(([, n]) => !n.stat.startsWith('special.'))
+      .filter(([, n]) => !Object.values(PASSIVES).some((p) => p.stat === n.stat))
+      .filter(([, n]) => !ICONS.stats[n.stat])
+      .map(([id]) => id);
     expect(missing).toEqual([]);
   });
 

@@ -23,7 +23,8 @@ import worldJson from './world.json';
 /** Grade de pixels: uma string por linha, um caractere por pixel; '.' é transparente. */
 export type PixelGrid = readonly string[];
 
-export type IconGroup = 'weapons' | 'passives' | 'specials';
+/** `stats`: atributos sem modificador no level up (só no Laboratório), desenhados no jogo. */
+export type IconGroup = 'weapons' | 'passives' | 'specials' | 'stats';
 
 /** Cor em `#RRGGBB` para cada letra das grades de ícone. */
 export const ICON_PALETTE: Readonly<Record<string, string>> = paletteJson;

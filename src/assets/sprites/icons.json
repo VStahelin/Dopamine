@@ -940,5 +940,61 @@
       ".....KKbbKK.....",
       ".......KK......."
     ]
+  },
+  "stats": {
+    "currencyGain": [
+      "................",
+      ".....KKKKKK.....",
+      "....KyYYYYyK....",
+      "...KyYYWWYYyK...",
+      "..KyYYWYYYYYyK..",
+      "..KYYWYYKKYYYK..",
+      "..KYYYYKYYKYYK..",
+      "..KYYYYKKKYYYK..",
+      "..KYYYYKYYYYYK..",
+      "..KyYYYKYYYYyK..",
+      "...KyYYYYYYyK...",
+      "....KyyyyyyK....",
+      ".....KKKKKK.....",
+      "................",
+      "................",
+      "................"
+    ],
+    "effectChance": [
+      "................",
+      "...KKKKKKKKKK...",
+      "..KWWWWWWWWWHK..",
+      "..KWKKWWWWKKHK..",
+      "..KWKKWWWWKKHK..",
+      "..KWWWWWWWWWHK..",
+      "..KWWWWKKWWWHK..",
+      "..KWWWWKKWWWHK..",
+      "..KWWWWWWWWWHK..",
+      "..KWKKWWWWKKHK..",
+      "..KWKKWWWWKKHK..",
+      "..KHHHHHHHHHAK..",
+      "...KKKKKKKKKK...",
+      "................",
+      "................",
+      "................"
+    ],
+    "weaponSlots": [
+      "................",
+      "..KKKKKKKKKKKK..",
+      "..KoOOOOOOOOoK..",
+      "..KOTTTTTTTTOK..",
+      "..KOTTTKKTTTOK..",
+      "..KOTTTKKTTTOK..",
+      "..KOTKKKKKKTOK..",
+      "..KOTKKKKKKTOK..",
+      "..KOTTTKKTTTOK..",
+      "..KOTTTKKTTTOK..",
+      "..KOTTTTTTTTOK..",
+      "..KoOOOOOOOOoK..",
+      "..KKKKKKKKKKKK..",
+      "................",
+      "................",
+      "................"
+    ]
   }
 }

@@ -128,7 +128,8 @@ try {
     writeFileSync(target, png);
   }
   if (check) {
-    for (const p of listPngs(OUT)) if (!expected.has(p)) problems.push(`sobrando: ${relative(OUT, p)}`);
+    for (const p of listPngs(OUT))
+      if (!expected.has(p)) problems.push(`sobrando: ${relative(OUT, p)}`);
     if (problems.length > 0) {
       console.error(
         `Os PNGs de public/sprites estão diferentes dos dados (${problems.length}). Rode npm run sprites:build.\n` +
