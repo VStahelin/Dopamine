@@ -26,7 +26,7 @@ Proposta de nome: **ATP**, a molécula que é a moeda de energia das células de
 
 - **Na run:** cada molécula decomposta dá ATP; moléculas de minutos mais avançados valem mais, para recompensar o risco de continuar. No jogo (fase 2.7), a molécula solta uma moeda de ATP no chão por chance (elites e chefe sempre, o chefe valendo bem mais), e o agente coleta como as gemas; os números ficam em `runCurrency` de `economy.json`.
 - **No idle:** ATP por hora, multiplicado pela saúde do organismo.
-- **Gasto:** upgrades das duas árvores e desbloqueio de agentes e armas. Na fase 3, tudo em `src/config/meta.json` ([decisão 0021](decisoes/0021-meta-progressao.md)): armas a 250, 350 e 450 de ATP, Lipase a 600, Insulina a 900, e as estrelas do caso dão 40, 80 e 160 de ATP pelo baú. `npm run sim` mostra a curva com esses números.
+- **Gasto:** upgrades das duas árvores e desbloqueio de agentes e armas. Na fase 3, tudo em `src/config/meta.json` ([decisão 0021](decisoes/0021-meta-progressao.md)): armas a 200, 500 e 800 de ATP, Lipase a 1200, Insulina a 2000, Laboratório com custo base dobrado, e as estrelas do caso dão 40, 80 e 160 de ATP pelo baú. Com a queda de ATP em 3% por molécula, `npm run sim` mostra: jogador casual (runs de até 6 min) faz o primeiro desbloqueio na run 3; jogador bom (runs de 15 min) compra tudo em cerca de 31 runs; uma noite de idle no começo rende cerca de 250 ATP.
 
 ## As fórmulas
 

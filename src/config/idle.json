@@ -17,13 +17,29 @@
     "boss": "ldl",
     "bossHpMultiplier": 0.15,
     "pool": [
-      { "fromWave": 1, "kinds": ["glucose", "fructose"] },
-      { "fromWave": 5, "kinds": ["glucose", "fructose", "glycerol", "fattyAcid"] },
-      { "fromWave": 10, "kinds": ["fructose", "fattyAcid", "maltose", "sucrose"] },
-      { "fromWave": 16, "kinds": ["maltose", "sucrose", "fattyAcid", "starch", "triglyceride"] }
+      {
+        "fromWave": 1,
+        "kinds": ["glucose", "fructose"]
+      },
+      {
+        "fromWave": 5,
+        "kinds": ["glucose", "fructose", "glycerol", "fattyAcid"]
+      },
+      {
+        "fromWave": 10,
+        "kinds": ["fructose", "fattyAcid", "maltose", "sucrose"]
+      },
+      {
+        "fromWave": 16,
+        "kinds": ["maltose", "sucrose", "fattyAcid", "starch", "triglyceride"]
+      }
     ],
-    "baseDamage": { "common": 1, "strong": 2, "boss": 5 },
-    "atpPerKill": 0.018,
+    "baseDamage": {
+      "common": 1,
+      "strong": 2,
+      "boss": 5
+    },
+    "atpPerKill": 0.01,
     "atpGrowthPerWave": 1.06
   },
   "agents": {
@@ -72,21 +88,53 @@
     }
   },
   "start": ["omega3"],
-  "unlockCost": { "melatonin": 300, "magnesium": 500, "vitaminD": 800, "endorphin": 1100 },
+  "unlockCost": {
+    "melatonin": 500,
+    "magnesium": 900,
+    "vitaminD": 1400,
+    "endorphin": 2000
+  },
   "levels": {
     "damagePerLevel": 0.25,
-    "baseCost": 30,
+    "baseCost": 45,
     "costRate": 1.12,
     "maxLevel": 50
   },
   "upgrades": {
-    "fireRate": { "name": "Ritmo de disparo", "perLevel": 0.1, "maxLevel": 20, "baseCost": 60 },
-    "baseSlots": { "name": "Espaços na base", "perLevel": 1, "maxLevel": 2, "baseCost": 400 },
-    "offlineCapHours": { "name": "Teto offline", "perLevel": 2, "maxLevel": 8, "baseCost": 80 }
+    "fireRate": {
+      "name": "Ritmo de disparo",
+      "perLevel": 0.1,
+      "maxLevel": 20,
+      "baseCost": 90
+    },
+    "baseSlots": {
+      "name": "Espaços na base",
+      "perLevel": 1,
+      "maxLevel": 2,
+      "baseCost": 600
+    },
+    "offlineCapHours": {
+      "name": "Teto offline",
+      "perLevel": 2,
+      "maxLevel": 8,
+      "baseCost": 120
+    }
   },
-  "fireRate": { "base": 1, "runCap": 3 },
-  "baseSlots": { "base": 3, "runCap": 5 },
-  "offlineCapHours": { "base": 8, "runCap": 24 },
-  "offline": { "estimateSeconds": 120, "minSeconds": 60 },
+  "fireRate": {
+    "base": 1,
+    "runCap": 3
+  },
+  "baseSlots": {
+    "base": 3,
+    "runCap": 5
+  },
+  "offlineCapHours": {
+    "base": 8,
+    "runCap": 24
+  },
+  "offline": {
+    "estimateSeconds": 120,
+    "minSeconds": 60
+  },
   "speedUp": 2
 }

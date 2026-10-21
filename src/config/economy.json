@@ -38,7 +38,7 @@
     "caseStarMinutes": [5, 10, 15]
   },
   "runCurrency": {
-    "dropChance": 0.06,
+    "dropChance": 0.03,
     "eliteDropChance": 1,
     "bossValueMultiplier": 20,
     "baseValue": 1,
