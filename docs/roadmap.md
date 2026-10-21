@@ -16,6 +16,7 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | --- | --- | --- | --- | --- |
 | 0 | Fundação | O projeto roda no PC e no celular? | — | concluída |
 | 1 | Primeira versão jogável (v0.1) | Dá para abrir, ir do menu à run e voltar, e a batalha é divertida? | 0 | em andamento |
+| 1.5 | Menu principal (esqueleto) | Todas as áreas do jogo já têm um lugar no menu? | 1 | não iniciada |
 | 2 | Profundidade da run | A run aguenta 20 minutos sem ficar repetitiva? | 1 | não iniciada |
 | 3 | Meta-progressão e save | Dá vontade de jogar mais uma run? | 2 | não iniciada |
 | 4 | Campo longo (idle) | O idle ajuda a run sem substituí-la? | 3 | não iniciada |
@@ -68,6 +69,21 @@ A primeira versão que parece um jogo: abre num menu, entra numa run jogável e 
 
 **Critério de saída:** o ciclo menu → run → fim → menu funciona no PC e no celular, e uma run de 10 minutos é jogada até o fim por vontade própria, a 60 FPS num celular intermediário (testar no Safari do iPhone).
 
+## Fase 1.5: Menu principal (esqueleto)
+
+Montar o menu principal inteiro, definido em [menu.md](menu.md), antes de aprofundar a run. As áreas que ainda não existem entram como placeholder: o lugar já está no menu, explica o que vai ter ali e em que fase chega. Assim cada fase seguinte só preenche a sua tela.
+
+- [ ] Tela de título (o menu atual) levando ao hub.
+- [ ] Hub com moeda, indivíduo, agente em destaque, botão Jogar e a grade de seções.
+- [ ] Jogar: escolha do modo, com Campo crônico funcionando e Campo longo como placeholder.
+- [ ] Escolha do agente com a Dopamina liberada e os outros agentes bloqueados.
+- [ ] Placeholders de Agentes, Arsenal, Laboratório, Organismo e Compêndio, no formato comum de placeholder.
+- [ ] Recordes e Opções movidos para dentro do hub.
+- [ ] Navegação com Voltar (botão e Esc) em todas as telas; fim da run e pausa voltam ao hub.
+- [ ] Layout do hub em tela larga (PC, celular deitado).
+
+**Critério de saída:** dá para visitar todas as seções do menu no PC e no celular, e cada uma deixa claro o que vai ter ali.
+
 ## Fase 2: Profundidade da run
 
 Transformar o protótipo numa run com escolhas de verdade.
@@ -79,7 +95,8 @@ Transformar o protótipo numa run com escolhas de verdade.
 - [ ] Efetividade por tipo entre agente e molécula (matriz da aba Personagens).
 - [ ] Dente de serra: onda de pico a cada 5 minutos, respiro em seguida e um chefe.
 - [ ] 2 ou 3 agentes jogáveis, cada um com arma inicial e especial próprios, incluindo a Dopamina.
-- [ ] Tela de escolha de agente antes da run.
+- [ ] Preencher a escolha do agente e o placeholder de Agentes com os agentes novos ([menu.md](menu.md)).
+- [ ] Começar o Compêndio com as moléculas e modificadores vistos.
 
 **Critério de saída:** duas runs com agentes ou armas diferentes que pedem estratégias diferentes, e uma run boa que passa dos 20 minutos.
 
@@ -88,7 +105,7 @@ Transformar o protótipo numa run com escolhas de verdade.
 Fazer cada run deixar algo para a próxima.
 
 - [ ] Moeda (ATP) ganha na run.
-- [ ] Menu principal entre runs.
+- [ ] Preencher Laboratório (árvore da run), moeda no hub e desbloqueios em Agentes e Arsenal ([menu.md](menu.md)).
 - [ ] Árvore de upgrades da run, com custo exponencial e teto de poder permanente.
 - [ ] Desbloqueio de agentes e armas com ATP.
 - [ ] Save no IndexedDB, com backup exportável por arquivo ou código.
