@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { DEFAULT_RULES } from './rules';
-import { computeStats, weaponStats } from './stats';
+import { computeStats } from './stats';
+import { weaponParams } from './weaponParams';
 
 describe('computeStats', () => {
   it('começa nos valores base da aba Parâmetros', () => {
@@ -31,16 +32,25 @@ describe('computeStats', () => {
   });
 });
 
-describe('weaponStats', () => {
+describe('weaponParams', () => {
   it('soma os níveis da arma e aplica os atributos do agente', () => {
     const stats = computeStats(DEFAULT_RULES, {
       reactivity: { level: 1, bonus: 0.1 },
       diffusion: { level: 1, bonus: 0.5 },
     });
-    const lv1 = weaponStats(DEFAULT_RULES, 1, stats);
-    const lv3 = weaponStats(DEFAULT_RULES, 3, stats);
-    expect(lv1.damage).toBeCloseTo(DEFAULT_RULES.weapon.damage * 1.1);
-    expect(lv1.radius).toBeCloseTo(DEFAULT_RULES.weapon.projectileRadiusPx * 1.5);
-    expect(lv3.projectiles).toBe(lv1.projectiles + 1);
+    const radical = DEFAULT_RULES.weapons.radical;
+    const lv1 = weaponParams(radical, 1, stats);
+    const lv3 = weaponParams(radical, 3, stats);
+    expect(lv1.damage).toBeCloseTo(radical.base.damage * 1.1);
+    expect(lv1.areaPx).toBeCloseTo(radical.base.areaPx * 1.5);
+    expect(lv3.count).toBe(lv1.count + 1);
+  });
+
+  it('o especial ajusta a recarga e a área da ação', () => {
+    const stats = computeStats(DEFAULT_RULES, {});
+    const pulse = DEFAULT_RULES.weapons.dopaminePulse;
+    const p = weaponParams(pulse, 1, stats, { cooldown: 0.5, area: 2 });
+    expect(p.cooldownSeconds).toBeCloseTo(pulse.base.cooldownSeconds * 0.5);
+    expect(p.areaPx).toBeCloseTo(pulse.base.areaPx * 2);
   });
 });

@@ -1,4 +1,4 @@
-import { PASSIVES, RARITIES, WEAPONS, type RunStatKey, type WeaponLevel } from '../../config';
+import { PASSIVES, RARITIES, WEAPONS, type RunStatKey, type WeaponParams } from '../../config';
 import type { UpgradeChoice } from '../../core/run/upgrades';
 
 const pct = (v: number) => `${Math.round(Math.abs(v) * 100)}%`;
@@ -44,13 +44,24 @@ const STAT_TEXT: Record<RunStatKey, (v: number) => string> = {
   curse: (v) => `+${pct(v)} de estresse: inimigos mais fortes, mais XP`,
 };
 
-function weaponLevelText(level: WeaponLevel): string {
-  const parts: string[] = [];
-  if (level.damage) parts.push(`+${num(level.damage)} de dano`);
-  if (level.projectiles) parts.push(`+${num(level.projectiles)} projétil`);
-  if (level.cooldownSeconds) parts.push(`−${num(level.cooldownSeconds)} s de recarga`);
-  if (level.pierce) parts.push(`atravessa +${num(level.pierce)} inimigo`);
-  return parts.join(', ');
+/** O que cada nível de arma soma, em texto. */
+const PARAM_TEXT: Record<keyof WeaponParams, (v: number) => string> = {
+  damage: (v) => `+${num(v)} de dano`,
+  cooldownSeconds: (v) => `−${num(v)} s de recarga`,
+  count: (v) => `+${num(v)} por ativação`,
+  areaPx: (v) => `+${num(v)} de área`,
+  rangePx: (v) => `+${num(v)} de alcance`,
+  speedPxPerSecond: (v) => `+${num(v)} de velocidade`,
+  pierce: (v) => `atravessa +${num(v)} inimigo`,
+  ricochet: (v) => `salta para +${num(v)} ${plural(v, 'inimigo', 'inimigos')}`,
+  durationSeconds: (v) => `+${num(v)} s de duração`,
+};
+
+function weaponLevelText(level: Partial<WeaponParams>): string {
+  return (Object.keys(level) as (keyof WeaponParams)[])
+    .filter((k) => level[k])
+    .map((k) => PARAM_TEXT[k](level[k]!))
+    .join(', ');
 }
 
 export interface ChoiceText {
@@ -65,11 +76,23 @@ export interface ChoiceText {
 export function describeChoice(choice: UpgradeChoice): ChoiceText {
   switch (choice.kind) {
     case 'weapon': {
-      const w = WEAPONS.radical;
+      const w = WEAPONS[choice.id];
+      if (choice.level === 1)
+        return { title: w.name, level: 'NOVA ARMA', description: w.description };
       return {
         title: w.name,
         level: `NV ${choice.level}`,
         description: weaponLevelText(w.levels[choice.level - 2] ?? {}),
+      };
+    }
+    case 'evolve': {
+      const into = WEAPONS[choice.into];
+      const top = RARITIES.tiers[RARITIES.tiers.length - 1]!;
+      return {
+        title: into.name,
+        level: 'EVOLUÇÃO',
+        description: `${WEAPONS[choice.id].name} evolui: ${into.description}`,
+        rarity: { name: top.name, color: top.color },
       };
     }
     case 'passive': {

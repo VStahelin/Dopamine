@@ -71,6 +71,8 @@ export interface RunConfig {
     /** Invulnerabilidade depois de voltar com a Segunda dose. */
     reviveInvulnerabilitySeconds: number;
   };
+  /** Chefes: nascem no começo de cada pico do dente de serra que caia no intervalo. */
+  bosses: { kind: string; everyMinutes: number }[];
   /** Quanto cada 100% de Estresse aumenta nos inimigos e na recompensa. */
   curse: { hp: number; speed: number; quantity: number; xp: number };
   gems: {
@@ -98,28 +100,101 @@ export interface EnemyDef {
   spawnWeight: number;
   /** Quantos nascem juntos. */
   groupSize: number;
+  /** Em que se quebra ao ser decomposto (cascata da química real, aba Personagens). */
+  fragments?: { kind: string; count: number }[];
+  /** Chefe: nasce pelo calendário de `bosses` em run.json, não pelo sorteio. */
+  boss?: boolean;
 }
 
-export interface WeaponLevel {
-  damage?: number;
-  cooldownSeconds?: number;
-  projectiles?: number;
-  pierce?: number;
+/**
+ * Tipos de ataque (arquétipos da aba Armas): disparo com mira, cone, órbita, aura, poça no chão,
+ * feixe que atravessa, pulso em anel e golpe no inimigo mais próximo.
+ */
+export type WeaponKind =
+  'projectile' | 'cone' | 'orbit' | 'aura' | 'zone' | 'beam' | 'pulse' | 'strike';
+
+/** Valores de uma arma; cada nível a partir do 2 soma uma parte deles. */
+export interface WeaponParams {
+  damage: number;
+  cooldownSeconds: number;
+  /** Projéteis, elétrons, poças, feixes ou alvos por ativação. */
+  count: number;
+  /** Raio da área: projétil, aura, poça, anel, respingo do golpe ou largura do feixe. */
+  areaPx: number;
+  /** Distância de mira; na órbita, o raio da órbita; no cone, o comprimento. */
+  rangePx: number;
+  /** Velocidade do projétil, do elétron na órbita ou do anel do pulso. */
+  speedPxPerSecond: number;
+  pierce: number;
+  ricochet: number;
+  /** Quanto dura a poça. */
+  durationSeconds: number;
 }
+
+export type WeaponSource = 'pool' | 'agent' | 'evolution';
 
 export interface WeaponDef {
   name: string;
-  damage: number;
+  kind: WeaponKind;
+  /** pool = aparece no level up; agent = ação própria de um agente; evolution = só por evolução. */
+  source: WeaponSource;
+  description: string;
+  base: WeaponParams;
+  levels: Partial<WeaponParams>[];
+  /** Disparo: ângulo entre projéteis do mesmo disparo. */
+  spreadDegrees?: number;
+  /** Cone: abertura total. */
+  coneDegrees?: number;
+  /** Aura, poça e órbita: intervalo entre golpes no mesmo inimigo. */
+  hitIntervalSeconds?: number;
+  /** Poça: fração da velocidade que o inimigo perde dentro dela. */
+  slow?: number;
+  /** Aura: dano extra que os inimigos dentro dela recebem de todas as fontes. */
+  vulnerability?: number;
+  /** Aura: puxa inimigos deste tipo para o agente. */
+  pullType?: MoleculeType;
+  pullPxPerSecond?: number;
+  /** Aura que cresce a cada decomposição (Enzima). */
+  growPerKillPx?: number;
+  growMaxPx?: number;
+  /** Arma no nível máximo + este reagente = vira `into`. */
+  evolution?: { reagent: string; into: string };
+}
+
+export type AffinityLevel = 'strong' | 'neutral' | 'weak';
+
+export type SpecialKind = 'frenzy' | 'emulsion' | 'uptake';
+
+/** Especial do agente, disparado pelo jogador. */
+export interface SpecialDef {
+  name: string;
+  kind: SpecialKind;
+  description: string;
   cooldownSeconds: number;
-  projectileSpeedPxPerSecond: number;
-  rangePx: number;
-  projectiles: number;
-  pierce: number;
-  projectileRadiusPx: number;
-  /** Ângulo entre projéteis do mesmo disparo. */
-  spreadDegrees: number;
-  /** O que cada nível a partir do 2 soma aos valores base. */
-  levels: WeaponLevel[];
+  durationSeconds: number;
+  /** Pico de recompensa: multiplica a recarga e a área da ação durante o efeito. */
+  cooldownMultiplier?: number;
+  areaMultiplier?: number;
+  /** Pico de recompensa: depois do efeito, a ação fica mais lenta por este tempo. */
+  crashSeconds?: number;
+  crashCooldownMultiplier?: number;
+  /** Emulsão e Captação: raio, tipo afetado, dano extra recebido, dano e puxão. */
+  radiusPx?: number;
+  type?: MoleculeType;
+  vulnerability?: number;
+  damage?: number;
+  pullPx?: number;
+}
+
+export interface AgentDef {
+  name: string;
+  /** Molécula que o agente é (para a ficha). */
+  description: string;
+  /** Arma da ação própria (source "agent" em weapons.json). */
+  action: string;
+  special: SpecialDef;
+  /** Efetividade por tipo de molécula; o que faltar é neutro. */
+  affinity: Partial<Record<MoleculeType, AffinityLevel>>;
 }
 
 /**
@@ -177,6 +252,8 @@ export interface PassiveDef {
   integer?: boolean;
   /** Não ocupa espaço de modificador (o próprio "Espaços de modificador"). */
   freeSlot?: boolean;
+  /** Reagente: além do atributo, é o que uma arma no máximo pede para evoluir. */
+  reagent?: boolean;
 }
 
 export interface RarityTier {

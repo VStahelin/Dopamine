@@ -10,7 +10,7 @@ import { PALETTE } from './palette';
  * (pixels de arte por unidade, decisão 0009), então o mesmo sprite sai com mais pixels sem
  * mudar de tamanho no mundo.
  */
-export type Element = 'C' | 'H' | 'O' | 'N';
+export type Element = 'C' | 'H' | 'O' | 'N' | 'S';
 
 export interface Atom {
   el: Element;
@@ -29,22 +29,38 @@ const ELEMENT = {
   H: { color: PALETTE.hydrogen, size: 6 },
   O: { color: PALETTE.oxygen, size: 9 },
   N: { color: PALETTE.nitrogen, size: 9 },
+  S: { color: PALETTE.sulfur, size: 10 },
 } as const;
 
 const BOND = 7;
 
-/** Pontos de um hexágono "em pé" com centro (cx, cy). */
-function hexagon(cx: number, cy: number, r = BOND): { x: number; y: number }[] {
-  return Array.from({ length: 6 }, (_, k) => {
-    const a = ((-90 + 60 * k) * Math.PI) / 180;
+/** Pontos de um polígono regular "em pé" (hexágono por padrão) com centro (cx, cy). */
+function polygon(cx: number, cy: number, sides = 6, r = BOND): { x: number; y: number }[] {
+  return Array.from({ length: sides }, (_, k) => {
+    const a = ((-90 + (360 / sides) * k) * Math.PI) / 180;
     return { x: cx + Math.cos(a) * r, y: cy + Math.sin(a) * r };
   });
 }
 
-function ring(cx: number, cy: number, elements: Element[]): MoleculeDef {
-  const atoms = hexagon(cx, cy).map((p, i) => ({ el: elements[i] ?? 'C', ...p }));
-  const bonds: MoleculeDef['bonds'] = atoms.map((_, i) => [i, (i + 1) % 6]);
+function ring(cx: number, cy: number, elements: Element[], sides = 6): MoleculeDef {
+  const atoms = polygon(cx, cy, sides).map((p, i) => ({ el: elements[i] ?? 'C', ...p }));
+  const bonds: MoleculeDef['bonds'] = atoms.map((_, i) => [i, (i + 1) % sides]);
   return { atoms, bonds };
+}
+
+/** Junta outra molécula, deslocada, e liga um átomo de cada (índices locais). */
+function merge(
+  m: MoleculeDef,
+  other: MoleculeDef,
+  dx: number,
+  dy: number,
+  link?: [number, number],
+) {
+  const offset = m.atoms.length;
+  for (const a of other.atoms) m.atoms.push({ ...a, x: a.x + dx, y: a.y + dy });
+  for (const [a, b, o] of other.bonds) m.bonds.push([a + offset, b + offset, o]);
+  if (link) m.bonds.push([link[0], link[1] + offset]);
+  return offset;
 }
 
 /** Acrescenta um átomo ligado a outro, na direção do ângulo em graus. */
@@ -115,6 +131,115 @@ function triglyceride(): MoleculeDef {
   return m;
 }
 
+/** Frutose: anel de furanose (4 C e 1 O) com uma hidroxila. */
+function fructose(): MoleculeDef {
+  const m = ring(0, 0, ['O', 'C', 'C', 'C', 'C'], 5);
+  attach(m, 2, 'O', 20);
+  return m;
+}
+
+/** Maltose: duas glicoses ligadas por um oxigênio. */
+function maltose(): MoleculeDef {
+  const m = ring(-11, 0, ['O', 'C', 'C', 'C', 'C', 'C']);
+  const o = attach(m, 2, 'O', 30);
+  merge(m, ring(11, 0, ['O', 'C', 'C', 'C', 'C', 'C']), 0, 0, [o, 5]);
+  return m;
+}
+
+/** Sacarose: glicose (hexágono) e frutose (pentágono) ligadas por um oxigênio. */
+function sucrose(): MoleculeDef {
+  const m = ring(-11, 0, ['O', 'C', 'C', 'C', 'C', 'C']);
+  const o = attach(m, 2, 'O', 30);
+  merge(m, ring(10, 2, ['O', 'C', 'C', 'C', 'C'], 5), 0, 0, [o, 4]);
+  return m;
+}
+
+/** Amido: cadeia de três anéis de glicose. */
+function starch(): MoleculeDef {
+  const m = ring(-22, 0, ['O', 'C', 'C', 'C', 'C', 'C']);
+  let o = attach(m, 2, 'O', 30);
+  const mid = merge(m, ring(0, 0, ['O', 'C', 'C', 'C', 'C', 'C']), 0, 0, [o, 5]);
+  o = attach(m, mid + 2, 'O', 30);
+  merge(m, ring(22, 0, ['O', 'C', 'C', 'C', 'C', 'C']), 0, 0, [o, 5]);
+  return m;
+}
+
+/** Glicerol: três carbonos, cada um com uma hidroxila. */
+function glycerol(): MoleculeDef {
+  const m: MoleculeDef = {
+    atoms: [
+      { el: 'C', x: 0, y: -BOND },
+      { el: 'C', x: 0, y: 0 },
+      { el: 'C', x: 0, y: BOND },
+    ],
+    bonds: [
+      [0, 1],
+      [1, 2],
+    ],
+  };
+  attach(m, 0, 'O', -30);
+  attach(m, 1, 'O', 180);
+  attach(m, 2, 'O', 30);
+  return m;
+}
+
+/** Partícula de LDL (chefe): casca de fosfolipídios em volta de um núcleo de colesterol. */
+function ldl(): MoleculeDef {
+  const shell = polygon(0, 0, 12, 20).map((p, i) => ({
+    el: (i % 3 === 0 ? 'N' : i % 2 ? 'O' : 'C') as Element,
+    ...p,
+  }));
+  const m: MoleculeDef = { atoms: shell, bonds: shell.map((_, i) => [i, (i + 1) % 12]) };
+  merge(m, ring(0, 0, ['C', 'C', 'C', 'C', 'C', 'C']), 0, 0);
+  const core = m.atoms.length;
+  m.atoms.push({ el: 'O', x: 0, y: 0 });
+  m.bonds.push([core - 6, core]);
+  return m;
+}
+
+/** Lipase (enzima): trecho de cadeia de proteína, N–C–C(=O) repetido. */
+function lipase(): MoleculeDef {
+  const m: MoleculeDef = { atoms: [{ el: 'N', x: -24, y: 0 }], bonds: [] };
+  let last = 0;
+  for (let i = 0; i < 3; i++) {
+    const ca = attach(m, last, 'C', -30);
+    const c = attach(m, ca, 'C', 30);
+    attach(m, c, 'O', 90, 2);
+    if (i < 2) last = attach(m, c, 'N', -30);
+  }
+  attach(m, 0, 'H', 210);
+  return m;
+}
+
+/** Insulina: duas cadeias (A e B) presas por pontes de enxofre. */
+function insulin(): MoleculeDef {
+  const m: MoleculeDef = { atoms: [], bonds: [] };
+  const chain = (y: number, el: Element) => {
+    const start = m.atoms.length;
+    for (let i = 0; i < 4; i++) {
+      m.atoms.push({ el: i === 0 ? el : 'C', x: -16 + i * 11, y: y + (i % 2 ? 3 : -3) });
+      if (i > 0) m.bonds.push([start + i - 1, start + i]);
+    }
+    return start;
+  };
+  const a = chain(-10, 'N');
+  const b = chain(10, 'N');
+  for (const i of [1, 3]) {
+    const sa = m.atoms.length;
+    m.atoms.push({ el: 'S', x: m.atoms[a + i]!.x, y: -2 });
+    m.atoms.push({ el: 'S', x: m.atoms[b + i]!.x, y: 4 });
+    m.bonds.push([a + i, sa], [sa, sa + 1], [sa + 1, b + i]);
+  }
+  return m;
+}
+
+/** Superóxido (O₂•⁻), o projétil da Reação em Cadeia. */
+function superoxide(): MoleculeDef {
+  const m: MoleculeDef = { atoms: [{ el: 'O', x: 0, y: 0 }], bonds: [] };
+  attach(m, 0, 'O', 0);
+  return m;
+}
+
 /** Radical hidroxila (OH•), o projétil do Radical Livre. */
 function hydroxyl(): MoleculeDef {
   const m: MoleculeDef = { atoms: [{ el: 'O', x: 0, y: 0 }], bonds: [] };
@@ -122,7 +247,22 @@ function hydroxyl(): MoleculeDef {
   return m;
 }
 
-export const MOLECULES = { dopamine, glucose, fattyAcid, triglyceride, hydroxyl } as const;
+export const MOLECULES = {
+  dopamine,
+  lipase,
+  insulin,
+  glucose,
+  fructose,
+  maltose,
+  sucrose,
+  starch,
+  glycerol,
+  fattyAcid,
+  triglyceride,
+  ldl,
+  hydroxyl,
+  superoxide,
+} as const;
 
 /** Escurece uma cor RGB pelo fator (0 a 1). */
 export function shade(color: number, factor: number): number {

@@ -25,9 +25,20 @@ describe('migrateSave', () => {
 
 describe('recordRun', () => {
   it('atualiza recordes e diz quais foram batidos', () => {
-    const start = recordRun(defaultSave(defaults), { timeSeconds: 100, level: 5, kills: 50 }).save;
-    const { save, newRecords } = recordRun(start, { timeSeconds: 80, level: 7, kills: 50 });
+    const start = recordRun(defaultSave(defaults), {
+      timeSeconds: 100,
+      level: 5,
+      kills: 50,
+      seen: ['glucose'],
+    }).save;
+    const { save, newRecords } = recordRun(start, {
+      timeSeconds: 80,
+      level: 7,
+      kills: 50,
+      seen: ['ldl', 'glucose'],
+    });
     expect(newRecords).toEqual(['level']);
     expect(save.records).toEqual({ bestTimeSeconds: 100, bestLevel: 7, mostKills: 50, runs: 2 });
+    expect(save.seen.sort()).toEqual(['glucose', 'ldl']);
   });
 });

@@ -1,0 +1,65 @@
+{
+  "dopamine": {
+    "name": "Dopamina",
+    "description": "Neurotransmissor da recompensa. A generalista: efetividade média contra tudo.",
+    "action": "dopaminePulse",
+    "affinity": {},
+    "special": {
+      "name": "Pico de recompensa",
+      "kind": "frenzy",
+      "description": "Por alguns segundos, pulsos muito mais rápidos e maiores. Depois vem a queda.",
+      "cooldownSeconds": 30,
+      "durationSeconds": 5,
+      "cooldownMultiplier": 0.35,
+      "areaMultiplier": 1.5,
+      "crashSeconds": 3,
+      "crashCooldownMultiplier": 1.6
+    }
+  },
+  "lipase": {
+    "name": "Lipase",
+    "description": "Enzima que quebra gordura. Forte contra lipídios, fraca contra o resto.",
+    "action": "lipaseStrike",
+    "affinity": {
+      "lipid": "strong",
+      "sugar": "weak",
+      "radical": "weak",
+      "stress": "weak",
+      "toxin": "weak",
+      "inflammation": "weak"
+    },
+    "special": {
+      "name": "Emulsão",
+      "kind": "emulsion",
+      "description": "Espalha uma área no chão que deixa os lipídios dentro dela frágeis.",
+      "cooldownSeconds": 25,
+      "durationSeconds": 6,
+      "radiusPx": 80,
+      "type": "lipid",
+      "vulnerability": 1
+    }
+  },
+  "insulin": {
+    "name": "Insulina",
+    "description": "Hormônio que tira o açúcar da circulação. Forte contra açúcares, fraca contra o resto.",
+    "action": "insulinField",
+    "affinity": {
+      "sugar": "strong",
+      "lipid": "weak",
+      "radical": "weak",
+      "stress": "weak",
+      "toxin": "weak",
+      "inflammation": "weak"
+    },
+    "special": {
+      "name": "Captação",
+      "kind": "uptake",
+      "description": "Puxa todos os açúcares da tela de uma vez e causa dano neles.",
+      "cooldownSeconds": 30,
+      "durationSeconds": 0,
+      "type": "sugar",
+      "damage": 40,
+      "pullPx": 120
+    }
+  }
+}

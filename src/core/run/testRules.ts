@@ -1,12 +1,20 @@
 import { DEFAULT_RULES, type RunRules } from './rules';
 
-/** Regras para testes: sem inimigos nascendo sozinhos, para cada teste montar a cena que quer. */
+/**
+ * Regras para testes: sem inimigos nem chefes nascendo sozinhos, para cada teste montar a cena
+ * que quer. A Dopamina usa o Radical Livre como ação, um disparo previsível em linha reta.
+ */
 export function rulesWithoutSpawn(): RunRules {
   return {
     ...DEFAULT_RULES,
     run: {
       ...DEFAULT_RULES.run,
       spawn: { ...DEFAULT_RULES.run.spawn, baseEnemiesPerSecond: 0 },
+      bosses: [],
+    },
+    agents: {
+      ...DEFAULT_RULES.agents,
+      dopamine: { ...DEFAULT_RULES.agents.dopamine, action: 'radical' },
     },
   };
 }

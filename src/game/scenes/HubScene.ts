@@ -1,8 +1,9 @@
 import * as Phaser from 'phaser';
-import { ECONOMY } from '../../config';
+import { AGENTS, ECONOMY, type AgentId } from '../../config';
 import { PALETTE, PALETTE_CSS } from '../render/palette';
-import { ENEMY_TEXTURES, TEXTURES, textureKey } from '../render/textures';
-import { getSave } from '../storage/saveStore';
+import { AGENT_TEXTURES, ENEMY_TEXTURES, textureKey } from '../render/textures';
+import { getSave, setSave } from '../storage/saveStore';
+import { renderAgents, renderArsenal } from '../ui/catalogViews';
 import {
   BODY_SIZE,
   drawBody,
@@ -16,14 +17,7 @@ import {
   drawWoodFrame,
   type IconName,
 } from '../ui/icons';
-import {
-  AGENT_SELECT,
-  SCREENS,
-  TAB_SECTIONS,
-  TABS,
-  type SectionDef,
-  type TabId,
-} from '../ui/menuContent';
+import { SCREENS, TAB_SECTIONS, TABS, type SectionDef, type TabId } from '../ui/menuContent';
 import { renderSection } from '../ui/sectionView';
 import { bodyText, formatTime, impactText, labelText, withShadow } from '../ui/theme';
 import { setupUiLayout } from '../ui/uiLayout';
@@ -95,6 +89,29 @@ export class HubScene extends Phaser.Scene {
     if (this.tab === 'case') this.scene.start(SCENES.run);
   }
 
+  private selectedAgent(): AgentId {
+    const id = getSave(this).selectedAgent;
+    return (id in AGENTS ? id : 'dopamine') as AgentId;
+  }
+
+  /** Conteúdo das abas: Agentes e Arsenal já têm conteúdo; Laboratório e Organismo são placeholder. */
+  private tabContent(w: number, top: number, bottom: number): Phaser.GameObjects.GameObject[] {
+    switch (this.tab) {
+      case 'agents':
+        return renderAgents(this, 0, top + 14, w, this.selectedAgent(), (id) => {
+          setSave(this, { ...getSave(this), selectedAgent: id });
+          this.build();
+        });
+      case 'arsenal':
+        return renderArsenal(this, 0, top + 14, w);
+      case 'lab':
+      case 'organism':
+        return renderSection(this, 0, top, w, bottom - top, TAB_SECTIONS[this.tab]);
+      case 'case':
+        return [];
+    }
+  }
+
   private open(def: SectionDef): void {
     this.scene.start(SCENES.placeholder, { def });
   }
@@ -117,7 +134,7 @@ export class HubScene extends Phaser.Scene {
       out.push(...this.caseArea(g, colX, colW, midTop, midBottom - ACTION_H));
       out.push(...this.actionRow(g, w, colX, colW, midBottom - ACTION_H));
     } else {
-      out.push(...renderSection(this, 0, midTop, w, midBottom - midTop, TAB_SECTIONS[this.tab]));
+      out.push(...this.tabContent(w, midTop, midBottom));
     }
     out.push(...this.tabBar(g, w, h, colX, colW));
     this.root = this.add.container(0, 0, out);
@@ -324,7 +341,7 @@ export class HubScene extends Phaser.Scene {
     drawInkBox(g, railX, railY, 60, 140);
     out.push(
       this.iconButton(g, railX + 8, railY + 8, 44, 'book', PALETTE.textLight, () =>
-        this.open(SCREENS.compendium),
+        this.scene.start(SCENES.catalog, { view: 'compendium' }),
       ),
       this.add
         .text(railX + 30, railY + 55, 'COMPÊNDIO', labelText(8, PALETTE_CSS.text))
@@ -387,14 +404,20 @@ export class HubScene extends Phaser.Scene {
     const ax = colX + colW - 16 - 80;
     drawWoodFrame(g, ax, fy, 80, 72);
     drawCreamSlot(g, ax + 6, fy + 6, 68, 60);
-    const agent = this.add.image(ax + 40, fy + 36, textureKey(TEXTURES.agent, 3));
+    const agentId = this.selectedAgent();
+    const agent = this.add.image(ax + 40, fy + 36, textureKey(AGENT_TEXTURES[agentId], 3));
     agent.setScale(Math.min(60 / agent.width, 48 / agent.height));
     out.push(
       agent,
       this.add
-        .text(ax + 40, fy + 76, 'DOPAMINA ▸', labelText(9, PALETTE_CSS.text))
+        .text(
+          ax + 40,
+          fy + 76,
+          `${AGENTS[agentId].name.toUpperCase()} ▸`,
+          labelText(9, PALETTE_CSS.text),
+        )
         .setOrigin(0.5, 0),
-      this.zone(ax, fy, 80, 92, () => this.open(AGENT_SELECT)),
+      this.zone(ax, fy, 80, 92, () => this.scene.start(SCENES.catalog, { view: 'agents' })),
     );
 
     // JOGAR: o botão dominante, entre os dois.

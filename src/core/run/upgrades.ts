@@ -1,9 +1,13 @@
-import type { PassiveDef, PassiveId } from '../../config';
-import type { RunState } from './state';
-import { computeStats, weaponMaxLevel } from './stats';
+import type { PassiveDef, PassiveId, WeaponId } from '../../config';
+import { newWeapon, type RunState } from './state';
+import { computeStats } from './stats';
+import { weaponMaxLevel } from './weaponParams';
 
 export type UpgradeChoice =
-  | { kind: 'weapon'; level: number }
+  /** Arma nova (nível 1) ou o próximo nível de uma arma que o agente já tem. */
+  | { kind: 'weapon'; id: WeaponId; level: number }
+  /** Arma no máximo + reagente: vira a arma evoluída. */
+  | { kind: 'evolve'; id: WeaponId; into: WeaponId }
   | {
       kind: 'passive';
       id: PassiveId;
@@ -20,8 +24,8 @@ const FALLBACK_HEAL = 30;
 
 /** Identifica a opção para banir: a arma ou um modificador, sem nível nem raridade. */
 export function choiceKey(choice: UpgradeChoice): string {
-  if (choice.kind === 'passive') return `passive:${choice.id}`;
-  return choice.kind;
+  if (choice.kind === 'heal') return 'heal';
+  return `${choice.kind}:${choice.id}`;
 }
 
 /** Usos restantes de Rerrolar, Pular ou Banir nesta run. */
@@ -66,23 +70,58 @@ function availablePassives(state: RunState): PassiveId[] {
   });
 }
 
+/** Evoluções prontas: arma no nível máximo com o reagente que ela pede. */
+function readyEvolutions(state: RunState): UpgradeChoice[] {
+  const out: UpgradeChoice[] = [];
+  for (const w of state.weapons) {
+    const def = state.rules.weapons[w.id];
+    if (!def.evolution || w.level < weaponMaxLevel(def)) continue;
+    const reagent = def.evolution.reagent as PassiveId;
+    if ((state.passives[reagent]?.level ?? 0) === 0) continue;
+    if (state.banished.includes(`evolve:${w.id}`)) continue;
+    out.push({ kind: 'evolve', id: w.id, into: def.evolution.into as WeaponId });
+  }
+  return out;
+}
+
+/** Armas que podem aparecer: melhorias das que já tem e, com espaço, as do pool. */
+function availableWeapons(state: RunState): UpgradeChoice[] {
+  const { weapons } = state.rules;
+  const out: UpgradeChoice[] = [];
+  for (const w of state.weapons) {
+    if (w.level < weaponMaxLevel(weapons[w.id]) && !state.banished.includes(`weapon:${w.id}`)) {
+      out.push({ kind: 'weapon', id: w.id, level: w.level + 1 });
+    }
+  }
+  if (state.weapons.length < Math.floor(state.stats.weaponSlots)) {
+    const owned = new Set(state.weapons.map((w) => w.id));
+    for (const id of Object.keys(weapons) as WeaponId[]) {
+      if (weapons[id].source !== 'pool' || owned.has(id)) continue;
+      // Uma arma evoluída ocupa o lugar da original: a original não volta.
+      if (state.weapons.some((w) => weapons[id].evolution?.into === w.id)) continue;
+      if (state.banished.includes(`weapon:${id}`)) continue;
+      out.push({ kind: 'weapon', id, level: 1 });
+    }
+  }
+  return out;
+}
+
 /** Opções do level up atual; sorteia na primeira chamada e repete até a escolha. */
 export function levelUpOffer(state: RunState): UpgradeChoice[] {
   if (state.offer) return state.offer;
 
-  type Candidate = { kind: 'weapon' } | { kind: 'passive'; id: PassiveId };
-  const pool: Candidate[] = [];
-  if (state.weaponLevel < weaponMaxLevel(state.rules) && !state.banished.includes('weapon')) {
-    pool.push({ kind: 'weapon' });
-  }
-  for (const id of availablePassives(state)) pool.push({ kind: 'passive', id });
-
   const count = Math.floor(state.stats.choices);
-  const offer: UpgradeChoice[] = [];
+  // Evoluções prontas aparecem sempre, antes do sorteio.
+  const offer: UpgradeChoice[] = readyEvolutions(state).slice(0, count);
+  type Candidate = UpgradeChoice | { kind: 'passiveSlot'; id: PassiveId };
+  const pool: Candidate[] = [
+    ...availableWeapons(state),
+    ...availablePassives(state).map((id) => ({ kind: 'passiveSlot' as const, id })),
+  ];
   while (offer.length < count && pool.length > 0) {
     const pick = pool.splice(state.rng.int(pool.length), 1)[0]!;
-    if (pick.kind === 'weapon') {
-      offer.push({ kind: 'weapon', level: state.weaponLevel + 1 });
+    if (pick.kind !== 'passiveSlot') {
+      offer.push(pick);
       continue;
     }
     const def = state.rules.passives[pick.id];
@@ -106,9 +145,17 @@ export function applyChoice(state: RunState, choice: UpgradeChoice): void {
 
   const before = state.stats.maxInteractions;
   switch (choice.kind) {
-    case 'weapon':
-      state.weaponLevel = choice.level;
+    case 'weapon': {
+      const owned = state.weapons.find((w) => w.id === choice.id);
+      if (owned) owned.level = choice.level;
+      else state.weapons.push(newWeapon(choice.id));
       break;
+    }
+    case 'evolve': {
+      const i = state.weapons.findIndex((w) => w.id === choice.id);
+      if (i >= 0) state.weapons[i] = newWeapon(choice.into);
+      break;
+    }
     case 'passive': {
       const current = state.passives[choice.id] ?? { level: 0, bonus: 0 };
       state.passives[choice.id] = {

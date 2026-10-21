@@ -23,7 +23,7 @@ describe('atributos ofensivos', () => {
     for (const h of hits) {
       expect(h).toMatchObject({
         crit: true,
-        amount: r.rules.weapon.damage * r.stats.critDamage * 1,
+        amount: r.rules.weapons.radical.base.damage * r.stats.critDamage,
       });
     }
   });
@@ -36,7 +36,7 @@ describe('atributos ofensivos', () => {
     e.speed = 0;
     steps(30, () => stepRun(r, STILL, DT));
     const hit = drainEvents(r).find((ev) => ev.type === 'damage');
-    expect(hit).toMatchObject({ amount: r.rules.weapon.damage * 2 });
+    expect(hit).toMatchObject({ amount: r.rules.weapons.radical.base.damage * 2 });
   });
 
   it('Repulsão empurra o inimigo atingido', () => {
@@ -82,7 +82,7 @@ describe('atributos defensivos', () => {
   it('Reflexo devolve dano a quem encosta', () => {
     const r = run();
     r.stats.thorns = 1;
-    r.weaponCooldown = 99;
+    r.weapons[0]!.cooldown = 99;
     const e = addEnemy(r, 'triglyceride', 0, 0);
     stepRun(r, STILL, DT);
     expect(e.hp).toBe(e.maxHp - e.contactDamage);

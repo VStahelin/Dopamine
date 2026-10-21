@@ -21,6 +21,10 @@ export interface SaveData {
   version: number;
   records: Records;
   options: Options;
+  /** Agente escolhido para a próxima run. */
+  selectedAgent: string;
+  /** Moléculas já vistas em alguma run, para o Compêndio. */
+  seen: string[];
 }
 
 export type RecordKind = 'time' | 'level' | 'kills';
@@ -30,6 +34,8 @@ export function defaultSave(options: Options): SaveData {
     version: SAVE_VERSION,
     records: { bestTimeSeconds: 0, bestLevel: 0, mostKills: 0, runs: 0 },
     options: { ...options },
+    selectedAgent: 'dopamine',
+    seen: [],
   };
 }
 
@@ -41,7 +47,12 @@ function num(value: unknown, fallback: number): number {
 export function migrateSave(raw: unknown, defaults: Options): SaveData {
   const base = defaultSave(defaults);
   if (typeof raw !== 'object' || raw === null) return base;
-  const data = raw as Partial<{ records: Partial<Records>; options: Partial<Options> }>;
+  const data = raw as Partial<{
+    records: Partial<Records>;
+    options: Partial<Options>;
+    selectedAgent: unknown;
+    seen: unknown;
+  }>;
   const r = data.records ?? {};
   const o = data.options ?? {};
   return {
@@ -55,6 +66,8 @@ export function migrateSave(raw: unknown, defaults: Options): SaveData {
     options: {
       showFps: typeof o.showFps === 'boolean' ? o.showFps : base.options.showFps,
     },
+    selectedAgent: typeof data.selectedAgent === 'string' ? data.selectedAgent : base.selectedAgent,
+    seen: Array.isArray(data.seen) ? data.seen.filter((k) => typeof k === 'string') : [],
   };
 }
 
@@ -77,6 +90,7 @@ export function recordRun(
         mostKills: Math.max(r.mostKills, result.kills),
         runs: r.runs + 1,
       },
+      seen: [...new Set([...save.seen, ...result.seen])],
     },
     newRecords,
   };

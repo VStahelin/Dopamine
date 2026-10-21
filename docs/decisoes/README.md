@@ -19,4 +19,5 @@ As decisões de design tomadas antes deste registro continuam marcadas como "dec
 | [0011](0011-rodar-localmente.md) | Rodar localmente durante o desenvolvimento | técnica | proposta |
 | [0012](0012-passo-fixo-e-semente.md) | Simulação em passo fixo, com aleatoriedade por semente | técnica | proposta |
 | [0013](0013-raridade-e-sorte.md) | Raridade dos modificadores, movida pela Sorte | design | proposta |
+| [0015](0015-acao-do-agente-e-armas.md) | Ação própria do agente + armas do pool, com tipos de ataque em JSON | design | aceita |
 | [0014](0014-fase-menu-principal.md) | Fase 1.5: esqueleto do menu principal antes da profundidade da run | processo | proposta |

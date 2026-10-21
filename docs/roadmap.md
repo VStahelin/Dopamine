@@ -16,8 +16,8 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | --- | --- | --- | --- | --- |
 | 0 | Fundação | O projeto roda no PC e no celular? | — | concluída |
 | 1 | Primeira versão jogável (v0.1) | Dá para abrir, ir do menu à run e voltar, e a batalha é divertida? | 0 | concluída |
-| 1.5 | Menu principal (esqueleto) | Todas as áreas do jogo já têm um lugar no menu? | 1 | em andamento |
-| 2 | Profundidade da run | A run aguenta 20 minutos sem ficar repetitiva? | 1 | não iniciada |
+| 1.5 | Menu principal (esqueleto) | Todas as áreas do jogo já têm um lugar no menu? | 1 | concluída |
+| 2 | Profundidade da run | A run aguenta 20 minutos sem ficar repetitiva? | 1 | em andamento |
 | 3 | Meta-progressão e save | Dá vontade de jogar mais uma run? | 2 | não iniciada |
 | 4 | Campo longo (idle) | O idle ajuda a run sem substituí-la? | 3 | não iniciada |
 | 5 | Organismo | Cuidar do corpo muda o jeito de jogar? | 3, 4 | não iniciada |
@@ -90,15 +90,16 @@ Montar o menu principal inteiro, definido em [menu.md](menu.md), antes de aprofu
 
 Transformar o protótipo numa run com escolhas de verdade.
 
-- [ ] As 7 armas iniciais da aba Armas, com níveis.
-- [ ] Itens passivos (reagentes) e as evoluções de arma.
-- [ ] Especial ativado pelo jogador, com recarga e botão no celular.
-- [ ] Decomposição em cascata: moléculas fortes se quebram em mais fracas.
-- [ ] Efetividade por tipo entre agente e molécula (matriz da aba Personagens).
-- [ ] Dente de serra: onda de pico a cada 5 minutos, respiro em seguida e um chefe.
-- [ ] 2 ou 3 agentes jogáveis, cada um com arma inicial e especial próprios, incluindo a Dopamina.
-- [ ] Preencher a escolha do agente e o placeholder de Agentes com os agentes novos ([menu.md](menu.md)).
-- [ ] Começar o Compêndio com as moléculas e modificadores vistos.
+- [x] As 7 armas iniciais da aba Armas, com níveis.
+- [x] Itens passivos (reagentes) e as evoluções de arma.
+- [x] Especial ativado pelo jogador, com recarga e botão no celular.
+- [x] Decomposição em cascata: moléculas fortes se quebram em mais fracas.
+- [x] Efetividade por tipo entre agente e molécula (matriz da aba Personagens).
+- [x] Dente de serra: onda de pico a cada 5 minutos, respiro em seguida e um chefe (Partícula de LDL, [decisão 0015](decisoes/0015-acao-do-agente-e-armas.md)).
+- [x] 2 ou 3 agentes jogáveis, cada um com arma inicial e especial próprios, incluindo a Dopamina.
+- [x] Preencher a escolha do agente e o placeholder de Agentes com os agentes novos ([menu.md](menu.md)).
+- [x] Começar o Compêndio com as moléculas vistas (os modificadores entram depois).
+- [ ] Jogar com os três agentes e ajustar os números (ritmo de armas, vida do chefe, Lipase contra açúcares).
 
 **Critério de saída:** duas runs com agentes ou armas diferentes que pedem estratégias diferentes, e uma run boa que passa dos 20 minutos.
 
@@ -173,9 +174,9 @@ Perguntas em aberto das outras abas que precisam de resposta antes da fase indic
 - [x] **Fase 0:** orientação no celular para a run (vertical, horizontal ou as duas)? → as duas ([0010](decisoes/0010-orientacao-livre.md), proposta)
 - [x] **Fase 1:** quantas interações o agente tem no início, e existe forma de recuperar na run? → 100 (aba Parâmetros); recupera pelo modificador Interações e pela opção "Nova dose" quando não sobra upgrade.
 - [x] **Fase 1:** qual agente e quais três inimigos entram no protótipo? → Dopamina; glicose, ácido graxo e triglicerídeo.
-- [ ] **Fase 2:** a arma é do agente ou do jogador? Quantas armas e qual nível máximo por run?
-- [ ] **Fase 2:** quais moléculas fortes geram quais fragmentos na cascata?
-- [ ] **Fase 2:** um agente por run, ou dá para trocar durante a run?
+- [x] **Fase 2:** a arma é do agente ou do jogador? Quantas armas e qual nível máximo por run? → ação própria + armas do pool, 4 espaços, nível 8 ([0015](decisoes/0015-acao-do-agente-e-armas.md)).
+- [x] **Fase 2:** quais moléculas fortes geram quais fragmentos na cascata? → química real da aba Personagens ([0015](decisoes/0015-acao-do-agente-e-armas.md)).
+- [x] **Fase 2:** um agente por run, ou dá para trocar durante a run? → um agente por run, escolhido no hub.
 - [ ] **Fase 3:** o save precisa sincronizar entre aparelhos, ou cada um com o seu basta no começo?
 - [ ] **Fase 4:** o idle aparece na mesma tela da run ou numa tela própria? O jogador posiciona os agentes da base?
 - [ ] **Fase 5:** os efeitos de cada setor, o efeito colateral e o que acontece quando um setor chega a zero.

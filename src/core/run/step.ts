@@ -1,18 +1,28 @@
 import type { EnemyKind } from '../../config';
 import { clampLength, type Vec2 } from '../math/vec2';
+import { damageEnemy, heal } from './combat';
 import { difficultyAt, waveFactorAt, xpToNextLevel } from './progression';
 import { SpatialGrid } from './spatialGrid';
-import { addEnemy, type Enemy, type Projectile, type RunState } from './state';
-import { weaponStats } from './stats';
+import { updateSpecial } from './specials';
+import { addEnemy, type Enemy, type RunState } from './state';
+import {
+  applyFields,
+  GRID_CELL,
+  moveProjectiles,
+  updatePulses,
+  updateWeapons,
+  updateZones,
+} from './weapons';
 
 export interface StepInput {
   /** Direção pedida pelo jogador, comprimento de 0 a 1. */
   move: Vec2;
   /** Distância do agente até a borda mais longe da tela; os inimigos nascem além dela. */
   viewRadius: number;
+  /** O jogador pediu o especial neste passo. */
+  special?: boolean;
 }
 
-const GRID_CELL = 32;
 const grid = new SpatialGrid(GRID_CELL);
 
 /**
@@ -24,14 +34,18 @@ export function stepRun(state: RunState, input: StepInput, dt: number): void {
   state.time += dt;
 
   moveAgent(state, input.move, dt);
+  updateSpecial(state, input.special === true, dt);
   spawnEnemies(state, input.viewRadius, dt);
 
   grid.clear();
   state.enemies.forEach((e, i) => grid.insert(i, e.x, e.y));
 
+  applyFields(state, dt, grid);
   moveEnemies(state, dt);
-  fireWeapon(state, dt);
-  moveProjectiles(state, dt);
+  updateWeapons(state, dt, grid);
+  moveProjectiles(state, dt, grid);
+  updatePulses(state, dt, grid);
+  updateZones(state, dt, grid);
   touchAgent(state, dt);
   updateGems(state, dt);
   removeDead(state);
@@ -45,9 +59,29 @@ function moveAgent(state: RunState, intent: Vec2, dt: number): void {
   if (dir.x !== 0) state.agent.facingX = Math.sign(dir.x);
 }
 
+function spawnAround(state: RunState, distance: number): { x: number; y: number } {
+  const angle = state.rng.range(0, Math.PI * 2);
+  return {
+    x: state.agent.x + Math.cos(angle) * distance,
+    y: state.agent.y + Math.sin(angle) * distance,
+  };
+}
+
 function spawnEnemies(state: RunState, viewRadius: number, dt: number): void {
   const { run, economy, enemies } = state.rules;
   const difficulty = difficultyAt(state.time, economy.difficulty);
+  const distance = viewRadius + run.spawn.marginOutsideViewPx;
+
+  // Chefes no começo de cada pico do dente de serra.
+  run.bosses.forEach((b, i) => {
+    const next = (state.bossesSpawned[i]! + 1) * b.everyMinutes * 60;
+    if (state.time < next) return;
+    state.bossesSpawned[i]!++;
+    const at = spawnAround(state, distance);
+    addEnemy(state, b.kind as EnemyKind, at.x, at.y, difficulty);
+    state.events.push({ type: 'boss', kind: b.kind as EnemyKind });
+  });
+
   const rate =
     run.spawn.baseEnemiesPerSecond *
     difficulty *
@@ -57,41 +91,41 @@ function spawnEnemies(state: RunState, viewRadius: number, dt: number): void {
 
   const minute = state.time / 60;
   const unlocked = (Object.keys(enemies) as EnemyKind[]).filter(
-    (k) => enemies[k].unlockMinute <= minute,
+    (k) => enemies[k].unlockMinute <= minute && enemies[k].spawnWeight > 0 && !enemies[k].boss,
   );
-  const distance = viewRadius + run.spawn.marginOutsideViewPx;
 
   while (state.spawnBudget >= 1 && state.enemies.length < run.spawn.maxEnemies) {
     const kind = state.rng.weighted(unlocked, (k) => enemies[k].spawnWeight);
     if (!kind) break;
-    const angle = state.rng.range(0, Math.PI * 2);
-    const cx = state.agent.x + Math.cos(angle) * distance;
-    const cy = state.agent.y + Math.sin(angle) * distance;
+    const c = spawnAround(state, distance);
     const group = enemies[kind].groupSize;
     for (let i = 0; i < group && state.enemies.length < run.spawn.maxEnemies; i++) {
       const spread = i === 0 ? 0 : run.spawn.groupSpreadPx;
       addEnemy(
         state,
         kind,
-        cx + state.rng.range(-spread, spread),
-        cy + state.rng.range(-spread, spread),
+        c.x + state.rng.range(-spread, spread),
+        c.y + state.rng.range(-spread, spread),
         difficulty,
       );
     }
     state.spawnBudget -= group;
   }
   // Não acumula nascimentos enquanto a tela está cheia.
-  if (state.enemies.length >= run.spawn.maxEnemies)
+  if (state.enemies.length >= run.spawn.maxEnemies) {
     state.spawnBudget = Math.min(state.spawnBudget, 1);
+  }
 
   // Inimigos que ficaram muito para trás voltam para perto, como no Vampire Survivors;
   // sem isso, fugir em linha reta deixa o limite de inimigos ocupado por quem não alcança.
+  // Chefes nunca são reposicionados.
   const far = distance * 2;
   for (const e of state.enemies) {
+    if (e.boss) continue;
     if ((e.x - state.agent.x) ** 2 + (e.y - state.agent.y) ** 2 < far * far) continue;
-    const angle = state.rng.range(0, Math.PI * 2);
-    e.x = state.agent.x + Math.cos(angle) * distance;
-    e.y = state.agent.y + Math.sin(angle) * distance;
+    const at = spawnAround(state, distance);
+    e.x = at.x;
+    e.y = at.y;
   }
 }
 
@@ -105,159 +139,29 @@ function moveEnemies(state: RunState, dt: number): void {
     const dy = agent.y - e.y;
     const dist = Math.hypot(dx, dy);
     if (dist > 0.001) {
-      const step = Math.min(e.speed * dt, dist);
+      const step = Math.min(e.speed * e.slow * dt, dist);
       e.x += (dx / dist) * step;
       e.y += (dy / dist) * step;
     }
     grid.query(e.x, e.y, e.radius * 2, (j) => {
       if (j <= i) return;
-      const o = state.enemies[j]!;
+      const o = state.enemies[j];
+      if (!o) return;
       const ox = o.x - e.x;
       const oy = o.y - e.y;
       const d = Math.hypot(ox, oy);
       const overlap = e.radius + o.radius - d;
       if (overlap <= 0 || d < 0.001) return;
-      const nx = (ox / d) * overlap * 0.5 * push;
-      const ny = (oy / d) * overlap * 0.5 * push;
-      e.x -= nx;
-      e.y -= ny;
-      o.x += nx;
-      o.y += ny;
+      // O chefe não é empurrado pelos menores.
+      const share = e.boss ? 0 : o.boss ? 1 : 0.5;
+      const nx = (ox / d) * overlap * push;
+      const ny = (oy / d) * overlap * push;
+      e.x -= nx * share;
+      e.y -= ny * share;
+      o.x += nx * (1 - share);
+      o.y += ny * (1 - share);
     });
   }
-}
-
-/** Inimigo vivo mais perto de (x, y), ignorando os ids em `skip`. */
-function nearestEnemy(
-  state: RunState,
-  x: number,
-  y: number,
-  maxDistance: number,
-  skip: readonly number[] = [],
-): Enemy | undefined {
-  let best: Enemy | undefined;
-  let bestD2 = maxDistance * maxDistance;
-  for (const e of state.enemies) {
-    if (e.hp <= 0 || skip.includes(e.id)) continue;
-    const d2 = (e.x - x) ** 2 + (e.y - y) ** 2;
-    if (d2 < bestD2) {
-      bestD2 = d2;
-      best = e;
-    }
-  }
-  return best;
-}
-
-function fireWeapon(state: RunState, dt: number): void {
-  state.weaponCooldown = Math.max(0, state.weaponCooldown - dt);
-  if (state.weaponCooldown > 0) return;
-
-  const w = weaponStats(state.rules, state.weaponLevel, state.stats);
-  const target = nearestEnemy(state, state.agent.x, state.agent.y, w.range);
-  if (!target) return;
-
-  const base = Math.atan2(target.y - state.agent.y, target.x - state.agent.x);
-  for (let i = 0; i < w.projectiles; i++) {
-    const angle = base + (i - (w.projectiles - 1) / 2) * w.spreadRadians;
-    state.projectiles.push({
-      x: state.agent.x,
-      y: state.agent.y,
-      vx: Math.cos(angle) * w.speed,
-      vy: Math.sin(angle) * w.speed,
-      life: (w.range * 1.3) / w.speed,
-      damage: w.damage,
-      pierceLeft: w.pierce,
-      radius: w.radius,
-      hits: [],
-      ricochetLeft: w.ricochet,
-    });
-  }
-  state.weaponCooldown = w.cooldownSeconds;
-  state.events.push({ type: 'shoot' });
-}
-
-function moveProjectiles(state: RunState, dt: number): void {
-  const { combat } = state.rules.run;
-  for (const p of state.projectiles) {
-    p.x += p.vx * dt;
-    p.y += p.vy * dt;
-    p.life -= dt;
-    if (p.life <= 0) continue;
-
-    let done = false;
-    grid.query(p.x, p.y, p.radius + GRID_CELL, (j) => {
-      if (done || p.life <= 0) return;
-      const e = state.enemies[j]!;
-      if (e.hp <= 0 || p.hits.includes(e.id)) return;
-      if ((e.x - p.x) ** 2 + (e.y - p.y) ** 2 > (e.radius + p.radius) ** 2) return;
-
-      p.hits.push(e.id);
-      hitEnemy(state, e, p);
-
-      // Reação em cadeia: o disparo salta para o inimigo mais próximo ainda não atingido.
-      if (p.ricochetLeft > 0) {
-        const next = nearestEnemy(state, p.x, p.y, combat.ricochetRangePx, p.hits);
-        if (next) {
-          const speed = Math.hypot(p.vx, p.vy);
-          const d = Math.hypot(next.x - p.x, next.y - p.y) || 1;
-          p.vx = ((next.x - p.x) / d) * speed;
-          p.vy = ((next.y - p.y) / d) * speed;
-          p.life = (combat.ricochetRangePx * 1.5) / speed;
-          p.damage *= combat.ricochetDamageFactor;
-          p.ricochetLeft--;
-          done = true;
-          return;
-        }
-      }
-      if (p.pierceLeft > 0) p.pierceLeft--;
-      else p.life = 0;
-      done = p.life <= 0;
-    });
-  }
-}
-
-/** Golpe de um disparo: crítico, bônus contra inimigos fortes e empurrão. */
-function hitEnemy(state: RunState, e: Enemy, p: Projectile): void {
-  const { stats, rng, rules } = state;
-  let amount = p.damage;
-  if (e.elite) amount *= stats.eliteDamage;
-  const crit = rng.next() < stats.critChance;
-  if (crit) amount *= stats.critDamage;
-
-  const speed = Math.hypot(p.vx, p.vy) || 1;
-  const push = (rules.run.combat.knockbackPx * stats.knockback) / Math.max(1, e.radius / 8);
-  e.x += (p.vx / speed) * push;
-  e.y += (p.vy / speed) * push;
-
-  damageEnemy(state, e, amount, crit);
-}
-
-function damageEnemy(state: RunState, e: Enemy, amount: number, crit = false): void {
-  e.hp -= amount;
-  e.hitFlash = 0.1;
-  state.events.push({ type: 'damage', x: e.x, y: e.y, amount, crit });
-  if (e.hp > 0) return;
-
-  state.kills++;
-  state.events.push({ type: 'kill', x: e.x, y: e.y, kind: e.kind });
-  dropGem(state, e.x, e.y, e.xp);
-  // Absorção: chance de recuperar 1 interação ao decompor.
-  if (state.rng.next() < state.stats.lifesteal) heal(state, 1);
-}
-
-function heal(state: RunState, amount: number): void {
-  state.agent.interactions = Math.min(
-    state.stats.maxInteractions,
-    state.agent.interactions + amount,
-  );
-}
-
-function dropGem(state: RunState, x: number, y: number, value: number): void {
-  if (state.gems.length >= state.rules.run.gems.maxOnField) {
-    state.gems[0]!.value += value;
-    return;
-  }
-  state.gems.push({ x, y, value, attracted: false });
 }
 
 function touchAgent(state: RunState, dt: number): void {
@@ -269,9 +173,9 @@ function touchAgent(state: RunState, dt: number): void {
 
   const agentRadius = rules.run.agent.radiusPx;
   let attacker: Enemy | undefined;
-  grid.query(agent.x, agent.y, agentRadius + GRID_CELL, (j) => {
-    const e = state.enemies[j]!;
-    if (e.hp <= 0) return;
+  grid.query(agent.x, agent.y, agentRadius + GRID_CELL * 2, (j) => {
+    const e = state.enemies[j];
+    if (!e || e.hp <= 0) return;
     if ((e.x - agent.x) ** 2 + (e.y - agent.y) ** 2 > (e.radius + agentRadius) ** 2) return;
     if (!attacker || e.contactDamage > attacker.contactDamage) attacker = e;
   });
@@ -338,4 +242,10 @@ function updateGems(state: RunState, dt: number): void {
 function removeDead(state: RunState): void {
   state.enemies = state.enemies.filter((e) => e.hp > 0);
   state.projectiles = state.projectiles.filter((p) => p.life > 0);
+  // Limpa marcas de golpe de inimigos que já morreram.
+  if (Math.floor(state.time) !== Math.floor(state.time - 1 / 60)) {
+    const alive = new Set(state.enemies.map((e) => e.id));
+    for (const w of state.weapons)
+      for (const id of w.lastHit.keys()) if (!alive.has(id)) w.lastHit.delete(id);
+  }
 }

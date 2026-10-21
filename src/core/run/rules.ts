@@ -1,4 +1,5 @@
 import {
+  AGENTS,
   ECONOMY,
   ENEMIES,
   PASSIVES,
@@ -6,6 +7,8 @@ import {
   RUN,
   STATS,
   WEAPONS,
+  type AgentDef,
+  type AgentId,
   type EconomyConfig,
   type EnemyDef,
   type EnemyKind,
@@ -15,6 +18,7 @@ import {
   type RunConfig,
   type StatsConfig,
   type WeaponDef,
+  type WeaponId,
 } from '../../config';
 
 /**
@@ -26,9 +30,10 @@ export interface RunRules {
   economy: EconomyConfig;
   stats: StatsConfig;
   enemies: Record<EnemyKind, EnemyDef>;
-  weapon: WeaponDef;
+  weapons: Record<WeaponId, WeaponDef>;
   passives: Record<PassiveId, PassiveDef>;
   rarities: RarityConfig;
+  agents: Record<AgentId, AgentDef>;
 }
 
 export const DEFAULT_RULES: RunRules = {
@@ -36,7 +41,8 @@ export const DEFAULT_RULES: RunRules = {
   economy: ECONOMY,
   stats: STATS,
   enemies: ENEMIES,
-  weapon: WEAPONS.radical,
+  weapons: WEAPONS,
   passives: PASSIVES,
   rarities: RARITIES,
+  agents: AGENTS,
 };

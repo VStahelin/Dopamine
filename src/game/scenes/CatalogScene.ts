@@ -1,0 +1,91 @@
+import * as Phaser from 'phaser';
+import type { AgentId } from '../../config';
+import { getSave, setSave } from '../storage/saveStore';
+import { addButton } from '../ui/button';
+import { renderAgents, renderCompendium } from '../ui/catalogViews';
+import { drawGrid } from '../ui/icons';
+import { impactText, withShadow } from '../ui/theme';
+import { PALETTE_CSS } from '../render/palette';
+import { setupUiLayout } from '../ui/uiLayout';
+import { SCENES } from './keys';
+
+export type CatalogView = 'agents' | 'compendium';
+
+const TITLES: Record<CatalogView, string> = {
+  agents: 'ESCOLHA DO AGENTE',
+  compendium: 'COMPÊNDIO',
+};
+
+/** Telas abertas pelo hub com conteúdo de verdade: escolha do agente e Compêndio. */
+export class CatalogScene extends Phaser.Scene {
+  private root?: Phaser.GameObjects.Container;
+  private view: CatalogView = 'agents';
+  private size = { w: 0, h: 0 };
+
+  constructor() {
+    super(SCENES.catalog);
+  }
+
+  create(data: { view: CatalogView }): void {
+    this.view = data.view;
+    this.input.keyboard?.on('keydown-ESC', () => this.back());
+    setupUiLayout(
+      this,
+      (w, h) => {
+        this.size = { w, h };
+        this.build();
+      },
+      { width: 390, height: 700 },
+    );
+  }
+
+  private back(): void {
+    this.scene.start(SCENES.hub);
+  }
+
+  private build(): void {
+    this.root?.destroy();
+    const { w, h } = this.size;
+    const bg = this.add.graphics();
+    drawGrid(bg, 0, 0, w, h);
+    const save = getSave(this);
+    const title = this.add
+      .text(
+        w / 2,
+        18,
+        TITLES[this.view],
+        withShadow(impactText(24, PALETTE_CSS.logoOrange), PALETTE_CSS.outline, 2),
+      )
+      .setOrigin(0.5, 0);
+    const body =
+      this.view === 'agents'
+        ? renderAgents(
+            this,
+            0,
+            64,
+            w,
+            save.selectedAgent,
+            (id: AgentId) => {
+              setSave(this, { ...getSave(this), selectedAgent: id });
+              this.back();
+            },
+            false,
+          )
+        : renderCompendium(this, 0, 64, w, save.seen);
+    const bw = Math.min(w - 32, 220);
+    this.root = this.add.container(0, 0, [
+      bg,
+      title,
+      ...body,
+      addButton(this, {
+        x: Math.floor((w - bw) / 2),
+        y: h - 62,
+        width: bw,
+        height: 48,
+        label: 'VOLTAR',
+        variant: 'secondary',
+        onClick: () => this.back(),
+      }),
+    ]);
+  }
+}

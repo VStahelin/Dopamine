@@ -1,6 +1,6 @@
 import * as Phaser from 'phaser';
 import { PALETTE, PALETTE_CSS } from '../render/palette';
-import { TEXTURES, textureKey } from '../render/textures';
+import { AGENT_TEXTURES, textureKey } from '../render/textures';
 import { addButtonColumn } from '../ui/menuLayout';
 import { impactText, labelText } from '../ui/theme';
 import { setupUiLayout } from '../ui/uiLayout';
@@ -30,7 +30,9 @@ export class TitleScene extends Phaser.Scene {
       band.fillStyle(PALETTE.interaction).fillRect(-122, -18, 244, 36);
       band.setPosition(cx, logoTop + 70).setRotation(-0.06);
 
-      const agent = this.add.image(cx, logoTop + 20, textureKey(TEXTURES.agent, 3)).setScale(2 / 3);
+      const agent = this.add
+        .image(cx, logoTop + 20, textureKey(AGENT_TEXTURES.dopamine, 3))
+        .setScale(2 / 3);
       const title = this.add
         .text(cx, logoTop + 70, 'DOPAMINA', impactText(34, PALETTE_CSS.logoOrange))
         .setOrigin(0.5)

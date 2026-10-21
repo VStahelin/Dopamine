@@ -1,22 +1,508 @@
 {
   "radical": {
     "name": "Radical Livre",
-    "damage": 6,
-    "cooldownSeconds": 0.9,
-    "projectileSpeedPxPerSecond": 220,
-    "rangePx": 200,
-    "projectiles": 1,
-    "pierce": 0,
-    "projectileRadiusPx": 3,
-    "spreadDegrees": 12,
+    "kind": "projectile",
+    "source": "pool",
+    "description": "Dispara radicais OH• no inimigo mais próximo.",
+    "base": {
+      "damage": 6,
+      "cooldownSeconds": 0.9,
+      "count": 1,
+      "areaPx": 3,
+      "rangePx": 200,
+      "speedPxPerSecond": 220,
+      "pierce": 0,
+      "ricochet": 0,
+      "durationSeconds": 0
+    },
     "levels": [
-      { "damage": 3 },
-      { "projectiles": 1 },
-      { "cooldownSeconds": -0.1 },
-      { "damage": 3 },
-      { "pierce": 1 },
-      { "projectiles": 1 },
-      { "damage": 5 }
+      {
+        "damage": 3
+      },
+      {
+        "count": 1
+      },
+      {
+        "cooldownSeconds": -0.1
+      },
+      {
+        "damage": 3
+      },
+      {
+        "pierce": 1
+      },
+      {
+        "count": 1
+      },
+      {
+        "damage": 5
+      }
+    ],
+    "spreadDegrees": 12,
+    "evolution": {
+      "reagent": "peroxide",
+      "into": "fenton"
+    }
+  },
+  "acidJet": {
+    "name": "Jato Ácido",
+    "kind": "cone",
+    "source": "pool",
+    "description": "Cone curto e forte na direção do inimigo mais próximo.",
+    "base": {
+      "damage": 10,
+      "cooldownSeconds": 1.1,
+      "count": 1,
+      "areaPx": 0,
+      "rangePx": 60,
+      "speedPxPerSecond": 0,
+      "pierce": 0,
+      "ricochet": 0,
+      "durationSeconds": 0
+    },
+    "levels": [
+      {
+        "damage": 4
+      },
+      {
+        "rangePx": 10
+      },
+      {
+        "cooldownSeconds": -0.15
+      },
+      {
+        "damage": 5
+      },
+      {
+        "rangePx": 12
+      },
+      {
+        "cooldownSeconds": -0.15
+      },
+      {
+        "damage": 8
+      }
+    ],
+    "coneDegrees": 70,
+    "evolution": {
+      "reagent": "chlorine",
+      "into": "aquaRegia"
+    }
+  },
+  "electronCloud": {
+    "name": "Nuvem de Elétrons",
+    "kind": "orbit",
+    "source": "pool",
+    "description": "Elétrons giram em volta do agente e acertam o que passa.",
+    "base": {
+      "damage": 5,
+      "cooldownSeconds": 0,
+      "count": 2,
+      "areaPx": 5,
+      "rangePx": 34,
+      "speedPxPerSecond": 110,
+      "pierce": 0,
+      "ricochet": 0,
+      "durationSeconds": 0
+    },
+    "levels": [
+      {
+        "count": 1
+      },
+      {
+        "damage": 3
+      },
+      {
+        "rangePx": 6
+      },
+      {
+        "count": 1
+      },
+      {
+        "damage": 4
+      },
+      {
+        "speedPxPerSecond": 40
+      },
+      {
+        "count": 1
+      }
+    ],
+    "hitIntervalSeconds": 0.6
+  },
+  "catalyst": {
+    "name": "Catalisador",
+    "kind": "aura",
+    "source": "pool",
+    "description": "Campo em volta do agente: dano baixo e contínuo, e quem está dentro recebe mais dano.",
+    "base": {
+      "damage": 2,
+      "cooldownSeconds": 0,
+      "count": 1,
+      "areaPx": 40,
+      "rangePx": 0,
+      "speedPxPerSecond": 0,
+      "pierce": 0,
+      "ricochet": 0,
+      "durationSeconds": 0
+    },
+    "levels": [
+      {
+        "areaPx": 6
+      },
+      {
+        "damage": 1
+      },
+      {
+        "areaPx": 6
+      },
+      {
+        "damage": 1
+      },
+      {
+        "areaPx": 8
+      },
+      {
+        "damage": 2
+      },
+      {
+        "areaPx": 10
+      }
+    ],
+    "hitIntervalSeconds": 0.5,
+    "vulnerability": 0.25,
+    "evolution": {
+      "reagent": "coenzyme",
+      "into": "enzyme"
+    }
+  },
+  "solventPool": {
+    "name": "Poça de Solvente",
+    "kind": "zone",
+    "source": "pool",
+    "description": "Arremessa um frasco que vira uma poça: dano por segundo e lentidão.",
+    "base": {
+      "damage": 3,
+      "cooldownSeconds": 2.5,
+      "count": 1,
+      "areaPx": 26,
+      "rangePx": 160,
+      "speedPxPerSecond": 0,
+      "pierce": 0,
+      "ricochet": 0,
+      "durationSeconds": 3
+    },
+    "levels": [
+      {
+        "damage": 2
+      },
+      {
+        "count": 1
+      },
+      {
+        "areaPx": 6
+      },
+      {
+        "durationSeconds": 1
+      },
+      {
+        "damage": 2
+      },
+      {
+        "count": 1
+      },
+      {
+        "areaPx": 8
+      }
+    ],
+    "hitIntervalSeconds": 0.5,
+    "slow": 0.4
+  },
+  "chainReaction": {
+    "name": "Reação em Cadeia",
+    "kind": "projectile",
+    "source": "pool",
+    "description": "O disparo acerta um inimigo e salta para o próximo.",
+    "base": {
+      "damage": 8,
+      "cooldownSeconds": 1.4,
+      "count": 1,
+      "areaPx": 4,
+      "rangePx": 180,
+      "speedPxPerSecond": 260,
+      "pierce": 0,
+      "ricochet": 3,
+      "durationSeconds": 0
+    },
+    "levels": [
+      {
+        "ricochet": 1
+      },
+      {
+        "damage": 3
+      },
+      {
+        "cooldownSeconds": -0.15
+      },
+      {
+        "ricochet": 1
+      },
+      {
+        "damage": 4
+      },
+      {
+        "ricochet": 2
+      },
+      {
+        "damage": 5
+      }
+    ],
+    "spreadDegrees": 20
+  },
+  "uvRay": {
+    "name": "Raio UV",
+    "kind": "beam",
+    "source": "pool",
+    "description": "Feixe em linha reta que atravessa todos os inimigos no caminho.",
+    "base": {
+      "damage": 18,
+      "cooldownSeconds": 2.2,
+      "count": 1,
+      "areaPx": 6,
+      "rangePx": 260,
+      "speedPxPerSecond": 0,
+      "pierce": 0,
+      "ricochet": 0,
+      "durationSeconds": 0
+    },
+    "levels": [
+      {
+        "damage": 6
+      },
+      {
+        "cooldownSeconds": -0.25
+      },
+      {
+        "areaPx": 3
+      },
+      {
+        "damage": 8
+      },
+      {
+        "cooldownSeconds": -0.25
+      },
+      {
+        "count": 1
+      },
+      {
+        "damage": 12
+      }
+    ],
+    "spreadDegrees": 25,
+    "evolution": {
+      "reagent": "ozone",
+      "into": "laser"
+    }
+  },
+  "dopaminePulse": {
+    "name": "Pulso dopaminérgico",
+    "kind": "pulse",
+    "source": "agent",
+    "description": "Pulsos em anel que saem do agente e acertam tudo por onde passam.",
+    "base": {
+      "damage": 7,
+      "cooldownSeconds": 1.3,
+      "count": 1,
+      "areaPx": 70,
+      "rangePx": 0,
+      "speedPxPerSecond": 220,
+      "pierce": 0,
+      "ricochet": 0,
+      "durationSeconds": 0
+    },
+    "levels": [
+      {
+        "damage": 3
+      },
+      {
+        "areaPx": 12
+      },
+      {
+        "cooldownSeconds": -0.15
+      },
+      {
+        "damage": 4
+      },
+      {
+        "areaPx": 14
+      },
+      {
+        "cooldownSeconds": -0.15
+      },
+      {
+        "damage": 6
+      }
     ]
+  },
+  "lipaseStrike": {
+    "name": "Hidrólise",
+    "kind": "strike",
+    "source": "agent",
+    "description": "Golpes curtos e fortes no inimigo mais próximo, com respingo em volta.",
+    "base": {
+      "damage": 22,
+      "cooldownSeconds": 0.65,
+      "count": 1,
+      "areaPx": 22,
+      "rangePx": 55,
+      "speedPxPerSecond": 0,
+      "pierce": 0,
+      "ricochet": 0,
+      "durationSeconds": 0
+    },
+    "levels": [
+      {
+        "damage": 6
+      },
+      {
+        "cooldownSeconds": -0.1
+      },
+      {
+        "areaPx": 6
+      },
+      {
+        "damage": 8
+      },
+      {
+        "count": 1
+      },
+      {
+        "cooldownSeconds": -0.1
+      },
+      {
+        "damage": 12
+      }
+    ]
+  },
+  "insulinField": {
+    "name": "Campo de captação",
+    "kind": "aura",
+    "source": "agent",
+    "description": "Campo que puxa os açúcares para perto e os absorve.",
+    "base": {
+      "damage": 4,
+      "cooldownSeconds": 0,
+      "count": 1,
+      "areaPx": 66,
+      "rangePx": 0,
+      "speedPxPerSecond": 0,
+      "pierce": 0,
+      "ricochet": 0,
+      "durationSeconds": 0
+    },
+    "levels": [
+      {
+        "areaPx": 8
+      },
+      {
+        "damage": 1
+      },
+      {
+        "areaPx": 10
+      },
+      {
+        "damage": 2
+      },
+      {
+        "areaPx": 10
+      },
+      {
+        "damage": 2
+      },
+      {
+        "damage": 3
+      }
+    ],
+    "hitIntervalSeconds": 0.5,
+    "pullType": "sugar",
+    "pullPxPerSecond": 45
+  },
+  "fenton": {
+    "name": "Reação de Fenton",
+    "kind": "projectile",
+    "source": "evolution",
+    "description": "Rajada de radicais: o peróxido com ferro gera OH• em massa.",
+    "base": {
+      "damage": 14,
+      "cooldownSeconds": 0.35,
+      "count": 3,
+      "areaPx": 4,
+      "rangePx": 220,
+      "speedPxPerSecond": 280,
+      "pierce": 1,
+      "ricochet": 0,
+      "durationSeconds": 0
+    },
+    "levels": [],
+    "spreadDegrees": 18
+  },
+  "aquaRegia": {
+    "name": "Água Régia",
+    "kind": "cone",
+    "source": "evolution",
+    "description": "Cone largo que corrói até inimigos fortes; a água régia dissolve até ouro.",
+    "base": {
+      "damage": 30,
+      "cooldownSeconds": 0.9,
+      "count": 1,
+      "areaPx": 0,
+      "rangePx": 100,
+      "speedPxPerSecond": 0,
+      "pierce": 0,
+      "ricochet": 0,
+      "durationSeconds": 0
+    },
+    "levels": [],
+    "coneDegrees": 110
+  },
+  "laser": {
+    "name": "Laser",
+    "kind": "beam",
+    "source": "evolution",
+    "description": "Feixe quase contínuo que varre a tela.",
+    "base": {
+      "damage": 9,
+      "cooldownSeconds": 0.25,
+      "count": 1,
+      "areaPx": 8,
+      "rangePx": 320,
+      "speedPxPerSecond": 0,
+      "pierce": 0,
+      "ricochet": 0,
+      "durationSeconds": 0
+    },
+    "levels": []
+  },
+  "enzyme": {
+    "name": "Enzima",
+    "kind": "aura",
+    "source": "evolution",
+    "description": "Aura que cresce a cada molécula decomposta.",
+    "base": {
+      "damage": 6,
+      "cooldownSeconds": 0,
+      "count": 1,
+      "areaPx": 70,
+      "rangePx": 0,
+      "speedPxPerSecond": 0,
+      "pierce": 0,
+      "ricochet": 0,
+      "durationSeconds": 0
+    },
+    "levels": [],
+    "hitIntervalSeconds": 0.4,
+    "vulnerability": 0.4,
+    "growPerKillPx": 0.2,
+    "growMaxPx": 60
   }
 }

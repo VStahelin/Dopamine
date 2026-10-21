@@ -11,6 +11,88 @@
     "spawnWeight": 3,
     "groupSize": 4
   },
+  "fructose": {
+    "name": "Frutose",
+    "type": "sugar",
+    "hp": 3,
+    "speedPxPerSecond": 95,
+    "contactDamage": "common",
+    "xp": 1,
+    "radiusPx": 7,
+    "unlockMinute": 1,
+    "spawnWeight": 2,
+    "groupSize": 3
+  },
+  "maltose": {
+    "name": "Maltose",
+    "type": "sugar",
+    "hp": 9,
+    "speedPxPerSecond": 70,
+    "contactDamage": "common",
+    "xp": 2,
+    "radiusPx": 11,
+    "unlockMinute": 2,
+    "spawnWeight": 1.5,
+    "groupSize": 2,
+    "fragments": [
+      {
+        "kind": "glucose",
+        "count": 2
+      }
+    ]
+  },
+  "sucrose": {
+    "name": "Sacarose",
+    "type": "sugar",
+    "hp": 10,
+    "speedPxPerSecond": 65,
+    "contactDamage": "common",
+    "xp": 2,
+    "radiusPx": 11,
+    "unlockMinute": 3,
+    "spawnWeight": 1,
+    "groupSize": 2,
+    "fragments": [
+      {
+        "kind": "glucose",
+        "count": 1
+      },
+      {
+        "kind": "fructose",
+        "count": 1
+      }
+    ]
+  },
+  "starch": {
+    "name": "Amido",
+    "type": "sugar",
+    "hp": 40,
+    "speedPxPerSecond": 34,
+    "contactDamage": "strong",
+    "xp": 6,
+    "radiusPx": 16,
+    "unlockMinute": 6,
+    "spawnWeight": 0.6,
+    "groupSize": 1,
+    "fragments": [
+      {
+        "kind": "maltose",
+        "count": 3
+      }
+    ]
+  },
+  "glycerol": {
+    "name": "Glicerol",
+    "type": "lipid",
+    "hp": 3,
+    "speedPxPerSecond": 55,
+    "contactDamage": "common",
+    "xp": 1,
+    "radiusPx": 7,
+    "unlockMinute": 999,
+    "spawnWeight": 0,
+    "groupSize": 1
+  },
   "fattyAcid": {
     "name": "Ácido graxo",
     "type": "lipid",
@@ -33,6 +115,39 @@
     "radiusPx": 15,
     "unlockMinute": 3,
     "spawnWeight": 1,
-    "groupSize": 1
+    "groupSize": 1,
+    "fragments": [
+      {
+        "kind": "glycerol",
+        "count": 1
+      },
+      {
+        "kind": "fattyAcid",
+        "count": 3
+      }
+    ]
+  },
+  "ldl": {
+    "name": "Partícula de LDL",
+    "type": "lipid",
+    "hp": 450,
+    "speedPxPerSecond": 26,
+    "contactDamage": "boss",
+    "xp": 60,
+    "radiusPx": 28,
+    "unlockMinute": 999,
+    "spawnWeight": 0,
+    "groupSize": 1,
+    "boss": true,
+    "fragments": [
+      {
+        "kind": "triglyceride",
+        "count": 3
+      },
+      {
+        "kind": "fattyAcid",
+        "count": 4
+      }
+    ]
   }
 }

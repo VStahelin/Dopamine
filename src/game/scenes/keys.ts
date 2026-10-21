@@ -3,6 +3,7 @@ export const SCENES = {
   title: 'title',
   hub: 'hub',
   placeholder: 'placeholder',
+  catalog: 'catalog',
   records: 'records',
   options: 'options',
   run: 'run',
