@@ -51,6 +51,11 @@ export const PALETTE = {
   buff: 0x6cd43f,
   /** Segmento parcial das interações. */
   interactionLight: 0xff8a80,
+  /** Efeitos das armas (prancheta Crônico: HUD de batalha). */
+  chlorineDark: 0x1a4e12,
+  dopaminePink: 0xff6fa8,
+  uv: 0xb072f0,
+  uvDark: 0x4a1e7a,
   /** Botão de desistir. */
   wine: 0x5a1416,
   wineHi: 0x7a2a2c,

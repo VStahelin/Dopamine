@@ -7,9 +7,11 @@
  * - `icons.json`: ícones de 16×16 do canvas (prancheta "Ícones de armas e habilidades"), por
  *   arma, modificador e especial.
  * - `frames.json`: molduras dos ícones (prancheta "Crônico: ícones, dano e paisagem").
- * - `molecules.json`: moléculas como átomos e ligações, em unidades do mundo.
+ * - `molecules.json`: moléculas como átomos e ligações, em unidades do mundo, e o estilo de cada
+ *   elemento.
  * - `ui.json`: ícones de 8×8 do menu, organismo, cadeado e formas (moeda, estrela, escudo).
- * - `world.json`: chão, gema e elétron, que o gerador desenha a partir destes números.
+ * - `world.json`: chão, gema, elétron, disparo e moeda, que o gerador desenha a partir destes
+ *   números.
  */
 import framesJson from './frames.json';
 import iconsJson from './icons.json';
@@ -43,7 +45,7 @@ export interface FrameStyle {
 
 export const FRAMES: Readonly<Record<FrameKind, FrameStyle>> = framesJson;
 
-export type Element = 'C' | 'H' | 'O' | 'N' | 'S';
+export type Element = 'C' | 'H' | 'O' | 'N' | 'S' | 'Cl';
 
 /** Átomo: elemento e posição em unidades do mundo, com o centro da molécula em (0, 0). */
 export type AtomDef = readonly [Element, number, number];
@@ -58,8 +60,19 @@ export interface MoleculeDef {
 /** Nome de uma cor de `PALETTE` (src/game/render/palette.ts). */
 export type PaletteName = string;
 
-export const ELEMENTS: Readonly<Record<Element, { color: PaletteName; size: number }>> =
-  moleculesJson.elements;
+/** Átomo da prancheta "Sprites de moléculas": miolo, borda escura e brilho, em #RRGGBB. */
+export interface ElementStyle {
+  fill: string;
+  dark: string;
+  light: string;
+  /** Diâmetro em unidades do mundo. */
+  size: number;
+}
+
+export const ELEMENTS: Readonly<Record<Element, ElementStyle>> = moleculesJson.elements;
+
+/** Cor das ligações entre os átomos. */
+export const BOND_COLOR: string = moleculesJson.bond;
 
 export const MOLECULES = moleculesJson.molecules as unknown as Readonly<
   Record<string, MoleculeDef>
@@ -81,4 +94,19 @@ export const UI_SPRITES: {
   lockedIcon: PixelGrid;
 } = uiJson;
 
-export const WORLD_SPRITES = worldJson;
+/** Bolinha octogonal do campo (gema, elétron, disparo, moeda): borda, miolo e brilho. */
+export interface OrbStyle {
+  /** Lado em unidades do mundo. */
+  size: number;
+  border: string;
+  fill: string;
+  light: string;
+}
+
+export const WORLD_SPRITES: {
+  ground: { fill: string; line: string; lineWidth: number };
+  gem: OrbStyle;
+  electron: OrbStyle;
+  shot: OrbStyle;
+  coin: OrbStyle;
+} = worldJson;

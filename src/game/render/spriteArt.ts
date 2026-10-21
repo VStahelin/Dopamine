@@ -1,12 +1,14 @@
 import {
+  BOND_COLOR,
   ELEMENTS,
   ICON_PALETTE,
   WORLD_SPRITES,
   type MoleculeDef,
+  type OrbStyle,
   type PixelGrid,
 } from '../../assets/sprites';
 import { DISPLAY } from '../../config';
-import { PALETTE, paletteColor } from './palette';
+import { paletteColor } from './palette';
 
 /**
  * Desenho dos sprites a partir dos dados de `src/assets/sprites` (decisão 0019), sem depender do
@@ -45,6 +47,18 @@ export function pixelCircle(p: Painter, x: number, y: number, d: number): void {
   }
 }
 
+/**
+ * Octógono em degraus, o "pixel redondo" do canvas: cantos cortados em dois degraus de 1/8 do
+ * lado, como o `clip-path` das pranchetas.
+ */
+export function pixelOctagon(p: Painter, x: number, y: number, size: number): void {
+  const step = Math.max(1, Math.round(size / 8));
+  const quarter = step * 2;
+  p.fillRect(x + quarter, y, size - quarter * 2, size);
+  p.fillRect(x + step, y + step, size - step * 2, size - step * 2);
+  p.fillRect(x, y + quarter, size, size - quarter * 2);
+}
+
 /** Linha grossa feita de quadrados, para continuar pixelada. */
 function pixelLine(
   p: Painter,
@@ -64,39 +78,41 @@ function pixelLine(
 }
 
 /**
- * Átomo pixelado: contorno escuro, corpo na cor do elemento com sombra em meia-lua embaixo à
- * direita e um brilho no canto superior esquerdo.
+ * Bolinha do canvas (átomo, gema, elétron, disparo, moeda): octógono com borda escura, miolo na
+ * cor e um quadrado de brilho no canto de cima à esquerda.
  */
-function paintAtom(
+function paintBall(
   p: Painter,
   x: number,
   y: number,
   size: number,
-  color: number,
-  outline: number,
+  colors: { dark: number; fill: number; light: number },
+  border: number,
 ): void {
-  p.fillStyle(PALETTE.outline);
-  pixelCircle(p, x, y, size);
-  const inner = size - outline * 2;
-  p.fillStyle(shade(color, 0.7));
-  pixelCircle(p, x + outline, y + outline, inner);
-  const lit = Math.round(inner * 0.8);
-  p.fillStyle(color);
-  pixelCircle(p, x + outline, y + outline, lit);
-  const spot = Math.max(1, Math.round(size / 7));
-  p.fillStyle(0xffffff, 0.9);
-  p.fillRect(
-    x + outline + Math.round(inner * 0.22),
-    y + outline + Math.round(inner * 0.2),
+  p.fillStyle(colors.dark);
+  pixelOctagon(p, x, y, size);
+  p.fillStyle(colors.fill);
+  pixelOctagon(p, x + border, y + border, size - border * 2);
+  const spot = Math.max(1, Math.round(size / 5));
+  p.fillStyle(colors.light).fillRect(
+    x + Math.round(size * 0.24),
+    y + Math.round(size * 0.24),
     spot,
     spot,
   );
 }
 
-const element = (el: keyof typeof ELEMENTS) => ({
-  color: paletteColor(ELEMENTS[el].color),
-  size: ELEMENTS[el].size,
-});
+const element = (el: keyof typeof ELEMENTS) => {
+  const e = ELEMENTS[el];
+  return {
+    size: e.size,
+    colors: {
+      dark: paletteColor(e.dark),
+      fill: paletteColor(e.fill),
+      light: paletteColor(e.light),
+    },
+  };
+};
 
 /**
  * Tamanho da textura da molécula, com o centro da textura no centro geométrico da molécula
@@ -129,16 +145,16 @@ export function paintMolecule(p: Painter, def: MoleculeDef, detail: number): Siz
   const at = (v: number, half: number) => v * detail + half;
 
   const bond = Math.max(2, Math.round(1.7 * detail));
-  const thin = Math.max(1, Math.round(0.7 * detail));
-  p.fillStyle(PALETTE.outline);
+  const thin = Math.max(1, Math.round(0.9 * detail));
+  p.fillStyle(paletteColor(BOND_COLOR));
   for (const [a, b, order] of def.bonds) {
     const [, x0, y0] = def.atoms[a]!;
     const [, x1, y1] = def.atoms[b]!;
     const [px, py, qx, qy] = [at(x0, halfW), at(y0, halfH), at(x1, halfW), at(y1, halfH)];
     if (order === 2) {
       const len = Math.hypot(qx - px, qy - py);
-      const nx = (-(qy - py) / len) * 1.2 * detail;
-      const ny = ((qx - px) / len) * 1.2 * detail;
+      const nx = (-(qy - py) / len) * 1.3 * detail;
+      const ny = ((qx - px) / len) * 1.3 * detail;
       pixelLine(p, px + nx, py + ny, qx + nx, qy + ny, thin);
       pixelLine(p, px - nx, py - ny, qx - nx, qy - ny, thin);
     } else {
@@ -148,14 +164,14 @@ export function paintMolecule(p: Painter, def: MoleculeDef, detail: number): Siz
 
   // Átomos mais abaixo ficam por cima.
   for (const [el, x, y] of [...def.atoms].sort((a, b) => a[2] - b[2])) {
-    const { color, size: s } = element(el);
+    const { size: s, colors } = element(el);
     const d = s * detail;
-    paintAtom(
+    paintBall(
       p,
       Math.round(at(x, halfW) - d / 2),
       Math.round(at(y, halfH) - d / 2),
       d,
-      color,
+      colors,
       detail,
     );
   }
@@ -174,49 +190,34 @@ export function paintGrid(p: Painter, grid: PixelGrid, scale = 1): Size {
   return { width: (grid[0]?.length ?? 0) * scale, height: grid.length * scale };
 }
 
-/** Elétron da Nuvem de Elétrons: pontos concêntricos com contorno e brilho. */
-export function paintElectron(p: Painter, detail: number): Size {
-  const { size, layers } = WORLD_SPRITES.electron;
-  const d = size * detail;
-  layers.forEach((color, i) => {
-    const inset = i * detail;
-    p.fillStyle(paletteColor(color));
-    pixelCircle(p, inset, inset, i === 2 ? Math.max(2, d - 5 * detail) : d - 2 * inset);
-  });
-  return { width: d, height: d };
-}
-
-/** Ladrilho de areia com rejunte e grãos, sempre o mesmo (sorteio com semente fixa). */
-export function paintGround(p: Painter, detail: number): Size {
-  const { colors, grainDensity } = WORLD_SPRITES.ground;
-  const [sand, grout, light] = colors.map(paletteColor) as [number, number, number];
-  const size = DISPLAY.tileSizePx * detail;
-  p.fillStyle(sand).fillRect(0, 0, size, size);
-
-  let seed = WORLD_SPRITES.ground.seed;
-  const rand = () => {
-    seed = (seed * 1103515245 + 12345) & 0x7fffffff;
-    return seed / 0x7fffffff;
+/** Bolinha do campo a partir do estilo de `world.json`. */
+export function paintOrb(p: Painter, style: OrbStyle, detail: number): Size {
+  const size = style.size * detail;
+  const colors = {
+    dark: paletteColor(style.border),
+    fill: paletteColor(style.fill),
+    light: paletteColor(style.light),
   };
-  const grain = Math.max(1, Math.round(detail / 2));
-  for (let i = 0; i < size * grainDensity; i++) {
-    p.fillStyle(rand() < 0.5 ? light : grout);
-    p.fillRect(Math.floor(rand() * size), Math.floor(rand() * size), grain, grain);
-  }
-
-  const line = Math.max(1, Math.round(detail / 2));
-  p.fillStyle(grout)
-    .fillRect(0, size - line, size, line)
-    .fillRect(size - line, 0, line, size);
+  paintBall(p, 0, 0, size, colors, Math.max(1, Math.round(detail * 1.5)));
   return { width: size, height: size };
 }
 
-/** Gema de XP: cristal em losango com contorno, faces claras e escuras e brilho. */
+/** Ladrilho de areia com o rejunte da prancheta (linhas na borda de cima e da esquerda). */
+export function paintGround(p: Painter, detail: number): Size {
+  const { fill, line, lineWidth } = WORLD_SPRITES.ground;
+  const size = DISPLAY.tileSizePx * detail;
+  const w = lineWidth * detail;
+  p.fillStyle(paletteColor(fill)).fillRect(0, 0, size, size);
+  p.fillStyle(paletteColor(line)).fillRect(0, 0, size, w).fillRect(0, 0, w, size);
+  return { width: size, height: size };
+}
+
+/** Gema de XP: losango ciano com borda escura e brilho, como na prancheta. */
 export function paintGem(p: Painter, detail: number): Size {
   const gem = WORLD_SPRITES.gem;
-  const body = paletteColor(gem.body);
   const size = gem.size * detail;
   const c = (size - 1) / 2;
+  const border = Math.max(1, Math.round(detail * 1.5));
   const diamond = (inset: number, color: number) => {
     p.fillStyle(color);
     for (let row = inset; row < size - inset; row++) {
@@ -224,15 +225,14 @@ export function paintGem(p: Painter, detail: number): Size {
       if (half >= 0) p.fillRect(Math.round(c - half), row, half * 2 + 1, 1);
     }
   };
-  diamond(0, paletteColor(gem.outline));
-  diamond(detail, shade(body, gem.bodyShade));
-  // Face clara: metade de cima.
-  p.fillStyle(body);
-  for (let row = detail; row <= c; row++) {
-    const half = Math.floor(c - detail - Math.abs(row - c));
-    if (half >= 0) p.fillRect(Math.round(c - half), row, half * 2 + 1, 1);
-  }
-  p.fillStyle(paletteColor(gem.shine));
-  pixelCircle(p, Math.round(c - detail * 1.5), Math.round(c - detail * 1.5), Math.max(2, detail));
+  diamond(0, paletteColor(gem.border));
+  diamond(border, paletteColor(gem.fill));
+  const spot = Math.max(1, detail);
+  p.fillStyle(paletteColor(gem.light)).fillRect(
+    Math.round(c - spot * 1.5),
+    Math.round(c - spot * 1.5),
+    spot,
+    spot,
+  );
   return { width: size, height: size };
 }

@@ -1,5 +1,5 @@
 import type * as Phaser from 'phaser';
-import { ICONS, MOLECULES, UI_SPRITES, type IconGroup } from '../../assets/sprites';
+import { ICONS, MOLECULES, UI_SPRITES, WORLD_SPRITES, type IconGroup } from '../../assets/sprites';
 import {
   AGENTS,
   DISPLAY,
@@ -11,11 +11,11 @@ import {
   type WeaponId,
 } from '../../config';
 import {
-  paintElectron,
   paintGem,
   paintGrid,
   paintGround,
   paintMolecule,
+  paintOrb,
   type Painter,
   type Size,
 } from './spriteArt';
@@ -30,6 +30,8 @@ export const TEXTURES = {
   ground: 'ground',
   gem: 'gem',
   electron: 'electron',
+  shot: 'shot',
+  coin: 'coin',
 } as const;
 
 /** Sprite de cada inimigo. */
@@ -44,8 +46,8 @@ export const AGENT_TEXTURES = Object.fromEntries(
 
 /** Sprite do projétil de cada arma que dispara; as outras desenham efeitos (cone, feixe...). */
 export const PROJECTILE_TEXTURES: Partial<Record<WeaponId, string>> = {
-  radical: 'proj-hydroxyl',
-  fenton: 'proj-hydroxyl',
+  radical: TEXTURES.shot,
+  fenton: TEXTURES.shot,
   chainReaction: 'proj-superoxide',
 };
 
@@ -78,7 +80,11 @@ export function createTextures(scene: Phaser.Scene): void {
   for (const detail of DISPLAY.spriteDetails) {
     bake(scene, textureKey(TEXTURES.ground, detail), (g) => paintGround(g, detail));
     bake(scene, textureKey(TEXTURES.gem, detail), (g) => paintGem(g, detail));
-    bake(scene, textureKey(TEXTURES.electron, detail), (g) => paintElectron(g, detail));
+    for (const orb of ['electron', 'shot', 'coin'] as const) {
+      bake(scene, textureKey(TEXTURES[orb], detail), (g) =>
+        paintOrb(g, WORLD_SPRITES[orb], detail),
+      );
+    }
     for (const [key, id] of MOLECULE_SPRITES) {
       const def = MOLECULES[id];
       if (def) bake(scene, textureKey(key, detail), (g) => paintMolecule(g, def, detail));

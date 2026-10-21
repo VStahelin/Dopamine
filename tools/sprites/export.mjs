@@ -43,7 +43,9 @@ function exportAll(art, sprites, details) {
     }
     save('world', `ground@${detail}`, (p) => art.paintGround(p, detail));
     save('world', `gem@${detail}`, (p) => art.paintGem(p, detail));
-    save('world', `electron@${detail}`, (p) => art.paintElectron(p, detail));
+    for (const orb of ['electron', 'shot', 'coin']) {
+      save('world', `${orb}@${detail}`, (p) => art.paintOrb(p, sprites.WORLD_SPRITES[orb], detail));
+    }
   }
   return files;
 }

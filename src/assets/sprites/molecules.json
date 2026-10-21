@@ -1,10 +1,12 @@
 {
+  "bond": "#1A1424",
   "elements": {
-    "C": { "color": "carbon", "size": 9 },
-    "H": { "color": "hydrogen", "size": 6 },
-    "O": { "color": "oxygen", "size": 9 },
-    "N": { "color": "nitrogen", "size": 9 },
-    "S": { "color": "sulfur", "size": 10 }
+    "C": { "fill": "#4A4F5C", "dark": "#1C1E25", "light": "#8A90A0", "size": 9 },
+    "H": { "fill": "#EDEBDD", "dark": "#6E6C5E", "light": "#FFFFFF", "size": 6 },
+    "O": { "fill": "#E0433A", "dark": "#5A0E10", "light": "#FF9A8A", "size": 9 },
+    "N": { "fill": "#3F6FE0", "dark": "#13245E", "light": "#9FBEFF", "size": 9 },
+    "S": { "fill": "#F2C83A", "dark": "#6E500C", "light": "#FFF2A8", "size": 10 },
+    "Cl": { "fill": "#5BC43A", "dark": "#1A4E12", "light": "#B4F58A", "size": 9 }
   },
   "molecules": {
     "dopamine": {
