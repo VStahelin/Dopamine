@@ -18,7 +18,8 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | 1 | Primeira versão jogável (v0.1) | Dá para abrir, ir do menu à run e voltar, e a batalha é divertida? | 0 | concluída |
 | 1.5 | Menu principal (esqueleto) | Todas as áreas do jogo já têm um lugar no menu? | 1 | concluída |
 | 2 | Profundidade da run | A run aguenta 20 minutos sem ficar repetitiva? | 1 | em andamento |
-| 3 | Meta-progressão e save | Dá vontade de jogar mais uma run? | 2 | não iniciada |
+| 2.5 | Jogo offline e atualizações controladas | O jogo roda sem internet e só muda de versão quando o jogador aceita? | 2 | não iniciada (próxima) |
+| 3 | Meta-progressão e save | Dá vontade de jogar mais uma run? | 2, 2.5 | não iniciada |
 | 4 | Campo longo (idle) | O idle ajuda a run sem substituí-la? | 3 | não iniciada |
 | 5 | Organismo | Cuidar do corpo muda o jeito de jogar? | 3, 4 | não iniciada |
 | 6 | Arte, polimento e lançamento | Dá para mandar o link para os amigos? | 1 a 5 | não iniciada |
@@ -103,6 +104,23 @@ Transformar o protótipo numa run com escolhas de verdade.
 
 **Critério de saída:** duas runs com agentes ou armas diferentes que pedem estratégias diferentes, e uma run boa que passa dos 20 minutos.
 
+## Fase 2.5: Jogo offline e atualizações controladas
+
+O jogo inteiro passa a ficar no aparelho e só troca de versão por build completa, quando o jogador aceitar, com o aviso só nos menus. Arquitetura em [atualizacoes.md](atualizacoes.md) ([decisão 0016](decisoes/0016-offline-e-atualizacoes.md)).
+
+- [ ] Fontes locais (`@fontsource`), sem depender do Google Fonts.
+- [ ] Service worker com precache da build inteira (`vite-plugin-pwa`, modo `prompt`) e manifest do PWA.
+- [ ] `version.json` na build, com versão, `buildId` e lista de arquivos.
+- [ ] Gestor de atualização (`src/game/update/`): verifica ao entrar no hub, a cada 15 minutos nos menus e pelo botão; acompanha o download; nunca recarrega sozinho.
+- [ ] Aviso "Nova versão pronta" no hub, com ATUALIZAR (grava o save e recarrega) e DEPOIS; descoberto na run, espera a volta ao hub.
+- [ ] Opções: versão, `buildId` e o botão VERIFICAR ATUALIZAÇÃO com os estados.
+- [ ] `npm run release`: check completo, build e publicação atômica em `releases/<buildId>` com `current` apontando para a última; mantém as 3 anteriores.
+- [ ] `npm run serve`: serve a build publicada em HTTPS na rede local, para testar no celular como jogador.
+- [ ] Pedir armazenamento persistente (`navigator.storage.persist()`).
+- [ ] Testes: o gestor de atualização (estados e quando avisar) no `core` ou em lógica pura testável; teste no navegador offline.
+
+**Critério de saída:** com a internet desligada, o jogo abre e roda; publicar uma build nova durante uma run não muda nada até a volta ao hub, onde aparece o aviso; aceitar leva à versão nova com o save intacto; uma publicação interrompida no meio nunca chega ao aparelho.
+
 ## Fase 3: Meta-progressão e save
 
 Fazer cada run deixar algo para a próxima.
@@ -148,7 +166,7 @@ Deixar o jogo com a cara do canvas de identidade visual e pronto para outras pes
 - [ ] HUD, molduras, botões e fontes da aba Design.
 - [ ] Chão, paredes e efeitos (dano com contorno, projéteis).
 - [ ] Som e música.
-- [ ] PWA: instalação na tela inicial e funcionamento offline.
+- [ ] PWA: ícones e polimento da instalação na tela inicial (o offline vem da fase 2.5).
 - [ ] Layout em telas largas e altas (painéis laterais, mais pista).
 - [ ] Rodada de testes com 2 ou 3 amigos e ajuste dos números.
 - [ ] Decidir como o jogo chega aos jogadores (provavelmente pelo navegador); até lá ele roda só localmente ([0011](decisoes/0011-rodar-localmente.md)).

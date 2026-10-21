@@ -10,7 +10,7 @@ Como o código do Dopamina Blaster é organizado. Este arquivo descreve **o esta
 | --- | --- | --- |
 | Engine | Phaser 4.2 | [0002](decisoes/0002-phaser-4-typescript-pwa.md) |
 | Linguagem | TypeScript 6 (modo `strict`) | [0002](decisoes/0002-phaser-4-typescript-pwa.md) |
-| Distribuição | Web, instalável como PWA (PWA na fase 6) | [0002](decisoes/0002-phaser-4-typescript-pwa.md) |
+| Distribuição | Web, instalável como PWA, offline e com atualização controlada (fase 2.5, [atualizacoes.md](atualizacoes.md)) | [0002](decisoes/0002-phaser-4-typescript-pwa.md) |
 | Build e servidor local | Vite 8 | [0003](decisoes/0003-camadas-core-game-config.md) |
 | Testes | Vitest 4 | [0003](decisoes/0003-camadas-core-game-config.md) |
 | Lint e formatação | ESLint 10 (typescript-eslint) e Prettier | [0003](decisoes/0003-camadas-core-game-config.md) |
