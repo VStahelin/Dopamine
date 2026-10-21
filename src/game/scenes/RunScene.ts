@@ -546,12 +546,13 @@ export class RunScene extends Phaser.Scene {
 
   /** Escala do mundo: zoom da câmera e texturas com o detalhe certo para a tela (decisão 0009). */
   private applyZoom(): void {
-    const scale = worldScale(
-      this.scale.width,
-      this.scale.height,
-      DISPLAY.minVisibleShortSidePx,
-      DISPLAY.spriteDetails,
-    );
+    const cssShort =
+      Math.min(this.scale.width, this.scale.height) / Math.min(window.devicePixelRatio || 1, 4);
+    const target =
+      cssShort >= DISPLAY.largeScreenShortSideCss
+        ? DISPLAY.minVisibleShortSidePxLarge
+        : DISPLAY.minVisibleShortSidePx;
+    const scale = worldScale(this.scale.width, this.scale.height, target, DISPLAY.spriteDetails);
     this.zoom = scale.zoom;
     this.cameras.main.setZoom(scale.zoom);
     for (const f of this.floaters) f.text.setResolution(scale.zoom);

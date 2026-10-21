@@ -37,7 +37,8 @@ export function impactText(size: number, color: string = PALETTE_CSS.hydrogen): 
     fontSize: `${size}px`,
     color,
     stroke: PALETTE_CSS.outline,
-    strokeThickness: Math.max(2, Math.round(size / 6)),
+    // Contorno fino em letras pequenas: grosso, ele tapa os buracos do 2, do 5 e do 6 e vira 8.
+    strokeThickness: size < 14 ? 1 : Math.max(2, Math.round(size / 6)),
     resolution: textResolution,
   };
 }

@@ -94,11 +94,11 @@ function sprite(scene: Phaser.Scene, key: string, x: number, y: number, size: nu
 }
 
 function header(scene: Phaser.Scene, x: number, y: number, text: string): Obj {
-  return scene.add.text(x, y, text, labelText(9, PALETTE_CSS.water));
+  return scene.add.text(x, y, text, labelText(10, PALETTE_CSS.water));
 }
 
 /** Coluna centralizada com largura máxima, dentro da área. */
-function column(x: number, w: number, max = 360) {
+function column(x: number, w: number, max = 420) {
   const width = Math.min(w - 24, max);
   return { left: Math.floor(x + (w - width) / 2), width };
 }
@@ -142,7 +142,7 @@ export function renderAgents(
     const action = WEAPONS[a.action as WeaponId].name;
     out.push(
       addIcon(scene, left + 78, cy + 28, iconTexture('weapons', a.action as WeaponId)),
-      scene.add.text(left + 98, cy + 30, `Ação: ${action}`, bodyText(10, PALETTE_CSS.text)),
+      scene.add.text(left + 98, cy + 30, `Ação: ${action}`, bodyText(11, PALETTE_CSS.text)),
       addIcon(scene, left + 78, cy + 46, iconTexture('specials', a.special.kind)),
       scene.add.text(
         left + 98,
@@ -155,7 +155,7 @@ export function renderAgents(
       .filter(([, v]) => v === 'strong')
       .map(([t]) => TYPE_NAMES[t as MoleculeType]);
     const tag = strong.length ? `FORTE CONTRA ${strong.join(', ')}` : 'MÉDIA CONTRA TUDO';
-    out.push(scene.add.text(left + 78, cy + 66, tag, labelText(7, PALETTE_CSS.cyan)));
+    out.push(scene.add.text(left + 78, cy + 66, tag, labelText(8, PALETTE_CSS.cyan)));
     if (locked && shop) {
       // Bloqueado: no lugar de escolher, o botão de desbloquear com o custo.
       out.push(
@@ -217,9 +217,9 @@ export function renderArsenal(
   const ids = Object.keys(WEAPONS) as WeaponId[];
   const row = (id: WeaponId, sub: string, color: string, locked = false) => {
     const def = WEAPONS[id];
-    const h = 40;
+    const h = 48;
     drawInkBox(g, left, cy, width, h, PALETTE.panel);
-    const icon = addIconSlot(scene, left + 8, cy + 8, 1, { ...weaponIcon(id), dim: locked });
+    const icon = addIconSlot(scene, left + 8, cy + 12, 1, { ...weaponIcon(id), dim: locked });
     const tx = left + 8 + icon.size + 8;
     out.push(
       ...icon.objects,
@@ -227,19 +227,19 @@ export function renderArsenal(
         tx,
         cy + 6,
         def.name,
-        withShadow(bodyText(12, PALETTE_CSS.text), PALETTE_CSS.ink, 1),
+        withShadow(bodyText(14, PALETTE_CSS.text), PALETTE_CSS.ink, 1),
       ),
       locked && shop
-        ? buyButton(scene, shop, 'weapons', id, left + width - 80, cy + 7, 70)
+        ? buyButton(scene, shop, 'weapons', id, left + width - 80, cy + 11, 70)
         : scene.add
             .text(
               left + width - 12,
               cy + 8,
               KIND_NAMES[def.kind],
-              labelText(7, PALETTE_CSS.textSoft),
+              labelText(8, PALETTE_CSS.textSoft),
             )
             .setOrigin(1, 0),
-      scene.add.text(tx, cy + 23, sub, labelText(7, color)),
+      scene.add.text(tx, cy + 28, sub, labelText(8, color)),
     );
     cy += h + 4;
   };
@@ -255,7 +255,7 @@ export function renderArsenal(
   out.push(header(scene, left, cy + 6, 'EVOLUÇÕES'));
   cy += 22;
   for (const id of ids.filter((i) => WEAPONS[i].source === 'evolution')) {
-    row(id, WEAPONS[id].description.toUpperCase().slice(0, 44), '#E6CC80');
+    row(id, WEAPONS[id].description.toUpperCase().slice(0, 40), '#E6CC80');
   }
 
   // Modificadores do level up, com os ícones, em duas colunas.
@@ -264,7 +264,7 @@ export function renderArsenal(
   const passives = Object.keys(PASSIVES) as PassiveId[];
   const cols = width >= 300 ? 2 : 1;
   const cellW = Math.floor((width - (cols - 1) * 6) / cols);
-  const cellH = slotSize(1) + 6;
+  const cellH = slotSize(1) + 10;
   const rows = Math.ceil(passives.length / cols);
   drawInkBox(g, left, cy, width, rows * cellH + 8, PALETTE.panel);
   passives.forEach((id, i) => {
@@ -273,7 +273,7 @@ export function renderArsenal(
     const slot = addIconSlot(scene, cx, ry, 1, { ...passiveSlot(id, 0), label: undefined });
     out.push(
       ...slot.objects,
-      scene.add.text(cx + slot.size + 6, ry + 5, PASSIVES[id].name, bodyText(10, PALETTE_CSS.text)),
+      scene.add.text(cx + slot.size + 6, ry + 5, PASSIVES[id].name, bodyText(12, PALETTE_CSS.text)),
     );
   });
   return out;
@@ -296,7 +296,7 @@ export function renderCompendium(
   for (const kind of kinds) {
     const def = ENEMIES[kind];
     const isSeen = seen.includes(kind);
-    const h = 46;
+    const h = 50;
     drawInkBox(g, left, cy, width, h, PALETTE.panel);
     drawCreamSlot(g, left + 6, cy + 6, 34, 34);
     const img = sprite(scene, ENEMY_TEXTURES[kind], left + 23, cy + 23, 30);
@@ -311,14 +311,14 @@ export function renderCompendium(
           left + 50,
           cy + 6,
           name,
-          withShadow(bodyText(12, PALETTE_CSS.text), PALETTE_CSS.ink, 1),
+          withShadow(bodyText(14, PALETTE_CSS.text), PALETTE_CSS.ink, 1),
         ),
         scene.add
           .text(
             left + width - 12,
             cy + 8,
             TYPE_NAMES[def.type].replace(/S$/, ''),
-            labelText(7, PALETTE_CSS.cyan),
+            labelText(8, PALETTE_CSS.cyan),
           )
           .setOrigin(1, 0),
       );
@@ -330,7 +330,7 @@ export function renderCompendium(
           left + 50,
           cy + 26,
           frag ? `QUEBRA EM ${frag}` : 'DECOMPOSTA POR COMPLETO',
-          labelText(7, frag ? PALETTE_CSS.gold : PALETTE_CSS.textMuted),
+          labelText(8, frag ? PALETTE_CSS.gold : PALETTE_CSS.textMuted),
         ),
       );
     }

@@ -5,5 +5,7 @@
   "uiMinShortSidePx": 320,
   "showFps": true,
   "iconSizesPx": [16, 32, 48, 64, 80, 96, 112, 128],
-  "frameScales": [1, 2, 3]
+  "frameScales": [1, 2, 3],
+  "largeScreenShortSideCss": 700,
+  "minVisibleShortSidePxLarge": 480
 }

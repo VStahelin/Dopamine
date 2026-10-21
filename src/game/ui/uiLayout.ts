@@ -21,7 +21,8 @@ export function setupUiLayout(
       ? Math.max(1, Math.floor(Math.min(width / minSize.width, height / minSize.height)))
       : integerZoom(width, height, DISPLAY.uiMinShortSidePx);
     scene.cameras.main.setOrigin(0, 0).setZoom(zoom);
-    setTextResolution(zoom);
+    // Pelo menos 2×: em telas 1× o texto pequeno precisa de mais pixels (veja textFix.ts).
+    setTextResolution(Math.max(2, zoom));
     layout(Math.floor(width / zoom), Math.floor(height / zoom));
     // Zoom novo: carrega os ícones desse tamanho e monta a tela de novo quando chegarem.
     loadIconsForZoom(scene, zoom, apply);

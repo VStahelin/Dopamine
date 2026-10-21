@@ -424,6 +424,12 @@ export interface DisplayConfig {
   /** Área visível que a escala do mundo tenta mostrar no lado menor da tela, em unidades do mundo. */
   minVisibleShortSidePx: number;
   /**
+   * Telas grandes (lado menor em pixels CSS a partir deste valor, como o PC) mostram
+   * `minVisibleShortSidePxLarge` unidades: no monitor, 360 unidades deixavam tudo ampliado demais.
+   */
+  largeScreenShortSideCss: number;
+  minVisibleShortSidePxLarge: number;
+  /**
    * Pixels de arte por unidade do mundo com que os sprites podem ser desenhados. A escala do
    * mundo escolhe um deles conforme a tela, para cada pixel de arte ser um número inteiro de
    * pixels da tela.
