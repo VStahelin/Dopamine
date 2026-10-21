@@ -2,7 +2,7 @@
 
 Como o código do Dopamina Blaster é organizado. Este arquivo descreve **o estado atual**; o porquê de cada escolha fica nas [decisões](decisoes/README.md), ligadas em cada seção. Ao mudar algo aqui, registre a decisão primeiro.
 
-> **Estado:** fases 0 a 2.5 implementadas; fase 2.6 (sprites numa pasta e ícones do canvas na HUD, pausa, level up e menu) implementada, falta validar no celular.
+> **Estado:** fases 0 a 2.5 implementadas; fases 2.6 (sprites numa pasta e ícones do canvas) e 2.7 (campo crônico com a cara do canvas, ATP na run) implementadas, falta validar no celular.
 
 ## Stack
 
@@ -79,7 +79,7 @@ src/
     save/        formato do save, migrações e recordes
   game/
     scenes/      cenas do Phaser
-    render/      paleta, zoom, spriteArt.ts (desenho dos sprites a partir dos dados) e textures.ts (gerador único de texturas)
+    render/      paleta, zoom, spriteArt.ts (desenho dos sprites a partir dos dados), fxArt.ts (efeitos das armas em pixels de arte) e textures.ts (gerador único de texturas)
     input/       teclado e joystick virtual
     ui/          tema (fontes, textos), botões, layout das telas, textos dos upgrades, espaços de ícone, conteúdo da pausa, números de dano, rolagem
     storage/     save no IndexedDB

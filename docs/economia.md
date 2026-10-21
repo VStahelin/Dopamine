@@ -24,7 +24,7 @@ Esta aba propõe as fórmulas que equilibram progressão e dificuldade, com base
 
 Proposta de nome: **ATP**, a molécula que é a moeda de energia das células de verdade. É a mesma moeda na run e no idle, como decidido.
 
-- **Na run:** cada molécula decomposta dá ATP; moléculas de minutos mais avançados valem mais, para recompensar o risco de continuar.
+- **Na run:** cada molécula decomposta dá ATP; moléculas de minutos mais avançados valem mais, para recompensar o risco de continuar. No jogo (fase 2.7), a molécula solta uma moeda de ATP no chão por chance (elites e chefe sempre, o chefe valendo bem mais), e o agente coleta como as gemas; os números ficam em `runCurrency` de `economy.json`.
 - **No idle:** ATP por hora, multiplicado pela saúde do organismo.
 - **Gasto:** upgrades das duas árvores e desbloqueio de agentes.
 

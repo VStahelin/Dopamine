@@ -20,7 +20,7 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | 2 | Profundidade da run | A run aguenta 20 minutos sem ficar repetitiva? | 1 | em andamento |
 | 2.5 | Jogo offline e atualizações controladas | O jogo roda sem internet e só muda de versão quando o jogador aceita? | 2 | concluída |
 | 2.6 | Sprites e ícones da identidade visual | Todo sprite está numa pasta e cada arma, modificador e especial aparece com o ícone do canvas? | 2 | implementada, falta validar no celular |
-| 2.7 | Campo crônico com a cara do canvas | A run, do chão aos efeitos, parece com as pranchetas do modo crônico? | 2.6 | em andamento |
+| 2.7 | Campo crônico com a cara do canvas | A run, do chão aos efeitos, parece com as pranchetas do modo crônico? | 2.6 | implementada, falta validar no celular |
 | 3 | Meta-progressão e save | Dá vontade de jogar mais uma run? | 2, 2.5, 2.6, 2.7 | não iniciada |
 | 4 | Campo longo (idle) | O idle ajuda a run sem substituí-la? | 3 | não iniciada |
 | 5 | Organismo | Cuidar do corpo muda o jeito de jogar? | 3, 4 | não iniciada |
@@ -153,34 +153,34 @@ A fase 2.6 trouxe os ícones, a HUD e a pausa das pranchetas "Crônico". Esta fa
 
 **Campo**
 
-- [ ] Moléculas no estilo da prancheta "Sprites de moléculas": átomo octogonal ("pixel redondo"), com borda escura e brilho próprios de cada elemento (C, H, O, N, S e Cl) e ligações grossas. Vale para agentes, inimigos, chefe e projéteis.
-- [ ] Chão de areia com o rejunte da prancheta: linhas de 3 px a cada 40 px.
-- [ ] Gema de XP em losango ciano com borda, elétrons brancos com borda azul e disparos ciano, como na prancheta.
-- [ ] Efeitos das armas pixelados e nas cores da paleta: poça octogonal com borda, feixe com bordas e miolo branco, aura, pulso, cone e golpe.
-- [ ] Decomposição em cascata: estalo branco na molécula e fragmentos saltando para fora.
-- [ ] Joystick octogonal com o miolo quadrado da prancheta.
-- [ ] Interações embaixo do agente no tamanho da prancheta (56 px, segmentos de 5 px).
-- [ ] Números de dano nos tamanhos da prancheta de batalha, e um interruptor nas Opções para escondê-los.
+- [x] Moléculas no estilo da prancheta "Sprites de moléculas": átomo octogonal ("pixel redondo"), com borda escura e brilho próprios de cada elemento (C, H, O, N, S e Cl) e ligações grossas. Vale para agentes, inimigos, chefe e projéteis.
+- [x] Chão de areia com o rejunte da prancheta: linhas de 3 px a cada 40 px.
+- [x] Gema de XP em losango ciano com borda, elétrons brancos com borda azul e disparos ciano, como na prancheta.
+- [x] Efeitos das armas pixelados e nas cores da paleta: poça octogonal com borda, feixe com bordas e miolo branco, aura, pulso, cone e golpe.
+- [x] Decomposição em cascata: estalo branco na molécula e fragmentos saltando para fora.
+- [x] Joystick octogonal com o miolo quadrado da prancheta.
+- [x] Interações embaixo do agente no tamanho da prancheta (56 px, segmentos de 5 px).
+- [x] Números de dano nos tamanhos da prancheta de batalha, e um interruptor nas Opções para escondê-los.
 
 **ATP na run**
 
-- [ ] Cada molécula decomposta pode soltar ATP no chão (moeda dourada), que vale mais com o tempo de run ([economia.md](economia.md)); o agente coleta com o mesmo raio das gemas. Os números ficam em `economy.json`.
-- [ ] ATP na HUD (número antes da moeda, acima das decompostas), na faixa de status e na aba Run da pausa, e no fim de run.
-- [ ] O ATP ganho vai para o save e aparece no menu. Gastar ATP continua na fase 3.
+- [x] Cada molécula decomposta pode soltar ATP no chão (moeda dourada), que vale mais com o tempo de run ([economia.md](economia.md)); o agente coleta com o mesmo raio das gemas. Os números ficam em `economy.json`.
+- [x] ATP na HUD (número antes da moeda, acima das decompostas), na faixa de status e na aba Run da pausa, e no fim de run.
+- [x] O ATP ganho vai para o save e aparece no menu. Gastar ATP continua na fase 3.
 
 **HUD**
 
-- [ ] Botão do especial com o nome curto do especial embaixo e as cargas (`x1`) no canto; as cargas vêm do atributo Cargas de `stats.json`.
-- [ ] Celular deitado: banda baixa, com armas e reagentes numa linha só ao lado do tempo, ATP e decompostas à direita e a pausa dentro da banda.
+- [x] Botão do especial com o nome curto do especial embaixo e as cargas (`x1`) no canto; as cargas vêm do atributo Cargas de `stats.json`.
+- [x] Celular deitado: banda baixa, com armas e reagentes numa linha só ao lado do tempo, ATP e decompostas à direita e a pausa dentro da banda.
 
 **Pausa**
 
-- [ ] Abas de 44 px, ATP na faixa de status, aba Run com "ATP NA RUN", espaço bloqueado dizendo que libera no Laboratório e atributos de level up e risco num grupo só, como na prancheta.
+- [x] Abas de 44 px, ATP na faixa de status, aba Run com "ATP NA RUN", espaço bloqueado dizendo que libera no Laboratório e atributos de level up e risco num grupo só, como na prancheta.
 
 **Telas**
 
-- [ ] Fim de run com o ícone de cada arma, o dano que ela causou e o ATP ganho.
-- [ ] Compêndio, Recordes e Título com as molduras e os ícones da identidade visual.
+- [x] Fim de run com o ícone de cada arma, o dano que ela causou e o ATP ganho.
+- [x] Recordes com os ícones da identidade visual e o ATP guardado. O Compêndio e o Título já usavam as molduras e as moléculas do canvas.
 - [ ] Validar no celular, em pé e deitado, junto com a fase 2.6.
 
 Fica para quando a mecânica existir: efeitos temporários de inimigos e itens (Lentidão, Adrenalina da prancheta) e a evolução de arma pelo baú do chefe (a prancheta diz que a arma em MAX evolui no próximo baú; hoje a evolução é uma opção do level up).
