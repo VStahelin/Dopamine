@@ -24,6 +24,7 @@ import {
   type DisplayConfig,
   type EconomyConfig,
   type EnemyDef,
+  type IdleAgentKind,
   type IdleConfig,
   type MetaConfig,
   type MoleculeType,
@@ -181,7 +182,7 @@ function loadAgents(): Record<AgentId, AgentDef> {
 export const STATS: StatsConfig = statsJson;
 export const RUN: RunConfig = runJson;
 export const ECONOMY: EconomyConfig = economyJson;
-export const IDLE: IdleConfig = idleJson;
+export const IDLE: IdleConfig = loadIdle();
 export const DISPLAY: DisplayConfig = displayJson;
 export const ENEMIES: Record<EnemyKind, EnemyDef> = loadEnemies();
 export const WEAPONS: Record<WeaponId, WeaponDef> = loadWeapons();
@@ -255,3 +256,23 @@ function loadMeta(): MetaConfig {
 }
 
 export const META: MetaConfig = loadMeta();
+
+/** Confere idle.json: tipos dos agentes, moléculas das ondas e ids de início e custo. */
+function loadIdle(): IdleConfig {
+  const idle = idleJson as unknown as IdleConfig;
+  const kinds: readonly IdleAgentKind[] = ['shot', 'splash', 'aura', 'burst'];
+  for (const [id, a] of Object.entries(idle.agents)) {
+    oneOf(a.kind, kinds, `idle.json agents.${id}.kind`);
+  }
+  for (const id of idle.start) exists(id, idle.agents, 'idle.json start');
+  for (const id of Object.keys(idle.unlockCost)) exists(id, idle.agents, 'idle.json unlockCost');
+  for (const id of Object.keys(idle.agents)) {
+    if (!idle.start.includes(id) && !(id in idle.unlockCost)) {
+      throw new Error(`Configuração inválida em idle.json: agente "${id}" sem início nem custo`);
+    }
+  }
+  exists(idle.waves.boss, enemiesJson, 'idle.json waves.boss');
+  for (const p of idle.waves.pool)
+    for (const k of p.kinds) exists(k, enemiesJson, 'idle.json waves.pool');
+  return idle;
+}

@@ -342,10 +342,80 @@ export interface EconomyConfig {
   };
 }
 
+export type IdleAgentKind = 'shot' | 'splash' | 'aura' | 'burst';
+
+/** Agente do campo longo (personagens.md, Agentes do idle), fixo num espaço da base. */
+export interface IdleAgentDef {
+  name: string;
+  description: string;
+  kind: IdleAgentKind;
+  /** Dano por disparo; na aura, por segundo. */
+  damage: number;
+  cooldownSeconds: number;
+  /** Raio da explosão (splash) ou da aura, contado da base. */
+  radius?: number;
+  /** Aura: quanto desacelera as moléculas dentro dela. */
+  slow?: number;
+  /** Rajada: quantos disparos e o intervalo entre eles. */
+  burst?: number;
+  burstIntervalSeconds?: number;
+  /** Vitamina D: dano extra por minuto na base, até growthMax. */
+  growthPerMinute?: number;
+  growthMax?: number;
+  /** Melatonina: produção offline extra enquanto está na base. */
+  offlineBonus?: number;
+}
+
+export interface IdleUpgradeDef {
+  name: string;
+  perLevel: number;
+  maxLevel: number;
+  baseCost: number;
+}
+
+/** Campo longo (fase 4, decisão 0022): campo, ondas, agentes, níveis, melhorias e offline. */
 export interface IdleConfig {
+  field: {
+    /** Tamanho lógico do campo, igual em qualquer tela (conceito.md). */
+    width: number;
+    height: number;
+    baseInteractions: number;
+    /** Ondas que o campo volta quando a BASE zera. */
+    fallbackWaves: number;
+    wavePauseSeconds: number;
+  };
+  waves: {
+    /** Moléculas da onda n: baseCount + countPerWave × (n − 1). */
+    baseCount: number;
+    countPerWave: number;
+    spawnIntervalSeconds: number;
+    /** Vida da molécula × hpGrowth^(n − 1). */
+    hpGrowth: number;
+    speed: number;
+    speedPerWave: number;
+    /** A cada bossEvery ondas, a última molécula é o chefe (com a vida reduzida). */
+    bossEvery: number;
+    boss: string;
+    bossHpMultiplier: number;
+    /** Moléculas sorteadas a partir de cada onda. */
+    pool: { fromWave: number; kinds: string[] }[];
+    /** Interações que a BASE perde por molécula que chega, pelo tipo de dano. */
+    baseDamage: Record<ContactDamageKind, number>;
+    /** ATP por molécula decomposta: atpPerKill × atpGrowthPerWave^(n − 1), com o hp da molécula. */
+    atpPerKill: number;
+    atpGrowthPerWave: number;
+  };
+  agents: Record<string, IdleAgentDef>;
+  start: string[];
+  unlockCost: Record<string, number>;
+  levels: { damagePerLevel: number; baseCost: number; costRate: number; maxLevel: number };
+  upgrades: Record<'fireRate' | 'baseSlots' | 'offlineCapHours', IdleUpgradeDef>;
   fireRate: Omit<Stat, 'name' | 'metaCap'>;
   baseSlots: Omit<Stat, 'name' | 'metaCap'>;
   offlineCapHours: Omit<Stat, 'name' | 'metaCap'>;
+  offline: { estimateSeconds: number; minSeconds: number };
+  /** Velocidade do botão x2. */
+  speedUp: number;
 }
 
 export interface DisplayConfig {

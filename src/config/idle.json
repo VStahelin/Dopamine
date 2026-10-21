@@ -1,5 +1,92 @@
 {
+  "field": {
+    "width": 300,
+    "height": 440,
+    "baseInteractions": 10,
+    "fallbackWaves": 3,
+    "wavePauseSeconds": 2
+  },
+  "waves": {
+    "baseCount": 6,
+    "countPerWave": 2,
+    "spawnIntervalSeconds": 1.1,
+    "hpGrowth": 1.14,
+    "speed": 20,
+    "speedPerWave": 0.35,
+    "bossEvery": 10,
+    "boss": "ldl",
+    "bossHpMultiplier": 0.15,
+    "pool": [
+      { "fromWave": 1, "kinds": ["glucose", "fructose"] },
+      { "fromWave": 5, "kinds": ["glucose", "fructose", "glycerol", "fattyAcid"] },
+      { "fromWave": 10, "kinds": ["fructose", "fattyAcid", "maltose", "sucrose"] },
+      { "fromWave": 16, "kinds": ["maltose", "sucrose", "fattyAcid", "starch", "triglyceride"] }
+    ],
+    "baseDamage": { "common": 1, "strong": 2, "boss": 5 },
+    "atpPerKill": 0.018,
+    "atpGrowthPerWave": 1.06
+  },
+  "agents": {
+    "omega3": {
+      "name": "Ômega-3",
+      "description": "O mais estável: disparo médio e constante, mira a molécula mais perto da base.",
+      "kind": "shot",
+      "damage": 6,
+      "cooldownSeconds": 0.8
+    },
+    "melatonin": {
+      "name": "Melatonina",
+      "description": "Disparo lento em área. Rende mais com o jogo fechado, o sono do organismo.",
+      "kind": "splash",
+      "damage": 9,
+      "cooldownSeconds": 2.4,
+      "radius": 34,
+      "offlineBonus": 0.25
+    },
+    "magnesium": {
+      "name": "Magnésio",
+      "description": "Aura perto da base que enfraquece e desacelera o que chega.",
+      "kind": "aura",
+      "damage": 5,
+      "cooldownSeconds": 1,
+      "radius": 140,
+      "slow": 0.35
+    },
+    "vitaminD": {
+      "name": "Vitamina D",
+      "description": "Disparo forte e raro, que fica mais forte quanto mais tempo passa na base.",
+      "kind": "shot",
+      "damage": 45,
+      "cooldownSeconds": 4.5,
+      "growthPerMinute": 0.05,
+      "growthMax": 1
+    },
+    "endorphin": {
+      "name": "Endorfina",
+      "description": "Rajadas curtas de disparos rápidos.",
+      "kind": "burst",
+      "damage": 5,
+      "cooldownSeconds": 2.6,
+      "burst": 4,
+      "burstIntervalSeconds": 0.12
+    }
+  },
+  "start": ["omega3"],
+  "unlockCost": { "melatonin": 300, "magnesium": 500, "vitaminD": 800, "endorphin": 1100 },
+  "levels": {
+    "damagePerLevel": 0.25,
+    "baseCost": 30,
+    "costRate": 1.12,
+    "maxLevel": 50
+  },
+  "upgrades": {
+    "fireRate": { "name": "Ritmo de disparo", "perLevel": 0.1, "maxLevel": 20, "baseCost": 60 },
+    "baseSlots": { "name": "Espaços na base", "perLevel": 1, "maxLevel": 2, "baseCost": 400 },
+    "offlineCapHours": { "name": "Teto offline", "perLevel": 2, "maxLevel": 8, "baseCost": 80 }
+  },
   "fireRate": { "base": 1, "runCap": 3 },
-  "baseSlots": { "base": 3, "runCap": 8 },
-  "offlineCapHours": { "base": 8, "runCap": 24 }
+  "baseSlots": { "base": 3, "runCap": 5 },
+  "offlineCapHours": { "base": 8, "runCap": 24 },
+  "offline": { "estimateSeconds": 120, "minSeconds": 60 },
+  "speedUp": 2
 }

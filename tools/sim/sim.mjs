@@ -44,6 +44,26 @@ try {
       : 'Sem parede de grind: a próxima compra nunca passa de 3 runs médias.',
   );
   console.log(`(${runs} runs em ${((Date.now() - started) / 1000).toFixed(1)} s)`);
+
+  // Campo longo: quanto uma noite (8 h) com o jogo fechado rende, no começo e com o pool montado.
+  const idle = await server.ssrLoadModule('/src/core/idle/progress.ts');
+  const start = idle.defaultIdle(1);
+  const built = {
+    ...start,
+    wave: 12,
+    pool: ['omega3', 'melatonin', 'magnesium', null, null],
+    agents: ['omega3', 'melatonin', 'magnesium'],
+    levels: { omega3: 10, melatonin: 8, magnesium: 6 },
+  };
+  for (const [label, p] of [
+    ['idle do começo (Ômega-3 nv 1)', start],
+    ['idle montado (3 agentes)', built],
+  ]) {
+    const night = idle.offlineGain(p, 8 * 3600, seed);
+    console.log(
+      `Noite de 8 h, ${label}: ${night.atp} ATP (${Math.round(night.ratePerHour)} por hora)`,
+    );
+  }
 } finally {
   await server.close();
 }

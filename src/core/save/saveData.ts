@@ -1,4 +1,6 @@
 import type { RunResult } from '../run/state';
+import { IDLE } from '../../config';
+import { defaultIdle, maxSlots, type IdleProgress } from '../idle/progress';
 import { defaultProgress, type MetaProgress } from '../meta/progress';
 
 /**
@@ -32,6 +34,8 @@ export interface SaveData {
   atp: number;
   /** Laboratório, desbloqueios e estrelas do caso (fase 3). */
   meta: MetaProgress;
+  /** Campo longo: onda, pool, níveis, melhorias e ATP a coletar (fase 4). */
+  idle: IdleProgress;
 }
 
 export type RecordKind = 'time' | 'level' | 'kills';
@@ -45,6 +49,7 @@ export function defaultSave(options: Options): SaveData {
     seen: [],
     atp: 0,
     meta: defaultProgress(),
+    idle: defaultIdle(),
   };
 }
 
@@ -63,6 +68,7 @@ export function migrateSave(raw: unknown, defaults: Options): SaveData {
     seen: unknown;
     atp: unknown;
     meta: unknown;
+    idle: unknown;
   }>;
   const r = data.records ?? {};
   const o = data.options ?? {};
@@ -85,6 +91,7 @@ export function migrateSave(raw: unknown, defaults: Options): SaveData {
     seen: Array.isArray(data.seen) ? data.seen.filter((k) => typeof k === 'string') : [],
     atp: num(data.atp, 0),
     meta: migrateProgress(data.meta),
+    idle: migrateIdle(data.idle),
   };
 }
 
@@ -134,5 +141,41 @@ function migrateProgress(raw: unknown): MetaProgress {
     weapons: [...new Set([...base.weapons, ...(strings(m.weapons) ?? [])])],
     stars: Math.min(3, num(m.stars, 0)),
     chest: num(m.chest, 0),
+  };
+}
+
+/** Campo longo lido de um save; agentes e espaços que não existem mais caem fora. */
+function migrateIdle(raw: unknown): IdleProgress {
+  const base = defaultIdle();
+  if (typeof raw !== 'object' || raw === null) return base;
+  const m = raw as Partial<Record<keyof IdleProgress, unknown>>;
+  const agents = [...new Set([...base.agents, ...(strings(m.agents) ?? [])])].filter(
+    (id) => id in IDLE.agents,
+  );
+  const levels: Record<string, number> = {};
+  for (const id of agents) {
+    const level = (m.levels as Record<string, unknown> | undefined)?.[id];
+    levels[id] = typeof level === 'number' && level >= 1 ? Math.floor(level) : 1;
+  }
+  const rawPool = Array.isArray(m.pool) ? m.pool : base.pool;
+  const pool = Array.from({ length: maxSlots() }, (_, i) => {
+    const id = rawPool[i];
+    return typeof id === 'string' && agents.includes(id) ? id : null;
+  });
+  const u = (m.upgrades ?? {}) as Partial<Record<keyof IdleProgress['upgrades'], unknown>>;
+  const wave = Math.max(1, Math.floor(num(m.wave, 1)));
+  return {
+    wave,
+    bestWave: Math.max(wave, Math.floor(num(m.bestWave, 1))),
+    pool,
+    levels,
+    agents,
+    upgrades: {
+      fireRate: Math.floor(num(u.fireRate, 0)),
+      baseSlots: Math.floor(num(u.baseSlots, 0)),
+      offlineCapHours: Math.floor(num(u.offlineCapHours, 0)),
+    },
+    pending: num(m.pending, 0),
+    lastSeen: num(m.lastSeen, 0),
   };
 }
