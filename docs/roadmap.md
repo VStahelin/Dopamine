@@ -163,7 +163,7 @@ A camada que amarra tudo: a saúde do corpo.
 
 Deixar o jogo com a cara do canvas de identidade visual e pronto para outras pessoas.
 
-- [ ] HUD, molduras, botões e fontes da aba Design.
+- [ ] HUD, molduras, botões e fontes da aba Design; HUD e pausa da run como em [ui-cronico.md](ui-cronico.md).
 - [ ] Chão, paredes e efeitos (dano com contorno, projéteis).
 - [ ] Som e música.
 - [ ] PWA: ícones e polimento da instalação na tela inicial (o offline vem da fase 2.5).
