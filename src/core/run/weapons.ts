@@ -66,7 +66,8 @@ export function updateWeapons(state: RunState, dt: number, grid: SpatialGrid): v
   });
 }
 
-function paramsOf(state: RunState, w: WeaponInstance, index: number): WeaponParams {
+/** Valores atuais de uma arma do agente, com atributos e o especial. */
+export function paramsOf(state: RunState, w: WeaponInstance, index: number): WeaponParams {
   const mods = index === 0 ? actionMods(state) : NO_MODS;
   return weaponParams(state.rules.weapons[w.id], w.level, state.stats, mods);
 }
@@ -153,7 +154,7 @@ export function moveProjectiles(state: RunState, dt: number, grid: SpatialGrid):
       if ((e.x - p.x) ** 2 + (e.y - p.y) ** 2 > (e.radius + p.radius) ** 2) return;
 
       p.hits.push(e.id);
-      hitEnemy(state, e, p.damage, { dirX: p.vx, dirY: p.vy });
+      hitEnemy(state, e, p.damage, { dirX: p.vx, dirY: p.vy, source: p.weapon });
 
       // Reação em cadeia: o disparo salta para o inimigo mais próximo ainda não atingido.
       if (p.ricochetLeft > 0) {
@@ -193,7 +194,9 @@ function fireCone(
   eachInRadius(state, grid, agent.x, agent.y, p.rangePx, (e) => {
     const a = Math.atan2(e.y - agent.y, e.x - agent.x);
     const diff = Math.abs(Math.atan2(Math.sin(a - angle), Math.cos(a - angle)));
-    if (diff <= half) hitEnemy(state, e, p.damage, { dirX: e.x - agent.x, dirY: e.y - agent.y });
+    if (diff <= half) {
+      hitEnemy(state, e, p.damage, { dirX: e.x - agent.x, dirY: e.y - agent.y, source: w.id });
+    }
   });
   w.cooldown = p.cooldownSeconds;
   state.events.push({
@@ -241,7 +244,11 @@ function spinOrbit(
     const y = state.agent.y + Math.sin(a) * p.rangePx;
     eachInRadius(state, grid, x, y, p.areaPx, (e) => {
       if (readyToHit(w.lastHit, e.id, state.time, interval)) {
-        hitEnemy(state, e, p.damage, { dirX: e.x - state.agent.x, dirY: e.y - state.agent.y });
+        hitEnemy(state, e, p.damage, {
+          dirX: e.x - state.agent.x,
+          dirY: e.y - state.agent.y,
+          source: w.id,
+        });
       }
     });
   }
@@ -257,7 +264,7 @@ function tickAura(
   const interval = def.hitIntervalSeconds ?? 0.5;
   eachInRadius(state, grid, state.agent.x, state.agent.y, p.areaPx + w.growth, (e) => {
     if (readyToHit(w.lastHit, e.id, state.time, interval)) {
-      hitEnemy(state, e, p.damage, { continuous: true });
+      hitEnemy(state, e, p.damage, { continuous: true, source: w.id });
     }
   });
 }
@@ -282,6 +289,7 @@ function throwZones(state: RunState, w: WeaponInstance, def: WeaponDef, p: Weapo
       lastHit: new Map(),
       slow: def.slow ?? 0,
       vulnerability: 0,
+      source: w.id,
     });
   }
   w.cooldown = p.cooldownSeconds;
@@ -294,7 +302,7 @@ export function updateZones(state: RunState, dt: number, grid: SpatialGrid): voi
     if (z.damage <= 0 || z.life <= 0) continue;
     eachInRadius(state, grid, z.x, z.y, z.radius, (e) => {
       if (readyToHit(z.lastHit, e.id, state.time, z.hitInterval)) {
-        hitEnemy(state, e, z.damage, { continuous: true });
+        hitEnemy(state, e, z.damage, { continuous: true, source: z.source });
       }
     });
   }
@@ -319,7 +327,9 @@ function fireBeams(state: RunState, w: WeaponInstance, def: WeaponDef, p: Weapon
       const along = rx * ux + ry * uy;
       if (along < 0 || along > p.rangePx) continue;
       const across = Math.abs(rx * uy - ry * ux);
-      if (across <= p.areaPx / 2 + e.radius) hitEnemy(state, e, p.damage, { dirX: ux, dirY: uy });
+      if (across <= p.areaPx / 2 + e.radius) {
+        hitEnemy(state, e, p.damage, { dirX: ux, dirY: uy, source: w.id });
+      }
     }
     state.events.push({
       type: 'beam',
@@ -344,6 +354,7 @@ function emitPulse(state: RunState, w: WeaponInstance, p: WeaponParams): void {
     speed: p.speedPxPerSecond,
     damage: p.damage,
     hits: [],
+    source: w.id,
   });
   w.cooldown = p.cooldownSeconds;
 }
@@ -357,7 +368,11 @@ export function updatePulses(state: RunState, dt: number, grid: SpatialGrid): vo
     eachInRadius(state, grid, pulse.x, pulse.y, pulse.radius, (e) => {
       if (pulse.hits.includes(e.id)) return;
       pulse.hits.push(e.id);
-      hitEnemy(state, e, pulse.damage, { dirX: e.x - pulse.x, dirY: e.y - pulse.y });
+      hitEnemy(state, e, pulse.damage, {
+        dirX: e.x - pulse.x,
+        dirY: e.y - pulse.y,
+        source: pulse.source,
+      });
     });
   }
   state.pulses = state.pulses.filter((p) => p.radius < p.maxRadius);
@@ -381,10 +396,12 @@ function strike(state: RunState, w: WeaponInstance, p: WeaponParams, grid: Spati
   for (const t of targets) {
     const tx = t.x;
     const ty = t.y;
-    hitEnemy(state, t, p.damage, { dirX: tx - agent.x, dirY: ty - agent.y });
+    hitEnemy(state, t, p.damage, { dirX: tx - agent.x, dirY: ty - agent.y, source: w.id });
     // Respingo: metade do dano em quem está em volta do alvo.
     eachInRadius(state, grid, tx, ty, p.areaPx, (e) => {
-      if (e !== t) hitEnemy(state, e, p.damage * 0.5, { dirX: e.x - tx, dirY: e.y - ty });
+      if (e !== t) {
+        hitEnemy(state, e, p.damage * 0.5, { dirX: e.x - tx, dirY: e.y - ty, source: w.id });
+      }
     });
     state.events.push({ type: 'strike', x: tx, y: ty, radius: p.areaPx });
   }

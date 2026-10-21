@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { ECONOMY } from '../../config';
-import { difficultyAt, waveFactorAt, xpToNextLevel } from './progression';
+import { difficultyAt, waveAt, waveFactorAt, xpToNextLevel } from './progression';
 
 describe('xpToNextLevel', () => {
   it('segue a tabela da aba Economia até o nível 20', () => {
@@ -46,5 +46,16 @@ describe('waveFactorAt', () => {
     expect(waveFactorAt(cycle + 1, d)).toBe(d.peakMultiplier);
     expect(waveFactorAt(cycle + d.peakDurationSeconds + 1, d)).toBe(d.respiteMultiplier);
     expect(waveFactorAt(cycle + d.peakDurationSeconds + d.respiteSeconds + 1, d)).toBe(1);
+  });
+});
+
+describe('waveAt', () => {
+  const d = ECONOMY.difficulty;
+  const cycle = d.peakEveryMinutes * 60;
+
+  it('conta uma onda por ciclo e marca o pico no começo de cada ciclo depois do primeiro', () => {
+    expect(waveAt(0, d)).toEqual({ wave: 1, peak: false });
+    expect(waveAt(cycle + 1, d)).toEqual({ wave: 2, peak: true });
+    expect(waveAt(cycle + d.peakDurationSeconds + 1, d)).toEqual({ wave: 2, peak: false });
   });
 });

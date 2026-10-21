@@ -73,6 +73,8 @@ export interface Zone {
   vulnerability: number;
   vulnerableType?: MoleculeType;
   kind: 'solvent' | 'emulsion';
+  /** Arma que criou a poça, para o dano por arma. */
+  source?: WeaponId;
 }
 
 /** Anel que sai do agente (Pulso dopaminérgico). */
@@ -84,6 +86,7 @@ export interface Pulse {
   speed: number;
   damage: number;
   hits: number[];
+  source: WeaponId;
 }
 
 export interface Gem {
@@ -95,7 +98,18 @@ export interface Gem {
 
 /** Acontecimentos de um passo, para o desenho (números de dano, efeitos). */
 export type RunEvent =
-  | { type: 'damage'; x: number; y: number; amount: number; crit: boolean }
+  | {
+      type: 'damage';
+      x: number;
+      y: number;
+      amount: number;
+      crit: boolean;
+      /** Multiplicador de afinidade do agente contra a molécula (1 = neutro). */
+      affinity: number;
+      /** Golpe contínuo (aura, poça), mostrado somado. */
+      continuous: boolean;
+    }
+  | { type: 'heal'; amount: number }
   | { type: 'dodge' }
   | { type: 'revive' }
   | { type: 'kill'; x: number; y: number; kind: EnemyKind }
@@ -158,7 +172,15 @@ export interface RunState {
   nextEnemyId: number;
   /** Fração acumulada de inimigos a nascer. */
   spawnBudget: number;
+  /** Números da run para a pausa e o fim de run. */
+  tally: RunTally;
   events: RunEvent[];
+}
+
+export interface RunTally {
+  damageByWeapon: Partial<Record<WeaponId, number>>;
+  crits: number;
+  interactionsLost: number;
 }
 
 export interface RunResult {
@@ -206,6 +228,7 @@ export function createRun(
     over: false,
     nextEnemyId: 1,
     spawnBudget: 0,
+    tally: { damageByWeapon: {}, crits: 0, interactionsLost: 0 },
     events: [],
   };
 }

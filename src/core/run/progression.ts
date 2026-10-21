@@ -17,6 +17,17 @@ export function difficultyAt(timeSeconds: number, d: EconomyConfig['difficulty']
   return value;
 }
 
+/** Onda atual (uma a cada ciclo do dente de serra) e se está no pico agora. */
+export function waveAt(
+  timeSeconds: number,
+  d: EconomyConfig['difficulty'],
+): { wave: number; peak: boolean } {
+  const cycle = d.peakEveryMinutes * 60;
+  const wave = Math.floor(timeSeconds / cycle) + 1;
+  const peak = timeSeconds >= cycle && timeSeconds % cycle < d.peakDurationSeconds;
+  return { wave, peak };
+}
+
 /** Dente de serra: pico a cada N minutos, seguido de um respiro com menos inimigos. */
 export function waveFactorAt(timeSeconds: number, d: EconomyConfig['difficulty']): number {
   const cycle = d.peakEveryMinutes * 60;

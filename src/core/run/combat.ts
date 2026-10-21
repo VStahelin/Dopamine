@@ -1,4 +1,4 @@
-import type { EnemyKind } from '../../config';
+import type { EnemyKind, WeaponId } from '../../config';
 import { difficultyAt } from './progression';
 import { addEnemy, type Enemy, type RunState } from './state';
 
@@ -35,6 +35,8 @@ export interface HitOptions {
   dirY?: number;
   /** Golpes contínuos (aura, poça) não rolam crítico nem empurram. */
   continuous?: boolean;
+  /** Arma que deu o golpe, para o dano por arma da pausa. */
+  source?: WeaponId;
 }
 
 /**
@@ -43,7 +45,8 @@ export interface HitOptions {
  */
 export function hitEnemy(state: RunState, e: Enemy, base: number, opts: HitOptions = {}): void {
   const { stats, rng, rules } = state;
-  let amount = base * affinityMultiplier(state, e) * (1 + e.vulnerability);
+  const affinity = affinityMultiplier(state, e);
+  let amount = base * affinity * (1 + e.vulnerability);
   if (e.elite) amount *= stats.eliteDamage;
   let crit = false;
   if (!opts.continuous) {
@@ -56,15 +59,27 @@ export function hitEnemy(state: RunState, e: Enemy, base: number, opts: HitOptio
       e.y += ((opts.dirY ?? 0) / len) * push;
     }
   }
-  damageEnemy(state, e, amount, crit);
+  if (crit) state.tally.crits++;
+  if (opts.source) {
+    const t = state.tally.damageByWeapon;
+    t[opts.source] = (t[opts.source] ?? 0) + Math.min(amount, Math.max(0, e.hp));
+  }
+  damageEnemy(state, e, amount, crit, affinity, opts.continuous ?? false);
 }
 
 /** Tira vida; na morte, conta a decomposição, deixa a gema e solta os fragmentos (cascata). */
-export function damageEnemy(state: RunState, e: Enemy, amount: number, crit = false): void {
+export function damageEnemy(
+  state: RunState,
+  e: Enemy,
+  amount: number,
+  crit = false,
+  affinity = 1,
+  continuous = false,
+): void {
   if (e.hp <= 0) return;
   e.hp -= amount;
   e.hitFlash = 0.1;
-  state.events.push({ type: 'damage', x: e.x, y: e.y, amount, crit });
+  state.events.push({ type: 'damage', x: e.x, y: e.y, amount, crit, affinity, continuous });
   if (e.hp > 0) return;
 
   state.kills++;
@@ -101,10 +116,10 @@ function spawnFragments(state: RunState, e: Enemy): void {
 }
 
 export function heal(state: RunState, amount: number): void {
-  state.agent.interactions = Math.min(
-    state.stats.maxInteractions,
-    state.agent.interactions + amount,
-  );
+  const before = state.agent.interactions;
+  state.agent.interactions = Math.min(state.stats.maxInteractions, before + amount);
+  const gained = state.agent.interactions - before;
+  if (gained > 0) state.events.push({ type: 'heal', amount: gained });
 }
 
 function dropGem(state: RunState, x: number, y: number, value: number): void {
