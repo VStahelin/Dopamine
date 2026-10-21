@@ -78,6 +78,8 @@ export class RunScene extends Phaser.Scene {
     });
 
     this.scene.launch(SCENES.hud);
+    // Só em desenvolvimento: deixa a run acessível no console do navegador para testes.
+    if (import.meta.env.DEV) Object.assign(globalThis, { dopamina: this });
   }
 
   override update(_time: number, deltaMs: number): void {
@@ -170,7 +172,15 @@ export class RunScene extends Phaser.Scene {
     });
 
     for (const ev of drainEvents(this.run)) {
-      if (ev.type === 'damage') this.showDamage(ev.x, ev.y, ev.amount);
+      const { agent: a } = this.run;
+      if (ev.type === 'damage') {
+        this.showFloater(ev.x, ev.y, String(Math.round(ev.amount)), ev.crit ? 'crit' : 'damage');
+      }
+      if (ev.type === 'dodge') this.showFloater(a.x, a.y - 12, 'ESQUIVA', 'info');
+      if (ev.type === 'revive') {
+        this.showFloater(a.x, a.y - 14, 'SEGUNDA DOSE!', 'info');
+        this.cameras.main.flash(250, 57, 211, 240);
+      }
       if (ev.type === 'hurt') this.cameras.main.shake(90, 0.006);
     }
     this.updateFloaters(dt);
@@ -187,7 +197,8 @@ export class RunScene extends Phaser.Scene {
     this.ground.setPosition(x0, y0).setSize(w + tile * 3, h + tile * 3);
   }
 
-  private showDamage(x: number, y: number, amount: number): void {
+  /** Texto que sobe e some: dano, crítico (dourado e maior) ou aviso. */
+  private showFloater(x: number, y: number, label: string, kind: 'damage' | 'crit' | 'info'): void {
     let floater = this.floaters.find((f) => f.life <= 0);
     if (!floater) {
       if (this.floaters.length < DAMAGE_TEXT_POOL) {
@@ -205,9 +216,17 @@ export class RunScene extends Phaser.Scene {
         floater = this.floaters.reduce((a, b) => (a.life < b.life ? a : b));
       }
     }
+    const color =
+      kind === 'crit'
+        ? PALETTE_CSS.gold
+        : kind === 'info'
+          ? PALETTE_CSS.water
+          : PALETTE_CSS.hydrogen;
     floater.life = 0.5;
     floater.text
-      .setText(String(Math.round(amount)))
+      .setText(label)
+      .setColor(color)
+      .setScale(kind === 'crit' ? 1.4 : 1)
       .setPosition(x + Phaser.Math.Between(-4, 4), y - 6)
       .setVisible(true)
       .setAlpha(1);

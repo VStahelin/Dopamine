@@ -50,7 +50,7 @@ As telas de interface usam [uiLayout.ts](../src/game/ui/uiLayout.ts): zoom intei
 
 - [state.ts](../src/core/run/state.ts): estado da run (agente, inimigos, disparos, gemas, nível) e `createRun(semente)`.
 - [step.ts](../src/core/run/step.ts): `stepRun` avança um passo: movimento, nascimento de inimigos, perseguição, arma, dano, contato e gemas. Usa uma [grade espacial](../src/core/run/spatialGrid.ts) para achar vizinhos.
-- [upgrades.ts](../src/core/run/upgrades.ts): opções de level up e aplicação da escolha.
+- [upgrades.ts](../src/core/run/upgrades.ts): opções de level up com raridade (Sorte), Rerrolar, Pular, Banir e espaços de modificador.
 - [stats.ts](../src/core/run/stats.ts) e [progression.ts](../src/core/run/progression.ts): atributos com modificadores, arma por nível, XP e dificuldade.
 - [rules.ts](../src/core/run/rules.ts): as regras chegam como parâmetro (`RunRules`), com os JSON como padrão.
 - O `core` registra acontecimentos (`events`) que a cena lê para efeitos, sem o `core` saber de desenho.
@@ -64,7 +64,7 @@ Fora dessas camadas:
 
 ```
 src/
-  config/        JSON de parâmetros (stats, run, enemies, weapons, passives, economy, idle, display), types.ts e index.ts
+  config/        JSON de parâmetros (stats, run, enemies, weapons, passives, rarities, economy, idle, display), types.ts e index.ts
   core/
     math/        vetores e utilidades
     random.ts    gerador aleatório com semente
@@ -109,6 +109,10 @@ Precisa de Node 20.19 ou mais novo.
 | `npm run build` | Checa os tipos e gera o build em `dist/` |
 | `npm run preview` | Serve o build de `dist/` localmente, para testar a versão final |
 | `npm run check` | Lint, formatação, testes e build de uma vez; rode antes de abrir um PR |
+
+## Testes no navegador
+
+Com `npm run dev`, a cena da run fica em `globalThis.dopamina` (só em desenvolvimento). Pelo console dá para mexer no estado, por exemplo `dopamina.run.xp = dopamina.run.xpToNext` para forçar um level up.
 
 ## CI
 

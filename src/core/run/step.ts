@@ -2,7 +2,7 @@ import type { EnemyKind } from '../../config';
 import { clampLength, type Vec2 } from '../math/vec2';
 import { difficultyAt, waveFactorAt, xpToNextLevel } from './progression';
 import { SpatialGrid } from './spatialGrid';
-import { addEnemy, type Enemy, type RunState } from './state';
+import { addEnemy, type Enemy, type Projectile, type RunState } from './state';
 import { weaponStats } from './stats';
 
 export interface StepInput {
@@ -49,7 +49,10 @@ function spawnEnemies(state: RunState, viewRadius: number, dt: number): void {
   const { run, economy, enemies } = state.rules;
   const difficulty = difficultyAt(state.time, economy.difficulty);
   const rate =
-    run.spawn.baseEnemiesPerSecond * difficulty * waveFactorAt(state.time, economy.difficulty);
+    run.spawn.baseEnemiesPerSecond *
+    difficulty *
+    waveFactorAt(state.time, economy.difficulty) *
+    (1 + state.stats.curse * run.curse.quantity);
   state.spawnBudget += rate * dt;
 
   const minute = state.time / 60;
@@ -124,12 +127,19 @@ function moveEnemies(state: RunState, dt: number): void {
   }
 }
 
-function nearestEnemy(state: RunState, maxDistance: number): Enemy | undefined {
+/** Inimigo vivo mais perto de (x, y), ignorando os ids em `skip`. */
+function nearestEnemy(
+  state: RunState,
+  x: number,
+  y: number,
+  maxDistance: number,
+  skip: readonly number[] = [],
+): Enemy | undefined {
   let best: Enemy | undefined;
   let bestD2 = maxDistance * maxDistance;
   for (const e of state.enemies) {
-    if (e.hp <= 0) continue;
-    const d2 = (e.x - state.agent.x) ** 2 + (e.y - state.agent.y) ** 2;
+    if (e.hp <= 0 || skip.includes(e.id)) continue;
+    const d2 = (e.x - x) ** 2 + (e.y - y) ** 2;
     if (d2 < bestD2) {
       bestD2 = d2;
       best = e;
@@ -143,7 +153,7 @@ function fireWeapon(state: RunState, dt: number): void {
   if (state.weaponCooldown > 0) return;
 
   const w = weaponStats(state.rules, state.weaponLevel, state.stats);
-  const target = nearestEnemy(state, w.range);
+  const target = nearestEnemy(state, state.agent.x, state.agent.y, w.range);
   if (!target) return;
 
   const base = Math.atan2(target.y - state.agent.y, target.x - state.agent.x);
@@ -159,6 +169,7 @@ function fireWeapon(state: RunState, dt: number): void {
       pierceLeft: w.pierce,
       radius: w.radius,
       hits: [],
+      ricochetLeft: w.ricochet,
     });
   }
   state.weaponCooldown = w.cooldownSeconds;
@@ -166,35 +177,79 @@ function fireWeapon(state: RunState, dt: number): void {
 }
 
 function moveProjectiles(state: RunState, dt: number): void {
+  const { combat } = state.rules.run;
   for (const p of state.projectiles) {
     p.x += p.vx * dt;
     p.y += p.vy * dt;
     p.life -= dt;
     if (p.life <= 0) continue;
 
+    let done = false;
     grid.query(p.x, p.y, p.radius + GRID_CELL, (j) => {
-      if (p.life <= 0) return;
+      if (done || p.life <= 0) return;
       const e = state.enemies[j]!;
       if (e.hp <= 0 || p.hits.includes(e.id)) return;
       if ((e.x - p.x) ** 2 + (e.y - p.y) ** 2 > (e.radius + p.radius) ** 2) return;
 
       p.hits.push(e.id);
-      damageEnemy(state, e, p.damage);
+      hitEnemy(state, e, p);
+
+      // Reação em cadeia: o disparo salta para o inimigo mais próximo ainda não atingido.
+      if (p.ricochetLeft > 0) {
+        const next = nearestEnemy(state, p.x, p.y, combat.ricochetRangePx, p.hits);
+        if (next) {
+          const speed = Math.hypot(p.vx, p.vy);
+          const d = Math.hypot(next.x - p.x, next.y - p.y) || 1;
+          p.vx = ((next.x - p.x) / d) * speed;
+          p.vy = ((next.y - p.y) / d) * speed;
+          p.life = (combat.ricochetRangePx * 1.5) / speed;
+          p.damage *= combat.ricochetDamageFactor;
+          p.ricochetLeft--;
+          done = true;
+          return;
+        }
+      }
       if (p.pierceLeft > 0) p.pierceLeft--;
       else p.life = 0;
+      done = p.life <= 0;
     });
   }
 }
 
-function damageEnemy(state: RunState, e: Enemy, amount: number): void {
+/** Golpe de um disparo: crítico, bônus contra inimigos fortes e empurrão. */
+function hitEnemy(state: RunState, e: Enemy, p: Projectile): void {
+  const { stats, rng, rules } = state;
+  let amount = p.damage;
+  if (e.elite) amount *= stats.eliteDamage;
+  const crit = rng.next() < stats.critChance;
+  if (crit) amount *= stats.critDamage;
+
+  const speed = Math.hypot(p.vx, p.vy) || 1;
+  const push = (rules.run.combat.knockbackPx * stats.knockback) / Math.max(1, e.radius / 8);
+  e.x += (p.vx / speed) * push;
+  e.y += (p.vy / speed) * push;
+
+  damageEnemy(state, e, amount, crit);
+}
+
+function damageEnemy(state: RunState, e: Enemy, amount: number, crit = false): void {
   e.hp -= amount;
   e.hitFlash = 0.1;
-  state.events.push({ type: 'damage', x: e.x, y: e.y, amount });
+  state.events.push({ type: 'damage', x: e.x, y: e.y, amount, crit });
   if (e.hp > 0) return;
 
   state.kills++;
   state.events.push({ type: 'kill', x: e.x, y: e.y, kind: e.kind });
   dropGem(state, e.x, e.y, e.xp);
+  // Absorção: chance de recuperar 1 interação ao decompor.
+  if (state.rng.next() < state.stats.lifesteal) heal(state, 1);
+}
+
+function heal(state: RunState, amount: number): void {
+  state.agent.interactions = Math.min(
+    state.stats.maxInteractions,
+    state.agent.interactions + amount,
+  );
 }
 
 function dropGem(state: RunState, x: number, y: number, value: number): void {
@@ -207,25 +262,44 @@ function dropGem(state: RunState, x: number, y: number, value: number): void {
 
 function touchAgent(state: RunState, dt: number): void {
   const { agent, stats, rules } = state;
+  // Homeostase: recupera interações aos poucos.
+  if (stats.regenPerSecond > 0) heal(state, stats.regenPerSecond * dt);
   agent.invulnerableFor = Math.max(0, agent.invulnerableFor - dt);
   if (agent.invulnerableFor > 0) return;
 
   const agentRadius = rules.run.agent.radiusPx;
-  let hit = 0;
+  let attacker: Enemy | undefined;
   grid.query(agent.x, agent.y, agentRadius + GRID_CELL, (j) => {
     const e = state.enemies[j]!;
     if (e.hp <= 0) return;
-    if ((e.x - agent.x) ** 2 + (e.y - agent.y) ** 2 <= (e.radius + agentRadius) ** 2) {
-      hit = Math.max(hit, e.contactDamage);
-    }
+    if ((e.x - agent.x) ** 2 + (e.y - agent.y) ** 2 > (e.radius + agentRadius) ** 2) return;
+    if (!attacker || e.contactDamage > attacker.contactDamage) attacker = e;
   });
-  if (hit === 0) return;
+  if (!attacker) return;
 
+  agent.invulnerableFor = stats.invulnerabilitySeconds;
+  if (state.rng.next() < stats.dodge) {
+    state.events.push({ type: 'dodge' });
+    return;
+  }
+
+  const hit = attacker.contactDamage;
   const amount = Math.max(rules.run.minDamageTaken, hit - stats.armor);
   agent.interactions = Math.max(0, agent.interactions - amount);
-  agent.invulnerableFor = stats.invulnerabilitySeconds;
   state.events.push({ type: 'hurt', amount });
-  if (agent.interactions === 0) state.over = true;
+  // Reflexo: devolve parte do dano a quem encostou.
+  if (stats.thorns > 0) damageEnemy(state, attacker, hit * stats.thorns);
+
+  if (agent.interactions > 0) return;
+  // Segunda dose: volta com metade das interações.
+  if (state.used.revives < Math.floor(stats.revives)) {
+    state.used.revives++;
+    agent.interactions = stats.maxInteractions / 2;
+    agent.invulnerableFor = rules.run.combat.reviveInvulnerabilitySeconds;
+    state.events.push({ type: 'revive' });
+    return;
+  }
+  state.over = true;
 }
 
 function updateGems(state: RunState, dt: number): void {

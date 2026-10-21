@@ -9,24 +9,27 @@ import economyJson from './economy.json';
 import enemiesJson from './enemies.json';
 import idleJson from './idle.json';
 import passivesJson from './passives.json';
+import raritiesJson from './rarities.json';
 import runJson from './run.json';
 import statsJson from './stats.json';
 import weaponsJson from './weapons.json';
-import type {
-  ContactDamageKind,
-  DisplayConfig,
-  EconomyConfig,
-  EnemyDef,
-  IdleConfig,
-  MoleculeType,
-  PassiveDef,
-  PassiveStat,
-  RunConfig,
-  StatsConfig,
-  WeaponDef,
+import {
+  RUN_STAT_KEYS,
+  type ContactDamageKind,
+  type DisplayConfig,
+  type EconomyConfig,
+  type EnemyDef,
+  type IdleConfig,
+  type MoleculeType,
+  type PassiveDef,
+  type RarityConfig,
+  type RunConfig,
+  type StatsConfig,
+  type WeaponDef,
 } from './types';
 
 export type * from './types';
+export { RUN_STAT_KEYS } from './types';
 
 export type EnemyKind = keyof typeof enemiesJson;
 export type WeaponId = keyof typeof weaponsJson;
@@ -41,14 +44,6 @@ const MOLECULE_TYPES: readonly MoleculeType[] = [
   'inflammation',
 ];
 const CONTACT_KINDS: readonly ContactDamageKind[] = ['common', 'strong', 'boss'];
-const PASSIVE_STATS: readonly PassiveStat[] = [
-  'damage',
-  'cooldown',
-  'moveSpeed',
-  'magnet',
-  'maxInteractions',
-  'xpGain',
-];
 
 function oneOf<T extends string>(value: string, allowed: readonly T[], where: string): T {
   if (!(allowed as readonly string[]).includes(value)) {
@@ -80,7 +75,7 @@ function loadPassives(): Record<PassiveId, PassiveDef> {
     PassiveId,
     (typeof passivesJson)[PassiveId],
   ][]) {
-    out[id] = { ...def, stat: oneOf(def.stat, PASSIVE_STATS, `passives.json ${id}.stat`) };
+    out[id] = { ...def, stat: oneOf(def.stat, RUN_STAT_KEYS, `passives.json ${id}.stat`) };
   }
   return out;
 }
@@ -93,3 +88,6 @@ export const DISPLAY: DisplayConfig = displayJson;
 export const ENEMIES: Record<EnemyKind, EnemyDef> = loadEnemies();
 export const WEAPONS: Record<WeaponId, WeaponDef> = weaponsJson;
 export const PASSIVES: Record<PassiveId, PassiveDef> = loadPassives();
+export const RARITIES: RarityConfig = raritiesJson;
+if (RARITIES.tiers.length === 0)
+  throw new Error('Configuração inválida: rarities.json sem raridades');

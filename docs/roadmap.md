@@ -63,6 +63,7 @@ A primeira versão que parece um jogo: abre num menu, entra numa run jogável e 
 - [x] Gerador de sprite de molécula: átomos, ligações e escala, como na aba Design.
 - [x] Tela de fim de run com tempo, nível e inimigos decompostos, avisando se bateu recorde, com Jogar de novo e Menu.
 
+- [x] Todos os modificadores da aba Parâmetros que já têm mecânica, com raridades movidas pela Sorte, Rerrolar, Pular e Banir ([decisão 0013](decisoes/0013-raridade-e-sorte.md)).
 - [ ] Jogar e ajustar os números até a run de 10 minutos ficar divertida (os valores estão nos JSON de `src/config/`).
 
 **Critério de saída:** o ciclo menu → run → fim → menu funciona no PC e no celular, e uma run de 10 minutos é jogada até o fim por vontade própria, a 60 FPS num celular intermediário (testar no Safari do iPhone).

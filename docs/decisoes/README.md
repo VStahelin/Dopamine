@@ -18,3 +18,4 @@ As decisões de design tomadas antes deste registro continuam marcadas como "dec
 | [0010](0010-orientacao-livre.md) | Orientação livre no celular, pensada para vertical | técnica | proposta |
 | [0011](0011-rodar-localmente.md) | Rodar localmente durante o desenvolvimento | técnica | proposta |
 | [0012](0012-passo-fixo-e-semente.md) | Simulação em passo fixo, com aleatoriedade por semente | técnica | proposta |
+| [0013](0013-raridade-e-sorte.md) | Raridade dos modificadores, movida pela Sorte | design | proposta |

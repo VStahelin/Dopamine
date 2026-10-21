@@ -2,6 +2,7 @@ import {
   ECONOMY,
   ENEMIES,
   PASSIVES,
+  RARITIES,
   RUN,
   STATS,
   WEAPONS,
@@ -10,6 +11,7 @@ import {
   type EnemyKind,
   type PassiveDef,
   type PassiveId,
+  type RarityConfig,
   type RunConfig,
   type StatsConfig,
   type WeaponDef,
@@ -26,6 +28,7 @@ export interface RunRules {
   enemies: Record<EnemyKind, EnemyDef>;
   weapon: WeaponDef;
   passives: Record<PassiveId, PassiveDef>;
+  rarities: RarityConfig;
 }
 
 export const DEFAULT_RULES: RunRules = {
@@ -35,4 +38,5 @@ export const DEFAULT_RULES: RunRules = {
   enemies: ENEMIES,
   weapon: WEAPONS.radical,
   passives: PASSIVES,
+  rarities: RARITIES,
 };

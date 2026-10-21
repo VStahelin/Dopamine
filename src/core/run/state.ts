@@ -18,6 +18,8 @@ export interface Enemy {
   xp: number;
   /** Segundos de "piscada" depois de levar dano, para o desenho. */
   hitFlash: number;
+  /** Inimigo forte ou chefe: recebe o bônus de Especificidade. */
+  elite: boolean;
 }
 
 export interface Projectile {
@@ -32,6 +34,8 @@ export interface Projectile {
   radius: number;
   /** Inimigos já atingidos, para um disparo que atravessa não acertar o mesmo duas vezes. */
   hits: number[];
+  /** Saltos de Reação em cadeia que ainda restam. */
+  ricochetLeft: number;
 }
 
 export interface Gem {
@@ -43,7 +47,9 @@ export interface Gem {
 
 /** Acontecimentos de um passo, para o desenho (números de dano, efeitos). */
 export type RunEvent =
-  | { type: 'damage'; x: number; y: number; amount: number }
+  | { type: 'damage'; x: number; y: number; amount: number; crit: boolean }
+  | { type: 'dodge' }
+  | { type: 'revive' }
   | { type: 'kill'; x: number; y: number; kind: EnemyKind }
   | { type: 'hurt'; amount: number }
   | { type: 'shoot' }
@@ -75,6 +81,10 @@ export interface RunState {
   pendingLevelUps: number;
   /** Opções sorteadas para o level up atual. */
   offer: UpgradeChoice[] | null;
+  /** Usos de Segunda dose, Rerrolar, Pular e Banir já gastos nesta run. */
+  used: { revives: number; rerolls: number; skips: number; banishes: number };
+  /** Opções banidas pelo resto da run (chaves de `choiceKey`). */
+  banished: string[];
   over: boolean;
   nextEnemyId: number;
   /** Fração acumulada de inimigos a nascer. */
@@ -108,6 +118,8 @@ export function createRun(seed: number, rules: RunRules = DEFAULT_RULES): RunSta
     stats,
     pendingLevelUps: 0,
     offer: null,
+    used: { revives: 0, rerolls: 0, skips: 0, banishes: 0 },
+    banished: [],
     over: false,
     nextEnemyId: 1,
     spawnBudget: 0,
@@ -124,7 +136,10 @@ export function addEnemy(
   difficulty = 1,
 ): Enemy {
   const def = state.rules.enemies[kind];
-  const hp = def.hp * difficulty;
+  // Estresse (maldição) deixa os inimigos mais fortes e mais valiosos.
+  const curse = state.stats.curse;
+  const c = state.rules.run.curse;
+  const hp = def.hp * difficulty * (1 + curse * c.hp);
   const enemy: Enemy = {
     id: state.nextEnemyId++,
     kind,
@@ -132,10 +147,11 @@ export function addEnemy(
     y,
     hp,
     maxHp: hp,
-    speed: def.speedPxPerSecond,
+    speed: def.speedPxPerSecond * (1 + curse * c.speed),
     radius: def.radiusPx,
     contactDamage: state.rules.run.contactDamage[def.contactDamage],
-    xp: def.xp,
+    xp: def.xp * (1 + curse * c.xp),
+    elite: def.contactDamage !== 'common',
     hitFlash: 0,
   };
   state.enemies.push(enemy);

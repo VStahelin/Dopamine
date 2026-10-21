@@ -101,6 +101,21 @@ A saúde executiva pode somar uma opção extra por level up, como proposto na a
 | Duração do especial | Duração do especial | Quanto o efeito dura | 100% | +100% | +20% |
 | Cargas | Cargas | Quantos usos guardados de uma vez | 1 | 3 | +1 |
 
+## Raridades e Sorte
+
+Cada modificador do level up sorteia uma raridade, que multiplica o valor dele. A **Sorte** deixa as raridades altas mais prováveis. Detalhes e fórmula na [decisão 0013](decisoes/0013-raridade-e-sorte.md); os números ficam em `src/config/rarities.json`.
+
+| Raridade | Cor | Multiplicador |
+| --- | --- | --- |
+| Comum | cinza | ×1 |
+| Incomum | verde | ×1,5 |
+| Raro | azul | ×2 |
+| Ultra raro | roxo | ×2,5 |
+| Lendário | laranja | ×3 |
+| Especial | dourado claro | ×4 |
+
+**No jogo hoje:** todos os atributos ofensivos, defensivos, de mobilidade, de level up e o Estresse viram modificadores (`src/config/passives.json`), menos Meia-vida, Chance de efeito, Rendimento, Espaços de arma e os do especial, que esperam a mecânica existir.
+
 ## Saúde do organismo (por agente)
 
 | Atributo | O que faz | Base |

@@ -1,0 +1,11 @@
+{
+  "luckExponentPerTier": 0.6,
+  "tiers": [
+    { "id": "common", "name": "Comum", "color": "#C8C8C8", "weight": 100, "multiplier": 1 },
+    { "id": "uncommon", "name": "Incomum", "color": "#1EFF00", "weight": 45, "multiplier": 1.5 },
+    { "id": "rare", "name": "Raro", "color": "#2F8CFF", "weight": 20, "multiplier": 2 },
+    { "id": "epic", "name": "Ultra raro", "color": "#A335EE", "weight": 8, "multiplier": 2.5 },
+    { "id": "legendary", "name": "Lendário", "color": "#FF8000", "weight": 3, "multiplier": 3 },
+    { "id": "special", "name": "Especial", "color": "#E6CC80", "weight": 1, "multiplier": 4 }
+  ]
+}

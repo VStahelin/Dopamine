@@ -61,6 +61,18 @@ export interface RunConfig {
   };
   /** Empurrão entre inimigos encostados, para não virarem uma pilha só. */
   separation: { strength: number };
+  combat: {
+    /** Empurrão de um golpe com Repulsão 100%, dividido pelo tamanho do inimigo. */
+    knockbackPx: number;
+    /** Distância máxima do salto da Reação em cadeia. */
+    ricochetRangePx: number;
+    /** Cada salto causa esta fração do dano anterior. */
+    ricochetDamageFactor: number;
+    /** Invulnerabilidade depois de voltar com a Segunda dose. */
+    reviveInvulnerabilitySeconds: number;
+  };
+  /** Quanto cada 100% de Estresse aumenta nos inimigos e na recompensa. */
+  curse: { hp: number; speed: number; quantity: number; xp: number };
   gems: {
     /** Acima disto, o XP de gemas novas soma na gema mais antiga. */
     maxOnField: number;
@@ -110,16 +122,82 @@ export interface WeaponDef {
   levels: WeaponLevel[];
 }
 
-/** Atributos que os modificadores passivos mexem na run. */
-export type PassiveStat =
-  'damage' | 'cooldown' | 'moveSpeed' | 'magnet' | 'maxInteractions' | 'xpGain';
+/**
+ * Atributos do agente na run: as chaves dos grupos offense, defense, mobility, levelUp e risk
+ * de stats.json. Os do especial entram com o especial (fase 2).
+ */
+export const RUN_STAT_KEYS = [
+  'damage',
+  'projectiles',
+  'cooldown',
+  'area',
+  'duration',
+  'projectileSpeed',
+  'range',
+  'pierce',
+  'ricochet',
+  'critChance',
+  'critDamage',
+  'knockback',
+  'eliteDamage',
+  'effectChance',
+  'maxInteractions',
+  'armor',
+  'dodge',
+  'regenPerSecond',
+  'lifesteal',
+  'invulnerabilitySeconds',
+  'revives',
+  'thorns',
+  'moveSpeed',
+  'magnet',
+  'xpGain',
+  'currencyGain',
+  'luck',
+  'choices',
+  'rerolls',
+  'skips',
+  'banishes',
+  'weaponSlots',
+  'modifierSlots',
+  'curse',
+] as const;
 
+export type RunStatKey = (typeof RUN_STAT_KEYS)[number];
+
+/** Modificador passivo oferecido no level up. */
 export interface PassiveDef {
   name: string;
-  stat: PassiveStat;
-  /** Quanto cada nível soma ao atributo, na unidade do atributo em stats.json. */
+  stat: RunStatKey;
+  /** Quanto cada escolha comum soma ao atributo, na unidade do atributo em stats.json. */
   perLevel: number;
+  /** Quantas vezes pode ser escolhido na run. */
   maxLevel: number;
+  /** Atributo inteiro (projéteis, perfuração...): o valor com raridade é arredondado. */
+  integer?: boolean;
+  /** Não ocupa espaço de modificador (o próprio "Espaços de modificador"). */
+  freeSlot?: boolean;
+}
+
+export interface RarityTier {
+  id: string;
+  name: string;
+  /** Cor da raridade (moldura e rótulo do cartão). */
+  color: string;
+  /** Peso no sorteio com Sorte 100%. */
+  weight: number;
+  /** Multiplica o valor do modificador. */
+  multiplier: number;
+}
+
+export interface RarityConfig {
+  /**
+   * Com Sorte `s`, o peso da raridade de índice `i` (0 = comum) vira peso × s^(i × expoente):
+   * mais sorte deixa as raridades altas mais prováveis.
+   */
+  luckExponentPerTier: number;
+  /** Da mais comum para a mais rara. */
+  tiers: RarityTier[];
 }
 
 export interface EconomyConfig {

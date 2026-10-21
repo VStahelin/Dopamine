@@ -1,38 +1,32 @@
-import type { PassiveId, PassiveStat, Stat, WeaponLevel } from '../../config';
+import {
+  RUN_STAT_KEYS,
+  type PassiveId,
+  type RunStatKey,
+  type Stat,
+  type WeaponLevel,
+} from '../../config';
 import type { RunRules } from './rules';
 
-/** Atributos do agente durante a run, já com os modificadores passivos aplicados. */
-export interface RunStats {
-  damage: number;
-  cooldown: number;
-  moveSpeed: number;
-  magnet: number;
-  maxInteractions: number;
-  xpGain: number;
-  projectiles: number;
-  pierce: number;
-  armor: number;
-  invulnerabilitySeconds: number;
+/** Atributos do agente durante a run (aba Parâmetros), já com os modificadores aplicados. */
+export type RunStats = Record<RunStatKey, number>;
+
+/** Quantas vezes um modificador foi escolhido e quanto ele já soma ao atributo. */
+export interface PassiveState {
+  level: number;
+  bonus: number;
 }
 
-export type PassiveLevels = Partial<Record<PassiveId, number>>;
+export type PassiveLevels = Partial<Record<PassiveId, PassiveState>>;
 
-function statDef(rules: RunRules, stat: PassiveStat): Stat {
-  const s = rules.stats;
-  switch (stat) {
-    case 'damage':
-      return s.offense.damage!;
-    case 'cooldown':
-      return s.offense.cooldown!;
-    case 'moveSpeed':
-      return s.mobility.moveSpeed!;
-    case 'magnet':
-      return s.mobility.magnet!;
-    case 'maxInteractions':
-      return s.defense.maxInteractions!;
-    case 'xpGain':
-      return s.mobility.xpGain!;
+const GROUPS = ['offense', 'defense', 'mobility', 'levelUp', 'risk'] as const;
+
+/** Definição de um atributo em stats.json, procurando nos grupos da run. */
+export function statDef(rules: RunRules, key: RunStatKey): Stat {
+  for (const group of GROUPS) {
+    const def = rules.stats[group][key];
+    if (def) return def;
   }
+  throw new Error(`stats.json não tem o atributo "${key}"`);
 }
 
 /** Aplica o teto da run; atributos que caem (como a recarga) têm o teto como mínimo. */
@@ -42,29 +36,12 @@ function capped(value: number, def: Stat): number {
 }
 
 export function computeStats(rules: RunRules, passives: PassiveLevels): RunStats {
-  const { offense, defense } = rules.stats;
-  const stats: RunStats = {
-    damage: statDef(rules, 'damage').base,
-    cooldown: statDef(rules, 'cooldown').base,
-    moveSpeed: statDef(rules, 'moveSpeed').base,
-    magnet: statDef(rules, 'magnet').base,
-    maxInteractions: statDef(rules, 'maxInteractions').base,
-    xpGain: statDef(rules, 'xpGain').base,
-    projectiles: offense.projectiles!.base,
-    pierce: offense.pierce!.base,
-    armor: defense.armor!.base,
-    invulnerabilitySeconds: defense.invulnerabilitySeconds!.base,
-  };
-
-  for (const [id, level] of Object.entries(passives) as [PassiveId, number][]) {
-    const def = rules.passives[id];
-    stats[def.stat] += def.perLevel * level;
+  const stats = {} as RunStats;
+  for (const key of RUN_STAT_KEYS) stats[key] = statDef(rules, key).base;
+  for (const [id, p] of Object.entries(passives) as [PassiveId, PassiveState][]) {
+    stats[rules.passives[id].stat] += p.bonus;
   }
-  for (const stat of Object.keys(rules.passives).map(
-    (id) => rules.passives[id as PassiveId].stat,
-  )) {
-    stats[stat] = capped(stats[stat], statDef(rules, stat));
-  }
+  for (const key of RUN_STAT_KEYS) stats[key] = capped(stats[key], statDef(rules, key));
   return stats;
 }
 
@@ -74,6 +51,7 @@ export interface WeaponStats {
   cooldownSeconds: number;
   projectiles: number;
   pierce: number;
+  ricochet: number;
   speed: number;
   range: number;
   radius: number;
@@ -92,11 +70,12 @@ export function weaponStats(rules: RunRules, level: number, stats: RunStats): We
   return {
     damage: (w.damage + sum.damage) * stats.damage,
     cooldownSeconds: (w.cooldownSeconds + sum.cooldownSeconds) * stats.cooldown,
-    projectiles: w.projectiles + sum.projectiles + stats.projectiles,
-    pierce: w.pierce + sum.pierce + stats.pierce,
-    speed: w.projectileSpeedPxPerSecond,
-    range: w.rangePx,
-    radius: w.projectileRadiusPx,
+    projectiles: Math.floor(w.projectiles + sum.projectiles + stats.projectiles),
+    pierce: Math.floor(w.pierce + sum.pierce + stats.pierce),
+    ricochet: Math.floor(stats.ricochet),
+    speed: w.projectileSpeedPxPerSecond * stats.projectileSpeed,
+    range: w.rangePx * stats.range,
+    radius: w.projectileRadiusPx * stats.area,
     spreadRadians: (w.spreadDegrees * Math.PI) / 180,
   };
 }
