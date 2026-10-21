@@ -1,4 +1,4 @@
-import type * as Phaser from 'phaser';
+import * as Phaser from 'phaser';
 import { PASSIVES, STATS, WEAPONS, type PassiveId, type RunStatKey } from '../../config';
 import type { RunState } from '../../core/run/state';
 import { statDef } from '../../core/run/stats';
@@ -27,18 +27,41 @@ const SLOTS = 6;
 const num = (v: number) => Math.round(v).toLocaleString('pt-BR');
 const dec = (v: number) => v.toLocaleString('pt-BR', { maximumFractionDigits: 1 });
 
+/** Texturas das linhas da pausa, liberadas a cada vez que a pausa é montada de novo. */
+const baked: string[] = [];
+let bakedCount = 0;
+
+/** Solta as texturas da montagem anterior da pausa. */
+export function releasePauseTextures(scene: Phaser.Scene): void {
+  for (const key of baked) if (scene.textures.exists(key)) scene.textures.remove(key);
+  baked.length = 0;
+}
+
+/**
+ * Linha da pausa. Os desenhos (caixa, pips, barras) viram uma textura só: um Graphics por linha
+ * era redesenhado a cada quadro e pesava com a pausa aberta.
+ */
 function row(
   scene: Phaser.Scene,
+  width: number,
   height: number,
   children: Phaser.GameObjects.GameObject[],
 ): PauseRow {
-  return { container: scene.add.container(0, 0, children), height: height + ROW_GAP };
+  const out = children.map((child) => {
+    if (!(child instanceof Phaser.GameObjects.Graphics)) return child;
+    const key = `pause-row-${bakedCount++}`;
+    child.generateTexture(key, Math.max(1, Math.ceil(width)), Math.max(1, Math.ceil(height)));
+    child.destroy();
+    baked.push(key);
+    return scene.add.image(0, 0, key).setOrigin(0);
+  });
+  return { container: scene.add.container(0, 0, out), height: height + ROW_GAP };
 }
 
 /** Título de seção com contagem à direita. */
 function header(text: string, color: string, right = ''): Build {
   return (scene, width) =>
-    row(scene, 14, [
+    row(scene, width, 14, [
       scene.add.text(0, 0, text, labelText(10, color)),
       scene.add.text(width, 0, right, labelText(10, color)).setOrigin(1, 0),
     ]);
@@ -113,7 +136,7 @@ function weaponRow(run: RunState, index: number): Build {
     if (hint) {
       children.push(scene.add.text(tx, height - 16, hint, labelText(7, PALETTE_CSS.goldIcon)));
     }
-    return row(scene, height, children);
+    return row(scene, width, height, children);
   };
 }
 
@@ -130,7 +153,7 @@ function slotRow(content: SlotContent, kind: 'arma' | 'modificador', scale: numb
       : kind === 'arma'
         ? 'Uma arma nova pode entrar no próximo level up'
         : 'Um modificador novo pode entrar no próximo level up';
-    return row(scene, height, [
+    return row(scene, width, height, [
       box(scene, width, height),
       ...slot.objects,
       scene.add.text(tx, scale === 2 ? 8 : 4, title, bodyText(12, PALETTE_CSS.muted)),
@@ -149,7 +172,7 @@ function passiveRow(run: RunState, id: PassiveId): Build {
     const slot = addIconSlot(scene, 6, 5, 1, { ...passiveSlot(id, state.level), label: undefined });
     const pipsW = def.maxLevel * 8;
     pips(g, width - 70 - pipsW, 14, state.level, def.maxLevel, { w: 6, h: 6 }, PALETTE.water);
-    return row(scene, height, [
+    return row(scene, width, height, [
       g,
       ...slot.objects,
       scene.add.text(6 + slot.size + 8, 9, def.name, bodyText(12, PALETTE_CSS.text)),
@@ -171,7 +194,7 @@ function effectRows(run: RunState): Build[] {
   return list.map((e) => (scene, width) => {
     const slot = addIconSlot(scene, 6, 5, 1, { frame: e.frame, icon });
     const color = e.frame === 'buff' ? PALETTE_CSS.numberHeal : PALETTE_CSS.numberHurt;
-    return row(scene, 34, [
+    return row(scene, width, 34, [
       box(scene, width, 34),
       ...slot.objects,
       scene.add.text(6 + slot.size + 8, 9, e.name, bodyText(12, PALETTE_CSS.text)),
@@ -227,7 +250,7 @@ export function statRows(run: RunState): Build[] {
     out.push((scene, width) => {
       const g = scene.add.graphics();
       g.fillStyle(PALETTE.panel).fillRect(0, 15, width, 2);
-      return row(scene, 18, [
+      return row(scene, width, 18, [
         g,
         scene.add.text(0, 0, title, labelText(10, PALETTE_CSS.sectionOrange)),
       ]);
@@ -292,7 +315,7 @@ export function runRows(run: RunState, bestTimeSeconds: number): Build[] {
           scene.add.text(x + 8, 18, value, withShadow(impactText(18, color), PALETTE_CSS.ink, 2)),
         ];
       });
-      return row(scene, 46, children);
+      return row(scene, width, 46, children);
     });
   }
 
@@ -307,7 +330,7 @@ export function runRows(run: RunState, bestTimeSeconds: number): Build[] {
       g.fillStyle(PALETTE.ink).fillRect(0, 17, width, 10);
       g.fillStyle(PALETTE.panelDeep).fillRect(2, 19, width - 4, 6);
       g.fillStyle(PALETTE.water).fillRect(2, 19, Math.round(((width - 4) * d.value) / top), 6);
-      return row(scene, 27, [
+      return row(scene, width, 27, [
         g,
         scene.add.text(0, 0, d.name, bodyText(11, PALETTE_CSS.text)),
         scene.add.text(width, 0, num(d.value), bodyText(11, PALETTE_CSS.text)).setOrigin(1, 0),
@@ -322,7 +345,7 @@ export function runRows(run: RunState, bestTimeSeconds: number): Build[] {
         ? `Recorde de ${formatTime(bestTimeSeconds)} batido!`
         : `Recorde: ${formatTime(bestTimeSeconds)}. Faltam ${formatTime(bestTimeSeconds - run.time)} para bater.`;
   out.push((scene, width) =>
-    row(scene, 30, [
+    row(scene, width, 30, [
       scene.add.text(0, 6, record, {
         ...bodyText(11, PALETTE_CSS.textSoft),
         wordWrap: { width },

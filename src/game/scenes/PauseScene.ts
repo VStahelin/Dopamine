@@ -3,7 +3,13 @@ import { waveAt } from '../../core/run/progression';
 import { PALETTE, PALETTE_CSS } from '../render/palette';
 import { getSave } from '../storage/saveStore';
 import { addButton } from '../ui/button';
-import { arsenalRows, runRows, statRows, type PauseRow } from '../ui/pauseContent';
+import {
+  arsenalRows,
+  releasePauseTextures,
+  runRows,
+  statRows,
+  type PauseRow,
+} from '../ui/pauseContent';
 import { safeAreaUi } from '../ui/safeArea';
 import { formatTime, impactText, labelText, withShadow } from '../ui/theme';
 import { addDim, setupUiLayout } from '../ui/uiLayout';
@@ -78,6 +84,7 @@ export class PauseScene extends Phaser.Scene {
 
   private build(): void {
     this.root?.destroy();
+    releasePauseTextures(this);
     this.scrollers = [];
     const run = this.runScene.run;
     const { w, h } = this.size;
