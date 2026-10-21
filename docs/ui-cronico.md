@@ -62,7 +62,7 @@ Cada tipo tem uma moldura própria, para que arma, reagente e efeito se separem 
 
 Os espaços de cada linha seguem a aba Parâmetros: 4 no começo, até 6. Os dois últimos aparecem com cadeado até serem liberados.
 
-Os ícones são pixel art de 8×8 em escala inteira (2× na HUD, 3× na pausa, 4× nas telas grandes), com cores tiradas da paleta: radical em vermelho de oxigênio, elétrons em ciano e azul, UV em roxo, solvente em verde de cloro, e assim por diante.
+Os ícones são pixel art de 16×16 com contorno escuro de 1 pixel, em escala inteira (1× na HUD, 2× na pausa e no level up), com cores tiradas da paleta: radical em vermelho de oxigênio, elétrons em ciano e azul, UV em roxo, solvente em verde de cloro, e assim por diante. Começaram em 8×8, mas com 52 ícones (armas, evoluções, passivos e especiais) 8×8 não deixa cada um com forma própria. Todos estão na prancheta **Ícones de armas e habilidades** do canvas e em [src/assets/sprites/icons.json](../src/assets/sprites/icons.json) ([decisão 0019](decisoes/0019-sprites-numa-pasta.md)).
 
 ## Números de dano e feedback
 
