@@ -15,8 +15,8 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | Fase | Nome | Pergunta que responde | Depende de | Status |
 | --- | --- | --- | --- | --- |
 | 0 | Fundação | O projeto roda no PC e no celular? | — | concluída |
-| 1 | Primeira versão jogável (v0.1) | Dá para abrir, ir do menu à run e voltar, e a batalha é divertida? | 0 | em andamento |
-| 1.5 | Menu principal (esqueleto) | Todas as áreas do jogo já têm um lugar no menu? | 1 | não iniciada |
+| 1 | Primeira versão jogável (v0.1) | Dá para abrir, ir do menu à run e voltar, e a batalha é divertida? | 0 | concluída |
+| 1.5 | Menu principal (esqueleto) | Todas as áreas do jogo já têm um lugar no menu? | 1 | em andamento |
 | 2 | Profundidade da run | A run aguenta 20 minutos sem ficar repetitiva? | 1 | não iniciada |
 | 3 | Meta-progressão e save | Dá vontade de jogar mais uma run? | 2 | não iniciada |
 | 4 | Campo longo (idle) | O idle ajuda a run sem substituí-la? | 3 | não iniciada |
@@ -65,7 +65,7 @@ A primeira versão que parece um jogo: abre num menu, entra numa run jogável e 
 - [x] Tela de fim de run com tempo, nível e inimigos decompostos, avisando se bateu recorde, com Jogar de novo e Menu.
 
 - [x] Todos os modificadores da aba Parâmetros que já têm mecânica, com raridades movidas pela Sorte, Rerrolar, Pular e Banir ([decisão 0013](decisoes/0013-raridade-e-sorte.md)).
-- [ ] Jogar e ajustar os números até a run de 10 minutos ficar divertida (os valores estão nos JSON de `src/config/`).
+- [x] Jogar e ajustar os números até a run ficar divertida (os valores estão nos JSON de `src/config/`). O Vitor aprovou a diversão; o ajuste fino continua nas próximas fases.
 
 **Critério de saída:** o ciclo menu → run → fim → menu funciona no PC e no celular, e uma run de 10 minutos é jogada até o fim por vontade própria, a 60 FPS num celular intermediário (testar no Safari do iPhone).
 

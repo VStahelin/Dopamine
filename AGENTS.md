@@ -46,4 +46,4 @@ Só as decisões **importantes**, que têm impacto na construção do jogo, vira
 - **Idioma:** documentação, mensagens de commit e textos do jogo em português do Brasil. Código (nomes de variáveis, funções, tipos) em inglês.
 - **Lógica separada do desenho:** nada em `src/core/` importa Phaser. Veja [docs/arquitetura.md](docs/arquitetura.md).
 - **Parâmetros** ficam só nos JSON de `src/config/`, lidos por `src/config/index.ts`, nunca soltos no código. Parâmetro novo: adicione no JSON e no tipo em `src/config/types.ts`.
-- **Commits** pequenos, um assunto por commit. Trabalhe em branch e abra PR para a `main`.
+- **Commits** pequenos, um assunto por commit, direto na `main`. Sem branches nem PRs: o fluxo é simples de propósito. Antes de commitar, rode `npm run check`.
