@@ -1,0 +1,5 @@
+{
+  "fireRate": { "base": 1, "runCap": 3 },
+  "baseSlots": { "base": 3, "runCap": 8 },
+  "offlineCapHours": { "base": 8, "runCap": 24 }
+}

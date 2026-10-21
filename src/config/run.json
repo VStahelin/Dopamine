@@ -1,0 +1,7 @@
+{
+  "arena": { "widthPx": 1600, "heightPx": 1600 },
+  "agent": { "moveSpeedPxPerSecond": 80, "pickupRadiusPx": 32 },
+  "contactDamage": { "common": 5, "strong": 15, "boss": 30 },
+  "affinity": { "strong": 1.5, "neutral": 1, "weak": 0.5 },
+  "minDamageTaken": 1
+}
