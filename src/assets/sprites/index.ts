@@ -46,7 +46,7 @@ export interface FrameStyle {
 
 export const FRAMES: Readonly<Record<FrameKind, FrameStyle>> = framesJson;
 
-export type Element = 'C' | 'H' | 'O' | 'N' | 'S' | 'Cl';
+export type Element = 'C' | 'H' | 'O' | 'N' | 'S' | 'Cl' | 'Mg';
 
 /** Átomo: elemento e posição em unidades do mundo, com o centro da molécula em (0, 0). */
 export type AtomDef = readonly [Element, number, number];

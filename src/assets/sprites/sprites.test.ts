@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { AGENTS, ENEMIES, META, PASSIVES, WEAPONS } from '../../config';
+import { AGENTS, ENEMIES, IDLE, META, PASSIVES, WEAPONS } from '../../config';
 import { ELEMENTS, ICON_PALETTE, ICON_SIZE, ICONS, MOLECULES, UI_SPRITES, type PixelGrid } from '.';
 
 function badPixels(grid: PixelGrid, size: number, colors: Record<string, unknown>): string[] {
@@ -53,8 +53,8 @@ describe('sprites', () => {
     }
   });
 
-  it('todo agente e toda molécula inimiga têm sprite', () => {
-    const ids = [...Object.keys(AGENTS), ...Object.keys(ENEMIES)];
+  it('todo agente (run e idle) e toda molécula inimiga têm sprite', () => {
+    const ids = [...Object.keys(AGENTS), ...Object.keys(ENEMIES), ...Object.keys(IDLE.agents)];
     expect(ids.filter((id) => !MOLECULES[id])).toEqual([]);
   });
 
