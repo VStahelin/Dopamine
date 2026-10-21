@@ -8,14 +8,14 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 
 - Ao concluir um item, marque o checkbox no mesmo commit que entrega o código.
 - Ao começar ou terminar uma fase, atualize a coluna Status abaixo (`não iniciada`, `em andamento`, `concluída`).
-- Quando uma pergunta de "Decisões que travam cada fase" for respondida, marque-a e registre a resposta em [decisoes/](decisoes/README.md).
+- Quando uma pergunta de "Decisões que travam cada fase" for respondida, marque-a e anote a resposta no doc da aba. Só vira arquivo em [decisoes/](decisoes/README.md) se passar no teste do [AGENTS.md](../AGENTS.md#registrar-decisões-obrigatório).
 
 ## Visão geral
 
 | Fase | Nome | Pergunta que responde | Depende de | Status |
 | --- | --- | --- | --- | --- |
-| 0 | Fundação | O projeto roda no PC e no celular? | — | não iniciada |
-| 1 | Primeira versão jogável (v0.1) | Dá para abrir, ir do menu à run e voltar, e a batalha é divertida? | 0 | não iniciada |
+| 0 | Fundação | O projeto roda no PC e no celular? | — | concluída |
+| 1 | Primeira versão jogável (v0.1) | Dá para abrir, ir do menu à run e voltar, e a batalha é divertida? | 0 | em andamento |
 | 2 | Profundidade da run | A run aguenta 20 minutos sem ficar repetitiva? | 1 | não iniciada |
 | 3 | Meta-progressão e save | Dá vontade de jogar mais uma run? | 2 | não iniciada |
 | 4 | Campo longo (idle) | O idle ajuda a run sem substituí-la? | 3 | não iniciada |
@@ -28,14 +28,14 @@ A arte não espera a fase 6: os sprites de molécula são montados por código a
 
 Montar o esqueleto do projeto com a arquitetura da aba Plataforma, antes de qualquer gameplay.
 
-- [ ] Projeto Vite + Phaser 4 + TypeScript, com scripts de `dev`, `build` e `test`.
-- [ ] Separação de pastas: `src/core/` (lógica em TypeScript puro, sem Phaser) e `src/game/` (cenas, desenho e entrada).
-- [ ] `src/config/params.ts` com as constantes das abas Parâmetros e Economia, num lugar só.
-- [ ] Testes automatizados da lógica (Vitest), lint e formatação.
-- [ ] Escala inteira de pixel (1×, 2×, 3×) e redimensionamento para qualquer tela.
-- [ ] Deploy automático no GitHub Pages a cada push na `main`, para abrir no celular desde o primeiro dia.
+- [x] Projeto Vite + Phaser 4 + TypeScript, com scripts de `dev`, `build` e `test`.
+- [x] Separação de pastas: `src/core/` (lógica em TypeScript puro, sem Phaser) e `src/game/` (cenas, desenho e entrada).
+- [x] `src/config/params.ts` com as constantes das abas Parâmetros e Economia, num lugar só.
+- [x] Testes automatizados da lógica (Vitest), lint e formatação.
+- [x] Escala inteira de pixel (1×, 2×, 3×) e redimensionamento para qualquer tela.
+- [x] Rodar localmente no PC e abrir no celular pela rede local (`npm run dev`), desde o primeiro dia ([0011](decisoes/0011-rodar-localmente.md)).
 
-**Critério de saída:** uma cena vazia com um quadrado que anda com WASD no PC e com joystick virtual no celular, publicada num link.
+**Critério de saída:** uma cena vazia com um quadrado que anda com WASD no PC e com joystick virtual no celular, rodando localmente.
 
 ## Fase 1: Primeira versão jogável (v0.1)
 
@@ -128,7 +128,7 @@ Deixar o jogo com a cara do canvas de identidade visual e pronto para outras pes
 - [ ] PWA: instalação na tela inicial e funcionamento offline.
 - [ ] Layout em telas largas e altas (painéis laterais, mais pista).
 - [ ] Rodada de testes com 2 ou 3 amigos e ajuste dos números.
-- [ ] Publicação final (GitHub Pages, Cloudflare Pages ou itch.io).
+- [ ] Decidir como o jogo chega aos jogadores (provavelmente pelo navegador); até lá ele roda só localmente ([0011](decisoes/0011-rodar-localmente.md)).
 
 **Critério de saída:** um amigo instala pelo link, joga sem explicação e volta no dia seguinte.
 
@@ -137,7 +137,7 @@ Deixar o jogo com a cara do canvas de identidade visual e pronto para outras pes
 O que dá para começar já, em ordem:
 
 1. Criar o projeto Vite + Phaser 4 + TypeScript e a estrutura `src/core/`, `src/game/`, `src/config/`.
-2. Configurar testes, lint e o deploy no GitHub Pages.
+2. Configurar testes, lint e CI.
 3. Fazer o agente andar com teclado e joystick virtual, e abrir no celular.
 4. Escrever o gerador de sprite de molécula e desenhar o primeiro inimigo.
 5. Implementar spawn, perseguição e interações.
@@ -147,8 +147,8 @@ O que dá para começar já, em ordem:
 
 Perguntas em aberto das outras abas que precisam de resposta antes da fase indicada.
 
-- [ ] **Fase 0:** tamanho base do pixel (grade de 16 ou de 32 px)?
-- [ ] **Fase 0:** orientação no celular para a run (vertical, horizontal ou as duas)?
+- [ ] **Fase 1:** tamanho base do pixel? Em aberto, tendência a um pixel mais detalhado; 16 px provisório ([0009](decisoes/0009-grade-16px-zoom-inteiro.md)).
+- [x] **Fase 0:** orientação no celular para a run (vertical, horizontal ou as duas)? → as duas ([0010](decisoes/0010-orientacao-livre.md), proposta)
 - [ ] **Fase 1:** quantas interações o agente tem no início, e existe forma de recuperar na run?
 - [ ] **Fase 1:** qual agente e quais três inimigos entram no protótipo?
 - [ ] **Fase 2:** a arma é do agente ou do jogador? Quantas armas e qual nível máximo por run?

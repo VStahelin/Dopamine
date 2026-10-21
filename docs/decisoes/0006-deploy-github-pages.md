@@ -1,6 +1,6 @@
 # 0006. Deploy no GitHub Pages pelo GitHub Actions
 
-- **Status:** proposta
+- **Status:** substituída por [0011](0011-rodar-localmente.md)
 - **Data:** 2026-10-21
 - **Área:** técnica
 
