@@ -20,7 +20,8 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | 2 | Profundidade da run | A run aguenta 20 minutos sem ficar repetitiva? | 1 | em andamento |
 | 2.5 | Jogo offline e atualizações controladas | O jogo roda sem internet e só muda de versão quando o jogador aceita? | 2 | concluída |
 | 2.6 | Sprites e ícones da identidade visual | Todo sprite está numa pasta e cada arma, modificador e especial aparece com o ícone do canvas? | 2 | implementada, falta validar no celular |
-| 3 | Meta-progressão e save | Dá vontade de jogar mais uma run? | 2, 2.5, 2.6 | não iniciada |
+| 2.7 | Campo crônico com a cara do canvas | A run, do chão aos efeitos, parece com as pranchetas do modo crônico? | 2.6 | não iniciada (próxima) |
+| 3 | Meta-progressão e save | Dá vontade de jogar mais uma run? | 2, 2.5, 2.6, 2.7 | não iniciada |
 | 4 | Campo longo (idle) | O idle ajuda a run sem substituí-la? | 3 | não iniciada |
 | 5 | Organismo | Cuidar do corpo muda o jeito de jogar? | 3, 4 | não iniciada |
 | 6 | Arte, polimento e lançamento | Dá para mandar o link para os amigos? | 1 a 5 | não iniciada |
@@ -145,6 +146,29 @@ Juntar toda a pixel art numa pasta de dados e aplicar os ícones que o Vitor des
 - [ ] Validar no celular, em pé e deitado.
 
 **Critério de saída:** nenhuma pixel art fica fora de `src/assets/sprites/`; toda arma, modificador, reagente, evolução e especial aparece com o seu ícone do canvas no level up, na HUD, na pausa e no menu, no celular em pé e deitado.
+
+## Fase 2.7: Campo crônico com a cara do canvas
+
+A fase 2.6 trouxe os ícones, a HUD e a pausa das pranchetas "Crônico". Esta fase leva o resto do [canvas de identidade visual](https://claude.ai/artifact/MPV17zZywrhhXBUdfnUs6F) para o que já existe no jogo: o campo da run, as moléculas, os efeitos das armas e as telas que ainda estão com o visual provisório. As referências são as pranchetas "Crônico: HUD de batalha", "Crônico: ícones, dano e paisagem", "Sprites de moléculas" e "Tela de batalha (mockup)". Tudo continua como dados em `src/assets/sprites/` ([decisão 0019](decisoes/0019-sprites-numa-pasta.md)).
+
+**Sprites no que já existe**
+
+- [ ] Moléculas no estilo da prancheta "Sprites de moléculas": átomo octogonal ("pixel redondo"), com borda escura e brilho próprios de cada elemento (C, H, O, N, S e Cl) e ligações grossas na cor do contorno. Vale para agentes, inimigos, chefe e projéteis.
+- [ ] Chão de areia com o rejunte da prancheta: linhas de 3 px a cada 40 px, no lugar do ladrilho atual de 16 px.
+- [ ] Gema de XP, elétrons da Nuvem e disparos com o desenho da prancheta "Crônico: HUD de batalha".
+- [ ] Efeitos das armas pixelados e nas cores da paleta: aura, poça, pulso, cone, feixe e golpe. Hoje são círculos e linhas lisos.
+- [ ] Joystick octogonal da prancheta, no lugar do círculo atual.
+- [ ] Fim de run com o ícone de cada arma e o dano que ela causou, usando os números que a pausa já mostra.
+- [ ] Compêndio, Recordes e Título com as molduras e os ícones da identidade visual.
+
+**Layout do modo crônico**
+
+- [ ] Banda da HUD com as medidas da prancheta: 126 px em pé contando a área segura de cima e 74 px deitado. Deitado, os ícones ficam em uma linha de 18 px ao lado do tempo, e a pausa entra na banda.
+- [ ] Faixas laterais da área segura no celular deitado: nada da HUD embaixo do notch.
+- [ ] Interações embaixo do agente com o tamanho da prancheta (56 px, segmentos de 5 px).
+- [ ] Validar no celular, em pé e deitado, junto com a fase 2.6.
+
+**Critério de saída:** um print da run no celular, em pé e deitado, fica igual às pranchetas do modo crônico do canvas: chão, moléculas, efeitos, HUD e joystick.
 
 ## Fase 3: Meta-progressão e save
 
