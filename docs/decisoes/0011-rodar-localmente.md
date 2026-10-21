@@ -1,6 +1,6 @@
 # 0011. Rodar localmente durante o desenvolvimento
 
-- **Status:** proposta
+- **Status:** substituída por [0017](0017-deploy-por-versao.md)
 - **Data:** 2026-10-21
 - **Área:** técnica
 

@@ -16,6 +16,7 @@ import {
   textureKey,
 } from '../render/textures';
 import { getSave, setSave } from '../storage/saveStore';
+import { updates } from '../update/updateManager';
 import { impactText } from '../ui/theme';
 import type { HudScene } from './HudScene';
 import { SCENES } from './keys';
@@ -115,6 +116,8 @@ export class RunScene extends Phaser.Scene {
       this.game.events.off(Phaser.Core.Events.HIDDEN, this.pauseFromOutside, this);
     });
 
+    // Durante a run: nada de verificação nem de aviso de versão nova.
+    updates.leaveMenus();
     this.scene.launch(SCENES.hud);
     // Só em desenvolvimento: deixa a run acessível no console do navegador para testes.
     if (import.meta.env.DEV) Object.assign(globalThis, { dopamina: this });

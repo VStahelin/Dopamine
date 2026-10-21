@@ -16,7 +16,7 @@ Como o código do Dopamina Blaster é organizado. Este arquivo descreve **o esta
 | Lint e formatação | ESLint 10 (typescript-eslint) e Prettier | [0003](decisoes/0003-camadas-core-game-config.md) |
 | Tela e pixel art | Canvas na resolução real da tela; sprites com 2 ou 3 pixels de arte por unidade, pixel de arte inteiro | [0009](decisoes/0009-grade-16px-zoom-inteiro.md), [0010](decisoes/0010-orientacao-livre.md) |
 | Save | IndexedDB, com backup exportável | [0005](decisoes/0005-save-local-indexeddb.md) |
-| Onde roda (desenvolvimento) | Localmente (`npm run dev`), celular pela rede local; distribuição ainda não decidida | [0011](decisoes/0011-rodar-localmente.md) |
+| Onde roda | GitHub Pages e Render, publicados só ao gerar uma versão (tag); `npm run dev` para programar | [0017](decisoes/0017-deploy-por-versao.md) |
 
 ## Camadas
 
@@ -110,12 +110,16 @@ Precisa de Node 20.19 ou mais novo.
 | `npm run format` | Formata o código com o Prettier |
 | `npm run build` | Checa os tipos e gera o build em `dist/` |
 | `npm run preview` | Serve o build de `dist/` localmente, para testar a versão final |
+| `npm run release` | Check completo e publicação local atômica em `releases/` ([atualizacoes.md](atualizacoes.md)) |
+| `npm run serve` | Serve a build publicada localmente, em HTTPS, para testar atualizações no PC |
+| `npm start` | Servidor de produção usado no Render |
+| `npm version minor` + `git push --follow-tags` | Gera uma versão: dispara o deploy no Pages e no Render |
 | `npm run check` | Lint, formatação, testes e build de uma vez; rode antes de abrir um PR |
 
 ## Testes no navegador
 
 Com `npm run dev`, a cena da run fica em `globalThis.dopamina` (só em desenvolvimento). Pelo console dá para mexer no estado, por exemplo `dopamina.run.xp = dopamina.run.xpToNext` para forçar um level up.
 
-## CI
+## CI e deploy
 
-[.github/workflows/ci.yml](../.github/workflows/ci.yml) roda o `npm run check` em todo PR e push na `main`. Não há deploy: o jogo roda localmente ([0011](decisoes/0011-rodar-localmente.md)).
+[ci.yml](../.github/workflows/ci.yml) roda o `npm run check` em todo PR e push na `main`. [deploy.yml](../.github/workflows/deploy.yml) roda só com tags `vX.Y.Z`: check, build, GitHub Pages e deploy hook do Render ([0017](decisoes/0017-deploy-por-versao.md)).

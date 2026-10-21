@@ -1,3 +1,7 @@
+// Fontes do jogo dentro do pacote, para funcionar sem internet (decisão 0016).
+import '@fontsource/pixelify-sans/latin-600.css';
+import '@fontsource/pixelify-sans/latin-700.css';
+import '@fontsource/silkscreen/latin-400.css';
 import * as Phaser from 'phaser';
 import { PALETTE_CSS } from './game/render/palette';
 import { BootScene } from './game/scenes/BootScene';
@@ -13,7 +17,9 @@ import { PauseScene } from './game/scenes/PauseScene';
 import { RecordsScene } from './game/scenes/RecordsScene';
 import { RunScene } from './game/scenes/RunScene';
 import './game/ui/textFix';
+import { UpdatePromptScene } from './game/scenes/UpdatePromptScene';
 import { loadFonts } from './game/ui/theme';
+import { updates } from './game/update/updateManager';
 
 await loadFonts();
 
@@ -59,6 +65,7 @@ const game = new Phaser.Game({
     LevelUpScene,
     PauseScene,
     GameOverScene,
+    UpdatePromptScene,
   ],
 });
 
@@ -69,3 +76,8 @@ const onResize = () => {
 };
 window.addEventListener('resize', onResize);
 window.visualViewport?.addEventListener('resize', onResize);
+
+// Jogo offline e atualizações controladas (decisão 0016).
+updates.start();
+// Pede para o navegador não apagar o jogo nem o save quando faltar espaço.
+void navigator.storage?.persist?.().catch(() => false);

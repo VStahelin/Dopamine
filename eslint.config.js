@@ -3,13 +3,18 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  { ignores: ['dist', 'node_modules'] },
+  { ignores: ['dist', 'node_modules', 'releases', '.certs'] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
     languageOptions: {
       globals: { ...globals.browser },
     },
+  },
+  {
+    // Scripts de publicação e do servidor local rodam no Node.
+    files: ['tools/**/*.mjs', 'server/**/*.mjs', 'vite.config.ts'],
+    languageOptions: { globals: { ...globals.node } },
   },
   {
     // Decisão 0003: core e config não dependem do Phaser nem da camada game.

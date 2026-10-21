@@ -57,9 +57,17 @@ export function getSave(scene: Phaser.Scene): SaveData {
   return scene.registry.get(REGISTRY_KEY) as SaveData;
 }
 
+/** Última gravação em andamento, para esperar antes de recarregar o jogo. */
+let lastWrite: Promise<void> = Promise.resolve();
+
 export function setSave(scene: Phaser.Scene, save: SaveData): void {
   scene.registry.set(REGISTRY_KEY, save);
-  void writeSave(save);
+  lastWrite = lastWrite.then(() => writeSave(save));
+}
+
+/** Espera todas as gravações pendentes (antes de trocar de versão). */
+export function flushSave(): Promise<void> {
+  return lastWrite;
 }
 
 export function initSave(scene: Phaser.Scene, save: SaveData): void {

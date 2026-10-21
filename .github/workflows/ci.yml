@@ -1,4 +1,4 @@
-# Verificações em todo PR e push na main. Sem deploy: o jogo roda localmente (decisão 0011).
+# Verificações em todo PR e push na main. O deploy só acontece ao gerar uma versão (deploy.yml).
 name: CI
 
 on:

@@ -1,13 +1,38 @@
 import * as Phaser from 'phaser';
 import { getSave, setSave } from '../storage/saveStore';
 import { addButtonColumn } from '../ui/menuLayout';
-import { impactText } from '../ui/theme';
+import { impactText, labelText } from '../ui/theme';
+import { PALETTE_CSS } from '../render/palette';
+import { updates } from '../update/updateManager';
+import type { UpdateStatus } from '../update/updateLogic';
 import { setupUiLayout } from '../ui/uiLayout';
 import { SCENES } from './keys';
 
 const yesNo = (value: boolean) => (value ? 'SIM' : 'NÃO');
 
-/** Opções: mostrar FPS (salvo) e tela cheia. Volume entra quando o jogo tiver som. */
+/** Texto do botão de atualização para cada estado do gestor. */
+const UPDATE_LABEL: Record<UpdateStatus, string> = {
+  upToDate: 'VERIFICAR ATUALIZAÇÃO',
+  checking: 'PROCURANDO...',
+  downloading: 'BAIXANDO VERSÃO NOVA...',
+  ready: 'ATUALIZAR AGORA',
+  offline: 'SEM INTERNET · TENTAR',
+  unavailable: 'VERIFICAR ATUALIZAÇÃO',
+};
+
+const UPDATE_NOTE: Record<UpdateStatus, string> = {
+  upToDate: 'EM DIA',
+  checking: 'PROCURANDO VERSÃO NOVA',
+  downloading: 'BAIXANDO EM SEGUNDO PLANO',
+  ready: 'VERSÃO NOVA PRONTA',
+  offline: 'SEM INTERNET · O JOGO CONTINUA FUNCIONANDO',
+  unavailable: 'ATUALIZAÇÃO INDISPONÍVEL AQUI',
+};
+
+/**
+ * Opções: mostrar FPS (salvo), tela cheia, versão e verificar atualização (decisão 0016).
+ * Volume entra quando o jogo tiver som.
+ */
 export class OptionsScene extends Phaser.Scene {
   private root?: Phaser.GameObjects.Container;
   private size = { w: 0, h: 0 };
@@ -22,6 +47,8 @@ export class OptionsScene extends Phaser.Scene {
       this.size = { w, h };
       this.build();
     });
+    const unsubscribe = updates.subscribe(() => this.build());
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, unsubscribe);
     this.scale.on(Phaser.Scale.Events.ENTER_FULLSCREEN, this.build, this);
     this.scale.on(Phaser.Scale.Events.LEAVE_FULLSCREEN, this.build, this);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
@@ -50,11 +77,30 @@ export class OptionsScene extends Phaser.Scene {
         variant: 'secondary',
         onClick: () => this.scale.toggleFullscreen(),
       },
+      {
+        label: UPDATE_LABEL[updates.state.status],
+        variant: updates.state.status === 'ready' ? 'primary' : 'secondary',
+        onClick: () => {
+          if (updates.state.status === 'ready') void updates.apply();
+          else void updates.check();
+        },
+      },
       { label: 'VOLTAR', onClick: () => this.scene.start(SCENES.hub) },
     ]);
+    const s = updates.state;
+    const info = [
+      `VERSÃO ${s.currentVersion} · BUILD ${s.currentBuild}`,
+      UPDATE_NOTE[s.status] +
+        (s.remoteVersion && s.status !== 'upToDate' ? ` · ${s.remoteVersion}` : ''),
+    ];
     this.root = this.add.container(0, 0, [
       this.add.text(w / 2, top, 'OPÇÕES', impactText(24)).setOrigin(0.5, 0),
       ...buttons,
+      ...info.map((line, i) =>
+        this.add
+          .text(w / 2, top + 44 + 4 * 50 + 6 + i * 14, line, labelText(8, PALETTE_CSS.textSoft))
+          .setOrigin(0.5, 0),
+      ),
     ]);
   }
 }

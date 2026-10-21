@@ -21,6 +21,7 @@ import { SCREENS, TAB_SECTIONS, TABS, type SectionDef, type TabId } from '../ui/
 import { renderSection } from '../ui/sectionView';
 import { bodyText, formatTime, impactText, labelText, withShadow } from '../ui/theme';
 import { setupUiLayout } from '../ui/uiLayout';
+import { updates } from '../update/updateManager';
 import { SCENES } from './keys';
 
 const TAB_KEY = 'hubTab';
@@ -65,6 +66,11 @@ export class HubScene extends Phaser.Scene {
 
   create(): void {
     this.input.keyboard?.on('keydown-ESC', () => this.scene.start(SCENES.title));
+    // Aviso de versão nova: só aqui nos menus, uma vez por visita ao hub.
+    const unsubscribe = updates.subscribe(() => this.maybePromptUpdate());
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, unsubscribe);
+    updates.enterHub();
+    this.time.delayedCall(300, () => this.maybePromptUpdate());
     this.input.keyboard?.on('keydown-ENTER', () => this.play());
     setupUiLayout(
       this,
@@ -74,6 +80,11 @@ export class HubScene extends Phaser.Scene {
       },
       { width: 390, height: 760 },
     );
+  }
+
+  private maybePromptUpdate(): void {
+    if (!this.scene.isActive() || this.scene.isActive(SCENES.updatePrompt)) return;
+    if (updates.shouldPrompt) this.scene.launch(SCENES.updatePrompt);
   }
 
   private get tab(): TabId {

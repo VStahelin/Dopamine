@@ -45,7 +45,12 @@ export class TitleScene extends Phaser.Scene {
         { label: 'COMEÇAR', onClick: () => this.play() },
       ]);
       const version = this.add
-        .text(cx, h - 16, 'V0.1 · PROTÓTIPO', labelText(8, PALETTE_CSS.cream))
+        .text(
+          cx,
+          h - 16,
+          `V${__APP_VERSION__} · ${__BUILD_ID__.split('-')[0]}`,
+          labelText(8, PALETTE_CSS.cream),
+        )
         .setOrigin(0.5, 0);
 
       this.root = this.add.container(0, 0, [band, agent, title, subtitle, ...buttons, version]);

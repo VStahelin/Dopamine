@@ -47,7 +47,18 @@ stateDiagram-v2
 - **Pronta** quer dizer que a versão nova está inteira no aparelho, esperando. A antiga continua ativa até o jogador aceitar.
 - **ATUALIZAR** grava o save, manda o service worker novo assumir e recarrega a página. **DEPOIS** fecha o aviso; ele volta na próxima entrada no hub. Recarregar o site por conta própria também ativa a versão pronta.
 
-## Publicar uma build (o gestor de build)
+## Gerar uma versão e publicar
+
+Uma versão é uma tag `vX.Y.Z` ([decisão 0017](decisoes/0017-deploy-por-versao.md)):
+
+```
+npm version minor          # ou patch / major: sobe o package.json, faz o commit e cria a tag
+git push --follow-tags     # envia o commit e a tag
+```
+
+A tag dispara o workflow [deploy.yml](../.github/workflows/deploy.yml): check completo, build, publicação no GitHub Pages (`https://vstahelin.github.io/Dopamine/`) e deploy no Render pelo deploy hook, no mesmo commit da tag. Commits comuns na `main` só passam pelo CI. Os dois hosts trocam a build inteira de uma vez, então nunca servem uma versão pela metade; a partir daí, o gestor de atualização de cada aparelho segue as regras acima.
+
+## Publicar uma build localmente (o gestor de build)
 
 O site só oferece builds completas porque a publicação é atômica:
 
@@ -57,17 +68,18 @@ O site só oferece builds completas porque a publicação é atômica:
 4. Por último entram `sw.js`, `index.html` e `version.json`. Só aí um aparelho consegue ver a build nova.
 5. As builds antigas ficam por algum tempo (as 3 últimas), para quem ainda está nelas carregar algum arquivo que faltou.
 
-Enquanto o jogo roda só localmente ([decisão 0011](decisoes/0011-rodar-localmente.md)), "publicar" é gerar a build numa pasta `releases/<buildId>` e apontar `releases/current` para ela; o servidor local serve `current`. Quando a distribuição for decidida (fase 6), o mesmo passo a passo vale para o host escolhido.
+Enquanto o jogo roda só localmente ([decisão 0011](decisoes/0011-rodar-localmente.md)), "publicar" é copiar a build inteira para `releases/<buildId>`, marcá-la como completa (arquivo `.complete`, gravado por último) e só então trocar o ponteiro `releases/current.json`. O servidor local (`npm run serve`) lê o ponteiro a cada pedido e ignora builds sem o marcador. Quando a distribuição for decidida (fase 6), o mesmo passo a passo vale para o host escolhido.
 
 ## Desenvolvimento e teste
 
 | Comando | Para quê | Atualiza a tela sozinho? |
 | --- | --- | --- |
 | `npm run dev` | Programar no PC, com recarga automática | Sim (só em desenvolvimento, sem service worker) |
-| `npm run serve` | Jogar e testar como jogador: serve a build publicada, com service worker, em HTTPS na rede local | Não: segue estas regras |
-| `npm run release` | Gerar e publicar uma build nova | — |
+| `npm run release` | Gerar e publicar uma build localmente, em `releases/` | — |
+| `npm run serve` | Servir a build publicada localmente, em HTTPS, para testar o ciclo de atualização no PC | Não: segue estas regras |
+| `npm start` | Servidor de produção (Render): serve `dist/` na porta `$PORT` | Não: segue estas regras |
 
-- **HTTPS no celular.** O service worker só funciona em contexto seguro. `localhost` serve no PC; no celular, o `serve` usa HTTPS com um certificado local (na primeira vez o navegador avisa que o certificado não é conhecido).
+- **HTTPS no celular.** O service worker só funciona em contexto seguro e o Chrome não o registra com certificado autoassinado. Por isso o teste no celular é pelo GitHub Pages ou pelo Render, que têm HTTPS de verdade. O `npm run serve` (HTTPS com certificado local) serve para o PC: no navegador, `localhost` já é contexto seguro.
 - **Fontes locais.** Pixelify Sans e Silkscreen entram no pacote do jogo (pacotes `@fontsource`), sem depender do Google Fonts.
 - **Armazenamento persistente.** O jogo pede `navigator.storage.persist()` para o navegador não apagar o cache e o save quando o aparelho fica sem espaço.
 
@@ -82,4 +94,4 @@ Enquanto o jogo roda só localmente ([decisão 0011](decisoes/0011-rodar-localme
 
 - Intervalo da verificação automática nos menus: 15 minutos está bom?
 - O aviso pode ter um "não mostrar até a próxima versão", ou sempre volta ao abrir o hub?
-- Quando a distribuição for decidida, o host precisa permitir controlar o cache por arquivo (`version.json`, `sw.js` e `index.html` sem cache; arquivos com hash com cache longo).
+- O GitHub Pages não deixa configurar cabeçalhos de cache; ele usa cache curto (10 minutos). O jogo pede `version.json` sem cache e o service worker confere o `sw.js`, então no pior caso o aviso de versão nova chega com até 10 minutos de atraso no Pages. No Render os cabeçalhos são os deste documento.
