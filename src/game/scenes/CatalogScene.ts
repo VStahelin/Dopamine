@@ -2,6 +2,7 @@ import * as Phaser from 'phaser';
 import type { AgentId } from '../../config';
 import { getSave, setSave } from '../storage/saveStore';
 import { addButton } from '../ui/button';
+import { buyUnlock } from '../../core/meta/progress';
 import { renderAgents, renderCompendium } from '../ui/catalogViews';
 import { drawGrid } from '../ui/icons';
 import { impactText, withShadow } from '../ui/theme';
@@ -70,6 +71,17 @@ export class CatalogScene extends Phaser.Scene {
               this.back();
             },
             false,
+            {
+              progress: save.meta,
+              atp: save.atp,
+              onBuy: (kind, id) => {
+                const now = getSave(this);
+                const bought = buyUnlock(now.meta, now.atp, kind, id);
+                if (!bought) return;
+                setSave(this, { ...now, meta: bought.progress, atp: bought.atp });
+                this.build();
+              },
+            },
           )
         : renderCompendium(this, 0, 64, w, save.seen);
     const bw = Math.min(w - 32, 220);

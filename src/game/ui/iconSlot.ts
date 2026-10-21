@@ -16,6 +16,8 @@ export interface SlotContent {
   label?: string;
   /** Rótulo dourado (MAX, EVO). */
   gold?: boolean;
+  /** Ícone apagado (ainda não disponível, como um nó bloqueado do Laboratório). */
+  dim?: boolean;
 }
 
 export { slotSize };
@@ -77,6 +79,7 @@ export class IconSlot {
       this.image
         .setTexture(iconKey(this.scene, icon, px))
         .setDisplaySize(px, px)
+        .setAlpha(content.dim ? 0.35 : 1)
         .setVisible(true);
     }
     this.text

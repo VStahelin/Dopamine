@@ -1,5 +1,6 @@
 import * as Phaser from 'phaser';
-import { AGENTS, DISPLAY, RUN, type AgentId } from '../../config';
+import { AGENTS, DISPLAY, RUN } from '../../config';
+import { addRunStars, playableAgent, rulesWithProgress } from '../../core/meta/progress';
 import { DEFAULT_RULES } from '../../core/run/rules';
 import { auraRadius, orbitPositions } from '../../core/run/weapons';
 import { recordRun } from '../../core/save/saveData';
@@ -96,9 +97,13 @@ export class RunScene extends Phaser.Scene {
   }
 
   create(): void {
-    const chosen = getSave(this).selectedAgent;
-    const agentId = (chosen in AGENTS ? chosen : 'dopamine') as AgentId;
-    this.run = createRun(Date.now() >>> 0, DEFAULT_RULES, agentId);
+    // Meta-progressão: Laboratório somado aos atributos, só armas liberadas e agente liberado.
+    const save = getSave(this);
+    const agentId = playableAgent(
+      save.meta,
+      save.selectedAgent in AGENTS ? save.selectedAgent : 'dopamine',
+    );
+    this.run = createRun(Date.now() >>> 0, rulesWithProgress(DEFAULT_RULES, save.meta), agentId);
     this.specialQueued = false;
     this.electronSprites = [];
     this.fx = [];
@@ -515,12 +520,22 @@ export class RunScene extends Phaser.Scene {
     if (this.run.over && !this.overHandled) {
       this.overHandled = true;
       const result = runResult(this.run);
-      const { save, newRecords } = recordRun(getSave(this), result);
-      setSave(this, save);
+      const recorded = recordRun(getSave(this), result);
+      const { newRecords } = recorded;
+      // Estrelas novas do caso enchem o baú do menu.
+      const stars = addRunStars(recorded.save.meta, result.timeSeconds);
+      setSave(this, { ...recorded.save, meta: stars.progress });
       const damage = this.run.weapons
         .map((w) => ({ id: w.id, value: this.run.tally.damageByWeapon[w.id] ?? 0 }))
         .sort((a, b) => b.value - a.value);
-      const data: GameOverData = { result, newRecords, damage, gaveUp: this.gaveUp };
+      const data: GameOverData = {
+        result,
+        newRecords,
+        damage,
+        gaveUp: this.gaveUp,
+        newStars: stars.newStars,
+        starReward: stars.reward,
+      };
       this.time.delayedCall(700, () => this.scene.launch(SCENES.gameOver, data));
     }
   }

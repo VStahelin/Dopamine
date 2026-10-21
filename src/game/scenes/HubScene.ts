@@ -6,9 +6,20 @@ import { getSave, setSave } from '../storage/saveStore';
 import { renderAgents, renderArsenal } from '../ui/catalogViews';
 import { addScrollArea, type ScrollArea } from '../ui/scrollArea';
 import {
+  buyLab,
+  buyUnlock,
+  labAffordable,
+  openChest,
+  playableAgent,
+  unlockAffordable,
+  type UnlockKind,
+} from '../../core/meta/progress';
+import { LAB_DETAIL_H, labTreeHeight, renderLabDetail, renderLabTree } from '../ui/labView';
+import {
   BODY_SIZE,
   drawBody,
   drawCoin,
+  drawBadge,
   drawCreamSlot,
   drawGrid,
   drawIcon,
@@ -60,6 +71,11 @@ type Obj = Phaser.GameObjects.GameObject;
 export class HubScene extends Phaser.Scene {
   private root?: Phaser.GameObjects.Container;
   private scroll?: ScrollArea;
+  /** Rolagem de cada aba, para voltar ao mesmo ponto depois de uma compra. */
+  private scrollOffsets: Partial<Record<TabId, number>> = {};
+  private scrollTab?: TabId;
+  /** Nó do Laboratório mostrado no painel de detalhe. */
+  private labSelected = 'interactions';
   private size = { w: 0, h: 0 };
 
   constructor() {
@@ -103,21 +119,71 @@ export class HubScene extends Phaser.Scene {
   }
 
   private selectedAgent(): AgentId {
-    const id = getSave(this).selectedAgent;
-    return (id in AGENTS ? id : 'dopamine') as AgentId;
+    const save = getSave(this);
+    return playableAgent(save.meta, save.selectedAgent in AGENTS ? save.selectedAgent : 'dopamine');
+  }
+
+  /** Loja das abas Agentes e Arsenal: desbloqueia com ATP e salva. */
+  private shop() {
+    const save = getSave(this);
+    return {
+      progress: save.meta,
+      atp: save.atp,
+      onBuy: (kind: UnlockKind, id: string) => {
+        const now = getSave(this);
+        const bought = buyUnlock(now.meta, now.atp, kind, id);
+        if (!bought) return;
+        setSave(this, { ...now, meta: bought.progress, atp: bought.atp });
+        this.build();
+      },
+    };
+  }
+
+  private buyLabNode(id: string): void {
+    const save = getSave(this);
+    const bought = buyLab(save.meta, save.atp, id);
+    if (!bought) return;
+    setSave(this, { ...save, meta: bought.progress, atp: bought.atp });
+    this.build();
   }
 
   /** Conteúdo das abas: Agentes e Arsenal já têm conteúdo; Laboratório e Organismo são placeholder. */
   private tabContent(w: number, top: number, bottom: number): Phaser.GameObjects.GameObject[] {
     switch (this.tab) {
       case 'agents':
-        return renderAgents(this, 0, top + 14, w, this.selectedAgent(), (id) => {
-          setSave(this, { ...getSave(this), selectedAgent: id });
-          this.build();
-        });
+        return renderAgents(
+          this,
+          0,
+          top + 14,
+          w,
+          this.selectedAgent(),
+          (id) => {
+            setSave(this, { ...getSave(this), selectedAgent: id });
+            this.build();
+          },
+          true,
+          this.shop(),
+        );
       case 'arsenal':
-        return renderArsenal(this, 0, top + 14, w);
-      case 'lab':
+        return renderArsenal(this, 0, top + 14, w, this.shop());
+      case 'lab': {
+        const save = getSave(this);
+        const special = AGENTS[this.selectedAgent()].special.kind;
+        const width = Math.min(w - 24, 400);
+        return renderLabTree(
+          this,
+          Math.floor((w - width) / 2),
+          top + 10,
+          width,
+          save.meta,
+          special,
+          this.labSelected,
+          (id) => {
+            this.labSelected = id;
+            this.build();
+          },
+        );
+      }
       case 'organism':
         return renderSection(this, 0, top, w, bottom - top, TAB_SECTIONS[this.tab]);
       case 'case':
@@ -131,6 +197,7 @@ export class HubScene extends Phaser.Scene {
 
   private build(): void {
     this.root?.destroy();
+    if (this.scroll && this.scrollTab) this.scrollOffsets[this.scrollTab] = this.scroll.offset();
     this.scroll?.destroy();
     this.scroll = undefined;
     const { w, h } = this.size;
@@ -148,15 +215,36 @@ export class HubScene extends Phaser.Scene {
     if (this.tab === 'case') {
       out.push(...this.caseArea(g, colX, colW, midTop, midBottom - ACTION_H));
       out.push(...this.actionRow(g, w, colX, colW, midBottom - ACTION_H));
-    } else if (this.tab === 'agents' || this.tab === 'arsenal') {
-      // Listas longas rolam dentro da área entre as barras.
-      const content = this.tabContent(w, midTop, midBottom);
-      this.scroll = addScrollArea(this, content, {
-        x: 0,
-        y: midTop,
-        width: w,
-        height: midBottom - midTop,
-      });
+    } else if (this.tab === 'agents' || this.tab === 'arsenal' || this.tab === 'lab') {
+      // Listas longas rolam dentro da área entre as barras. No Laboratório, o painel do nó
+      // escolhido fica fixo em cima e só a árvore rola.
+      let top = midTop;
+      if (this.tab === 'lab') {
+        const save = getSave(this);
+        out.push(
+          ...renderLabDetail(
+            this,
+            colX + 12,
+            midTop + 8,
+            colW - 24,
+            this.labSelected,
+            save.meta,
+            save.atp,
+            AGENTS[this.selectedAgent()].special.kind,
+            (id) => this.buyLabNode(id),
+          ),
+        );
+        top = midTop + 8 + LAB_DETAIL_H + 4;
+      }
+      const content = this.tabContent(w, top, midBottom);
+      this.scroll = addScrollArea(
+        this,
+        content,
+        { x: 0, y: top, width: w, height: midBottom - top },
+        this.scrollOffsets[this.tab] ?? 0,
+      );
+      this.scrollTab = this.tab;
+      void labTreeHeight;
     } else {
       out.push(...this.tabContent(w, midTop, midBottom));
     }
@@ -342,23 +430,47 @@ export class HubScene extends Phaser.Scene {
     drawInkBox(g, rowX, starsY, boxW, starsH);
     goals.forEach((m, i) => {
       const sx = rowX + 12 + i * 44;
-      drawStar(g, sx, starsY + 8, 26, best >= m * 60);
+      drawStar(g, sx, starsY + 8, 26, i < getSave(this).meta.stars || best >= m * 60);
       out.push(
         this.add
           .text(sx + 13, starsY + 38, `${m} MIN`, labelText(9, PALETTE_CSS.textSoft))
           .setOrigin(0.5, 0),
       );
     });
+    const meta = getSave(this).meta;
     out.push(
-      this.iconButton(g, rowX + boxW + 10, starsY + 3, 52, 'chest', PALETTE.gold, () =>
+      this.iconButton(g, rowX + boxW + 10, starsY + 3, 52, 'chest', PALETTE.gold, () => {
+        const save = getSave(this);
+        if (save.meta.chest > 0) {
+          const opened = openChest(save.meta, save.atp);
+          setSave(this, { ...save, meta: opened.progress, atp: opened.atp });
+          this.build();
+          return;
+        }
         this.open({
           title: 'BAÚ DAS ESTRELAS',
           icon: 'chest',
-          text: 'Cada estrela nova do caso abre o baú, com ATP para o Laboratório.',
-          phase: 'FASE 3',
-        }),
-      ),
+          text: 'Cada estrela nova do caso enche o baú com ATP para o Laboratório e os desbloqueios. Sobreviva 5, 10 e 15 minutos.',
+          phase:
+            meta.stars >= goals.length
+              ? 'CASO COMPLETO'
+              : `${meta.stars} DE ${goals.length} ESTRELAS`,
+        });
+      }),
     );
+    if (meta.chest > 0) {
+      drawBadge(g, rowX + boxW + 10 + 52 - 12, starsY - 4);
+      out.push(
+        this.add
+          .text(
+            rowX + boxW + 10 + 26,
+            starsY + 58,
+            `+${meta.chest}`,
+            labelText(8, PALETTE_CSS.gold),
+          )
+          .setOrigin(0.5, 0),
+      );
+    }
 
     // Trilho direito: Compêndio e Conquistas.
     const railX = colX + colW - 10 - 60;
@@ -555,10 +667,20 @@ export class HubScene extends Phaser.Scene {
         ? withShadow(labelText(9, '#FFFFFF'), PALETTE_CSS.woodOutline, 2)
         : labelText(9, PALETTE_CSS.textSoft);
       out.push(this.add.text(x + tw / 2, iconY + 8 * pixel + 4, t.label, style).setOrigin(0.5, 0));
+      if (!on && this.tabHasBadge(t.id)) drawBadge(tg, x + tw - 18, ty + 2, 14);
       out.push(this.zone(x, ty, tw, th, () => this.setTab(t.id)));
       x += tw + 2;
     });
     return out;
+  }
+
+  /** Selo "!" na aba quando dá para comprar algo nela agora (docs/menu.md, Selos e avisos). */
+  private tabHasBadge(tab: TabId): boolean {
+    const { meta, atp } = getSave(this);
+    if (tab === 'agents') return unlockAffordable(meta, atp, 'agents');
+    if (tab === 'arsenal') return unlockAffordable(meta, atp, 'weapons');
+    if (tab === 'lab') return labAffordable(meta, atp);
+    return false;
   }
 
   /** Botão quadrado azul com ícone de pixels (Opções, Recordes, Compêndio, baú). */

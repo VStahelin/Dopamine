@@ -19,12 +19,52 @@ import {
   iconTexture,
   textureKey,
 } from '../render/textures';
+import {
+  isUnlocked,
+  unlockCost,
+  type MetaProgress,
+  type UnlockKind,
+} from '../../core/meta/progress';
+import { addButton } from './button';
 import { addIconSlot, passiveSlot, slotSize, weaponIcon } from './iconSlot';
 import { drawCreamSlot, drawInkBox, drawLock, drawWoodFrame } from './icons';
 import { IDLE_AGENTS, RUN_AGENTS } from './menuContent';
 import { bodyText, impactText, labelText, withShadow } from './theme';
 
 type Obj = Phaser.GameObjects.GameObject;
+
+/** Loja do menu (fase 3): o que está liberado, o ATP do jogador e a compra. */
+export interface Shop {
+  progress: MetaProgress;
+  atp: number;
+  onBuy: (kind: UnlockKind, id: string) => void;
+}
+
+/** Botão de desbloquear com o custo; apagado e sem ação se faltar ATP. */
+function buyButton(
+  scene: Phaser.Scene,
+  shop: Shop,
+  kind: UnlockKind,
+  id: string,
+  x: number,
+  y: number,
+  width: number,
+): Obj {
+  const cost = unlockCost(kind, id);
+  const can = shop.atp >= cost;
+  return addButton(scene, {
+    x,
+    y,
+    width,
+    height: 26,
+    label: `${cost} ATP`,
+    fontSize: 10,
+    variant: can ? 'primary' : 'secondary',
+    onClick: () => {
+      if (can) shop.onBuy(kind, id);
+    },
+  });
+}
 
 const TYPE_NAMES: Record<MoleculeType, string> = {
   lipid: 'LIPÍDIOS',
@@ -75,6 +115,7 @@ export function renderAgents(
   selected: string,
   onSelect: (id: AgentId) => void,
   showIdle = true,
+  shop?: Shop,
 ): Obj[] {
   const { left, width } = column(x, w);
   const g = scene.add.graphics();
@@ -82,13 +123,14 @@ export function renderAgents(
   let cy = y + 16;
   for (const id of Object.keys(AGENTS) as AgentId[]) {
     const a = AGENTS[id];
-    const on = id === selected;
+    const locked = shop ? !isUnlocked(shop.progress, 'agents', id) : false;
+    const on = id === selected && !locked;
     const h = 82;
     if (on) drawWoodFrame(g, left, cy, width, h);
     else drawInkBox(g, left, cy, width, h);
     g.fillStyle(PALETTE.panel).fillRect(left + 6, cy + 6, width - 12, h - 12);
     drawCreamSlot(g, left + 10, cy + 10, 58, 58);
-    out.push(sprite(scene, AGENT_TEXTURES[id], left + 39, cy + 39, 50));
+    out.push(sprite(scene, AGENT_TEXTURES[id], left + 39, cy + 39, 50).setAlpha(locked ? 0.4 : 1));
     out.push(scene.add.text(left + 78, cy + 9, a.name, impactText(15)));
     if (on) {
       out.push(
@@ -114,18 +156,28 @@ export function renderAgents(
       .map(([t]) => TYPE_NAMES[t as MoleculeType]);
     const tag = strong.length ? `FORTE CONTRA ${strong.join(', ')}` : 'MÉDIA CONTRA TUDO';
     out.push(scene.add.text(left + 78, cy + 66, tag, labelText(7, PALETTE_CSS.cyan)));
-    const zone = scene.add
-      .zone(left + width / 2, cy + h / 2, width, h)
-      .setInteractive({ useHandCursor: true });
-    zone.on('pointerup', () => onSelect(id));
-    out.push(zone);
+    if (locked && shop) {
+      // Bloqueado: no lugar de escolher, o botão de desbloquear com o custo.
+      out.push(
+        scene.add
+          .text(left + width - 12, cy + 12, 'BLOQUEADO', labelText(8, PALETTE_CSS.textMuted))
+          .setOrigin(1, 0),
+        buyButton(scene, shop, 'agents', id, left + width - 96, cy + h - 34, 84),
+      );
+    } else {
+      const zone = scene.add
+        .zone(left + width / 2, cy + h / 2, width, h)
+        .setInteractive({ useHandCursor: true });
+      zone.on('pointerup', () => onSelect(id));
+      out.push(zone);
+    }
     cy += h + 8;
   }
 
   // Agentes que ainda não existem no jogo.
   const playable = new Set(Object.values(AGENTS).map((a) => a.name));
   const locked = [
-    { label: 'EM BREVE · FASE 3', items: RUN_AGENTS.filter((i) => !playable.has(i.name)) },
+    { label: 'EM BREVE', items: RUN_AGENTS.filter((i) => !playable.has(i.name)) },
     ...(showIdle ? [{ label: 'AGENTES DO IDLE · FASE 4', items: IDLE_AGENTS }] : []),
   ];
   for (const group of locked) {
@@ -151,17 +203,23 @@ export function renderAgents(
 }
 
 /** Armas do pool com o tipo de ataque e a receita de evolução; depois, as evoluções. */
-export function renderArsenal(scene: Phaser.Scene, x: number, y: number, w: number): Obj[] {
+export function renderArsenal(
+  scene: Phaser.Scene,
+  x: number,
+  y: number,
+  w: number,
+  shop?: Shop,
+): Obj[] {
   const { left, width } = column(x, w);
   const g = scene.add.graphics();
   const out: Obj[] = [g, header(scene, left, y, 'ARMAS · CHEGAM PELO LEVEL UP')];
   let cy = y + 16;
   const ids = Object.keys(WEAPONS) as WeaponId[];
-  const row = (id: WeaponId, sub: string, color: string) => {
+  const row = (id: WeaponId, sub: string, color: string, locked = false) => {
     const def = WEAPONS[id];
     const h = 40;
     drawInkBox(g, left, cy, width, h, PALETTE.panel);
-    const icon = addIconSlot(scene, left + 8, cy + 8, 1, weaponIcon(id));
+    const icon = addIconSlot(scene, left + 8, cy + 8, 1, { ...weaponIcon(id), dim: locked });
     const tx = left + 8 + icon.size + 8;
     out.push(
       ...icon.objects,
@@ -171,9 +229,16 @@ export function renderArsenal(scene: Phaser.Scene, x: number, y: number, w: numb
         def.name,
         withShadow(bodyText(12, PALETTE_CSS.text), PALETTE_CSS.ink, 1),
       ),
-      scene.add
-        .text(left + width - 12, cy + 8, KIND_NAMES[def.kind], labelText(7, PALETTE_CSS.textSoft))
-        .setOrigin(1, 0),
+      locked && shop
+        ? buyButton(scene, shop, 'weapons', id, left + width - 80, cy + 7, 70)
+        : scene.add
+            .text(
+              left + width - 12,
+              cy + 8,
+              KIND_NAMES[def.kind],
+              labelText(7, PALETTE_CSS.textSoft),
+            )
+            .setOrigin(1, 0),
       scene.add.text(tx, cy + 23, sub, labelText(7, color)),
     );
     cy += h + 4;
@@ -183,7 +248,9 @@ export function renderArsenal(scene: Phaser.Scene, x: number, y: number, w: numb
     const sub = evo
       ? `NO MÁXIMO + ${PASSIVES[evo.reagent as PassiveId].name.toUpperCase()} → ${WEAPONS[evo.into as WeaponId].name.toUpperCase()}`
       : 'SEM EVOLUÇÃO AINDA';
-    row(id, sub, evo ? PALETTE_CSS.gold : PALETTE_CSS.textMuted);
+    const locked = shop ? !isUnlocked(shop.progress, 'weapons', id) : false;
+    if (locked) row(id, 'BLOQUEADA: NÃO APARECE NO LEVEL UP', PALETTE_CSS.textMuted, true);
+    else row(id, sub, evo ? PALETTE_CSS.gold : PALETTE_CSS.textMuted);
   }
   out.push(header(scene, left, cy + 6, 'EVOLUÇÕES'));
   cy += 22;

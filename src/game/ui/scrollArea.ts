@@ -9,6 +9,8 @@ export interface ScrollArea {
    * desenhar o resto da tela. Chame depois de montar a tela inteira.
    */
   isolate(): void;
+  /** Quanto já rolou, para voltar ao mesmo ponto ao montar a tela de novo. */
+  offset(): number;
   destroy(): void;
 }
 
@@ -21,6 +23,7 @@ export function addScrollArea(
   scene: Phaser.Scene,
   objects: Phaser.GameObjects.GameObject[],
   area: { x: number; y: number; width: number; height: number },
+  startOffset = 0,
 ): ScrollArea {
   const zoom = scene.cameras.main.zoom;
   const container = scene.add.container(FAR_X, 0, objects);
@@ -31,7 +34,7 @@ export function addScrollArea(
     .add(area.x * zoom, area.y * zoom, area.width * zoom, area.height * zoom)
     .setOrigin(0, 0)
     .setZoom(zoom);
-  let offset = 0;
+  let offset = Phaser.Math.Clamp(startOffset, 0, max);
   const apply = () => cam.setScroll(FAR_X + area.x, area.y + offset);
   apply();
 
@@ -65,6 +68,7 @@ export function addScrollArea(
   }
 
   return {
+    offset: () => offset,
     isolate() {
       scene.cameras.main.ignore(container);
       const others = scene.children.list.filter((o) => o !== container);

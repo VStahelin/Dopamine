@@ -6,6 +6,7 @@ import { PALETTE_CSS } from '../render/palette';
 import { updates } from '../update/updateManager';
 import type { UpdateStatus } from '../update/updateLogic';
 import { addDim, setupUiLayout } from '../ui/uiLayout';
+import { downloadBackup, exportCode, importBackup, pickBackupFile } from '../storage/backup';
 import { SCENES } from './keys';
 
 const yesNo = (value: boolean) => (value ? 'SIM' : 'NÃO');
@@ -39,6 +40,8 @@ export class OptionsScene extends Phaser.Scene {
   private root?: Phaser.GameObjects.Container;
   private size = { w: 0, h: 0 };
   private fromRun = false;
+  /** Aviso do backup (exportado, importado, código inválido). */
+  private note = '';
 
   constructor() {
     super(SCENES.options);
@@ -70,6 +73,48 @@ export class OptionsScene extends Phaser.Scene {
     this.scene.wake(SCENES.pause);
   }
 
+  /** Exportar: copia o código e baixa o arquivo. Importar: cola o código ou escolhe o arquivo. */
+  private backupButtons() {
+    return [
+      {
+        label: 'EXPORTAR SAVE',
+        variant: 'secondary' as const,
+        onClick: () => {
+          const save = getSave(this);
+          downloadBackup(save);
+          void navigator.clipboard
+            ?.writeText(exportCode(save))
+            .then(() => this.setNote('CÓDIGO COPIADO E ARQUIVO BAIXADO'))
+            .catch(() => this.setNote('ARQUIVO DO SAVE BAIXADO'));
+          this.setNote('ARQUIVO DO SAVE BAIXADO');
+        },
+      },
+      {
+        label: 'IMPORTAR SAVE',
+        variant: 'secondary' as const,
+        onClick: () => void this.importSave(),
+      },
+    ];
+  }
+
+  private async importSave(): Promise<void> {
+    const code = window.prompt('Cole o código do save (ou deixe vazio para escolher o arquivo):');
+    const text = code?.trim() ? code : await pickBackupFile();
+    if (!text) return;
+    const save = importBackup(text);
+    if (!save) {
+      this.setNote('ESSE CÓDIGO NÃO É UM SAVE DO JOGO');
+      return;
+    }
+    setSave(this, save);
+    this.setNote('SAVE IMPORTADO');
+  }
+
+  private setNote(note: string): void {
+    this.note = note;
+    this.build();
+  }
+
   private updateButton() {
     return {
       label: UPDATE_LABEL[updates.state.status],
@@ -85,8 +130,6 @@ export class OptionsScene extends Phaser.Scene {
     this.root?.destroy();
     const { w, h } = this.size;
     const save = getSave(this);
-    const top = Math.max(16, Math.floor(h / 2) - 110);
-
     const options = [
       {
         label: `MOSTRAR FPS: ${yesNo(save.options.showFps)}`,
@@ -112,12 +155,14 @@ export class OptionsScene extends Phaser.Scene {
         variant: 'secondary' as const,
         onClick: () => this.scale.toggleFullscreen(),
       },
-      ...(this.fromRun ? [] : [this.updateButton()]),
+      ...(this.fromRun ? [] : [this.updateButton(), ...this.backupButtons()]),
       { label: 'VOLTAR', onClick: () => this.back() },
     ];
+    const top = Math.max(16, Math.floor((h - (44 + options.length * 50 + 44)) / 2));
     const { buttons } = addButtonColumn(this, w, top + 44, options);
     const s = updates.state;
     const info = [
+      ...(this.note ? [this.note] : []),
       `VERSÃO ${s.currentVersion} · BUILD ${s.currentBuild}`,
       this.fromRun
         ? 'ATUALIZAÇÕES SÓ NOS MENUS'

@@ -17,6 +17,9 @@ export interface GameOverData {
   damage: { id: WeaponId; value: number }[];
   /** A run acabou pelo Desistir da pausa, e não pelas interações. */
   gaveUp: boolean;
+  /** Estrelas do caso conquistadas nesta run e o ATP que elas puseram no baú. */
+  newStars: number;
+  starReward: number;
 }
 
 const ROW_H = 24;
@@ -41,6 +44,15 @@ export class GameOverScene extends Phaser.Scene {
         ['NÍVEL', String(data.result.level), 'level'],
         ['DECOMPOSTAS', data.result.kills.toLocaleString('pt-BR'), 'kills'],
         ['ATP GANHO', data.result.atp.toLocaleString('pt-BR'), null],
+        ...(data.newStars > 0
+          ? ([
+              [
+                data.newStars > 1 ? `${data.newStars} ESTRELAS NOVAS` : 'ESTRELA NOVA',
+                `+${data.starReward} NO BAÚ`,
+                null,
+              ],
+            ] as [string, string, RecordKind | null][])
+          : []),
       ];
       const damage = data.damage.slice(0, DAMAGE_ROWS);
       const icon = slotSize(1);
