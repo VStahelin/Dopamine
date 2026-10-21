@@ -7,6 +7,7 @@ import { createRun, drainEvents, runResult, type RunState } from '../../core/run
 import { stepRun } from '../../core/run/step';
 import { KeyboardMove } from '../input/keyboardMove';
 import { PALETTE } from '../render/palette';
+import { pixelBand, pixelDisc, pixelOctagonAt, pixelRing, pixelSector } from '../render/fxArt';
 import { worldScale } from '../render/pixelScale';
 import {
   AGENT_TEXTURES,
@@ -17,7 +18,8 @@ import {
 } from '../render/textures';
 import { getSave, setSave } from '../storage/saveStore';
 import { updates } from '../update/updateManager';
-import { hitKind, hitLabel, NUMBER_STYLES, type NumberKind } from '../ui/damageNumbers';
+import { HIT_KINDS, hitKind, hitLabel, NUMBER_STYLES, type NumberKind } from '../ui/damageNumbers';
+import type { GameOverData } from './GameOverScene';
 import type { HudScene } from './HudScene';
 import { SCENES } from './keys';
 
@@ -27,7 +29,7 @@ const DAMAGE_TEXT_POOL = 40;
 /** Golpes contínuos e recuperação são somados e mostrados a cada meio segundo. */
 const SUM_EVERY_SECONDS = 0.5;
 /** Barra de interações embaixo do agente, em unidades do mundo. */
-const LIFE_BAR_WIDTH = 30;
+const LIFE_BAR_WIDTH = 40;
 const LIFE_PIPS = 10;
 /** Os números sobem e somem em cerca de 0,6 s. */
 const FLOATER_SECONDS = 0.6;
@@ -61,11 +63,15 @@ export class RunScene extends Phaser.Scene {
   private accumulator = 0;
   private levelUpOpen = false;
   private overHandled = false;
+  private gaveUp = false;
   private ground!: Phaser.GameObjects.TileSprite;
   private agentSprite!: Phaser.GameObjects.Image;
   private enemySprites: Phaser.GameObjects.Image[] = [];
   private projectileSprites: Phaser.GameObjects.Image[] = [];
   private gemSprites: Phaser.GameObjects.Image[] = [];
+  private coinSprites: Phaser.GameObjects.Image[] = [];
+  /** Opção "números de dano", relida ao voltar da pausa. */
+  private showNumbers = true;
   private electronSprites: Phaser.GameObjects.Image[] = [];
   /** Auras, poças e anéis (embaixo dos inimigos). */
   private fieldGfx!: Phaser.GameObjects.Graphics;
@@ -100,9 +106,12 @@ export class RunScene extends Phaser.Scene {
     this.accumulator = 0;
     this.levelUpOpen = false;
     this.overHandled = false;
+    this.gaveUp = false;
     this.enemySprites = [];
     this.projectileSprites = [];
     this.gemSprites = [];
+    this.coinSprites = [];
+    this.showNumbers = getSave(this).options.showDamageNumbers;
     this.floaters = [];
     this.areaSums.clear();
     this.healSum = 0;
@@ -149,6 +158,7 @@ export class RunScene extends Phaser.Scene {
   togglePause(): void {
     if (this.run.over || this.levelUpOpen) return;
     this.paused = !this.paused;
+    this.showNumbers = getSave(this).options.showDamageNumbers;
     if (this.paused) this.scene.launch(SCENES.pause);
     else this.scene.stop(SCENES.pause);
   }
@@ -171,6 +181,7 @@ export class RunScene extends Phaser.Scene {
   /** Desistir pela pausa: encerra a run e vai para a tela de fim de run. */
   giveUp(): void {
     if (this.run.over) return;
+    this.gaveUp = true;
     this.run.over = true;
     this.paused = false;
     this.scene.stop(SCENES.pause);
@@ -241,10 +252,15 @@ export class RunScene extends Phaser.Scene {
         .setPosition(e.x, e.y);
     });
     sync(this, this.projectileSprites, this.run.projectiles, 8, (s, p) => {
-      s.setTexture(this.tex(PROJECTILE_TEXTURES[p.weapon] ?? 'proj-hydroxyl'))
+      s.setTexture(this.tex(PROJECTILE_TEXTURES[p.weapon] ?? TEXTURES.shot))
         .setScale((p.weapon === 'fenton' ? 1.3 : 1) / this.detail)
         .setPosition(p.x, p.y)
         .setRotation(Math.atan2(p.vy, p.vx));
+    });
+    sync(this, this.coinSprites, this.run.coins, 2, (s, c) => {
+      s.setTexture(this.tex(TEXTURES.coin))
+        .setScale(1 / this.detail)
+        .setPosition(c.x, c.y);
     });
     sync(this, this.gemSprites, this.run.gems, 2, (s, g) => {
       s.setTexture(this.tex(TEXTURES.gem))
@@ -271,6 +287,7 @@ export class RunScene extends Phaser.Scene {
         this.agentSprite.setTint(PALETTE.interaction).setTintMode(Phaser.TintModes.FILL);
         this.time.delayedCall(90, () => this.agentSprite.clearTint());
       }
+      if (ev.type === 'kill') this.addPopFx(ev);
       if (ev.type === 'cone') this.addConeFx(ev);
       if (ev.type === 'beam') this.addBeamFx(ev);
       if (ev.type === 'strike') this.addStrikeFx(ev);
@@ -313,14 +330,16 @@ export class RunScene extends Phaser.Scene {
   private drawLifeBar(): void {
     const g = this.lifeGfx.clear();
     const { agent, stats } = this.run;
+    // Medidas da prancheta em pixels de arte: borda, segmentos e 1 pixel entre eles.
     const px = 1 / this.detail;
-    const w = LIFE_BAR_WIDTH;
-    const h = 3 + 4 * px;
-    const x = Math.round(agent.x - w / 2);
-    const y = Math.round(agent.y + this.agentSprite.displayHeight / 2 + 2);
+    const border = Math.max(1, Math.round(1.4 * this.detail)) * px;
+    const pip = Math.floor((LIFE_BAR_WIDTH / LIFE_PIPS - px) * this.detail) * px;
+    const pipH = Math.round(3.5 * this.detail) * px;
+    const w = LIFE_PIPS * pip + (LIFE_PIPS - 1) * px + border * 2;
+    const h = pipH + border * 2;
+    const x = Math.round((agent.x - w / 2) * this.detail) * px;
+    const y = Math.round((agent.y + this.agentSprite.displayHeight / 2 + 2) * this.detail) * px;
     g.fillStyle(PALETTE.ink).fillRect(x, y, w, h);
-    const inner = w - 4 * px;
-    const pip = (inner - (LIFE_PIPS - 1) * px) / LIFE_PIPS;
     const filled = (agent.interactions / stats.maxInteractions) * LIFE_PIPS;
     for (let i = 0; i < LIFE_PIPS; i++) {
       const color =
@@ -329,30 +348,45 @@ export class RunScene extends Phaser.Scene {
           : i < filled
             ? PALETTE.interactionLight
             : PALETTE.panel;
-      g.fillStyle(color).fillRect(x + 2 * px + i * (pip + px), y + 2 * px, pip, 3);
+      g.fillStyle(color).fillRect(x + border + i * (pip + px), y + border, pip, pipH);
     }
   }
 
-  /** Auras, poças e anéis do pulso, embaixo dos inimigos. */
+  /** Auras, poças e anéis do pulso, embaixo dos inimigos, em pixels de arte. */
   private drawFields(): void {
     const g = this.fieldGfx.clear();
     const { agent } = this.run;
+    const px = 1 / this.detail;
     this.run.weapons.forEach((w, i) => {
       if (this.run.rules.weapons[w.id].kind !== 'aura') return;
       const radius = auraRadius(this.run, i);
       const color = AURA_COLORS[w.id] ?? PALETTE.water;
-      g.fillStyle(color, 0.12).fillCircle(agent.x, agent.y, radius);
-      g.lineStyle(1.5, color, 0.6).strokeCircle(agent.x, agent.y, radius);
+      g.fillStyle(color, 0.14);
+      pixelDisc(g, agent.x, agent.y, radius, px);
+      g.fillStyle(color, 0.7);
+      pixelRing(g, agent.x, agent.y, radius, 1, px);
     });
     for (const z of this.run.zones) {
-      const color = z.kind === 'emulsion' ? PALETTE.cream : PALETTE.chlorine;
+      const emulsion = z.kind === 'emulsion';
       const a = Math.min(1, z.life * 2);
-      g.fillStyle(color, 0.3 * a).fillEllipse(z.x, z.y, z.radius * 2, z.radius * 1.6);
-      g.lineStyle(1.5, color, 0.7 * a).strokeEllipse(z.x, z.y, z.radius * 2, z.radius * 1.6);
+      const w = z.radius * 2;
+      const h = z.radius * 1.6;
+      g.fillStyle(emulsion ? PALETTE.cream : PALETTE.chlorine, 0.5 * a);
+      pixelOctagonAt(g, z.x, z.y, w, h, px);
+      // Filete escuro por dentro, como a poça da prancheta.
+      g.fillStyle(emulsion ? PALETTE.creamShade : PALETTE.chlorineDark, 0.55 * a);
+      const iw = w * 0.7;
+      const ih = h * 0.6;
+      const t = Math.max(px, 1);
+      g.fillRect(z.x - iw / 2, z.y - ih / 2, iw, t)
+        .fillRect(z.x - iw / 2, z.y + ih / 2 - t, iw, t)
+        .fillRect(z.x - iw / 2, z.y - ih / 2, t, ih)
+        .fillRect(z.x + iw / 2 - t, z.y - ih / 2, t, ih);
     }
     for (const p of this.run.pulses) {
       const a = 1 - p.radius / p.maxRadius;
-      g.lineStyle(3, 0xff6fb5, 0.8 * a + 0.2).strokeCircle(p.x, p.y, p.radius);
+      g.fillStyle(PALETTE.dopaminePink, 0.8 * a + 0.2);
+      pixelRing(g, p.x, p.y, p.radius, 2, px);
     }
   }
 
@@ -363,24 +397,48 @@ export class RunScene extends Phaser.Scene {
   private addConeFx(ev: { x: number; y: number; angle: number; range: number; spread: number }) {
     this.addFx(0.18, (g, a) => {
       g.fillStyle(PALETTE.chlorine, 0.45 * a);
-      g.slice(ev.x, ev.y, ev.range, ev.angle - ev.spread / 2, ev.angle + ev.spread / 2, false);
-      g.fillPath();
+      pixelSector(g, ev.x, ev.y, ev.range, ev.angle, ev.spread, 2);
     });
   }
 
+  /** Feixe da prancheta: bordas roxo-escuras, roxo e um miolo branco. */
   private addBeamFx(ev: { x: number; y: number; angle: number; length: number; width: number }) {
     const x2 = ev.x + Math.cos(ev.angle) * ev.length;
     const y2 = ev.y + Math.sin(ev.angle) * ev.length;
+    const px = 1 / this.detail;
     this.addFx(0.15, (g, a) => {
-      g.lineStyle(ev.width, 0xb388ff, 0.8 * a).lineBetween(ev.x, ev.y, x2, y2);
-      g.lineStyle(Math.max(1, ev.width / 3), 0xffffff, a).lineBetween(ev.x, ev.y, x2, y2);
+      g.fillStyle(PALETTE.uvDark, 0.8 * a);
+      pixelBand(g, ev.x, ev.y, x2, y2, ev.width + 2, px);
+      g.fillStyle(PALETTE.uv, 0.9 * a);
+      pixelBand(g, ev.x, ev.y, x2, y2, ev.width, px);
+      g.fillStyle(0xffffff, a);
+      pixelBand(g, ev.x, ev.y, x2, y2, Math.max(1, ev.width / 3), px);
     });
   }
 
   private addStrikeFx(ev: { x: number; y: number; radius: number }) {
+    const px = 1 / this.detail;
     this.addFx(0.18, (g, a) => {
-      g.lineStyle(2, PALETTE.woodHi, a).strokeCircle(ev.x, ev.y, ev.radius * (1.2 - a * 0.4));
-      g.fillStyle(PALETTE.wood, 0.35 * a).fillCircle(ev.x, ev.y, ev.radius * 0.6);
+      g.fillStyle(PALETTE.wood, 0.35 * a);
+      pixelDisc(g, ev.x, ev.y, ev.radius * 0.6, px);
+      g.fillStyle(PALETTE.woodHi, a);
+      pixelRing(g, ev.x, ev.y, ev.radius * (1.2 - a * 0.4), 1.5, px);
+    });
+  }
+
+  /** Cascata: estalo branco na molécula decomposta e lascas saltando para fora. */
+  private addPopFx(ev: { x: number; y: number }) {
+    const px = 1 / this.detail;
+    const bits = [0, 1, 2, 3, 4, 5].map((k) => (k / 6) * Math.PI * 2 + Math.random() * 0.5);
+    this.addFx(0.25, (g, a) => {
+      const t = 1 - a;
+      g.fillStyle(0xffffff, 0.8 * a);
+      pixelRing(g, ev.x, ev.y, 4 + t * 10, 2, px);
+      g.fillStyle(0xffffff, a);
+      for (const angle of bits) {
+        const d = 6 + t * 16;
+        g.fillRect(ev.x + Math.cos(angle) * d - 1, ev.y + Math.sin(angle) * d - 1, 2, 2);
+      }
     });
   }
 
@@ -406,6 +464,7 @@ export class RunScene extends Phaser.Scene {
 
   /** Número que sobe e some, com a cor e o tamanho do tipo (docs/ui-cronico.md). */
   private showFloater(x: number, y: number, label: string, kind: NumberKind): void {
+    if (!this.showNumbers && HIT_KINDS.has(kind)) return;
     let floater = this.floaters.find((f) => f.life <= 0);
     if (!floater) {
       if (this.floaters.length < DAMAGE_TEXT_POOL) {
@@ -458,7 +517,11 @@ export class RunScene extends Phaser.Scene {
       const result = runResult(this.run);
       const { save, newRecords } = recordRun(getSave(this), result);
       setSave(this, save);
-      this.time.delayedCall(700, () => this.scene.launch(SCENES.gameOver, { result, newRecords }));
+      const damage = this.run.weapons
+        .map((w) => ({ id: w.id, value: this.run.tally.damageByWeapon[w.id] ?? 0 }))
+        .sort((a, b) => b.value - a.value);
+      const data: GameOverData = { result, newRecords, damage, gaveUp: this.gaveUp };
+      this.time.delayedCall(700, () => this.scene.launch(SCENES.gameOver, data));
     }
   }
 

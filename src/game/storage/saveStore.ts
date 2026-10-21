@@ -8,7 +8,7 @@ const STORE = 'save';
 const KEY = 'main';
 const REGISTRY_KEY = 'save';
 
-const defaults = () => ({ showFps: DISPLAY.showFps });
+const defaults = () => ({ showFps: DISPLAY.showFps, showDamageNumbers: true });
 
 function openDb(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {

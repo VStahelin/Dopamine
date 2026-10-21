@@ -1,19 +1,28 @@
 import * as Phaser from 'phaser';
+import { WEAPONS, type WeaponId } from '../../config';
 import type { RunResult } from '../../core/run/state';
 import type { RecordKind } from '../../core/save/saveData';
-import { PALETTE_CSS } from '../render/palette';
+import { PALETTE, PALETTE_CSS } from '../render/palette';
+import { addIconSlot, slotSize, weaponIcon } from '../ui/iconSlot';
 import { addButtonColumn } from '../ui/menuLayout';
 import { bodyText, formatTime, impactText, labelText } from '../ui/theme';
 import { addDim, setupUiLayout } from '../ui/uiLayout';
 import { SCENES } from './keys';
 import type { RunScene } from './RunScene';
 
-interface GameOverData {
+export interface GameOverData {
   result: RunResult;
   newRecords: RecordKind[];
+  /** Dano de cada arma na run, do maior para o menor. */
+  damage: { id: WeaponId; value: number }[];
+  /** A run acabou pelo Desistir da pausa, e não pelas interações. */
+  gaveUp: boolean;
 }
 
-/** Fim de run: resumo, recordes batidos, jogar de novo ou voltar ao menu. */
+const ROW_H = 24;
+const DAMAGE_ROWS = 6;
+
+/** Fim de run: resumo, ATP ganho, dano por arma com os ícones, recordes, jogar de novo ou menu. */
 export class GameOverScene extends Phaser.Scene {
   private root?: Phaser.GameObjects.Container;
 
@@ -27,38 +36,92 @@ export class GameOverScene extends Phaser.Scene {
 
     setupUiLayout(this, (w, h) => {
       this.root?.destroy();
-      const top = Math.max(16, Math.floor(h / 2) - 130);
-      const rows: [string, string, RecordKind][] = [
+      const rows: [string, string, RecordKind | null][] = [
         ['TEMPO', formatTime(data.result.timeSeconds), 'time'],
         ['NÍVEL', String(data.result.level), 'level'],
-        ['DECOMPOSTAS', String(data.result.kills), 'kills'],
+        ['DECOMPOSTAS', data.result.kills.toLocaleString('pt-BR'), 'kills'],
+        ['ATP GANHO', data.result.atp.toLocaleString('pt-BR'), null],
       ];
+      const damage = data.damage.slice(0, DAMAGE_ROWS);
+      const icon = slotSize(1);
+      const total = 54 + rows.length * ROW_H + 22 + damage.length * (icon + 4) + 16 + 2 * 50;
+      const top = Math.max(16, Math.floor((h - total) / 2));
+      const width = Math.min(300, w - 32);
+      const left = Math.floor((w - width) / 2);
+      const right = left + width;
+
       const children: Phaser.GameObjects.GameObject[] = [
-        addDim(this, w, h, 0.8),
+        addDim(this, w, h, 0.85),
         this.add
-          .text(w / 2, top, 'AGENTE CONSUMIDO', impactText(20, PALETTE_CSS.interaction))
+          .text(
+            w / 2,
+            top,
+            data.gaveUp ? 'RUN ENCERRADA' : 'AGENTE CONSUMIDO',
+            impactText(20, PALETTE_CSS.interaction),
+          )
           .setOrigin(0.5, 0),
         this.add
-          .text(w / 2, top + 28, 'As interações acabaram.', bodyText(10, PALETTE_CSS.cream))
+          .text(
+            w / 2,
+            top + 28,
+            data.gaveUp ? 'Você desistiu desta run.' : 'As interações acabaram.',
+            bodyText(10, PALETTE_CSS.cream),
+          )
           .setOrigin(0.5, 0),
       ];
-      const colL = Math.floor(w / 2) - 90;
-      const colR = Math.floor(w / 2) + 90;
       rows.forEach(([label, value, kind], i) => {
-        const y = top + 54 + i * 24;
+        const y = top + 54 + i * ROW_H;
         children.push(
-          this.add.text(colL, y + 4, label, labelText(8, PALETTE_CSS.cream)),
-          this.add.text(colR, y, value, impactText(14)).setOrigin(1, 0),
+          this.add.text(left, y + 4, label, labelText(8, PALETTE_CSS.cream)),
+          this.add
+            .text(right, y, value, impactText(14, kind ? PALETTE_CSS.hydrogen : PALETTE_CSS.gold))
+            .setOrigin(1, 0),
         );
-        if (data.newRecords.includes(kind)) {
+        if (kind && data.newRecords.includes(kind)) {
           children.push(
             this.add
-              .text(colR + 6, y + 4, 'RECORDE!', labelText(8, PALETTE_CSS.gold))
-              .setOrigin(0, 0),
+              .text(right - 70, y + 4, 'RECORDE!', labelText(8, PALETTE_CSS.gold))
+              .setOrigin(1, 0),
           );
         }
       });
-      const { buttons } = addButtonColumn(this, w, top + 140, [
+
+      // Dano por arma: ícone, nome, barra e o número.
+      let y = top + 54 + rows.length * ROW_H + 6;
+      children.push(
+        this.add.text(left, y, 'DANO POR ARMA', labelText(9, PALETTE_CSS.sectionOrange)),
+      );
+      y += 16;
+      const best = Math.max(1, damage[0]?.value ?? 0);
+      const g = this.add.graphics();
+      children.push(g);
+      for (const d of damage) {
+        children.push(...addIconSlot(this, left, y, 1, weaponIcon(d.id)).objects);
+        const tx = left + icon + 6;
+        children.push(
+          this.add.text(tx, y, WEAPONS[d.id].name, bodyText(10, PALETTE_CSS.text)),
+          this.add
+            .text(
+              right,
+              y,
+              Math.round(d.value).toLocaleString('pt-BR'),
+              bodyText(10, PALETTE_CSS.text),
+            )
+            .setOrigin(1, 0),
+        );
+        const bw = right - tx;
+        g.fillStyle(PALETTE.ink).fillRect(tx, y + 15, bw, 7);
+        g.fillStyle(PALETTE.panelDeep).fillRect(tx + 1, y + 16, bw - 2, 5);
+        g.fillStyle(PALETTE.water).fillRect(
+          tx + 1,
+          y + 16,
+          Math.round(((bw - 2) * d.value) / best),
+          5,
+        );
+        y += icon + 4;
+      }
+
+      const { buttons } = addButtonColumn(this, w, y + 12, [
         { label: 'JOGAR DE NOVO', onClick: () => run().restartRun() },
         { label: 'MENU', onClick: () => run().exitToMenu() },
       ]);

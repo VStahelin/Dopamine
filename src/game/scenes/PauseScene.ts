@@ -128,14 +128,24 @@ export class PauseScene extends Phaser.Scene {
         .text(
           left + width - 12,
           sy + 9,
-          `${run.kills.toLocaleString('pt-BR')}`,
+          Math.floor(run.atp).toLocaleString('pt-BR'),
           impactText(15, PALETTE_CSS.white),
         )
         .setOrigin(1, 0),
       this.add
-        .text(left + width - 12, sy + 28, 'DECOMPOSTAS', labelText(8, PALETTE_CSS.textSoft))
+        .text(
+          left + width - 12,
+          sy + 28,
+          `${run.kills.toLocaleString('pt-BR')} DECOMPOSTAS`,
+          labelText(8, PALETTE_CSS.textSoft),
+        )
         .setOrigin(1, 0),
     );
+    // Moeda à esquerda do número de ATP, como na prancheta.
+    const atpW = (children[children.length - 2] as Phaser.GameObjects.Text).width;
+    const cx = left + width - 12 - atpW - 18;
+    g.fillStyle(PALETTE.goldDark).fillRect(cx, sy + 10, 12, 12);
+    g.fillStyle(PALETTE.gold).fillRect(cx + 2, sy + 12, 8, 8);
     const barW = Math.min(220, width - 130);
     const bx = left + 12;
     const by = sy + 24;
@@ -208,7 +218,7 @@ export class PauseScene extends Phaser.Scene {
             x: left + i * (tw + 6),
             y: panelTop,
             width: i === 2 ? width - 2 * (tw + 6) : tw,
-            height: 36,
+            height: 44,
             label,
             fontSize: 11,
             variant: id === this.tab ? 'primary' : 'secondary',
@@ -219,7 +229,7 @@ export class PauseScene extends Phaser.Scene {
           }),
         );
       });
-      panelTop += 46;
+      panelTop += 54;
       const rows =
         this.tab === 'arsenal'
           ? arsenalRows(run)

@@ -30,7 +30,8 @@ const UPDATE_NOTE: Record<UpdateStatus, string> = {
 };
 
 /**
- * Opções: mostrar FPS (salvo), tela cheia, versão e verificar atualização (decisão 0016).
+ * Opções: mostrar FPS e números de dano (salvos), tela cheia, versão e verificar atualização
+ * (decisão 0016).
  * Volume entra quando o jogo tiver som. Aberta pela pausa da run, fica por cima dela e volta para
  * ela, sem o botão de atualização (só nos menus, decisão 0016).
  */
@@ -92,6 +93,17 @@ export class OptionsScene extends Phaser.Scene {
         variant: 'secondary' as const,
         onClick: () => {
           setSave(this, { ...save, options: { ...save.options, showFps: !save.options.showFps } });
+          this.build();
+        },
+      },
+      {
+        label: `NÚMEROS DE DANO: ${yesNo(save.options.showDamageNumbers)}`,
+        variant: 'secondary' as const,
+        onClick: () => {
+          setSave(this, {
+            ...save,
+            options: { ...save.options, showDamageNumbers: !save.options.showDamageNumbers },
+          });
           this.build();
         },
       },

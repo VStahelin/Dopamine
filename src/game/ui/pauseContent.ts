@@ -126,7 +126,7 @@ function slotRow(content: SlotContent, kind: 'arma' | 'modificador', scale: numb
     const tx = 6 + slot.size + 8;
     const title = locked ? 'Bloqueado' : 'Espaço livre';
     const text = locked
-      ? `Libera com Espaços de ${kind}`
+      ? `Libera no Laboratório (Espaços de ${kind})`
       : kind === 'arma'
         ? 'Uma arma nova pode entrar no próximo level up'
         : 'Um modificador novo pode entrar no próximo level up';
@@ -212,18 +212,18 @@ export function arsenalRows(run: RunState): Build[] {
   ];
 }
 
-const STAT_GROUPS: [keyof typeof STATS, string][] = [
-  ['offense', 'OFENSIVOS'],
-  ['defense', 'DEFENSIVOS'],
-  ['mobility', 'MOBILIDADE E COLETA'],
-  ['levelUp', 'LEVEL UP'],
-  ['risk', 'RISCO'],
+/** Grupos da prancheta "Crônico: pausa e status"; level up e risco ficam juntos. */
+const STAT_GROUPS: [(keyof typeof STATS)[], string][] = [
+  [['offense'], 'OFENSIVOS'],
+  [['defense'], 'DEFENSIVOS'],
+  [['mobility'], 'MOBILIDADE E COLETA'],
+  [['levelUp', 'risk'], 'LEVEL UP E RISCO'],
 ];
 
 /** Aba Atributos: valor atual, base em cinza; verde se melhor, vermelho se pior. */
 export function statRows(run: RunState): Build[] {
   const out: Build[] = [];
-  for (const [group, title] of STAT_GROUPS) {
+  for (const [groups, title] of STAT_GROUPS) {
     out.push((scene, width) => {
       const g = scene.add.graphics();
       g.fillStyle(PALETTE.panel).fillRect(0, 15, width, 2);
@@ -232,7 +232,7 @@ export function statRows(run: RunState): Build[] {
         scene.add.text(0, 0, title, labelText(10, PALETTE_CSS.sectionOrange)),
       ]);
     });
-    for (const key of Object.keys(STATS[group]) as RunStatKey[]) {
+    for (const key of groups.flatMap((g) => Object.keys(STATS[g])) as RunStatKey[]) {
       out.push((scene, width) => {
         const value = run.stats[key];
         const base = statDef(run.rules, key).base;
@@ -274,7 +274,7 @@ export function runRows(run: RunState, bestTimeSeconds: number): Build[] {
     ['DECOMPOSTAS', num(run.kills), PALETTE_CSS.white],
     ['CRÍTICOS', num(run.tally.crits), PALETTE_CSS.goldIcon],
     ['INTERAÇÕES PERDIDAS', num(run.tally.interactionsLost), PALETTE_CSS.numberHurt],
-    ['ARMAS', String(run.weapons.length), PALETTE_CSS.white],
+    ['ATP NA RUN', num(run.atp), PALETTE_CSS.gold],
   ];
   const out: Build[] = [];
   for (let i = 0; i < tiles.length; i += 2) {

@@ -29,6 +29,8 @@ const ROW_GAP = 3;
 /** Botão do especial no canto de baixo à direita, onde fica o polegar direito. */
 const SPECIAL_SIZE = 76;
 const PAUSE_SIZE = 44;
+/** Altura da pausa dentro da banda, no celular deitado. */
+const PAUSE_WIDE_H = 40;
 /** Abaixo desta fração das interações, a borda da tela pulsa em vermelho. */
 const LOW_INTERACTIONS = 0.25;
 
@@ -45,6 +47,9 @@ export class HudScene extends Phaser.Scene {
   private timeText!: Phaser.GameObjects.Text;
   private waveText!: Phaser.GameObjects.Text;
   private killsText!: Phaser.GameObjects.Text;
+  private atpText!: Phaser.GameObjects.Text;
+  private chargesText!: Phaser.GameObjects.Text;
+  private countersAt = { x: 0, y: 0 };
   private bossText!: Phaser.GameObjects.Text;
   private specialText!: Phaser.GameObjects.Text;
   private specialCount!: Phaser.GameObjects.Text;
@@ -53,7 +58,16 @@ export class HudScene extends Phaser.Scene {
   private passiveSlots: IconSlot[] = [];
   private effectSlots: IconSlot[] = [];
   private specialIcon!: Phaser.GameObjects.Image;
-  private box = { w: 0, h: 0, band: 0, xpX: 0, xpW: 0, xpY: 0, below: 0 };
+  private box = {
+    w: 0,
+    h: 0,
+    band: 0,
+    xpX: 0,
+    xpW: 0,
+    xpY: 0,
+    below: 0,
+    pause: { x: 0, y: 0, w: 0, h: 0 },
+  };
   private safe: Insets = { top: 0, right: 0, bottom: 0, left: 0 };
   private specialAt = { x: 0, y: 0 };
 
@@ -73,11 +87,17 @@ export class HudScene extends Phaser.Scene {
   private layout(w: number, h: number): void {
     this.root?.destroy();
     const safe = (this.safe = safeAreaUi(this.cameras.main.zoom));
+    // Deitado: banda baixa, armas e reagentes numa linha só e a pausa dentro da banda.
+    const wide = w > h;
     const left = safe.left + 8;
     const right = w - safe.right - 8;
     const xpY = safe.top + 6;
     const rowsY = xpY + 24;
-    const band = rowsY + SLOT * 2 + ROW_GAP + 8;
+    const band = wide ? rowsY + PAUSE_WIDE_H + 6 : rowsY + SLOT * 2 + ROW_GAP + 8;
+    const below = band + 3 + 8;
+    const pause = wide
+      ? { x: right - PAUSE_SIZE, y: rowsY - 2, w: PAUSE_SIZE, h: PAUSE_WIDE_H }
+      : { x: right - PAUSE_SIZE, y: below, w: PAUSE_SIZE, h: PAUSE_SIZE };
     this.box = {
       w,
       h,
@@ -85,22 +105,24 @@ export class HudScene extends Phaser.Scene {
       xpX: safe.left + 6,
       xpW: w - safe.left - safe.right - 12,
       xpY,
-      below: band + 3 + 8,
+      below,
+      pause,
     };
 
     const children: Phaser.GameObjects.GameObject[] = [];
     this.g = this.add.graphics();
     children.push(this.g);
 
-    // Ícones: armas em cima, reagentes embaixo.
-    const row = (y: number) =>
-      Array.from(
-        { length: ROW_SLOTS },
-        (_, i) => new IconSlot(this, left + i * (SLOT + SLOT_GAP), y, 1),
-      );
-    this.weaponSlots = row(rowsY);
-    this.passiveSlots = row(rowsY + SLOT + ROW_GAP);
-    for (const s of [...this.weaponSlots, ...this.passiveSlots]) children.push(...s.objects);
+    // Ícones: em pé, armas em cima e reagentes embaixo; deitado, lado a lado.
+    const cell = SLOT + SLOT_GAP;
+    const row = (x: number, y: number) =>
+      Array.from({ length: ROW_SLOTS }, (_, i) => new IconSlot(this, x + i * cell, y, 1));
+    this.weaponSlots = row(left, rowsY);
+    this.passiveSlots = wide
+      ? row(left + ROW_SLOTS * cell + 6, rowsY)
+      : row(left, rowsY + SLOT + ROW_GAP);
+    for (const sl of [...this.weaponSlots, ...this.passiveSlots]) children.push(...sl.objects);
+    const iconsRight = (wide ? left + ROW_SLOTS * cell * 2 + 6 : left + ROW_SLOTS * cell) + 4;
 
     this.levelText = this.add
       .text(this.box.xpX + this.box.xpW - 8, xpY + 4, '', {
@@ -110,20 +132,24 @@ export class HudScene extends Phaser.Scene {
       })
       .setOrigin(1, 0);
 
-    // Decompostas à direita, número antes do ícone.
-    this.killsText = this.add
-      .text(
-        right - 19,
-        rowsY + 2,
-        '',
-        withShadow(impactText(16, PALETTE_CSS.white), PALETTE_CSS.ink, 2),
-      )
-      .setOrigin(1, 0)
-      .setStroke(PALETTE_CSS.ink, 0);
+    // ATP e decompostas à direita, número antes do ícone (deitado, antes da pausa).
+    const countersRight = wide ? pause.x - 8 : right;
+    const counter = (y: number) =>
+      this.add
+        .text(
+          countersRight - 19,
+          y,
+          '',
+          withShadow(impactText(16, PALETTE_CSS.white), PALETTE_CSS.ink, 2),
+        )
+        .setOrigin(1, 0)
+        .setStroke(PALETTE_CSS.ink, 0);
+    this.atpText = counter(rowsY);
+    this.killsText = counter(rowsY + 22);
+    this.countersAt = { x: countersRight - 14, y: rowsY };
 
     // Tempo e onda no centro do espaço entre os ícones e os contadores.
-    const iconsRight = left + ROW_SLOTS * (SLOT + SLOT_GAP);
-    const timeX = Math.round((iconsRight + right - 60) / 2);
+    const timeX = Math.round((iconsRight + countersRight - 70) / 2);
     this.timeText = this.add
       .text(timeX, rowsY - 2, '', { ...impactText(24, PALETTE_CSS.white), stroke: PALETTE_CSS.ink })
       .setOrigin(0.5, 0);
@@ -132,21 +158,19 @@ export class HudScene extends Phaser.Scene {
       .setOrigin(0.5, 0);
 
     // Abaixo da banda: efeitos à esquerda, chefe no centro, pausa à direita.
-    this.effectSlots = [0, 1, 2].map(
-      (i) => new IconSlot(this, left + i * (SLOT + 6), this.box.below, 1),
-    );
+    this.effectSlots = [0, 1, 2].map((i) => new IconSlot(this, left + i * (SLOT + 6), below, 1));
     for (const s of this.effectSlots) children.push(...s.objects);
     this.bossText = this.add
-      .text(w / 2, this.box.below, '', {
+      .text(w / 2, below, '', {
         ...labelText(9, PALETTE_CSS.tagText),
         stroke: PALETTE_CSS.outline,
         strokeThickness: 2,
       })
       .setOrigin(0.5, 0);
-    const pause = this.add
-      .zone(right - PAUSE_SIZE / 2, this.box.below + PAUSE_SIZE / 2, PAUSE_SIZE, PAUSE_SIZE)
+    const pauseZone = this.add
+      .zone(pause.x + pause.w / 2, pause.y + pause.h / 2, pause.w, pause.h)
       .setInteractive({ useHandCursor: true });
-    pause.on('pointerdown', () => this.runScene.togglePause());
+    pauseZone.on('pointerdown', () => this.runScene.togglePause());
 
     // Especial: madeira de 76 px com o ícone do especial e a recarga.
     const sx = w - safe.right - 18 - SPECIAL_SIZE;
@@ -164,6 +188,13 @@ export class HudScene extends Phaser.Scene {
         stroke: PALETTE_CSS.ink,
       })
       .setOrigin(0.5, 0);
+    this.chargesText = this.add
+      .text(sx + SPECIAL_SIZE - 6, sy + 6, '', {
+        ...labelText(9, PALETTE_CSS.white),
+        stroke: PALETTE_CSS.outline,
+        strokeThickness: 2,
+      })
+      .setOrigin(1, 0);
     this.specialText = this.add
       .text(sx + SPECIAL_SIZE / 2, sy + SPECIAL_SIZE + 4, '', {
         ...labelText(9, PALETTE_CSS.woodText),
@@ -182,7 +213,9 @@ export class HudScene extends Phaser.Scene {
       this.timeText,
       this.waveText,
       this.bossText,
-      pause,
+      pauseZone,
+      this.atpText,
+      this.chargesText,
       this.specialIcon,
       this.specialCount,
       this.specialText,
@@ -231,7 +264,7 @@ export class HudScene extends Phaser.Scene {
     this.levelText.setText(`NV ${run.level}`);
 
     this.updateRows(run);
-    this.drawKillsIcon(g, run);
+    this.drawCounters(g, run);
 
     const wave = waveAt(run.time, run.rules.economy.difficulty);
     this.timeText
@@ -243,7 +276,7 @@ export class HudScene extends Phaser.Scene {
 
     this.updateEffects(g, run);
     this.drawBoss(g, run, below);
-    this.drawPause(g, below);
+    this.drawPause(g);
     this.drawSpecial(g, run, time);
     this.fpsText?.setText(`${Math.round(this.game.loop.actualFps)} FPS`);
   }
@@ -263,17 +296,21 @@ export class HudScene extends Phaser.Scene {
     );
   }
 
-  /** Molécula pequena ao lado do número de decompostas. */
-  private drawKillsIcon(g: Phaser.GameObjects.Graphics, run: RunState): void {
-    const x = this.box.w - this.safe.right - 8 - 14;
-    const y = this.weaponSlots[0]!.y + 4;
-    g.fillStyle(PALETTE.ink).fillRect(x, y + 4, 8, 8);
-    g.fillStyle(PALETTE.carbon).fillRect(x + 1, y + 5, 6, 6);
+  /** ATP com a moeda e decompostas com uma molécula pequena, como na prancheta. */
+  private drawCounters(g: Phaser.GameObjects.Graphics, run: RunState): void {
+    const { x, y } = this.countersAt;
+    g.fillStyle(PALETTE.goldDark).fillRect(x, y + 3, 14, 14);
+    g.fillStyle(PALETTE.gold).fillRect(x + 2, y + 5, 10, 10);
+    g.fillStyle(PALETTE.goldHi).fillRect(x + 4, y + 7, 2, 4);
+    const ky = y + 22;
+    g.fillStyle(PALETTE.ink).fillRect(x, ky + 4, 8, 8);
+    g.fillStyle(PALETTE.carbon).fillRect(x + 1, ky + 5, 6, 6);
     g.fillStyle(PALETTE.textLight)
-      .fillRect(x + 7, y + 2, 2, 3)
-      .fillRect(x + 7, y + 9, 2, 3);
-    g.fillStyle(PALETTE.ink).fillRect(x + 9, y + 3, 6, 6);
-    g.fillStyle(PALETTE.oxygen).fillRect(x + 10, y + 4, 4, 4);
+      .fillRect(x + 7, ky + 2, 2, 3)
+      .fillRect(x + 7, ky + 9, 2, 3);
+    g.fillStyle(PALETTE.ink).fillRect(x + 9, ky + 3, 6, 6);
+    g.fillStyle(PALETTE.oxygen).fillRect(x + 10, ky + 4, 4, 4);
+    this.atpText.setText(Math.floor(run.atp).toLocaleString('pt-BR'));
     this.killsText.setText(run.kills.toLocaleString('pt-BR'));
   }
 
@@ -331,13 +368,14 @@ export class HudScene extends Phaser.Scene {
     );
   }
 
-  private drawPause(g: Phaser.GameObjects.Graphics, y: number): void {
-    const x = this.box.w - this.safe.right - 8 - PAUSE_SIZE;
-    g.fillStyle(PALETTE.ink).fillRect(x, y, PAUSE_SIZE, PAUSE_SIZE);
-    g.fillStyle(PALETTE.panel).fillRect(x + 3, y + 3, PAUSE_SIZE - 6, PAUSE_SIZE - 6);
+  private drawPause(g: Phaser.GameObjects.Graphics): void {
+    const { x, y, w, h } = this.box.pause;
+    const bar = h - 28;
+    g.fillStyle(PALETTE.ink).fillRect(x, y, w, h);
+    g.fillStyle(PALETTE.panel).fillRect(x + 3, y + 3, w - 6, h - 6);
     g.fillStyle(PALETTE.textLight)
-      .fillRect(x + 14, y + 14, 6, 16)
-      .fillRect(x + 25, y + 14, 6, 16);
+      .fillRect(x + 14, y + 14, 6, bar)
+      .fillRect(x + 25, y + 14, 6, bar);
   }
 
   /** Botão do especial: escurece de cima para baixo com a recarga e mostra os segundos. */
@@ -364,7 +402,8 @@ export class HudScene extends Phaser.Scene {
     }
     this.specialIcon.setAlpha(ready >= 1 ? 1 : 0.55);
     this.specialCount.setText(ready >= 1 ? '' : String(Math.ceil(run.special.cooldown)));
-    this.specialText.setText(def.name.toUpperCase());
+    this.chargesText.setText(`x${run.special.charges}`);
+    this.specialText.setText(def.shortName);
     // Nome longo não sai da tela: encosta na borda direita.
     const maxX = this.box.w - this.safe.right - 4 - this.specialText.width / 2;
     this.specialText.setX(Math.min(x + s / 2, maxX));

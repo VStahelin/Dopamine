@@ -200,7 +200,7 @@ export class HubScene extends Phaser.Scene {
     const atp = this.add.text(
       0,
       0,
-      '0',
+      getSave(this).atp.toLocaleString('pt-BR'),
       withShadow({ ...bodyText(19, '#FFFFFF'), fontStyle: '700' }, PALETTE_CSS.ink, 3),
     );
     const chipW = 8 + 22 + 6 + Math.max(atp.width, 30) + 10;

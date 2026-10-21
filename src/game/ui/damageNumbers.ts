@@ -20,21 +20,28 @@ const main = (size: number, color: string, outline: string = PALETTE_CSS.ink): N
   font: FONT_MAIN,
 });
 
-/**
- * Cores e tamanhos da prancheta "Crônico: ícones, dano e paisagem", em 60% do tamanho do
- * mockup para não cobrir o campo cheio de moléculas.
- */
+/** Cores do guia e tamanhos da prancheta "Crônico: HUD de batalha", em unidades do mundo. */
 export const NUMBER_STYLES: Record<NumberKind, NumberStyle> = {
-  damage: main(11, PALETTE_CSS.white),
-  crit: main(17, PALETTE_CSS.goldIcon, PALETTE_CSS.critOutline),
-  strong: main(12, PALETTE_CSS.numberStrong, PALETTE_CSS.cyanOutline),
-  weak: main(8, PALETTE_CSS.numberWeak),
-  area: main(8, PALETTE_CSS.white),
-  hurt: main(13, PALETTE_CSS.numberHurt, PALETTE_CSS.outline),
-  heal: main(10, PALETTE_CSS.numberHeal, PALETTE_CSS.numberHealOutline),
-  immune: { size: 7, color: PALETTE_CSS.textSoft, outline: PALETTE_CSS.ink, font: FONT_LABEL },
-  info: main(10, PALETTE_CSS.cyan, PALETTE_CSS.cyanOutline),
+  damage: main(14, PALETTE_CSS.white),
+  crit: main(22, PALETTE_CSS.goldIcon, PALETTE_CSS.critOutline),
+  strong: main(16, PALETTE_CSS.numberStrong, PALETTE_CSS.cyanOutline),
+  weak: main(11, PALETTE_CSS.numberWeak),
+  area: main(11, PALETTE_CSS.white),
+  hurt: main(18, PALETTE_CSS.numberHurt, PALETTE_CSS.outline),
+  heal: main(13, PALETTE_CSS.numberHeal, PALETTE_CSS.numberHealOutline),
+  immune: { size: 9, color: PALETTE_CSS.textSoft, outline: PALETTE_CSS.ink, font: FONT_LABEL },
+  info: main(12, PALETTE_CSS.cyan, PALETTE_CSS.cyanOutline),
 };
+
+/** Números de golpe, que o interruptor das Opções esconde; interações e avisos sempre aparecem. */
+export const HIT_KINDS: ReadonlySet<NumberKind> = new Set([
+  'damage',
+  'crit',
+  'strong',
+  'weak',
+  'area',
+  'immune',
+]);
 
 /** Tipo do número de um golpe: crítico, afinidade forte ou fraca, imune ou dano comum. */
 export function hitKind(hit: { crit: boolean; affinity: number }): NumberKind {

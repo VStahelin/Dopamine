@@ -1,5 +1,6 @@
 import type * as Phaser from 'phaser';
 import { ZERO, clampLength, type Vec2 } from '../../core/math/vec2';
+import { UI_SPRITES } from '../../assets/sprites';
 import { PALETTE } from '../render/palette';
 import { pointerToUi } from '../ui/uiLayout';
 
@@ -17,7 +18,7 @@ export class VirtualJoystick {
 
   constructor(
     private readonly scene: Phaser.Scene,
-    private readonly radius = 36,
+    private readonly radius = 48,
   ) {
     this.graphics = scene.add.graphics().setDepth(1000);
     scene.input.addPointer(1);
@@ -64,14 +65,22 @@ export class VirtualJoystick {
     this.graphics.clear();
   }
 
+  /** Joystick da prancheta: octógono em degraus translúcido e miolo quadrado creme. */
   private draw(): void {
     const g = this.graphics.clear();
-    g.fillStyle(PALETTE.panel, 0.5).fillCircle(this.originX, this.originY, this.radius);
-    g.lineStyle(2, PALETTE.wood, 0.8).strokeCircle(this.originX, this.originY, this.radius);
-    g.fillStyle(PALETTE.water, 0.9).fillCircle(
-      this.originX + this.current.x * this.radius,
-      this.originY + this.current.y * this.radius,
-      this.radius * 0.4,
-    );
+    const size = this.radius * 2;
+    const octagon = UI_SPRITES.shapes.octagon.map(([px = 0, py = 0]) => ({
+      x: this.originX - this.radius + px * size,
+      y: this.originY - this.radius + py * size,
+    }));
+    // fillPoints e strokePoints só leem x e y de cada ponto.
+    const points = octagon as unknown as Phaser.Math.Vector2[];
+    g.fillStyle(PALETTE.night, 0.25).fillPoints(points, true);
+    g.lineStyle(3, PALETTE.textLight, 0.45).strokePoints(points, true);
+    const knob = 36;
+    const kx = Math.round(this.originX + this.current.x * this.radius - knob / 2);
+    const ky = Math.round(this.originY + this.current.y * this.radius - knob / 2);
+    g.fillStyle(PALETTE.ink, 0.5).fillRect(kx, ky, knob, knob);
+    g.fillStyle(PALETTE.textLight, 0.6).fillRect(kx + 3, ky + 3, knob - 6, knob - 6);
   }
 }
