@@ -2,7 +2,7 @@
 
 Como o código do Dopamina Blaster é organizado. Este arquivo descreve **o estado atual**; o porquê de cada escolha fica nas [decisões](decisoes/README.md), ligadas em cada seção. Ao mudar algo aqui, registre a decisão primeiro.
 
-> **Estado:** fase 1 concluída; fase 1.5 (menu) implementada seguindo o artboard "Menu principal (protótipo)" do canvas de identidade visual, falta validar no celular.
+> **Estado:** fases 0 a 2.5 implementadas; fase 2.6 (sprites numa pasta e ícones do canvas na HUD, pausa, level up e menu) implementada, falta validar no celular.
 
 ## Stack
 
@@ -43,8 +43,8 @@ A regra de dependência é verificada pelo ESLint (`no-restricted-imports` em [e
 | `placeholder` | [PlaceholderScene.ts](../src/game/scenes/PlaceholderScene.ts) | Telas abertas pelo hub que ainda não têm conteúdo, no formato comum ([sectionView.ts](../src/game/ui/sectionView.ts)) |
 | `records`, `options` | [RecordsScene.ts](../src/game/scenes/RecordsScene.ts), [OptionsScene.ts](../src/game/scenes/OptionsScene.ts) | Recordes salvos; opções (FPS, tela cheia) |
 | `run` | [RunScene.ts](../src/game/scenes/RunScene.ts) | Chama o `stepRun` do `core` em passos fixos e desenha o estado (sprites reaproveitados, números de dano); abre as telas por cima |
-| `hud` | [HudScene.ts](../src/game/scenes/HudScene.ts) | Por cima da run: XP, nível, tempo, interações, decompostas, pausa, joystick e FPS |
-| `levelUp`, `pause`, `gameOver` | [LevelUpScene.ts](../src/game/scenes/LevelUpScene.ts), [PauseScene.ts](../src/game/scenes/PauseScene.ts), [GameOverScene.ts](../src/game/scenes/GameOverScene.ts) | Telas por cima da run |
+| `hud` | [HudScene.ts](../src/game/scenes/HudScene.ts) | Por cima da run ([ui-cronico.md](ui-cronico.md)): banda com XP, ícones de armas e reagentes, tempo, onda e decompostas; efeitos, chefe e pausa abaixo dela; botão do especial, joystick e FPS |
+| `levelUp`, `pause`, `gameOver` | [LevelUpScene.ts](../src/game/scenes/LevelUpScene.ts), [PauseScene.ts](../src/game/scenes/PauseScene.ts), [GameOverScene.ts](../src/game/scenes/GameOverScene.ts) | Telas por cima da run; a pausa tem as abas Arsenal, Atributos e Run (duas colunas na tela deitada) e abre as Opções por cima |
 
 As telas de interface usam [uiLayout.ts](../src/game/ui/uiLayout.ts): zoom inteiro a partir do canto superior esquerdo e layout refeito a cada redimensionamento.
 
@@ -66,6 +66,8 @@ Fora dessas camadas:
 
 ```
 src/
+  assets/
+    sprites/     toda a pixel art como dados (decisão 0019): paleta, ícones 16×16, molduras, moléculas, interface, mundo
   config/        JSON de parâmetros (stats, run, enemies, weapons, passives, rarities, economy, idle, display), types.ts e index.ts
   core/
     math/        vetores e utilidades
@@ -77,18 +79,23 @@ src/
     save/        formato do save, migrações e recordes
   game/
     scenes/      cenas do Phaser
-    render/      paleta, texturas, zoom e o gerador de sprites de molécula
+    render/      paleta, zoom, spriteArt.ts (desenho dos sprites a partir dos dados) e textures.ts (gerador único de texturas)
     input/       teclado e joystick virtual
-    ui/          tema (fontes, textos), botões, layout das telas, textos dos upgrades
+    ui/          tema (fontes, textos), botões, layout das telas, textos dos upgrades, espaços de ícone, conteúdo da pausa, números de dano, rolagem
     storage/     save no IndexedDB
   main.ts        ponto de entrada
 public/          favicon; manifest do PWA e fontes na fase 6
 tools/sim/       simulador (fase 3)
+tools/sprites/   exportador de sprites para PNG e SVG
 .github/         workflow de CI (verificações, sem deploy)
 docs/            design, roadmap, arquitetura e decisões
 ```
 
 Os testes ficam ao lado do código, como `*.test.ts`.
+
+## Sprites
+
+Toda a pixel art fica em `src/assets/sprites/` como dados ([0019](decisoes/0019-sprites-numa-pasta.md)): grades de caracteres para os ícones (as mesmas do canvas de identidade visual), átomos e ligações para as moléculas, números para chão, gema e elétron. [spriteArt.ts](../src/game/render/spriteArt.ts) pinta esses dados com retângulos num `Painter`, sem depender do Phaser; [textures.ts](../src/game/render/textures.ts) usa um `Graphics` como pintor e guarda as texturas no começo do jogo, e o exportador ([tools/sprites/export.mjs](../tools/sprites/export.mjs)) usa um buffer de pixels para gerar PNG e SVG. Ícones saem com 1 pixel de textura por pixel de arte e crescem só em escala inteira; sprites do mundo saem uma vez por detail ([0009](decisoes/0009-grade-16px-zoom-inteiro.md)). Um teste confere que toda arma, modificador, especial, agente e inimigo tem sprite.
 
 ## Princípios
 
@@ -111,6 +118,7 @@ Precisa de Node 20.19 ou mais novo.
 | `npm run build` | Checa os tipos e gera o build em `dist/` |
 | `npm run preview` | Serve o build de `dist/` localmente, para testar a versão final |
 | `npm run release` | Check completo e publicação local atômica em `releases/` ([atualizacoes.md](atualizacoes.md)) |
+| `npm run sprites:export` | Gera PNG e SVG de todos os sprites em `sprites-export/` (fora do git), com o mesmo desenho do jogo |
 | `npm run serve` | Serve a build publicada localmente, em HTTPS, para testar atualizações no PC |
 | `npm version minor` + `git push --follow-tags` | Gera uma versão: dispara o deploy no GitHub Pages (skills `criar-versao` e `publicar-versao`) |
 | `npm run check` | Lint, formatação, testes e build de uma vez; rode antes de abrir um PR |

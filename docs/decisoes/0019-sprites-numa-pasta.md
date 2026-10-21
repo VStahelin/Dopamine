@@ -16,12 +16,13 @@ Hoje a pixel art do jogo está espalhada pelo código: moléculas em `src/game/r
   - `molecules/*.json`: as moléculas como átomos e ligações (as definições que hoje estão em código).
   - Um índice liga cada arma, modificador, especial e molécula ao seu sprite pelo id da configuração.
 - **Um gerador só** transforma os dados em texturas para cada detalhe da escala do mundo ([0009](0009-grade-16px-zoom-inteiro.md)). Ícones de pixel crescem só em escala inteira.
+- O desenho não depende do Phaser: pinta retângulos num `Painter` (`src/game/render/spriteArt.ts`). No jogo o pintor é um `Graphics`; no comando `npm run sprites:export` é um buffer que vira PNG e SVG. Assim dá para ver os sprites fora do jogo e comparar, com o mesmo desenho, textura gerada no início contra imagem pronta carregada.
 - Ícone faltando não quebra o jogo: aparece um ícone padrão e o teste de configuração avisa.
 - Os ícones vêm do canvas como estão; quando o canvas mudar, os dados são atualizados a partir dele.
 
 ## Alternativas consideradas
 
-- **Exportar PNGs do canvas:** prático, mas perde o detalhe por escala e obriga a reexportar a cada ajuste de cor.
+- **PNGs como fonte:** prático, mas perde o detalhe por escala e obriga a reexportar a cada ajuste de cor. Se o teste de desempenho mostrar que imagens prontas carregam mais rápido, o exportador já gera os PNGs a partir dos dados, e a fonte continua sendo o JSON.
 - **Deixar a pixel art no código:** o que existe hoje; difícil de achar, revisar e trocar.
 
 ## Consequências

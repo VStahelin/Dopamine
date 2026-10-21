@@ -19,7 +19,7 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | 1.5 | Menu principal (esqueleto) | Todas as áreas do jogo já têm um lugar no menu? | 1 | concluída |
 | 2 | Profundidade da run | A run aguenta 20 minutos sem ficar repetitiva? | 1 | em andamento |
 | 2.5 | Jogo offline e atualizações controladas | O jogo roda sem internet e só muda de versão quando o jogador aceita? | 2 | concluída |
-| 2.6 | Sprites e ícones da identidade visual | Todo sprite está numa pasta e cada arma, modificador e especial aparece com o ícone do canvas? | 2 | não iniciada (próxima) |
+| 2.6 | Sprites e ícones da identidade visual | Todo sprite está numa pasta e cada arma, modificador e especial aparece com o ícone do canvas? | 2 | implementada, falta validar no celular |
 | 3 | Meta-progressão e save | Dá vontade de jogar mais uma run? | 2, 2.5, 2.6 | não iniciada |
 | 4 | Campo longo (idle) | O idle ajuda a run sem substituí-la? | 3 | não iniciada |
 | 5 | Organismo | Cuidar do corpo muda o jeito de jogar? | 3, 4 | não iniciada |
@@ -129,18 +129,20 @@ Juntar toda a pixel art numa pasta de dados e aplicar os ícones que o Vitor des
 
 **Pasta de sprites**
 
-- [ ] `src/assets/sprites/` com a paleta, os ícones e as moléculas como dados; um gerador único de texturas no lugar de `molecules.ts`, `textures.ts` e dos padrões de `icons.ts`.
-- [ ] Importar os 52 ícones de 16×16 do canvas: 7 armas do pool, 3 ações de agente, 4 evoluções, 4 reagentes, 3 especiais e 31 modificadores.
-- [ ] Índice ligando cada id da configuração (arma, modificador, especial, molécula) ao sprite, com ícone padrão quando faltar e um teste que confere que todos têm ícone.
+- [x] `src/assets/sprites/` com a paleta, os ícones e as moléculas como dados; um gerador único de texturas (`textures.ts`, que pinta com `spriteArt.ts`) no lugar de `molecules.ts` e dos padrões de `icons.ts`.
+- [x] Importar os 52 ícones de 16×16 do canvas: 7 armas do pool, 3 ações de agente, 4 evoluções, 4 reagentes, 3 especiais e 31 modificadores.
+- [x] Índice ligando cada id da configuração (arma, modificador, especial, molécula) ao sprite, com ícone padrão quando faltar e um teste que confere que todos têm ícone.
 
 **Onde os ícones aparecem**
 
-- [ ] Molduras dos ícones da prancheta "Crônico: ícones, dano e paisagem": arma, arma pronta para evoluir (MAX), arma evoluída (EVO), reagente/passivo, efeito temporário, efeito negativo, espaço livre e espaço bloqueado.
-- [ ] Cartões do level up com o ícone da arma ou do modificador, na moldura do tipo.
-- [ ] HUD da run como em [ui-cronico.md](ui-cronico.md): banda fixa (126 px em pé, 74 px deitado), duas linhas de ícones (armas em cima, passivos embaixo), tempo e onda no centro, ATP e decompostas à direita, barra do chefe abaixo da banda, interações em barra embaixo do agente e botão do especial de 76 px com o ícone do especial e a recarga.
-- [ ] Números na tela com as cores do guia: dano, crítico (catálise), afinidade forte e fraca, interações perdidas, recuperação e imune.
-- [ ] Pausa com status: cabeçalho, faixa de interações, abas Arsenal, Atributos e Run, e os botões Continuar, Opções e Desistir.
-- [ ] Menu: abas Agentes e Arsenal com os ícones das armas, das ações e dos especiais; Compêndio com os ícones dos modificadores vistos.
+- [x] Molduras dos ícones da prancheta "Crônico: ícones, dano e paisagem": arma, arma pronta para evoluir (MAX), arma evoluída (EVO), reagente/passivo, efeito temporário, efeito negativo, espaço livre e espaço bloqueado.
+- [x] Cartões do level up com o ícone da arma ou do modificador, na moldura do tipo.
+- [x] HUD da run como em [ui-cronico.md](ui-cronico.md): banda fixa (126 px em pé, 74 px deitado), duas linhas de ícones (armas em cima, passivos embaixo), tempo e onda no centro, ATP e decompostas à direita, barra do chefe abaixo da banda, interações em barra embaixo do agente e botão do especial de 76 px com o ícone do especial e a recarga.
+- [x] Números na tela com as cores do guia: dano, crítico (catálise), afinidade forte e fraca, interações perdidas, recuperação e imune.
+- [x] Pausa com status: cabeçalho, faixa de interações, abas Arsenal, Atributos e Run, e os botões Continuar, Opções e Desistir.
+- [x] Menu: abas Agentes e Arsenal com os ícones das armas, das ações e dos especiais; os modificadores aparecem com ícone no fim do Arsenal (todos, já que ainda não guardamos quais o jogador viu). As listas longas do menu rolam.
+- [x] `npm run sprites:export`: gera PNG e SVG de todos os sprites em `sprites-export/` (fora do git), com o mesmo código de desenho do jogo, para ver os sprites fora do jogo e comparar textura gerada com imagem pronta.
+- [ ] Validar no celular, em pé e deitado.
 
 **Critério de saída:** nenhuma pixel art fica fora de `src/assets/sprites/`; toda arma, modificador, reagente, evolução e especial aparece com o seu ícone do canvas no level up, na HUD, na pausa e no menu, no celular em pé e deitado.
 
