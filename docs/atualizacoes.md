@@ -56,7 +56,7 @@ npm version minor          # ou patch / major: sobe o package.json, faz o commit
 git push --follow-tags     # envia o commit e a tag
 ```
 
-A tag dispara o workflow [deploy.yml](../.github/workflows/deploy.yml): check completo, build, publicação no GitHub Pages (`https://vstahelin.github.io/Dopamine/`) e deploy no Render pelo deploy hook, no mesmo commit da tag. Commits comuns na `main` só passam pelo CI. Os dois hosts trocam a build inteira de uma vez, então nunca servem uma versão pela metade; a partir daí, o gestor de atualização de cada aparelho segue as regras acima.
+A tag dispara o workflow [deploy.yml](../.github/workflows/deploy.yml): check completo, build e publicação no GitHub Pages (`https://vstahelin.github.io/Dopamine/`), onde o jogo roda ([decisão 0018](decisoes/0018-jogo-no-pages-servidor-futuro.md)). Commits comuns na `main` só passam pelo CI. O Pages troca a build inteira de uma vez, então nunca servem uma versão pela metade; a partir daí, o gestor de atualização de cada aparelho segue as regras acima.
 
 ## Publicar uma build localmente (o gestor de build)
 
@@ -77,9 +77,8 @@ Enquanto o jogo roda só localmente ([decisão 0011](decisoes/0011-rodar-localme
 | `npm run dev` | Programar no PC, com recarga automática | Sim (só em desenvolvimento, sem service worker) |
 | `npm run release` | Gerar e publicar uma build localmente, em `releases/` | — |
 | `npm run serve` | Servir a build publicada localmente, em HTTPS, para testar o ciclo de atualização no PC | Não: segue estas regras |
-| `npm start` | Servidor de produção (Render): serve `dist/` na porta `$PORT` | Não: segue estas regras |
 
-- **HTTPS no celular.** O service worker só funciona em contexto seguro e o Chrome não o registra com certificado autoassinado. Por isso o teste no celular é pelo GitHub Pages ou pelo Render, que têm HTTPS de verdade. O `npm run serve` (HTTPS com certificado local) serve para o PC: no navegador, `localhost` já é contexto seguro.
+- **HTTPS no celular.** O service worker só funciona em contexto seguro e o Chrome não o registra com certificado autoassinado. Por isso o teste no celular é pelo GitHub Pages, que tem HTTPS de verdade. O `npm run serve` (HTTPS com certificado local) serve para o PC: no navegador, `localhost` já é contexto seguro.
 - **Fontes locais.** Pixelify Sans e Silkscreen entram no pacote do jogo (pacotes `@fontsource`), sem depender do Google Fonts.
 - **Armazenamento persistente.** O jogo pede `navigator.storage.persist()` para o navegador não apagar o cache e o save quando o aparelho fica sem espaço.
 
@@ -94,4 +93,4 @@ Enquanto o jogo roda só localmente ([decisão 0011](decisoes/0011-rodar-localme
 
 - Intervalo da verificação automática nos menus: 15 minutos está bom?
 - O aviso pode ter um "não mostrar até a próxima versão", ou sempre volta ao abrir o hub?
-- O GitHub Pages não deixa configurar cabeçalhos de cache; ele usa cache curto (10 minutos). O jogo pede `version.json` sem cache e o service worker confere o `sw.js`, então no pior caso o aviso de versão nova chega com até 10 minutos de atraso no Pages. No Render os cabeçalhos são os deste documento.
+- O GitHub Pages não deixa configurar cabeçalhos de cache; ele usa cache curto (10 minutos). O jogo pede `version.json` sem cache e o service worker confere o `sw.js`, então no pior caso o aviso de versão nova chega com até 10 minutos de atraso no Pages.

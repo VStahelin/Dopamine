@@ -15,6 +15,7 @@ Documento de conceito do jogo, um arquivo por aba do [documento original](https:
 | [ui-cronico.md](ui-cronico.md) | UI da run (campo crônico): HUD de batalha, tipos de ícone, números de dano, especial, pausa com status e adaptação a qualquer tela |
 | [menu.md](menu.md) | Menu principal: análise da referência mobile, hub (status, caso, JOGAR, barra de abas), telas de cada área, placeholders e navegação |
 | [atualizacoes.md](atualizacoes.md) | Jogo offline e atualizações: build completa, service worker, aviso só nos menus, publicação atômica |
+| [servidor.md](servidor.md) | Ideia futura e não prioritária: contas opcionais, save na nuvem e ranking por organismo e geral |
 | [roadmap.md](roadmap.md) | Fases de desenvolvimento, do protótipo da run ao lançamento, com status, critérios de saída e decisões que travam cada fase |
 | [arquitetura.md](arquitetura.md) | Estado atual do código: stack, camadas, estrutura de pastas e princípios |
 | [decisoes/](decisoes/README.md) | Registro de decisões técnicas e de design, um arquivo por decisão |

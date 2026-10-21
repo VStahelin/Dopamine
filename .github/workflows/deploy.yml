@@ -1,9 +1,8 @@
-# Deploy de uma versão (decisão 0017): só roda quando uma tag vX.Y.Z é enviada
+# Deploy de uma versão (decisões 0017 e 0018): só roda quando uma tag vX.Y.Z é enviada
 # (npm version patch|minor|major && git push --follow-tags). Commits comuns só passam pelo CI.
 #
 # 1. Roda o check completo e gera a build.
-# 2. Publica no GitHub Pages (https://vstahelin.github.io/Dopamine/).
-# 3. Aciona o deploy no Render pelo deploy hook (segredo RENDER_DEPLOY_HOOK_URL), na mesma versão.
+# 2. Publica no GitHub Pages (https://vstahelin.github.io/Dopamine/), onde o jogo roda.
 name: Deploy de versão
 
 on:
@@ -48,17 +47,3 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
-
-  render:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Aciona o deploy no Render
-        env:
-          HOOK: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
-        run: |
-          if [ -z "$HOOK" ]; then
-            echo "Segredo RENDER_DEPLOY_HOOK_URL não configurado: deploy no Render pulado."
-            exit 0
-          fi
-          curl -fsS -X POST "${HOOK}&ref=${GITHUB_SHA}"

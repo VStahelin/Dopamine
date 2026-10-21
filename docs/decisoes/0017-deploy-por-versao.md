@@ -1,6 +1,6 @@
 # 0017. Deploy no GitHub Pages e no Render só ao gerar uma versão
 
-- **Status:** aceita
+- **Status:** substituída por [0018](0018-jogo-no-pages-servidor-futuro.md) (só a parte do Render)
 - **Data:** 2026-10-21
 - **Área:** técnica
 

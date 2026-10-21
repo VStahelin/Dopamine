@@ -115,10 +115,10 @@ O jogo inteiro passa a ficar no aparelho e só troca de versão por build comple
 - [x] Aviso "Nova versão pronta" no hub, com ATUALIZAR (grava o save e recarrega) e DEPOIS; descoberto na run, espera a volta ao hub.
 - [x] Opções: versão, `buildId` e o botão VERIFICAR ATUALIZAÇÃO com os estados.
 - [x] `npm run release`: check completo, build e publicação atômica em `releases/<buildId>` com `current` apontando para a última; mantém as 3 anteriores.
-- [x] `npm run serve`: serve a build publicada em HTTPS local, para testar o ciclo de atualização no PC (no celular, pelo Pages ou Render).
+- [x] `npm run serve`: serve a build publicada em HTTPS local, para testar o ciclo de atualização no PC (no celular, pelo GitHub Pages).
 - [x] Pedir armazenamento persistente (`navigator.storage.persist()`).
 - [x] Testes: o gestor de atualização (estados e quando avisar) no `core` ou em lógica pura testável; teste no navegador offline.
-- [x] Gerar versão por tag (`npm version`) e deploy no GitHub Pages e no Render só nas tags ([decisão 0017](decisoes/0017-deploy-por-versao.md)).
+- [x] Gerar versão por tag (`npm version`) e deploy no GitHub Pages só nas tags ([decisões 0017](decisoes/0017-deploy-por-versao.md) e [0018](decisoes/0018-jogo-no-pages-servidor-futuro.md)).
 
 **Critério de saída:** com a internet desligada, o jogo abre e roda; publicar uma build nova durante uma run não muda nada até a volta ao hub, onde aparece o aviso; aceitar leva à versão nova com o save intacto; uma publicação interrompida no meio nunca chega ao aparelho.
 
@@ -170,9 +170,13 @@ Deixar o jogo com a cara do canvas de identidade visual e pronto para outras pes
 - [ ] PWA: ícones e polimento da instalação na tela inicial (o offline vem da fase 2.5).
 - [ ] Layout em telas largas e altas (painéis laterais, mais pista).
 - [ ] Rodada de testes com 2 ou 3 amigos e ajuste dos números.
-- [x] Decidir como o jogo chega aos jogadores: GitHub Pages e Render, publicados por versão ([0017](decisoes/0017-deploy-por-versao.md)).
+- [x] Decidir como o jogo chega aos jogadores: GitHub Pages, publicado por versão ([0018](decisoes/0018-jogo-no-pages-servidor-futuro.md)).
 
 **Critério de saída:** um amigo instala pelo link, joga sem explicação e volta no dia seguinte.
+
+## Depois: servidor (não prioritário)
+
+Ideia anotada, sem fase definida: contas opcionais, save na nuvem e ranking por organismo e geral, numa API separada do jogo ([servidor.md](servidor.md)). Entra no máximo depois da fase 5, quando existirem indivíduos para ranquear.
 
 ## Primeiros passos
 

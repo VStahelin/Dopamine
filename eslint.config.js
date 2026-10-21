@@ -13,7 +13,7 @@ export default tseslint.config(
   },
   {
     // Scripts de publicação e do servidor local rodam no Node.
-    files: ['tools/**/*.mjs', 'server/**/*.mjs', 'vite.config.ts'],
+    files: ['tools/**/*.mjs', 'vite.config.ts'],
     languageOptions: { globals: { ...globals.node } },
   },
   {

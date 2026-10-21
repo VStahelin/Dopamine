@@ -22,4 +22,5 @@ As decisões de design tomadas antes deste registro continuam marcadas como "dec
 | [0014](0014-fase-menu-principal.md) | Fase 1.5: esqueleto do menu principal antes da profundidade da run | processo | proposta |
 | [0015](0015-acao-do-agente-e-armas.md) | Ação própria do agente + armas do pool, com tipos de ataque em JSON | design | aceita |
 | [0016](0016-offline-e-atualizacoes.md) | Jogo offline, com atualização só por build completa e aviso só nos menus | técnica | proposta |
-| [0017](0017-deploy-por-versao.md) | Deploy no GitHub Pages e no Render só ao gerar uma versão | técnica | aceita |
+| [0017](0017-deploy-por-versao.md) | Deploy no GitHub Pages e no Render só ao gerar uma versão | técnica | substituída por 0018 (Render) |
+| [0018](0018-jogo-no-pages-servidor-futuro.md) | O jogo roda só no GitHub Pages; o servidor fica para contas e ranking | técnica | aceita |
