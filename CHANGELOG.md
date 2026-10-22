@@ -4,6 +4,8 @@ O que mudou em cada versão do Dopamina Blaster. O jogo mostra este arquivo em O
 
 ## Em desenvolvimento
 
+## v0.7.0 · 22/10/2026
+
 ### Novidades
 - Level up com receptores: cada nível oferece uma arma ou um receptor (a proteína onde o remédio se liga), e cada receptor sobe um atributo só. São 16, até o nível 5, com 4 espaços.
 - O nível de arma agora tem raridade, que multiplica o que ele soma.

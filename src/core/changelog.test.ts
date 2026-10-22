@@ -17,6 +17,7 @@ describe('parseChangelog', () => {
       '## v0.1.0',
       '### Ajustes',
       '- Algo.',
+      '## Vazia',
     ].join('\n');
     expect(parseChangelog(text)).toEqual([
       {

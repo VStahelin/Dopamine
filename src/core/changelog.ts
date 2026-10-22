@@ -29,5 +29,6 @@ export function parseChangelog(text: string): ChangelogVersion[] {
       version.intro.push(line);
     }
   }
-  return versions;
+  // "Em desenvolvimento" fica vazia logo depois de uma versão sair: não aparece.
+  return versions.filter((v) => v.intro.length > 0 || v.sections.some((s) => s.items.length > 0));
 }
