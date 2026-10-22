@@ -24,7 +24,8 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | 3 | Meta-progressão e save | Dá vontade de jogar mais uma run? | 2, 2.5, 2.6, 2.7 | implementada, falta validar no celular |
 | 4 | Campo longo (idle) | O idle ajuda a run sem substituí-la? | 3 | implementada, falta validar no celular |
 | 5 | Organismo | Cuidar do corpo muda o jeito de jogar? | 3, 4 | implementada, falta validar no celular |
-| 6 | Arte, polimento e lançamento | Dá para mandar o link para os amigos? | 1 a 5 | não iniciada |
+| 5.5 | Itens no mapa | Os itens do chão deixam a run mais variada sem quebrar a economia? | 2, 3 | não iniciada |
+| 6 | Arte, polimento e lançamento | Dá para mandar o link para os amigos? | 1 a 5.5 | não iniciada |
 
 A arte não espera a fase 6: os sprites de molécula são montados por código a partir dos átomos (aba Design), então entram já na fase 1. A fase 6 cuida do resto: HUD final, som, telas e acabamento.
 
@@ -184,7 +185,7 @@ A fase 2.6 trouxe os ícones, a HUD e a pausa das pranchetas "Crônico". Esta fa
 - [ ] Level up como nas pranchetas "Level up" e "Level up no PC" ([ui-cronico.md](ui-cronico.md#level-up)): prévia do atributo em cada cartão, Rerrolar, Pular e Banir sempre visíveis (apagados sem usos), modo banir, teclas S e B, e no PC os atributos e o arsenal nas laterais.
 - [ ] Validar no celular, em pé e deitado, junto com a fase 2.6.
 
-Fica para quando a mecânica existir: efeitos temporários de inimigos e itens (Lentidão, Adrenalina da prancheta) e a evolução de arma pelo baú do chefe (a prancheta diz que a arma em MAX evolui no próximo baú; hoje a evolução é uma opção do level up).
+Fica para quando a mecânica existir: efeitos temporários de inimigos e itens (Lentidão, Adrenalina da prancheta) e a evolução de arma pelo baú do chefe (a prancheta diz que a arma em MAX evolui no próximo baú; hoje a evolução é uma opção do level up). Os efeitos dos itens e a evolução pela cápsula do chefe entram na [fase 5.5](#fase-55-itens-no-mapa).
 
 **Critério de saída:** um print da run no celular, em pé e deitado, fica igual às pranchetas do modo crônico do canvas: chão, moléculas, efeitos, HUD, joystick e pausa.
 
@@ -235,6 +236,22 @@ Decisão: [0023](decisoes/0023-organismo.md). Números em `src/config/organism.j
 - [ ] Validar no celular e medir se o segundo indivíduo chega no ponto do primeiro de 2 a 5 vezes mais rápido.
 
 **Critério de saída:** dois indivíduos com "doenças" diferentes fazem você escolher agentes diferentes, e o segundo indivíduo chega no ponto do primeiro de 2 a 5 vezes mais rápido.
+
+## Fase 5.5: Itens no mapa
+
+Os itens que caem no chão da run, com o mesmo conjunto do Vampire Survivors adaptado à química: vesículas que soltam itens, gemas de XP em três cores e a cápsula do chefe. Regras em [itens.md](itens.md) ([decisão 0024](decisoes/0024-itens-no-mapa.md)); números em `src/config/drops.json`.
+
+- [ ] Vesículas: nascem em volta do agente, rompem com um golpe e sorteiam um item por peso, com nível mínimo e Sorte.
+- [ ] Itens de ATP: Glicose e Glicogênio, além da moeda que já existe.
+- [ ] Soro (recupera interações) e Vitamina (+10% de Sorte, acumula).
+- [ ] Itens de tela: Lisossomo, Gelo seco, Osmose, Bico de Bunsen e Glucagon (Febre de ATP), com os efeitos com tempo na fila de efeitos da HUD.
+- [ ] Gemas de XP em ciano, verde e vermelha pelo valor, juntando o excesso numa gema só.
+- [ ] Cápsula do chefe: bronze e prata, 1, 3 ou 5 upgrades com raridade (a Sorte mexe na quantidade e na raridade, regra da [decisão 0013](decisoes/0013-raridade-e-sorte.md)), ATP, sorte de principiante e a evolução de arma pela cápsula de prata.
+- [ ] Fosfocreatina quando a cápsula ou o level up não têm mais o que subir.
+- [ ] Ícones de 16×16 de cada item e da vesícula em `src/assets/sprites/`, e a seção "Itens" no Compêndio.
+- [ ] Rodar o `npm run sim` com os drops e ajustar os valores de ATP.
+
+**Critério de saída:** numa run de 15 minutos aparecem itens de quase todos os tipos, pelo menos um muda o rumo da run (um Lisossomo num pico, um Gelo seco no chefe), e o simulador não mostra a economia acelerando mais que 20%.
 
 ## Fase 6: Arte, polimento e lançamento
 
