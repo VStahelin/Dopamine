@@ -18,6 +18,7 @@ Documento de conceito do jogo, um arquivo por aba do [documento original](https:
 | [ui-cronico.md](ui-cronico.md) | UI da run (campo crônico): HUD de batalha, tipos de ícone, números de dano, especial, pausa com status e adaptação a qualquer tela |
 | [menu.md](menu.md) | Menu principal: análise da referência mobile, hub (status, caso, JOGAR, barra de abas), telas de cada área, placeholders e navegação |
 | [atualizacoes.md](atualizacoes.md) | Jogo offline e atualizações: build completa, service worker, aviso só nos menus, publicação atômica |
+| [publicacao.md](publicacao.md) | Fase 7: empacotar o jogo web para Android, iOS, Steam e Microsoft Store (Capacitor, Electron, PWABuilder), com cuidados e ordem sugerida |
 | [servidor.md](servidor.md) | Ideia futura e não prioritária: contas opcionais, save na nuvem e ranking por organismo e geral |
 | [wiki.md](wiki.md) | Textos da wiki dentro do jogo (Compêndio), escritos para o jogador: como jogar, agentes, armas, modificadores, moléculas, progressão, campo longo, organismo e glossário |
 | [megabonk.md](megabonk.md) | Run estilo Megabonk: level up só com armas e receptores (tomos), suplementos de ampola, XP com chance, agregados (mini chefes) e sinapses no mapa |

@@ -32,6 +32,7 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | 5.10 | Agregados (mini chefes) | Entre um chefe e outro sempre tem um alvo que vale o risco? | 5.9 | não iniciada |
 | 5.11 | Sinapses e estruturas | O jogador sai do lugar para buscar bônus no mapa? | 5.6, 5.9, 5.10 | não iniciada |
 | 6 | Arte, polimento e lançamento | Dá para mandar o link para os amigos? | 1 a 5.11 | não iniciada |
+| 7 | Lojas e plataformas | O mesmo jogo roda e é publicado em Android, iOS, Steam e Microsoft Store? | 6 | não iniciada |
 
 ## Bugs relatados
 
@@ -397,6 +398,19 @@ Deixar o jogo com a cara do canvas de identidade visual e pronto para outras pes
 ## Depois: conquistas
 
 Ideia aprovada para elaborar no futuro, sem fase definida: a aba Conquistas ganha metas ("Decompor 1.000 triglicerídeos", "Nível 50 com a Lipase") que dão ATP ou liberam conteúdo, como os desbloqueios do Vampire Survivors ([lacunas-vs.md](lacunas-vs.md#conquistas)). Falta decidir se substituem parte do desbloqueio por ATP ou só somam.
+
+## Fase 7: Lojas e plataformas
+
+Lançar o jogo em todas as plataformas ([0031](decisoes/0031-lancar-em-todas-as-plataformas.md)), empacotando a mesma build web. Passo a passo, cuidados e ordem em [publicacao.md](publicacao.md).
+
+- [ ] Flag de build (`TARGET`) para `base`, service worker e local do save; camada de save com implementações trocáveis.
+- [ ] Microsoft Store pelo PWABuilder.
+- [ ] Android com Capacitor (Google Play).
+- [ ] Steam com Electron: save em arquivo, controles de PC, tela cheia e Steamworks.
+- [ ] iOS com Capacitor (App Store).
+- [ ] Política de privacidade, classificação etária, ícones e capturas de cada loja; conferir as regras de conteúdo sobre remédios e substâncias reais.
+
+**Critério de saída:** o jogo está publicado e instalável em cada plataforma escolhida, com o mesmo código e o mesmo fluxo de versão.
 
 ## Depois: servidor (não prioritário)
 

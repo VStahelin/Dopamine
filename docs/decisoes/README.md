@@ -36,3 +36,4 @@ As decisões de design tomadas antes deste registro continuam marcadas como "dec
 | [0028](0028-suplementos-e-ampolas.md) | Suplementos de ampola, gema de XP com chance e agregados (mini chefes) | design | proposta |
 | [0029](0029-sinapses-e-estruturas.md) | Sinapses e estruturas no mapa (santuários do Megabonk) | design | proposta |
 | [0030](0030-variedade-da-run-reformulada.md) | Fase 5.6 reformulada: crises pela doença, receptor nativo e Superdosagem de atributos | design | proposta |
+| [0031](0031-lancar-em-todas-as-plataformas.md) | Lançar em todas as plataformas, empacotando a mesma build web | processo | proposta |
