@@ -38,6 +38,7 @@ Bugs que o Vitor achou jogando. Marque ao corrigir, com o commit da correção.
 - [x] PC: campo longo deitado espreme o campo numa faixa fina entre a HUD e o pool. Corrigido: o campo estica entre as paredes com proporção limitada.
 - [x] Celular: campo longo longe da prancheta "Tela de batalha (mockup)": paredes largas demais, campo estreito, pool com espaços pequenos.
 - [x] Celular: o dedo que movia o agente escolhia uma carta do level up ao soltar. Corrigido: a carta só responde a um toque que começou nela.
+- [x] Pausa: o botão Opções não fazia nada. A tela abria escondida atrás da run e da HUD; agora vem para cima.
 
 A arte não espera a fase 6: os sprites de molécula são montados por código a partir dos átomos (aba Design), então entram já na fase 1. A fase 6 cuida do resto: HUD final, som, telas e acabamento.
 

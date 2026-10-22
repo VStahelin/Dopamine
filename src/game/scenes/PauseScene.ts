@@ -197,7 +197,9 @@ export class PauseScene extends Phaser.Scene {
         fontSize: 12,
         variant: 'secondary',
         onClick: () => {
+          // Opções vem antes da run na lista de cenas: sem trazer para cima, abria escondida.
           this.scene.launch(SCENES.options, { fromRun: true });
+          this.scene.bringToTop(SCENES.options);
           this.scene.sleep();
         },
       }),
