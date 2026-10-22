@@ -28,3 +28,4 @@ As decisões de design tomadas antes deste registro continuam marcadas como "dec
 | [0020](0020-sprites-em-png-por-tamanho.md) | Sprites em PNG, gerados por tamanho a partir dos dados | técnica | proposta |
 | [0021](0021-meta-progressao.md) | Meta-progressão: Laboratório em árvore, desbloqueios com ATP e baú das estrelas | design | proposta |
 | [0022](0022-campo-longo.md) | Campo longo: defesa por ondas com pool de agentes, sempre rodando | design | proposta |
+| [0023](0023-organismo.md) | Organismo: setores com efeito no jogo, saúde vinda dos agentes e ALTA com herança | design | proposta |

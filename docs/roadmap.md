@@ -23,7 +23,7 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | 2.7 | Campo crônico com a cara do canvas | A run, do chão aos efeitos, parece com as pranchetas do modo crônico? | 2.6 | implementada, falta validar no celular |
 | 3 | Meta-progressão e save | Dá vontade de jogar mais uma run? | 2, 2.5, 2.6, 2.7 | implementada, falta validar no celular |
 | 4 | Campo longo (idle) | O idle ajuda a run sem substituí-la? | 3 | implementada, falta validar no celular |
-| 5 | Organismo | Cuidar do corpo muda o jeito de jogar? | 3, 4 | não iniciada |
+| 5 | Organismo | Cuidar do corpo muda o jeito de jogar? | 3, 4 | implementada, falta validar no celular |
 | 6 | Arte, polimento e lançamento | Dá para mandar o link para os amigos? | 1 a 5 | não iniciada |
 
 A arte não espera a fase 6: os sprites de molécula são montados por código a partir dos átomos (aba Design), então entram já na fase 1. A fase 6 cuida do resto: HUD final, som, telas e acabamento.
@@ -222,12 +222,16 @@ Decisão: [0022](decisoes/0022-campo-longo.md). Layout da prancheta "Tela de bat
 
 A camada que amarra tudo: a saúde do corpo.
 
-- [ ] Os quatro setores de saúde (física, mental, social e executiva), de 0 a 100, com retorno decrescente.
-- [ ] Efeito de cada setor no jogo (vida inicial, recarga do especial, opções de level up, produção do idle).
-- [ ] Agentes da run e do idle mexendo nos setores, com efeito colateral.
-- [ ] Multiplicador de saúde na produção do idle.
-- [ ] Setores baixos decidindo quais moléculas aparecem mais.
-- [ ] Reset para o próximo indivíduo, com pontos herdados e dificuldade 1,25^k.
+Decisão: [0023](decisoes/0023-organismo.md). Números em `src/config/organism.json`.
+
+- [x] Os quatro setores de saúde (física, mental, social e executiva), de 0 a 100, com retorno decrescente.
+- [x] Efeito de cada setor no jogo: Física = interações; Mental = recarga do especial; Executiva = rerrolar e opções no level up; Social = ATP do campo longo.
+- [x] Agentes da run (no fim, pelos minutos) e do idle (por hora, também offline) mexendo nos setores, com efeito colateral.
+- [x] Multiplicador de saúde na produção do idle.
+- [x] Setores baixos decidindo quais moléculas aparecem mais, com três famílias novas: estresse (Adrenalina, Cortisol), radicais (Radical hidroxila, Peroxinitrito) e toxinas (Etanol, Acetaldeído).
+- [x] ALTA para o próximo indivíduo: abre com os quatro setores acima de 70; nova doença, dificuldade 1,25^(k − 1) e pontos herdados (+10% de ATP cada); zera Laboratório, campo longo e ATP, mantém desbloqueios.
+- [x] Hub com o indivíduo, a doença e os setores reais; aba Organismo com setores, efeitos, quem ajuda cada setor e a ALTA; fim de run com a saúde que mudou.
+- [ ] Validar no celular e medir se o segundo indivíduo chega no ponto do primeiro de 2 a 5 vezes mais rápido.
 
 **Critério de saída:** dois indivíduos com "doenças" diferentes fazem você escolher agentes diferentes, e o segundo indivíduo chega no ponto do primeiro de 2 a 5 vezes mais rápido.
 

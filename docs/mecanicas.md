@@ -104,9 +104,9 @@ Quais moléculas geram quais fragmentos fica na aba Personagens.
 
 ## O que falta decidir
 
-- Os efeitos de cada setor na tabela fazem sentido, ou cada setor deve mexer em outra coisa?
-- Saúde de 0 a 100 por setor, ou outra escala?
-- Existe efeito colateral nos agentes, ou eles só somam?
-- A run aplica saúde só no fim, ou durante?
-- Que vantagem passa para o próximo indivíduo no reset?
-- O que acontece se um setor chega a zero: penalidade, derrota do indivíduo, ou nada além do efeito negativo?
+- [x] Os efeitos de cada setor na tabela fazem sentido, ou cada setor deve mexer em outra coisa? → a tabela vale ([decisão 0023](decisoes/0023-organismo.md)).
+- [x] Saúde de 0 a 100 por setor, ou outra escala? → 0 a 100 ([decisão 0023](decisoes/0023-organismo.md)).
+- [x] Existe efeito colateral nos agentes, ou eles só somam? → existe ([decisão 0023](decisoes/0023-organismo.md)).
+- [x] A run aplica saúde só no fim, ou durante? → no fim, proporcional aos minutos ([decisão 0023](decisoes/0023-organismo.md)).
+- [x] Que vantagem passa para o próximo indivíduo no reset? → pontos herdados (+10% de ATP cada) e os desbloqueios ([decisão 0023](decisoes/0023-organismo.md)).
+- [x] O que acontece se um setor chega a zero: penalidade, derrota do indivíduo, ou nada além do efeito negativo? → só a penalidade máxima ([decisão 0023](decisoes/0023-organismo.md)).
