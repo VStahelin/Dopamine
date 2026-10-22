@@ -57,15 +57,20 @@ function effectText(sector: Sector, value: number): string {
     .join(' · ');
 }
 
-/** Agentes (run e idle) que sobem um setor, para o jogador saber o que usar. */
-function helpers(sector: Sector): string {
+const dec = (v: number): string => v.toLocaleString('pt-BR', { maximumFractionDigits: 1 });
+
+/** O que mexe num setor, com os números: na run (a cada 10 min), no campo longo (por hora). */
+function sources(sector: Sector): { run: string; idle: string; down: string } {
   const run = Object.values(AGENTS)
     .filter((a) => (a.health?.[sector] ?? 0) > 0)
-    .map((a) => a.name);
+    .map((a) => `${a.name} +${dec(a.health![sector]!)}`);
   const idle = Object.values(IDLE.agents)
     .filter((a) => (a.healthPerHour?.[sector] ?? 0) > 0)
-    .map((a) => a.name);
-  return [...run, ...idle].join(', ') || 'nenhum agente ainda';
+    .map((a) => `${a.name} +${dec(a.healthPerHour![sector]!)}/h`);
+  const down = Object.values(AGENTS)
+    .filter((a) => (a.collateral?.[sector] ?? 0) < 0)
+    .map((a) => `${a.name} −${dec(Math.abs(a.collateral![sector]!))}`);
+  return { run: run.join(', '), idle: idle.join(', '), down: down.join(', ') };
 }
 
 /**
@@ -83,8 +88,10 @@ export function renderOrganism(
 ): Obj[] {
   const width = Math.min(w - 24, 420);
   const left = Math.floor(x + (w - width) / 2);
+  // Caixas atrás, barras e marcas na frente (a altura de cada caixa só sai depois do texto).
+  const boxes = scene.add.graphics();
   const g = scene.add.graphics();
-  const out: Obj[] = [g];
+  const out: Obj[] = [boxes, g];
   let cy = y;
 
   out.push(
@@ -108,8 +115,6 @@ export function renderOrganism(
   for (const sector of SECTOR_ORDER) {
     const value = o.sectors[sector];
     const def = ORGANISM.sectors[sector];
-    const h = 76;
-    drawInkBox(g, left, cy, width, h, PALETTE.panel);
     const low = value < 30;
     out.push(
       scene.add.text(
@@ -153,11 +158,26 @@ export function renderOrganism(
         effect,
         bodyText(10, low ? PALETTE_CSS.numberHurt : PALETTE_CSS.numberHeal),
       ),
-      scene.add.text(bx, cy + 58, `Baixo traz ${families}. Sobe com: ${helpers(sector)}`, {
-        ...bodyText(9, PALETTE_CSS.textSoft),
-        wordWrap: { width: bw },
-      }),
     );
+    // O que sobe e o que derruba o setor, com os números; o resto da caixa cresce com o texto.
+    const src = sources(sector);
+    const minutes = ORGANISM.run.minutesForFullEffect;
+    const lines: [string, string][] = [
+      [`NA RUN (a cada ${minutes} min): ${src.run || 'nenhum agente ainda'}`, PALETTE_CSS.text],
+      [`NO CAMPO LONGO: ${src.idle || 'nenhum agente ainda'}`, PALETTE_CSS.text],
+      ...(src.down
+        ? ([[`DESCE COMO COLATERAL: ${src.down}`, PALETTE_CSS.alert]] as [string, string][])
+        : []),
+      [`Setor baixo traz ${families}.`, PALETTE_CSS.textSoft],
+    ];
+    let ty = cy + 60;
+    for (const [text, color] of lines) {
+      const t = scene.add.text(bx, ty, text, { ...bodyText(9, color), wordWrap: { width: bw } });
+      out.push(t);
+      ty += t.height + 3;
+    }
+    const h = ty - cy + 6;
+    drawInkBox(boxes, left, cy, width, h, PALETTE.panel);
     cy += h + 6;
   }
 

@@ -242,6 +242,8 @@ O setor baixo traz mais moléculas da família dele: Física baixa traz açúcar
 - **Campo longo:** os agentes da base empurram os setores deles um pouco por hora, também com o jogo fechado.
 - **Retorno decrescente:** perto de 100 o setor quase não sobe; perto de 0 cai menos.
 
+A aba Organismo mostra, em cada setor, quem sobe ele na run (pontos a cada 10 minutos), quem sobe no campo longo (pontos por hora) e quem derruba como colateral, com os números atuais.
+
 ### Saúde e produção
 A saúde geral multiplica o ATP do campo longo: com média 50, 1×; com média 90, 1,4×.
 
