@@ -158,7 +158,15 @@ export class LevelUpScene extends Phaser.Scene {
       const zone = this.add
         .zone(left + cardW / 2, y + cardH / 2, cardW, cardH)
         .setInteractive({ useHandCursor: true });
-      zone.on('pointerup', () => this.pick(choice));
+      // Só escolhe se o toque começou na carta: o dedo que movia o agente já estava na tela
+      // quando o level up abriu, e soltá-lo em cima de uma carta escolhia sem querer.
+      let armed = false;
+      zone.on('pointerdown', () => (armed = true));
+      zone.on('pointerout', () => (armed = false));
+      zone.on('pointerup', () => {
+        if (armed) this.pick(choice);
+        armed = false;
+      });
       children.push(zone);
     });
 
