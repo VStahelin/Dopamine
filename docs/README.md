@@ -12,6 +12,7 @@ Documento de conceito do jogo, um arquivo por aba do [documento original](https:
 | [plataforma.md](plataforma.md) | Engine (Phaser 4 + TypeScript, PWA), comparação de engines, arquitetura, controles, salvamento e desempenho |
 | [design.md](design.md) | Identidade visual: direção de arte, paleta, tipografia, sprites de moléculas e componentes da tela de batalha |
 | [armas.md](armas.md) | Arquétipos de arma do Vampire Survivors, as 7 armas iniciais, evoluções e como a arma chega ao jogador |
+| [itens.md](itens.md) | Itens no mapa (drops): vesículas, os itens do conjunto do Vampire Survivors com nomes químicos, gemas de XP, cápsula do chefe e como aparecem na run |
 | [ui-cronico.md](ui-cronico.md) | UI da run (campo crônico): HUD de batalha, tipos de ícone, números de dano, especial, pausa com status e adaptação a qualquer tela |
 | [menu.md](menu.md) | Menu principal: análise da referência mobile, hub (status, caso, JOGAR, barra de abas), telas de cada área, placeholders e navegação |
 | [atualizacoes.md](atualizacoes.md) | Jogo offline e atualizações: build completa, service worker, aviso só nos menus, publicação atômica |
