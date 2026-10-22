@@ -71,7 +71,7 @@ export const TAB_SECTIONS: Record<Exclude<TabId, 'case'>, SectionDef> = {
   arsenal: {
     title: 'ARSENAL',
     icon: 'arsenal',
-    text: 'As armas, seus níveis, as evoluções e o reagente que cada evolução pede.',
+    text: 'As armas, os receptores, as evoluções e o reagente que cada evolução pede.',
     phase: 'FASES 2 E 3',
     examples: [
       {
@@ -134,7 +134,7 @@ export const SCREENS = {
   compendium: {
     title: 'COMPÊNDIO',
     icon: 'book',
-    text: 'Tudo o que você já encontrou: moléculas inimigas, modificadores e raridades.',
+    text: 'Tudo o que você já encontrou: moléculas inimigas, itens do mapa e raridades.',
     phase: 'FASE 2',
     examples: [
       {

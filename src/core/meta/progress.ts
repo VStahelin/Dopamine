@@ -5,6 +5,7 @@ import {
   type EconomyConfig,
   type LabNode,
   type MetaConfig,
+  type PassiveId,
   type WeaponId,
 } from '../../config';
 import { withStatBonuses, type RunRules } from '../run/rules';
@@ -17,9 +18,10 @@ import { withStatBonuses, type RunRules } from '../run/rules';
 export interface MetaProgress {
   /** Nível comprado de cada nó do Laboratório. */
   lab: Record<string, number>;
-  /** Agentes e armas do pool liberados. */
+  /** Agentes, armas do pool e receptores liberados. */
   agents: string[];
   weapons: string[];
+  receptors: string[];
   /** Estrelas do caso já conquistadas (0 a 3). */
   stars: number;
   /** ATP das estrelas novas esperando no baú. */
@@ -31,6 +33,7 @@ export function defaultProgress(meta: MetaConfig = META): MetaProgress {
     lab: {},
     agents: [...meta.start.agents],
     weapons: [...meta.start.weapons],
+    receptors: [...meta.start.receptors],
     stars: 0,
     chest: 0,
   };
@@ -93,7 +96,7 @@ export function labBonuses(
 
 // --- Desbloqueios ---
 
-export type UnlockKind = 'agents' | 'weapons';
+export type UnlockKind = 'agents' | 'weapons' | 'receptors';
 
 export function isUnlocked(progress: MetaProgress, kind: UnlockKind, id: string): boolean {
   return progress[kind].includes(id);
@@ -151,7 +154,8 @@ export function openChest(
 // --- Regras da run com a meta-progressão ---
 
 /**
- * Regras da run com o Laboratório somado à base dos atributos e só as armas liberadas no pool.
+ * Regras da run com o Laboratório somado à base dos atributos e só as armas e os receptores
+ * liberados no pool.
  */
 export function rulesWithProgress(
   rules: RunRules,
@@ -161,6 +165,7 @@ export function rulesWithProgress(
   return {
     ...withStatBonuses(rules, labBonuses(progress, meta)),
     unlockedWeapons: progress.weapons as WeaponId[],
+    unlockedReceptors: progress.receptors as PassiveId[],
   };
 }
 
@@ -185,7 +190,7 @@ export function labAffordable(
   );
 }
 
-/** Algum agente ou arma bloqueado cabe no ATP? */
+/** Algum agente, arma ou receptor bloqueado cabe no ATP? */
 export function unlockAffordable(
   progress: MetaProgress,
   atp: number,

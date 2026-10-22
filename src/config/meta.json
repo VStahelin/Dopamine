@@ -1,7 +1,19 @@
 {
   "start": {
     "agents": ["dopamine"],
-    "weapons": ["radical", "acidJet", "electronCloud", "catalyst"]
+    "weapons": ["radical", "acidJet", "electronCloud", "catalyst"],
+    "receptors": [
+      "reactivity",
+      "metabolism",
+      "diffusion",
+      "kinetics",
+      "catalysisChance",
+      "interactions",
+      "homeostasis",
+      "membrane",
+      "mobility",
+      "magnet"
+    ]
   },
   "unlockCost": {
     "agents": {
@@ -12,6 +24,14 @@
       "solventPool": 200,
       "chainReaction": 500,
       "uvRay": 800
+    },
+    "receptors": {
+      "stress": 300,
+      "halfLife": 400,
+      "learning": 400,
+      "dose": 600,
+      "luck": 800,
+      "mutation": 1000
     }
   },
   "starRewards": [40, 80, 160],

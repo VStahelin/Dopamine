@@ -141,7 +141,7 @@ function weaponRow(run: RunState, index: number): Build {
 }
 
 /** Espaço vazio ou bloqueado, dizendo como liberar. */
-function slotRow(content: SlotContent, kind: 'arma' | 'modificador', scale: number): Build {
+function slotRow(content: SlotContent, kind: 'arma' | 'receptor', scale: number): Build {
   return (scene, width) => {
     const locked = content.frame === 'locked';
     const height = scale === 2 ? 52 : 34;
@@ -152,7 +152,7 @@ function slotRow(content: SlotContent, kind: 'arma' | 'modificador', scale: numb
       ? `Libera no Laboratório (Espaços de ${kind})`
       : kind === 'arma'
         ? 'Uma arma nova pode entrar no próximo level up'
-        : 'Um modificador novo pode entrar no próximo level up';
+        : 'Um receptor novo pode entrar no próximo level up';
     return row(scene, width, height, [
       box(scene, width, height),
       ...slot.objects,
@@ -226,9 +226,9 @@ export function arsenalRows(run: RunState): Build[] {
     header('ARMAS', PALETTE_CSS.sectionOrange, `${run.weapons.length}/${weaponOpen}`),
     ...run.weapons.map((_, i) => weaponRow(run, i)),
     ...weaponFill.map((c) => slotRow(c, 'arma', 2)),
-    header('REAGENTES', PALETTE_CSS.cyan, `${held.length}/${passiveOpen}`),
+    header('RECEPTORES', PALETTE_CSS.cyan, `${held.length}/${passiveOpen}`),
     ...held.map((id) => passiveRow(run, id)),
-    ...passiveFill.map((c) => slotRow(c, 'modificador', 1)),
+    ...passiveFill.map((c) => slotRow(c, 'receptor', 1)),
     ...(effects.length > 0
       ? [header('EFEITOS ATIVOS', PALETTE_CSS.textSoft, String(effects.length)), ...effects]
       : []),

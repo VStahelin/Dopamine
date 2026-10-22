@@ -69,7 +69,7 @@ export function updateWeapons(state: RunState, dt: number, grid: SpatialGrid): v
 /** Valores atuais de uma arma do agente, com atributos e o especial. */
 export function paramsOf(state: RunState, w: WeaponInstance, index: number): WeaponParams {
   const mods = index === 0 ? actionMods(state) : NO_MODS;
-  return weaponParams(state.rules.weapons[w.id], w.level, state.stats, mods);
+  return weaponParams(state.rules.weapons[w.id], w.level, state.stats, mods, w.boosts);
 }
 
 function eachInRadius(

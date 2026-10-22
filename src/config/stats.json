@@ -231,8 +231,8 @@
       "metaCap": 1
     },
     "modifierSlots": {
-      "name": "Espaços de modificador",
-      "description": "Quantos modificadores o agente carrega.",
+      "name": "Espaços de receptor",
+      "description": "Quantos receptores o agente carrega.",
       "base": 4,
       "runCap": 6,
       "metaCap": 1

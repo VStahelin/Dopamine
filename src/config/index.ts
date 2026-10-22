@@ -35,6 +35,7 @@ import {
   SECTORS,
   type MoleculeType,
   type PassiveDef,
+  type PassiveKind,
   type RarityConfig,
   type RunConfig,
   type SpecialKind,
@@ -115,12 +116,18 @@ function loadEnemies(): Record<EnemyKind, EnemyDef> {
   return out;
 }
 
+const PASSIVE_KINDS: readonly PassiveKind[] = ['receptor', 'reagent', 'off'];
+
 function loadPassives(): Record<PassiveId, PassiveDef> {
   const out = {} as Record<PassiveId, PassiveDef>;
   for (const [id, def] of Object.entries(passivesJson as Record<string, PassiveDef>)) {
     out[id as PassiveId] = {
       ...def,
+      kind: oneOf(def.kind, PASSIVE_KINDS, `passives.json ${id}.kind`),
       stat: oneOf(def.stat, RUN_STAT_KEYS, `passives.json ${id}.stat`),
+      alsoStat: def.alsoStat
+        ? oneOf(def.alsoStat, RUN_STAT_KEYS, `passives.json ${id}.alsoStat`)
+        : undefined,
     };
   }
   return out;
@@ -219,6 +226,15 @@ function loadMeta(): MetaConfig {
   for (const id of Object.keys(AGENTS)) {
     if (!meta.start.agents.includes(id) && !(id in meta.unlockCost.agents)) {
       throw new Error(`Configuração inválida em meta.json: agente "${id}" sem início nem custo`);
+    }
+  }
+  for (const id of meta.start.receptors) exists(id, passivesJson, 'meta.json start.receptors');
+  for (const id of Object.keys(meta.unlockCost.receptors))
+    exists(id, passivesJson, 'meta.json unlockCost.receptors');
+  for (const [id, p] of Object.entries(PASSIVES)) {
+    if (p.kind !== 'receptor') continue;
+    if (!meta.start.receptors.includes(id) && !(id in meta.unlockCost.receptors)) {
+      throw new Error(`Configuração inválida em meta.json: receptor "${id}" sem início nem custo`);
     }
   }
   for (const [id, w] of Object.entries(WEAPONS)) {

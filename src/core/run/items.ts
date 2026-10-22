@@ -190,7 +190,7 @@ function collect(state: RunState, p: Pickup): void {
       fx.flame = def.seconds ?? 0;
       break;
     case 'vitamin':
-      state.itemLuck += def.luckBonus ?? 0;
+      state.bonus.luck = (state.bonus.luck ?? 0) + (def.luckBonus ?? 0);
       refreshStats(state);
       break;
     case 'glucagon':
@@ -234,11 +234,13 @@ function capsuleCandidates(state: RunState): UpgradeChoice[] {
   const out: UpgradeChoice[] = [];
   for (const w of state.weapons) {
     if (w.level < weaponMaxLevel(state.rules.weapons[w.id])) {
-      out.push({ kind: 'weapon', id: w.id, level: w.level + 1 });
+      out.push({ kind: 'weapon', id: w.id, level: w.level + 1, rarity: rollRarity(state) });
     }
   }
   for (const [id, p] of Object.entries(state.passives) as [PassiveId, { level: number }][]) {
-    if (p.level > 0 && p.level < state.rules.passives[id].maxLevel) {
+    const def = state.rules.passives[id];
+    if (def.kind === 'off') continue;
+    if (p.level > 0 && p.level < def.maxLevel) {
       const rarity = rollRarity(state);
       out.push({
         kind: 'passive',

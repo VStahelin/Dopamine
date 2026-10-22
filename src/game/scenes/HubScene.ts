@@ -789,7 +789,9 @@ export class HubScene extends Phaser.Scene {
   private tabHasBadge(tab: TabId): boolean {
     const { meta, atp } = getSave(this);
     if (tab === 'agents') return unlockAffordable(meta, atp, 'agents');
-    if (tab === 'arsenal') return unlockAffordable(meta, atp, 'weapons');
+    if (tab === 'arsenal') {
+      return unlockAffordable(meta, atp, 'weapons') || unlockAffordable(meta, atp, 'receptors');
+    }
     if (tab === 'lab') return labAffordable(meta, atp);
     return false;
   }

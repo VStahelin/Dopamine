@@ -27,7 +27,7 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | 5.5 | Itens no mapa | Os itens do chão deixam a run mais variada sem quebrar a economia? | 2, 3 | implementada, falta validar no celular |
 | 5.6 | Variedade da run | A run muda de cara a cada pico, e cada agente cresce do seu jeito? | 5, 5.8 | não iniciada |
 | 5.7 | Mapas gerados | Cada run tem um mapa diferente, sem deixar o agente preso? | 2, 5.5 | não iniciada |
-| 5.8 | Receptores no level up | O level up fica mais curto e cada escolha pesa mais? | 2, 3 | não iniciada |
+| 5.8 | Receptores no level up | O level up fica mais curto e cada escolha pesa mais? | 2, 3 | implementada, falta validar no celular |
 | 5.9 | Suplementos e ampolas | Os suplementos dão motivo para andar pelo mapa e montam um build diferente a cada run? | 5.5, 5.8 | não iniciada |
 | 5.10 | Agregados (mini chefes) | Entre um chefe e outro sempre tem um alvo que vale o risco? | 5.9 | não iniciada |
 | 5.11 | Sinapses e estruturas | O jogador sai do lugar para buscar bônus no mapa? | 5.6, 5.9, 5.10 | não iniciada |
@@ -322,14 +322,14 @@ O mapa do campo crônico passa a ser gerado por semente, em blocos de 16×16 til
 
 O level up passa a oferecer só armas e **receptores**, os tomos do Megabonk: 16 atributos, 4 espaços. Os outros modificadores saem do sorteio. Regras em [megabonk.md](megabonk.md#1-level-up-com-armas-e-receptores) ([decisão 0027](decisoes/0027-level-up-com-receptores.md)).
 
-- [ ] `passives.json` vira `receptors.json`, com os 16 receptores (Cinética junta velocidade do projétil e alcance) e o custo dos 6 desbloqueáveis.
-- [ ] Sorteio do level up só com arma nova, nível de arma, receptor novo e nível de receptor; "Nova dose" quando nada sobe.
-- [ ] Raridade no nível de arma, multiplicando o ganho daquele nível (inteiros arredondados, nunca abaixo do comum).
-- [ ] "Espaços de modificador" vira "Espaços de receptor", só no Laboratório; Rerrolar, Pular e Banir saem das cartas e ficam no Laboratório e na saúde executiva.
-- [ ] Enquanto a fase 5.9 não chega, os reagentes continuam como carta e os modificadores que saíram ficam só no Laboratório.
-- [ ] Desbloqueio dos receptores com ATP no Arsenal, como as armas, e o "!" na aba quando dá para comprar.
-- [ ] Level up com o título `ESCOLHA UMA ARMA OU RECEPTOR` e moldura de raridade na carta de arma; HUD e pausa com "Receptores" no lugar de "Modificadores".
-- [ ] Atualizar [wiki.md](wiki.md) (modificadores viram receptores) e rodar o `npm run sim`.
+- [x] Os 16 receptores (Cinética junta velocidade do projétil e alcance) e o custo dos 6 desbloqueáveis. Ficaram em `passives.json`, cada passivo com um papel (`receptor`, `reagent` ou `off`), em vez de um `receptors.json` novo; os custos estão em `meta.json`.
+- [x] Sorteio do level up só com arma nova, nível de arma, receptor novo e nível de receptor; "Nova dose" e Fosfocreatina quando nada sobe.
+- [x] Raridade no nível de arma, multiplicando o ganho daquele nível (inteiros arredondados, nunca abaixo do comum). Vale também para o nível de arma da cápsula.
+- [x] "Espaços de modificador" vira "Espaços de receptor", só no Laboratório; Rerrolar, Pular e Banir saem das cartas e ficam no Laboratório e na saúde executiva.
+- [x] Enquanto a fase 5.9 não chega, os reagentes continuam como carta (sem ocupar espaço) e os modificadores que saíram ficam só no Laboratório e na Mutação.
+- [x] Desbloqueio dos receptores com ATP no Arsenal, como as armas, e o "!" na aba quando dá para comprar.
+- [x] Level up com o título `ESCOLHA UMA ARMA OU RECEPTOR` e moldura de raridade na carta de arma; HUD e pausa com "Receptores" no lugar de "Modificadores".
+- [x] Atualizar [wiki.md](wiki.md) (modificadores viram receptores) e rodar o `npm run sim`.
 
 **Critério de saída:** uma run de 10 minutos chega com 4 armas e 4 receptores escolhidos, o level up nunca mostra mais de 8 tipos de carta diferentes, e o Vitor acha cada escolha mais pesada que antes.
 

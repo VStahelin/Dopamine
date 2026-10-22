@@ -86,7 +86,9 @@ export class LevelUpScene extends Phaser.Scene {
     const left = Math.floor((w - cardW) / 2);
 
     const title = this.banishing ? 'BANIR' : `NÍVEL ${run.level}!`;
-    const subtitle = this.banishing ? 'TOQUE NA OPÇÃO QUE QUER BANIR' : 'ESCOLHA UM MODIFICADOR';
+    const subtitle = this.banishing
+      ? 'TOQUE NA OPÇÃO QUE QUER BANIR'
+      : 'ESCOLHA UMA ARMA OU RECEPTOR';
     const children: Phaser.GameObjects.GameObject[] = [
       addDim(this, w, h),
       this.add
@@ -147,6 +149,8 @@ export class LevelUpScene extends Phaser.Scene {
         this.add.text(textX, titleY + 16 + extra, text.description, {
           ...bodyText(10, PALETTE_CSS.cream),
           wordWrap: { width: left + cardW - 28 - textX },
+          // Duas linhas no máximo: a terceira passava da borda do cartão.
+          maxLines: 2,
         }),
       );
       children.push(

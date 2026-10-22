@@ -1,11 +1,14 @@
-import type { PassiveDef, PassiveId, WeaponId } from '../../config';
+import type { PassiveDef, PassiveId, RunStatKey, WeaponId } from '../../config';
 import { newWeapon, type RunState } from './state';
 import { computeStats } from './stats';
 import { weaponMaxLevel } from './weaponParams';
 
 export type UpgradeChoice =
-  /** Arma nova (nível 1) ou o próximo nível de uma arma que o agente já tem. */
-  | { kind: 'weapon'; id: WeaponId; level: number }
+  /**
+   * Arma nova (nível 1) ou o próximo nível de uma arma que o agente já tem. O nível sorteia
+   * raridade, que multiplica o ganho dele (decisão 0027); a arma nova não tem.
+   */
+  | { kind: 'weapon'; id: WeaponId; level: number; rarity?: number }
   /** Arma no máximo + reagente: vira a arma evoluída. */
   | { kind: 'evolve'; id: WeaponId; into: WeaponId }
   | {
@@ -20,6 +23,17 @@ export type UpgradeChoice =
   | { kind: 'heal'; amount: number }
   /** Nada mais para subir: ATP em moedas do valor atual (Fosfocreatina). */
   | { kind: 'phosphocreatine'; coins: number };
+
+/** Atributos que a Mutação não sorteia: os de level up e espaços, que só vêm do Laboratório. */
+const MUTATION_SKIP: readonly RunStatKey[] = [
+  'choices',
+  'rerolls',
+  'skips',
+  'banishes',
+  'weaponSlots',
+  'modifierSlots',
+  'curse',
+];
 
 /** Interações recuperadas quando não sobra nenhum upgrade para oferecer. */
 const FALLBACK_HEAL = 30;
@@ -56,10 +70,17 @@ export function passiveAmount(def: PassiveDef, multiplier: number): number {
   return Math.abs(rounded) < Math.abs(def.perLevel) ? def.perLevel : rounded;
 }
 
-/** Modificadores que ainda podem aparecer, respeitando nível máximo, banidos e espaços. */
+/**
+ * Receptores e reagentes que ainda podem aparecer, respeitando liberados, nível máximo, banidos e
+ * espaços. Os outros modificadores ficam fora do level up (decisão 0027).
+ */
 function availablePassives(state: RunState): PassiveId[] {
-  const { passives } = state.rules;
-  const ids = Object.keys(passives) as PassiveId[];
+  const { passives, unlockedReceptors } = state.rules;
+  const ids = (Object.keys(passives) as PassiveId[]).filter(
+    (id) =>
+      passives[id].kind === 'reagent' ||
+      (passives[id].kind === 'receptor' && (!unlockedReceptors || unlockedReceptors.includes(id))),
+  );
   const held = ids.filter((id) => (state.passives[id]?.level ?? 0) > 0 && !passives[id].freeSlot);
   const slotsFull = held.length >= Math.floor(state.stats.modifierSlots);
   return ids.filter((id) => {
@@ -124,6 +145,10 @@ export function levelUpOffer(state: RunState): UpgradeChoice[] {
   ];
   while (offer.length < count && pool.length > 0) {
     const pick = pool.splice(state.rng.int(pool.length), 1)[0]!;
+    if (pick.kind === 'weapon' && pick.level > 1) {
+      offer.push({ ...pick, rarity: rollRarity(state) });
+      continue;
+    }
     if (pick.kind !== 'passiveSlot') {
       offer.push(pick);
       continue;
@@ -162,8 +187,10 @@ export function applyUpgrade(state: RunState, choice: UpgradeChoice): void {
   switch (choice.kind) {
     case 'weapon': {
       const owned = state.weapons.find((w) => w.id === choice.id);
-      if (owned) owned.level = choice.level;
-      else state.weapons.push(newWeapon(choice.id));
+      if (owned) {
+        owned.level = choice.level;
+        owned.boosts[choice.level - 2] = rarityMultiplier(state, choice.rarity);
+      } else state.weapons.push(newWeapon(choice.id));
       break;
     }
     case 'evolve': {
@@ -172,6 +199,7 @@ export function applyUpgrade(state: RunState, choice: UpgradeChoice): void {
       break;
     }
     case 'passive': {
+      if (state.rules.passives[choice.id].mutation) mutate(state, choice.rarity);
       const current = state.passives[choice.id] ?? { level: 0, bonus: 0 };
       state.passives[choice.id] = {
         level: current.level + 1,
@@ -194,9 +222,32 @@ export function applyUpgrade(state: RunState, choice: UpgradeChoice): void {
   state.agent.interactions += Math.max(0, state.stats.maxInteractions - before);
 }
 
-/** Recalcula os atributos com os modificadores e a Sorte das Vitaminas. */
+/** Recalcula os atributos com os receptores e o que a run somou fora deles. */
 export function refreshStats(state: RunState): void {
-  state.stats = computeStats(state.rules, state.passives, { luck: state.itemLuck });
+  state.stats = computeStats(state.rules, state.passives, state.bonus);
+}
+
+export function rarityMultiplier(state: RunState, rarity: number | undefined): number {
+  return rarity === undefined ? 1 : (state.rules.rarities.tiers[rarity]?.multiplier ?? 1);
+}
+
+/**
+ * Mutação: soma um nível de um atributo sorteado entre todos os receptores e modificadores, com a
+ * raridade da carta. O bônus vai em `state.bonus`, fora do receptor.
+ */
+function mutate(state: RunState, rarity: number): void {
+  const { passives } = state.rules;
+  const ids = (Object.keys(passives) as PassiveId[]).filter((id) => {
+    const def = passives[id];
+    return def.kind !== 'reagent' && !def.mutation && !MUTATION_SKIP.includes(def.stat);
+  });
+  const id = ids[state.rng.int(ids.length)];
+  if (!id) return;
+  const def = passives[id];
+  const amount = passiveAmount(def, rarityMultiplier(state, rarity));
+  for (const stat of [def.stat, def.alsoStat]) {
+    if (stat) state.bonus[stat] = (state.bonus[stat] ?? 0) + amount;
+  }
 }
 
 /** Valor de uma moeda de ATP agora: cresce com o tempo de run (economy.json runCurrency). */

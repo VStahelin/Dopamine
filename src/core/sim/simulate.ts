@@ -148,7 +148,7 @@ function offers(progress: MetaProgress, meta: MetaConfig): Offer[] {
       out.push({ kind: 'lab', id, cost: labCost(node, labLevel(progress, id)) });
     }
   }
-  for (const kind of ['agents', 'weapons'] as const) {
+  for (const kind of ['agents', 'weapons', 'receptors'] as const) {
     for (const id of Object.keys(meta.unlockCost[kind])) {
       if (!progress[kind].includes(id)) out.push({ kind, id, cost: unlockCost(kind, id, meta) });
     }

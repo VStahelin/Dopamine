@@ -40,6 +40,8 @@ export interface RunRules {
   drops: DropsConfig;
   /** Cápsulas já abertas no save, para a sorte de principiante; sem o número, 0. */
   capsulesOpened?: number;
+  /** Receptores liberados na meta-progressão; sem a lista, todos. */
+  unlockedReceptors?: readonly PassiveId[];
   /** Armas do pool liberadas na meta-progressão; sem a lista, todas. */
   unlockedWeapons?: readonly WeaponId[];
 }

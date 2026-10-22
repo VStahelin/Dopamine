@@ -56,6 +56,8 @@ export interface WeaponInstance {
   lastHit: Map<number, number>;
   /** Quanto a Enzima já cresceu. */
   growth: number;
+  /** Multiplicador de raridade de cada nível ganho (índice 0 = nível 2), decisão 0027. */
+  boosts: number[];
 }
 
 /** Área no chão: poça de solvente ou emulsão da Lipase. */
@@ -125,7 +127,7 @@ export interface ItemEffects {
 
 /** O que uma cápsula aberta deu, para a tela da cápsula. */
 export type CapsuleItem =
-  | { kind: 'weapon'; id: WeaponId; level: number }
+  | { kind: 'weapon'; id: WeaponId; level: number; rarity?: number }
   | { kind: 'evolve'; id: WeaponId; into: WeaponId }
   | { kind: 'passive'; id: PassiveId; level: number; rarity: number; amount: number }
   | { kind: 'phosphocreatine'; atp: number };
@@ -214,8 +216,8 @@ export interface RunState {
   vesicleTimer: number;
   pickups: Pickup[];
   effects: ItemEffects;
-  /** Sorte somada pelas Vitaminas nesta run. */
-  itemLuck: number;
+  /** Atributos somados na run fora dos receptores: Vitaminas, Mutação. */
+  bonus: Partial<RunStats>;
   /** Cápsula aberta esperando o jogador ver; a simulação para enquanto houver uma. */
   capsule: CapsuleResult | null;
   capsulesOpened: number;
@@ -268,7 +270,7 @@ export interface RunResult {
 }
 
 export function newWeapon(id: WeaponId): WeaponInstance {
-  return { id, level: 1, cooldown: 0, angle: 0, lastHit: new Map(), growth: 0 };
+  return { id, level: 1, cooldown: 0, angle: 0, lastHit: new Map(), growth: 0, boosts: [] };
 }
 
 export function createRun(
@@ -305,7 +307,7 @@ export function createRun(
     vesicleTimer: rules.drops.vesicles.everySeconds,
     pickups: [],
     effects: { freeze: 0, flame: 0, fever: 0 },
-    itemLuck: 0,
+    bonus: {},
     capsule: null,
     capsulesOpened: 0,
     seenItems: [],

@@ -29,6 +29,7 @@ import {
 } from '../../core/meta/progress';
 import { addButton } from './button';
 import { addIconSlot, passiveSlot, slotSize, weaponIcon } from './iconSlot';
+import { receptorGain } from './upgradeText';
 import { drawCreamSlot, drawInkBox, drawLock, drawWoodFrame } from './icons';
 import { IDLE_AGENTS, RUN_AGENTS } from './menuContent';
 import { bodyText, impactText, labelText, withShadow } from './theme';
@@ -260,16 +261,52 @@ export function renderArsenal(
     row(id, WEAPONS[id].description.toUpperCase().slice(0, 40), '#E6CC80');
   }
 
-  // Modificadores do level up, com os ícones, em duas colunas.
-  out.push(header(scene, left, cy + 6, 'MODIFICADORES'));
+  // Receptores (os tomos do Megabonk, decisão 0027): o que sobe por nível e os bloqueados.
+  out.push(header(scene, left, cy + 6, 'RECEPTORES · CHEGAM PELO LEVEL UP'));
   cy += 22;
   const passives = Object.keys(PASSIVES) as PassiveId[];
+  for (const id of passives.filter((p) => PASSIVES[p].kind === 'receptor')) {
+    const def = PASSIVES[id];
+    const locked = shop ? !isUnlocked(shop.progress, 'receptors', id) : false;
+    const h = 40;
+    drawInkBox(g, left, cy, width, h, PALETTE.panel);
+    const slot = addIconSlot(scene, left + 8, cy + 6, 1, {
+      ...passiveSlot(id, 0),
+      label: undefined,
+      dim: locked,
+    });
+    const tx = left + 8 + slot.size + 8;
+    const gain = `${receptorGain(def, def.perLevel)} por nível`.toUpperCase();
+    out.push(
+      ...slot.objects,
+      scene.add.text(
+        tx,
+        cy + 5,
+        def.name,
+        withShadow(bodyText(13, PALETTE_CSS.text), PALETTE_CSS.ink, 1),
+      ),
+      scene.add.text(
+        tx,
+        cy + 23,
+        locked ? 'BLOQUEADO: NÃO APARECE NO LEVEL UP' : gain,
+        labelText(8, locked ? PALETTE_CSS.textMuted : PALETTE_CSS.cyan),
+      ),
+    );
+    if (locked && shop)
+      out.push(buyButton(scene, shop, 'receptors', id, left + width - 80, cy + 7, 70));
+    cy += h + 4;
+  }
+
+  // Reagentes: cartas do level up que liberam a evolução, sem ocupar espaço.
+  out.push(header(scene, left, cy + 6, 'REAGENTES · LIBERAM A EVOLUÇÃO'));
+  cy += 22;
+  const reagents = passives.filter((p) => PASSIVES[p].kind === 'reagent');
   const cols = width >= 300 ? 2 : 1;
   const cellW = Math.floor((width - (cols - 1) * 6) / cols);
   const cellH = slotSize(1) + 10;
-  const rows = Math.ceil(passives.length / cols);
+  const rows = Math.ceil(reagents.length / cols);
   drawInkBox(g, left, cy, width, rows * cellH + 8, PALETTE.panel);
-  passives.forEach((id, i) => {
+  reagents.forEach((id, i) => {
     const cx = left + 6 + (i % cols) * (cellW + 6);
     const ry = cy + 7 + Math.floor(i / cols) * cellH;
     const slot = addIconSlot(scene, cx, ry, 1, { ...passiveSlot(id, 0), label: undefined });

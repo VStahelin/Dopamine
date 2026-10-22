@@ -249,19 +249,28 @@ export const RUN_STAT_KEYS = [
 export type RunStatKey = (typeof RUN_STAT_KEYS)[number];
 
 /** Modificador passivo oferecido no level up. */
+/**
+ * Papel de um passivo: receptor (sai no level up, ocupa espaço), reagente (carta do level up que
+ * libera a evolução, sem espaço) ou fora do level up (só Laboratório, por enquanto; decisão 0027).
+ */
+export type PassiveKind = 'receptor' | 'reagent' | 'off';
+
 export interface PassiveDef {
   name: string;
+  kind: PassiveKind;
   stat: RunStatKey;
+  /** Segundo atributo que recebe o mesmo bônus (Cinética: velocidade do projétil e alcance). */
+  alsoStat?: RunStatKey;
+  /** Mutação: cada nível soma um atributo sorteado, em vez de `stat`. */
+  mutation?: boolean;
   /** Quanto cada escolha comum soma ao atributo, na unidade do atributo em stats.json. */
   perLevel: number;
   /** Quantas vezes pode ser escolhido na run. */
   maxLevel: number;
   /** Atributo inteiro (projéteis, perfuração...): o valor com raridade é arredondado. */
   integer?: boolean;
-  /** Não ocupa espaço de modificador (o próprio "Espaços de modificador"). */
+  /** Não ocupa espaço de receptor (os reagentes e o próprio "Espaços de receptor"). */
   freeSlot?: boolean;
-  /** Reagente: além do atributo, é o que uma arma no máximo pede para evoluir. */
-  reagent?: boolean;
 }
 
 export interface RarityTier {
@@ -477,9 +486,13 @@ export interface LabNode {
 /** Meta-progressão (aba Economia, docs/menu.md): o que começa liberado, desbloqueios, estrelas. */
 export interface MetaConfig {
   /** Agentes e armas do pool liberados num save novo. */
-  start: { agents: string[]; weapons: string[] };
+  start: { agents: string[]; weapons: string[]; receptors: string[] };
   /** ATP para desbloquear cada agente e arma que não começa liberado. */
-  unlockCost: { agents: Record<string, number>; weapons: Record<string, number> };
+  unlockCost: {
+    agents: Record<string, number>;
+    weapons: Record<string, number>;
+    receptors: Record<string, number>;
+  };
   /** ATP do baú por estrela do caso, na ordem das metas de `caseStarMinutes`. */
   starRewards: number[];
   lab: { columns: string[]; nodes: Record<string, LabNode> };

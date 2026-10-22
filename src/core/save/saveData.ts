@@ -157,6 +157,7 @@ function migrateProgress(raw: unknown): MetaProgress {
     lab,
     agents: [...new Set([...base.agents, ...(strings(m.agents) ?? [])])],
     weapons: [...new Set([...base.weapons, ...(strings(m.weapons) ?? [])])],
+    receptors: [...new Set([...base.receptors, ...(strings(m.receptors) ?? [])])],
     stars: Math.min(3, num(m.stars, 0)),
     chest: num(m.chest, 0),
   };

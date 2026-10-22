@@ -23,7 +23,7 @@ No celular, encoste o dedo em qualquer lugar e arraste: o joystick aparece onde 
 Cada agente tem um especial, disparado pelo botão grande no canto (ou Espaço no PC). Ele recarrega com o tempo; o número no botão diz quantos segundos faltam e o `x1` no canto mostra as cargas guardadas.
 
 ### Experiência e nível
-Moléculas decompostas soltam gemas azuis. Passe perto para coletar. Encheu a barra do topo, você sobe de nível e escolhe um modificador ou uma arma.
+Moléculas decompostas soltam gemas azuis. Passe perto para coletar. Encheu a barra do topo, você sobe de nível e escolhe uma arma ou um receptor.
 
 ### Ondas e chefes
 A dificuldade sobe com o tempo. A cada 5 minutos vem um pico de onda (o tempo fica laranja), com mais moléculas, seguido de um respiro curto. A cada 5 minutos também aparece um chefe: a Partícula de LDL.
@@ -41,7 +41,7 @@ Branco é dano comum. Amarelo com "!" é catálise (crítico). Ciano é afinidad
 Algumas moléculas decompostas soltam ATP, a moeda do jogo (moeda dourada no chão). Moléculas fortes e o chefe sempre soltam, e quanto mais tempo de run, mais cada uma vale. O ATP fica com você no fim da run.
 
 ### Pausa
-A pausa mostra suas armas e modificadores (aba Arsenal), todos os atributos com o valor atual e a base (aba Atributos) e os números da run (aba Run). Desistir encerra a run e leva para a tela de fim.
+A pausa mostra suas armas e receptores (aba Arsenal), todos os atributos com o valor atual e a base (aba Atributos) e os números da run (aba Run). Desistir encerra a run e leva para a tela de fim.
 
 ---
 
@@ -104,40 +104,44 @@ Armas que você ainda não desbloqueou no Arsenal não aparecem no level up. Des
 
 ---
 
-## Level up e modificadores
+## Level up e receptores
 
-*Números de `passives.json`, `rarities.json` e `stats.json`.*
+*Números de `passives.json`, `rarities.json`, `meta.json` e `stats.json`.*
 
 ### Escolher no level up
-A cada nível você escolhe uma entre 3 opções: uma arma nova, o próximo nível de uma arma ou um modificador. Os modificadores ficam na linha de baixo da HUD.
+A cada nível você escolhe uma entre 3 cartas: uma arma nova, o próximo nível de uma arma, um receptor novo ou o próximo nível de um receptor. Os receptores ficam na linha de baixo da HUD.
+
+### Receptores
+O receptor é a proteína da célula onde o remédio se liga. Cada um sobe um atributo só, até o nível 5:
+- **Ataque:** Reatividade (dano), Metabolismo (recarga menor), Difusão (área), Cinética (velocidade dos disparos e alcance), Chance de catálise (crítico) e Dose (mais projéteis, até 3 níveis).
+- **Defesa:** Interações (vida máxima), Membrana (menos dano por golpe) e Homeostase (recupera interações com o tempo).
+- **Coleta e risco:** Mobilidade, Raio de coleta, Aprendizado (mais XP), Sorte e Estresse. **Estresse** deixa as moléculas mais fortes e mais rápidas, mas dá mais XP: risco por recompensa.
+- **Mutação:** cada nível soma um atributo sorteado, de qualquer tipo.
+
+### Receptores bloqueados
+Dose, Meia-vida, Aprendizado, Sorte, Estresse e Mutação começam bloqueados e se compram com ATP no Arsenal. Bloqueado, o receptor não aparece no level up.
+
+### Espaços
+O agente tem 4 espaços de arma (a ação dele conta) e 4 de receptor. O Laboratório aumenta os dois, até 6.
 
 ### Raridade
-Cada modificador vem com uma raridade, que multiplica o efeito: Comum (1×), Incomum (1,5×), Raro (2×), Ultra raro (2,5×), Lendário (3×) e Especial (4×). A cor da moldura do cartão mostra a raridade.
+Cada receptor e cada nível de arma vem com uma raridade, que multiplica o ganho: Comum (1×), Incomum (1,5×), Raro (2×), Ultra raro (2,5×), Lendário (3×) e Especial (4×). A cor da moldura da carta mostra a raridade. Arma nova e evolução não têm raridade.
 
 ### Sorte
 Quanto mais Sorte, mais aparecem as raridades altas.
 
 ### Rerrolar, Pular e Banir
-- **Rerrolar** sorteia outras opções.
+- **Rerrolar** sorteia outras cartas.
 - **Pular** dispensa o level up.
-- **Banir** tira uma opção da run inteira.
+- **Banir** tira uma carta da run inteira.
 
-Começam em zero: vêm de modificadores, do Laboratório e do setor Executiva do organismo.
-
-### Espaços
-O agente tem 4 espaços de modificador no começo (até 6). O modificador Espaços de modificador não ocupa espaço.
+Começam em zero: vêm do Laboratório e do setor Executiva do organismo.
 
 ### Reagentes
-Peróxido, Cloro, Ozônio e Coenzima são modificadores que também servem de reagente: com a arma certa no nível máximo, liberam a evolução.
+Peróxido, Cloro, Ozônio e Coenzima também aparecem no level up, sem ocupar espaço de receptor: com a arma certa no nível máximo, liberam a evolução.
 
-### Modificadores de ataque
-Reatividade (dano), Dose (mais projéteis), Metabolismo (recarga menor), Difusão (área), Cinética (velocidade dos disparos), Alcance, Penetração (atravessa inimigos), Reação em cadeia (ricochetes), Chance de catálise (crítico), Força da catálise (dano crítico), Repulsão (empurrão), Especificidade (dano em inimigos fortes) e Meia-vida (duração).
-
-### Modificadores de defesa
-Interações (vida máxima), Membrana (menos dano por golpe), Esquiva, Homeostase (recupera interações com o tempo), Absorção (chance de recuperar ao decompor), Tolerância (invulnerável por mais tempo depois de um golpe), Segunda dose (volta uma vez com metade das interações) e Reflexo (devolve dano a quem encosta).
-
-### Modificadores de coleta e risco
-Mobilidade (velocidade), Raio de coleta, Aprendizado (mais XP), Sorte e Estresse. **Estresse** deixa as moléculas mais fortes e mais rápidas, mas dá mais XP: risco por recompensa.
+### Os outros atributos
+Penetração, Reação em cadeia, Força da catálise, Repulsão, Especificidade, Esquiva, Absorção, Tolerância, Segunda dose e Reflexo não saem mais no level up. Por enquanto vêm do Laboratório e da Mutação; depois vão sair dos suplementos.
 
 ---
 
@@ -203,7 +207,7 @@ A partir do nível 30. Puxa todo o ATP do chão e começa a Febre de ATP: por 10
 A cor mostra o valor: ciano vale até 2 de XP, verde até 9, vermelha mais que isso. Com gemas demais no chão, o XP novo se junta numa gema só.
 
 ### Cápsula do chefe
-Todo chefe solta uma cápsula, que você precisa tocar. Ela sobe um nível de 1, 3 ou 5 armas ou modificadores que você já tem, com raridade pela Sorte, e dá ATP. A Sorte também aumenta a chance de 3 e 5. As seis primeiras cápsulas do save dão 1, 1, 3, 1, 1 e 5.
+Todo chefe solta uma cápsula, que você precisa tocar. Ela sobe um nível de 1, 3 ou 5 armas ou receptores que você já tem, com raridade pela Sorte, e dá ATP. A Sorte também aumenta a chance de 3 e 5. As seis primeiras cápsulas do save dão 1, 1, 3, 1, 1 e 5.
 
 ### Cápsula de prata
 Depois dos 10 minutos a cápsula é de prata: se uma arma estiver no nível máximo com o reagente certo, ela evolui.

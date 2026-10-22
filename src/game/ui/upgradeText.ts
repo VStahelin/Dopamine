@@ -1,11 +1,19 @@
-import { PASSIVES, RARITIES, WEAPONS, type RunStatKey, type WeaponParams } from '../../config';
+import {
+  PASSIVES,
+  RARITIES,
+  WEAPONS,
+  type PassiveDef,
+  type RunStatKey,
+  type WeaponParams,
+} from '../../config';
 import type { UpgradeChoice } from '../../core/run/upgrades';
+import { levelStep } from '../../core/run/weaponParams';
 
 const pct = (v: number) => `${Math.round(Math.abs(v) * 100)}%`;
 const num = (v: number) => Math.abs(v).toLocaleString('pt-BR', { maximumFractionDigits: 1 });
 const plural = (v: number, one: string, many: string) => (Math.abs(v) === 1 ? one : many);
 
-/** Texto do efeito de cada atributo, a partir de quanto o modificador soma. */
+/** Texto do efeito de cada atributo, a partir de quanto o receptor soma. */
 const STAT_TEXT: Record<RunStatKey, (v: number) => string> = {
   damage: (v) => `+${pct(v)} de dano`,
   projectiles: (v) => `+${num(v)} ${plural(v, 'projétil', 'projéteis')} por disparo`,
@@ -40,9 +48,16 @@ const STAT_TEXT: Record<RunStatKey, (v: number) => string> = {
   banishes: (v) => `+${num(v)} ${plural(v, 'uso', 'usos')} de Banir`,
   weaponSlots: (v) => `+${num(v)} ${plural(v, 'espaço', 'espaços')} de arma`,
   modifierSlots: (v) =>
-    `+${num(v)} ${plural(v, 'espaço', 'espaços')} de modificador (não ocupa espaço)`,
+    `+${num(v)} ${plural(v, 'espaço', 'espaços')} de receptor (não ocupa espaço)`,
   curse: (v) => `+${pct(v)} de estresse: inimigos mais fortes, mais XP`,
 };
+
+/** O que um receptor soma com `amount`, em texto; a Cinética fala dos dois atributos. */
+export function receptorGain(def: PassiveDef, amount: number): string {
+  if (def.mutation) return 'Soma um atributo sorteado, com a raridade da carta';
+  const main = STAT_TEXT[def.stat](amount);
+  return def.alsoStat ? `${main} e ${STAT_TEXT[def.alsoStat](amount)}` : main;
+}
 
 /** O que cada nível de arma soma, em texto. */
 const PARAM_TEXT: Record<keyof WeaponParams, (v: number) => string> = {
@@ -79,10 +94,13 @@ export function describeChoice(choice: UpgradeChoice): ChoiceText {
       const w = WEAPONS[choice.id];
       if (choice.level === 1)
         return { title: w.name, level: 'NOVA ARMA', description: w.description };
+      // O nível de arma tem raridade, que multiplica o ganho dele (decisão 0027).
+      const tier = RARITIES.tiers[choice.rarity ?? 0]!;
       return {
         title: w.name,
         level: `NV ${choice.level}`,
-        description: weaponLevelText(w.levels[choice.level - 2] ?? {}),
+        description: weaponLevelText(levelStep(w, choice.level - 2, tier.multiplier)),
+        rarity: { name: tier.name, color: tier.color },
       };
     }
     case 'evolve': {
@@ -101,7 +119,7 @@ export function describeChoice(choice: UpgradeChoice): ChoiceText {
       return {
         title: p.name,
         level: choice.level === 1 ? 'NOVO' : `NV ${choice.level}`,
-        description: STAT_TEXT[p.stat](choice.amount),
+        description: receptorGain(p, choice.amount),
         rarity: { name: tier.name, color: tier.color },
       };
     }

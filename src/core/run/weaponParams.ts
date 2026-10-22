@@ -13,10 +13,34 @@ export function weaponMaxLevel(def: WeaponDef): number {
   return def.levels.length + 1;
 }
 
-/** Valores da arma no nível, somando os níveis da config. */
-export function levelParams(def: WeaponDef, level: number): WeaponParams {
+/** Atributos de arma que só valem inteiros: com raridade, arredondam sem ficar abaixo do comum. */
+const INTEGER_PARAMS: readonly (keyof WeaponParams)[] = ['count', 'pierce', 'ricochet'];
+
+/** Ganho de um nível da arma (`index` 0 = nível 2) com o multiplicador da raridade. */
+export function levelStep(def: WeaponDef, index: number, multiplier = 1): Partial<WeaponParams> {
+  const step = def.levels[index] ?? {};
+  const out: Partial<WeaponParams> = {};
+  for (const key of Object.keys(step) as (keyof WeaponParams)[]) {
+    const base = step[key] ?? 0;
+    let value = base * multiplier;
+    if (INTEGER_PARAMS.includes(key)) {
+      const rounded = Math.round(value);
+      value = Math.abs(rounded) < Math.abs(base) ? base : rounded;
+    }
+    out[key] = value;
+  }
+  return out;
+}
+
+/** Valores da arma no nível, somando os níveis da config com a raridade de cada um. */
+export function levelParams(
+  def: WeaponDef,
+  level: number,
+  boosts: readonly number[] = [],
+): WeaponParams {
   const p = { ...def.base };
-  for (const step of def.levels.slice(0, level - 1)) {
+  for (let i = 0; i < Math.min(level - 1, def.levels.length); i++) {
+    const step = levelStep(def, i, boosts[i] ?? 1);
     for (const key of Object.keys(step) as (keyof WeaponParams)[]) p[key] += step[key] ?? 0;
   }
   return p;
@@ -31,8 +55,9 @@ export function weaponParams(
   level: number,
   stats: RunStats,
   mods: WeaponMods = NO_MODS,
+  boosts: readonly number[] = [],
 ): WeaponParams {
-  const p = levelParams(def, level);
+  const p = levelParams(def, level, boosts);
   const extraCount = ['projectile', 'orbit', 'zone'].includes(def.kind)
     ? Math.floor(stats.projectiles)
     : 0;
