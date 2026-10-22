@@ -1,6 +1,6 @@
 # UI do modo crônico
 
-Como a run (o campo crônico, mundo aberto) mostra as coisas na tela: HUD de batalha, ícones de armas e reagentes, efeitos, números de dano, botão do especial, tela de pausa com status e adaptação a qualquer proporção de tela. As pranchetas estão no [canvas de identidade visual](https://claude.ai/artifact/MPV17zZywrhhXBUdfnUs6F), na linha "UI do modo crônico": **HUD de batalha**, **Pausa e status** (interativa, com abas) e **Ícones, dano e paisagem**.
+Como a run (o campo crônico, mundo aberto) mostra as coisas na tela: HUD de batalha, ícones de armas e reagentes, efeitos, números de dano, botão do especial, tela de pausa com status e adaptação a qualquer proporção de tela. As pranchetas estão no [canvas de identidade visual](https://claude.ai/artifact/MPV17zZywrhhXBUdfnUs6F), na linha "UI do modo crônico": **HUD de batalha**, **Pausa e status** (interativa, com abas), **Ícones, dano e paisagem**, **Level up** e **Level up no PC** (as duas interativas).
 
 Tudo aqui é **proposta**. A base é o Vampire Survivors no celular, adaptada ao tema químico e à [identidade visual](design.md).
 
@@ -92,6 +92,36 @@ O botão de pausa (e Esc ou P no PC) abre um painel sobre o campo escurecido:
   - **Atributos:** todos os atributos da aba Parâmetros em quatro grupos (ofensivos, defensivos, mobilidade e coleta, level up e risco). Valor atual à direita, base em cinza ao lado; verde quando está melhor que a base, vermelho quando está pior.
   - **Run:** tempo, nível, decompostas, ATP na run, interações perdidas, críticos, dano por arma em barras e quanto falta para o recorde.
 - **Botões:** `CONTINUAR` (madeira, o maior), `OPÇÕES` e `DESISTIR` (vinho, que leva à tela de fim de run).
+
+## Level up
+
+A tela abre sobre o campo escurecido, com o jogo parado. As pranchetas **Level up** (celular) e **Level up no PC** são interativas: dá para escolher, rerrolar, pular e banir.
+
+**No celular (390×844):**
+
+- **Cabeçalho:** `NÍVEL 13!` em ciano e `ESCOLHA UM MODIFICADOR`. Logo abaixo, as duas linhas de espaços da HUD em miniatura (armas e reagentes, com o nível no canto), para o jogador ver o que já tem antes de escolher.
+- **Cartões de opção** (3 a 5, conforme as Opções), um embaixo do outro, cada um com:
+  - o ícone na moldura do tipo (madeira para arma, ciano para modificador, verde para cura);
+  - o nome, e à direita a raridade e o passo (`RARO · NV 3 → 4`, `ARMA NOVA`, `REAGENTE NOVO`);
+  - a descrição curta do efeito (`+20% de dano`);
+  - a **prévia em verde** de como o atributo fica (`Reatividade 130% → 150%`, `Armas 4/6 → 5/6`);
+  - a dica de evolução em dourado quando a escolha leva a uma (`MAX + COENZIMA → ENZIMA`).
+  - A moldura e a faixa da esquerda têm a cor da raridade ([0013](decisoes/0013-raridade-e-sorte.md)); arma e cura, que não têm raridade, usam ciano e verde.
+- **Barra de ações**, sempre visível embaixo, no lugar do polegar: **REROLAR**, **PULAR** e **BANIR**, cada um com o ícone e os usos restantes num selo (`×2`). Com zero usos, o botão continua lá, apagado e com `0`: o jogador fica sabendo que a mecânica existe e que libera no Laboratório.
+- **Banir** é um modo: o botão vira `CANCELAR`, o título vira `BANIR` em vermelho, os cartões ganham a borda vermelha e o selo `BANIR`, e o toque num cartão tira a opção da run e sorteia outra no lugar. As opções banidas aparecem riscadas acima da barra (`BANIDOS NESTA RUN`).
+- **Pular** recusa o level up sem escolher nada e volta para a run (ou para o próximo level up pendente).
+
+**No PC (tela larga):** três colunas sobre o campo escurecido.
+
+- **Centro:** o mesmo cabeçalho, os cartões mais largos com o número da tecla no canto e a barra de ações com a tecla de cada uma embaixo.
+- **Esquerda, Atributos:** o resumo da aba Atributos da pausa, nos mesmos grupos. Passar o mouse num cartão destaca em verde a linha que ele muda, com o valor de agora e o novo (`130% → 150%`).
+- **Direita, Arsenal:** as armas e os reagentes com o nível. A arma ou o reagente que o cartão melhora também fica em verde (`NV 4 → NV 5`, ou `NOVA` no espaço livre).
+- **Teclas:** 1 a 5 escolhem, R rerrola, S pula, B entra e sai do modo banir.
+
+Regras de interface:
+
+- Ignorar toques nos primeiros 350 ms depois que a tela abre, para o dedo que estava no joystick não escolher sem querer (como já faz o jogo).
+- Mais de um level up pendente abre a próxima tela direto, sem voltar para a run.
 
 ## Qualquer proporção de tela
 
