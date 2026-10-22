@@ -26,7 +26,8 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | 5 | Organismo | Cuidar do corpo muda o jeito de jogar? | 3, 4 | implementada, falta validar no celular |
 | 5.5 | Itens no mapa | Os itens do chão deixam a run mais variada sem quebrar a economia? | 2, 3 | não iniciada |
 | 5.6 | Variedade da run | A run muda de cara a cada pico, e cada agente cresce do seu jeito? | 2 | não iniciada |
-| 6 | Arte, polimento e lançamento | Dá para mandar o link para os amigos? | 1 a 5.6 | não iniciada |
+| 5.7 | Mapas gerados | Cada run tem um mapa diferente, sem deixar o agente preso? | 2, 5.5 | não iniciada |
+| 6 | Arte, polimento e lançamento | Dá para mandar o link para os amigos? | 1 a 5.7 | não iniciada |
 
 A arte não espera a fase 6: os sprites de molécula são montados por código a partir dos átomos (aba Design), então entram já na fase 1. A fase 6 cuida do resto: HUD final, som, telas e acabamento.
 
@@ -265,12 +266,27 @@ Três ideias do Vampire Survivors que deixam a run menos repetitiva, aprovadas p
 
 **Critério de saída:** numa run de 20 minutos aparecem pelo menos três formações diferentes, o level up continua útil depois que tudo chega ao máximo, e dá para dizer qual agente é qual só pelo jeito que ele cresce.
 
+## Fase 5.7: Mapas gerados
+
+O mapa do campo crônico passa a ser gerado por semente, em blocos de 16×16 tiles, com chão variado, obstáculos, decoração, destrutíveis e pontos de interesse, num de cinco ambientes do corpo. Regras em [mapas.md](mapas.md) ([decisão 0026](decisoes/0026-mapas-gerados.md)); números em `src/config/map.json` e arte em `src/assets/sprites/map.json` (prancheta "Mapas: objetos e chão" do canvas).
+
+- [ ] Gerador de blocos em `src/core/map/`, com semente por bloco e teste de "mesma semente, mesmo bloco".
+- [ ] Chão em tiles de 16×16 com manchas de variação por ruído, no ambiente Corrente sanguínea.
+- [ ] Obstáculos com colisão circular para o agente e as moléculas, com distância mínima e começo livre; chefe e formações atravessam.
+- [ ] Decoração sem colisão e destrutíveis com vida e drop.
+- [ ] Densidade sorteada por run (Aberto, Padrão, Denso) e o nome do mapa com a semente no início, na pausa e no fim da run.
+- [ ] Pontos de interesse: ninho de vesículas (junto com a fase 5.5), câmara, corredor.
+- [ ] Os outros quatro ambientes (fígado, intestino, pulmão, cérebro), conforme a escolha do local da run.
+- [ ] Validar no celular a 60 FPS com o mapa Denso.
+
+**Critério de saída:** duas runs seguidas dão mapas que dá para distinguir num print, nenhuma run prende o agente num beco, e o mapa Denso roda a 60 FPS no celular.
+
 ## Fase 6: Arte, polimento e lançamento
 
 Deixar o jogo com a cara do canvas de identidade visual e pronto para outras pessoas.
 
 - [ ] Acabamento visual de HUD, molduras, botões e fontes da aba Design (a HUD e a pausa de [ui-cronico.md](ui-cronico.md) entram na fase 2.6).
-- [ ] Chão, paredes e efeitos (dano com contorno, projéteis).
+- [ ] Chão, paredes e efeitos (dano com contorno, projéteis); o chão e os objetos dos ambientes vêm da fase 5.7.
 - [ ] Wiki dentro do jogo: o Compêndio ganha as páginas de [wiki.md](wiki.md) (como jogar, agentes, armas, modificadores, moléculas, progressão, campo longo, organismo e glossário).
 - [ ] Som e música.
 - [ ] PWA: ícones e polimento da instalação na tela inicial (o offline vem da fase 2.5).

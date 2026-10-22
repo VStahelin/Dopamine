@@ -109,7 +109,7 @@ Liberados por conquistas.
 
 ### Locais do corpo (estágios)
 
-O caso escolhe onde a run acontece, ligando o mapa à fase 5:
+O caso escolhe onde a run acontece, ligando o mapa à fase 5. O chão, os objetos e a geração de cada local estão em [mapas.md](mapas.md#ambientes).
 
 | Local | Moléculas mais comuns | Layout | Chefe |
 | --- | --- | --- | --- |

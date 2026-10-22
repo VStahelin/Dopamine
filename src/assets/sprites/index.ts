@@ -12,6 +12,9 @@
  * - `ui.json`: ícones de 8×8 do menu, organismo, cadeado e formas (moeda, estrela, escudo).
  * - `world.json`: chão, gema, elétron, disparo e moeda, que o gerador desenha a partir destes
  *   números.
+ * - `map.json`: tiles de chão e objetos de 16×16 dos ambientes da fase 5.7 (prancheta "Mapas:
+ *   objetos e chão", docs/mapas.md), ainda sem uso no jogo. Os tiles usam as letras 1 a 4 com as
+ *   cores de `floor` de cada ambiente; os objetos usam `palette.json`.
  */
 import framesJson from './frames.json';
 import iconsJson from './icons.json';

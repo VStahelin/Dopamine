@@ -31,3 +31,4 @@ As decisões de design tomadas antes deste registro continuam marcadas como "dec
 | [0023](0023-organismo.md) | Organismo: setores com efeito no jogo, saúde vinda dos agentes e ALTA com herança | design | proposta |
 | [0024](0024-itens-no-mapa.md) | Itens no mapa como fase 5.5, com o conjunto do Vampire Survivors | processo | proposta |
 | [0025](0025-variedade-da-run.md) | Fase 5.6: variedade da run (formações, perfil farmacológico, Superdosagem); Sorte também na raridade da cápsula | processo | aceita |
+| [0026](0026-mapas-gerados.md) | Mapas gerados por semente em blocos, em ambientes do corpo (fase 5.7) | design | proposta |

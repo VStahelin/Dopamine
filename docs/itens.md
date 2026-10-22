@@ -100,7 +100,7 @@ Quando virar código, um `src/config/drops.json` com o tipo em `src/config/types
 ## O que falta decidir
 
 - [ ] Os nomes funcionam (Soro, Glicose, Glicogênio, Gelo seco, Osmose, Lisossomo, Bico de Bunsen, Vitamina, Glucagon, Cápsula, Fosfocreatina)?
-- [ ] Vesículas nascendo sozinhas em volta do agente, ou pontos fixos no mapa como os castiçais do VS?
+- [ ] Vesículas nascendo sozinhas em volta do agente, ou pontos fixos no mapa como os castiçais do VS? Proposta em [mapas.md](mapas.md#relação-com-as-outras-fases): as duas (anel + ninhos de vesículas).
 - [ ] Valores de ATP mais baixos que o VS (5× e 25×) ou os mesmos (10× e 100×)?
 - [ ] A evolução sai do level up e passa a ser só pela cápsula de prata, como no VS, ou fica nos dois?
 - [ ] O Lisossomo poupa elites também, ou só o chefe?
