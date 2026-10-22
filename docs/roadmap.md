@@ -25,12 +25,12 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | 4 | Campo longo (idle) | O idle ajuda a run sem substituí-la? | 3 | implementada, falta validar no celular |
 | 5 | Organismo | Cuidar do corpo muda o jeito de jogar? | 3, 4 | implementada, falta validar no celular |
 | 5.5 | Itens no mapa | Os itens do chão deixam a run mais variada sem quebrar a economia? | 2, 3 | implementada, falta validar no celular |
-| 5.6 | Variedade da run | A run muda de cara a cada pico, e cada agente cresce do seu jeito? | 2 | não iniciada |
+| 5.6 | Variedade da run | A run muda de cara a cada pico, e cada agente cresce do seu jeito? | 5, 5.8 | não iniciada |
 | 5.7 | Mapas gerados | Cada run tem um mapa diferente, sem deixar o agente preso? | 2, 5.5 | não iniciada |
 | 5.8 | Receptores no level up | O level up fica mais curto e cada escolha pesa mais? | 2, 3 | não iniciada |
 | 5.9 | Suplementos e ampolas | Os suplementos dão motivo para andar pelo mapa e montam um build diferente a cada run? | 5.5, 5.8 | não iniciada |
 | 5.10 | Agregados (mini chefes) | Entre um chefe e outro sempre tem um alvo que vale o risco? | 5.9 | não iniciada |
-| 5.11 | Sinapses e estruturas | O jogador sai do lugar para buscar bônus no mapa? | 5.9, 5.10 | não iniciada |
+| 5.11 | Sinapses e estruturas | O jogador sai do lugar para buscar bônus no mapa? | 5.6, 5.9, 5.10 | não iniciada |
 | 6 | Arte, polimento e lançamento | Dá para mandar o link para os amigos? | 1 a 5.11 | não iniciada |
 
 ## Bugs relatados
@@ -44,7 +44,7 @@ Bugs que o Vitor achou jogando. Marque ao corrigir, com o commit da correção.
 - [x] Celular: o dedo que movia o agente escolhia uma carta do level up ao soltar. Corrigido: a carta só responde a um toque que começou nela.
 - [x] Pausa: o botão Opções não fazia nada. A tela abria escondida atrás da run e da HUD; agora vem para cima.
 
-**Ordem sugerida das fases 5.x:** 5.5 → 5.8 → 5.9 → 5.10 → 5.11 → 5.6 → 5.7. As fases 5.8 a 5.11 trazem as mecânicas do Megabonk ([megabonk.md](megabonk.md)) e mexem no level up e nos drops, então vêm antes da Superdosagem (5.6, que depende do level up novo) e dos mapas gerados (5.7, que passam a hospedar as estruturas como pontos de interesse). Os números das fases não mudam para não quebrar as decisões que citam cada uma.
+**Ordem sugerida das fases 5.x:** 5.5 → 5.8 → 5.9 → 5.10 → 5.6 → 5.11 → 5.7. As fases 5.8 a 5.11 trazem as mecânicas do Megabonk ([megabonk.md](megabonk.md)) e mexem no level up e nos drops. A 5.6 vem depois dos receptores (5.8, de onde saem o receptor nativo e os cartões da Superdosagem) e antes das sinapses (5.11, cujo Foco inflamatório usa o Cerco inflamatório), e a 5.7 vem por último porque os mapas passam a hospedar as estruturas como pontos de interesse. Os números das fases não mudam para não quebrar as decisões que citam cada uma.
 
 A arte não espera a fase 6: os sprites de molécula são montados por código a partir dos átomos (aba Design), então entram já na fase 1. A fase 6 cuida do resto: HUD final, som, telas e acabamento.
 
@@ -274,14 +274,34 @@ Os itens que caem no chão da run, com o mesmo conjunto do Vampire Survivors ada
 
 ## Fase 5.6: Variedade da run
 
-Três ideias do Vampire Survivors que deixam a run menos repetitiva, aprovadas pelo Vitor na comparação de [lacunas-vs.md](lacunas-vs.md) ([decisão 0025](decisoes/0025-variedade-da-run.md)). A cápsula do chefe e as estruturas destrutíveis, também aprovadas, ficam na fase 5.5 (itens no mapa), com a Sorte melhorando a quantidade e a raridade das recompensas da cápsula.
+A fase reformulada pela [decisão 0030](decisoes/0030-variedade-da-run-reformulada.md). As três ideias do Vampire Survivors da [decisão 0025](decisoes/0025-variedade-da-run.md) (formações, perfil do personagem e Limit Break) são refeitas em cima do que veio do Megabonk (receptores, suplementos, sinapses) e do tema do jogo: **o organismo**. A pergunta continua a mesma: a run muda de cara a cada pico, e cada agente cresce do seu jeito? A cápsula do chefe e as vesículas ficam na fase 5.5.
 
-- [ ] Ondas com formação, programadas em `run.json`: Pico glicêmico (enxame que atravessa a tela), Cerco inflamatório (anel de citocinas que fecha), Parede lipídica (fileira que varre o mapa) e Surto de cortisol.
-- [ ] Perfil farmacológico: cada agente ganha um atributo próprio a cada 10 níveis, até o nível 50, com os valores em `agents.json`; aparece na ficha do agente e na aba Atributos da pausa.
-- [ ] Superdosagem: com todas as armas e passivos no máximo, o level up oferece um aumento pequeno e sorteado (dano, área, recarga) numa arma, sem teto, ao lado da "Nova dose".
-- [ ] Jogar runs de 20 minutos com os três agentes e ajustar a frequência das formações.
+**A run muda de cara: crises pela doença do indivíduo**
 
-**Critério de saída:** numa run de 20 minutos aparecem pelo menos três formações diferentes, o level up continua útil depois que tudo chega ao máximo, e dá para dizer qual agente é qual só pelo jeito que ele cresce.
+- [ ] Formações programadas em `run.json`, cada uma ligada a uma família de molécula: **Pico glicêmico** (açúcares: enxame rápido que atravessa a tela), **Cerco inflamatório** (inflamação: anel de citocinas que fecha; o Foco inflamatório da fase 5.11 usa este), **Parede lipídica** (lipídios: fileira lenta que varre o mapa), **Surto de cortisol** (estresse: um cortisol no meio de um grupo acelerado), **Surto oxidativo** (radicais: raios diagonais e erráticos) e **Maré tóxica** (toxinas: fileira larga e lenta que deixa poças).
+- [ ] A doença escolhe a formação: o peso de cada uma é o peso da família dela no organismo (`familyWeights`), então Física baixa traz Picos glicêmicos e Paredes lipídicas, Mental baixa traz Surtos de cortisol, e assim por diante. Outro indivíduo, outras formações.
+- [ ] Agenda: uma formação a cada 90 s, e a cada pico do dente de serra (5 minutos) vem uma **crise**: a formação mais puxada pela doença vem dupla, com o nome no banner (Crise glicêmica, inflamatória, oxidativa...) e o mapa levemente tingido.
+- [ ] Aviso de 3 s antes, com seta e borda piscando do lado de onde vem; a formação nunca nasce dentro da tela e atravessa obstáculos.
+- [ ] Os números das formações e da agenda em `run.json`; as formações entram no Compêndio e na [wiki.md](wiki.md).
+
+**Cada agente cresce do seu jeito: receptor nativo**
+
+- [ ] Cada agente nasce com um **receptor nativo**, num espaço extra que não se troca nem se tira, que sobe 1 nível a cada 10 níveis de run, até o nível 5 no nível 50. Soma com o receptor de mesmo atributo, se o jogador também o escolher no level up. Valores em `agents.json`.
+- [ ] Primeiro chute: Dopamina, **Receptor D2** (−8% de recarga por nível); Lipase, **Sítio ativo** (+10% de Reatividade contra lipídios por nível); Insulina, **Receptor de insulina** (+25% de Raio de coleta por nível).
+- [ ] Borda dourada na HUD e na pausa; o perfil aparece na ficha do agente e a aba Atributos mostra "perfil" como origem do bônus.
+
+**Excesso: Superdosagem de atributos**
+
+- [ ] Com as armas e os receptores no máximo, o level up oferece **Superdosagem**: três cartões pequenos de bônus de atributo Comum (os mesmos cartões do level up e da sinapse), sorteados entre os atributos abaixo do teto na run, mais a "Nova dose". Sem teto de quantidade; o banner avisa que a run entrou na fase de excesso.
+
+**Para fechar**
+
+- [ ] Jogar runs de 20 minutos com os três agentes e com uma doença de cada setor, e ajustar a frequência das formações e das crises.
+- [ ] Atualizar [wiki.md](wiki.md), [personagens.md](personagens.md) e rodar o `npm run sim`.
+
+**Depende de:** o organismo (fase 5, a doença escolhe as formações) e os receptores (fase 5.8, que dão o receptor nativo e os cartões do level up). Vem antes da 5.11, que usa o Cerco inflamatório.
+
+**Critério de saída:** numa run de 20 minutos com Física baixa aparecem pelo menos três formações, quase todas de açúcares e lipídios; com outra doença, as formações mudam; dá para dizer qual agente é qual só pelo jeito que ele cresce; e, com tudo no máximo, o level up ainda dá alguma coisa.
 
 ## Fase 5.7: Mapas gerados
 

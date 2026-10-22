@@ -1,6 +1,6 @@
 # 0025. Fase 5.6: variedade da run com ideias do Vampire Survivors
 
-- **Status:** aceita
+- **Status:** substituída em parte por 0030
 - **Data:** 2026-10-22
 - **Área:** processo
 

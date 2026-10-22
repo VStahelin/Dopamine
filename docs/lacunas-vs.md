@@ -11,9 +11,9 @@ O Vitor aprovou cinco das seis recomendações em 22/10/2026 e deixou as Conquis
 | # | Recomendação | Decisão | Onde entra no roadmap |
 | --- | --- | --- | --- |
 | 1 | **Baú do chefe com evolução.** O chefe solta uma cápsula que abre com 1, 3 ou 5 recompensas, e é ali que a arma no máximo evolui. A **Sorte** melhora a quantidade e também a raridade das recompensas | aprovada | Fase 5.5 (cápsula do chefe, [itens.md](itens.md)) |
-| 2 | **Ondas com formação.** Enxames que cruzam a tela e anéis que fecham em volta do agente, além do dente de serra que já existe | aprovada | [Fase 5.6](roadmap.md#fase-56-variedade-da-run) |
-| 3 | **Perfil farmacológico.** Cada agente ganha um bônus próprio a cada 10 níveis, como os personagens do VS | aprovada | [Fase 5.6](roadmap.md#fase-56-variedade-da-run) |
-| 4 | **Superdosagem (Limit Break).** Depois que tudo chega ao máximo, cada level up ainda sobe um pouco uma arma | aprovada | [Fase 5.6](roadmap.md#fase-56-variedade-da-run) |
+| 2 | **Ondas com formação.** Enxames que cruzam a tela e anéis que fecham em volta do agente, além do dente de serra que já existe | aprovada, reformulada pela [0030](decisoes/0030-variedade-da-run-reformulada.md): a doença escolhe a formação | [Fase 5.6](roadmap.md#fase-56-variedade-da-run) |
+| 3 | **Perfil farmacológico.** Cada agente ganha um bônus próprio a cada 10 níveis, como os personagens do VS | aprovada, reformulada pela [0030](decisoes/0030-variedade-da-run-reformulada.md): vira o receptor nativo | [Fase 5.6](roadmap.md#fase-56-variedade-da-run) |
+| 4 | **Superdosagem (Limit Break).** Depois que tudo chega ao máximo, cada level up ainda sobe um pouco uma arma | aprovada, reformulada pela [0030](decisoes/0030-variedade-da-run-reformulada.md): três cartões de bônus de atributo | [Fase 5.6](roadmap.md#fase-56-variedade-da-run) |
 | 5 | **Conquistas que liberam conteúdo.** Cada meta libera algo no pool ou dá ATP | para elaborar no futuro | [Depois](roadmap.md#depois-conquistas) |
 | 6 | **Estruturas destrutíveis no mapa.** Bolsas no chão que, quebradas, soltam um item | aprovada | Fase 5.5 (vesículas, [itens.md](itens.md)) |
 
@@ -58,6 +58,8 @@ Já cobertos: ataque automático, level up com escolhas, armas com 8 níveis, pa
 
 ### Ondas com formação
 
+> **Reformulado pela [0030](decisoes/0030-variedade-da-run-reformulada.md):** são seis formações, uma por família de molécula (com o Surto oxidativo e a Maré tóxica), a doença do indivíduo escolhe qual vem, e a cada pico de 5 minutos há uma crise com a formação em dobro. Detalhes na [fase 5.6](roadmap.md#fase-56-variedade-da-run).
+
 Além do spawn contínuo em volta, eventos programados em `run.json`:
 
 | Formação | Como é | Molécula |
@@ -69,9 +71,13 @@ Além do spawn contínuo em volta, eventos programados em `run.json`:
 
 ### Perfil farmacológico
 
+> **Reformulado pela [0030](decisoes/0030-variedade-da-run-reformulada.md):** o perfil é um **receptor nativo** de cada agente, num espaço extra que sobe 1 nível a cada 10 níveis, até o 5 no nível 50.
+
 Cada agente ganha um atributo próprio a cada 10 níveis, até o nível 50, como no VS (o Antonio ganha +10% de dano a cada 10 níveis). Exemplos: Dopamina +5% de Metabolismo; Lipase +10% de Reatividade contra lipídios; Insulina +10% de Raio de coleta. Os valores vão em `agents.json`.
 
 ### Superdosagem (Limit Break)
+
+> **Reformulado pela [0030](decisoes/0030-variedade-da-run-reformulada.md):** com armas e receptores no máximo, o level up oferece três cartões pequenos de bônus de atributo Comum, em vez de subir uma arma sorteada.
 
 Quando todas as armas e passivos estão no máximo, o level up passa a oferecer "Superdosagem": um aumento pequeno e sorteado (dano, área, recarga) numa arma. Fica junto com a "Nova dose", sem teto, e o banner avisa que a run entrou na fase de excesso.
 

@@ -30,8 +30,9 @@ As decisões de design tomadas antes deste registro continuam marcadas como "dec
 | [0022](0022-campo-longo.md) | Campo longo: defesa por ondas com pool de agentes, sempre rodando | design | proposta |
 | [0023](0023-organismo.md) | Organismo: setores com efeito no jogo, saúde vinda dos agentes e ALTA com herança | design | proposta |
 | [0024](0024-itens-no-mapa.md) | Itens no mapa como fase 5.5, com o conjunto do Vampire Survivors | processo | proposta |
-| [0025](0025-variedade-da-run.md) | Fase 5.6: variedade da run (formações, perfil farmacológico, Superdosagem); Sorte também na raridade da cápsula | processo | aceita |
+| [0025](0025-variedade-da-run.md) | Fase 5.6: variedade da run (formações, perfil farmacológico, Superdosagem); Sorte também na raridade da cápsula | processo | substituída em parte por 0030 |
 | [0026](0026-mapas-gerados.md) | Mapas gerados por semente em blocos, em ambientes do corpo (fase 5.7) | design | proposta |
 | [0027](0027-level-up-com-receptores.md) | Level up só com armas e receptores (os tomos do Megabonk), com raridade também no nível de arma | design | proposta |
 | [0028](0028-suplementos-e-ampolas.md) | Suplementos de ampola, gema de XP com chance e agregados (mini chefes) | design | proposta |
 | [0029](0029-sinapses-e-estruturas.md) | Sinapses e estruturas no mapa (santuários do Megabonk) | design | proposta |
+| [0030](0030-variedade-da-run-reformulada.md) | Fase 5.6 reformulada: crises pela doença, receptor nativo e Superdosagem de atributos | design | proposta |
