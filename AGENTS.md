@@ -38,6 +38,7 @@ Só as decisões **importantes**, que têm impacto na construção do jogo, vira
 ## Ao terminar uma tarefa
 
 - Marque os itens concluídos no [roadmap](docs/roadmap.md) e atualize o status da fase.
+- Mudou uma mecânica ou um número que o jogador vê? Atualize os textos da wiki em [docs/wiki.md](docs/wiki.md) no mesmo commit.
 - Registre as decisões tomadas durante a tarefa.
 - Rode os testes e o lint antes de dizer que terminou (os comandos estão em [docs/arquitetura.md](docs/arquitetura.md) quando o projeto existir).
 
