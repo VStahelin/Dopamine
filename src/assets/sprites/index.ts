@@ -5,7 +5,7 @@
  *
  * - `palette.json`: letras das grades de ícone, as mesmas do canvas de identidade visual.
  * - `icons.json`: ícones de 16×16 do canvas (prancheta "Ícones de armas e habilidades"), por
- *   arma, modificador e especial.
+ *   arma, modificador e especial, e os itens do mapa (prancheta "Itens do mapa (drops)").
  * - `frames.json`: molduras dos ícones (prancheta "Crônico: ícones, dano e paisagem").
  * - `molecules.json`: moléculas como átomos e ligações, em unidades do mundo, e o estilo de cada
  *   elemento.
@@ -23,8 +23,11 @@ import worldJson from './world.json';
 /** Grade de pixels: uma string por linha, um caractere por pixel; '.' é transparente. */
 export type PixelGrid = readonly string[];
 
-/** `stats`: atributos sem modificador no level up (só no Laboratório), desenhados no jogo. */
-export type IconGroup = 'weapons' | 'passives' | 'specials' | 'stats';
+/**
+ * `stats`: atributos sem modificador no level up (só no Laboratório), desenhados no jogo.
+ * `items`: itens do mapa da fase 5.5 (prancheta "Itens do mapa (drops)"), ainda sem uso no jogo.
+ */
+export type IconGroup = 'weapons' | 'passives' | 'specials' | 'stats' | 'items';
 
 /** Cor em `#RRGGBB` para cada letra das grades de ícone. */
 export const ICON_PALETTE: Readonly<Record<string, string>> = paletteJson;
