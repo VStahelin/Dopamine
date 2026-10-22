@@ -38,6 +38,8 @@ export interface Enemy {
   frozen: number;
   /** Nasceu da cascata de outra: solta gema com menos chance. */
   fragment: boolean;
+  /** Agregado (mini chefe, fase 5.10): maior, mais forte, sempre solta ampola. */
+  aggregate: boolean;
 }
 
 export interface Projectile {
@@ -184,6 +186,7 @@ export type RunEvent =
   | { type: 'strike'; x: number; y: number; radius: number }
   | { type: 'special'; kind: string }
   | { type: 'boss'; kind: EnemyKind }
+  | { type: 'aggregate'; kind: EnemyKind }
   | { type: 'levelUp'; level: number }
   | { type: 'vesicle'; x: number; y: number }
   | { type: 'item'; kind: ItemId | 'capsule' | 'ampoule'; x: number; y: number }
@@ -269,6 +272,10 @@ export interface RunState {
   banished: string[];
   /** Tipos de molécula vistos nesta run, para o Compêndio. */
   seen: EnemyKind[];
+  /** Agregados já agendados (nascidos ou pulados por cair num minuto de chefe). */
+  aggregatesSpawned: number;
+  /** Moléculas que já vieram como agregado nesta run, para o Compêndio. */
+  seenAggregates: EnemyKind[];
   /** Próximos minutos de chefe já agendados, por índice de `bosses`. */
   bossesSpawned: number[];
   over: boolean;
@@ -295,6 +302,7 @@ export interface RunResult {
   seen: EnemyKind[];
   seenItems: ItemId[];
   seenSupplements: string[];
+  seenAggregates: EnemyKind[];
   capsulesOpened: number;
 }
 
@@ -365,6 +373,8 @@ export function createRun(
     banished: [],
     seen: [],
     bossesSpawned: rules.run.bosses.map(() => 0),
+    aggregatesSpawned: 0,
+    seenAggregates: [],
     over: false,
     nextEnemyId: 1,
     spawnBudget: 0,
@@ -405,6 +415,7 @@ export function addEnemy(
     vulnerability: 0,
     frozen: 0,
     fragment: false,
+    aggregate: false,
   };
   state.enemies.push(enemy);
   if (!state.seen.includes(kind)) state.seen.push(kind);
@@ -420,6 +431,7 @@ export function runResult(state: RunState): RunResult {
     seen: [...state.seen],
     seenItems: [...state.seenItems],
     seenSupplements: [...state.seenSupplements],
+    seenAggregates: [...state.seenAggregates],
     capsulesOpened: state.capsulesOpened,
   };
 }

@@ -196,7 +196,7 @@ function loadAgents(): Record<AgentId, AgentDef> {
 }
 
 export const STATS: StatsConfig = statsJson;
-export const RUN: RunConfig = runJson;
+export const RUN: RunConfig = runJson as RunConfig;
 export const ECONOMY: EconomyConfig = economyJson;
 export const IDLE: IdleConfig = loadIdle();
 export const DISPLAY: DisplayConfig = displayJson;

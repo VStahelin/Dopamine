@@ -95,6 +95,8 @@ function spawnEnemies(state: RunState, viewRadius: number, dt: number): void {
     state.events.push({ type: 'boss', kind: b.kind as EnemyKind });
   });
 
+  spawnAggregate(state, distance, hp);
+
   const rate =
     run.spawn.baseEnemiesPerSecond *
     difficulty *
@@ -134,12 +136,49 @@ function spawnEnemies(state: RunState, viewRadius: number, dt: number): void {
   // Chefes nunca são reposicionados.
   const far = distance * 2;
   for (const e of state.enemies) {
-    if (e.boss) continue;
+    if (e.boss || e.aggregate) continue;
     if ((e.x - state.agent.x) ** 2 + (e.y - state.agent.y) ** 2 < far * far) continue;
     const at = spawnAround(state, distance);
     e.x = at.x;
     e.y = at.y;
   }
+}
+
+/**
+ * Agregado (mini chefe, fase 5.10): a cada tantos minutos, menos nos minutos de chefe, a molécula
+ * forte mais comum agora (o peso já vem puxado pela doença) nasce maior e bem mais forte. Antes
+ * de haver molécula forte liberada, vem a que libera primeiro.
+ */
+function spawnAggregate(state: RunState, distance: number, hp: number): void {
+  const { run, enemies } = state.rules;
+  const ag = run.aggregates;
+  const next = (ag.startMinute + state.aggregatesSpawned * ag.everyMinutes) * 60;
+  if (state.time < next) return;
+  state.aggregatesSpawned++;
+  const minute = Math.round(next / 60);
+  if (run.bosses.some((b) => minute % b.everyMinutes === 0)) return;
+  const strong = (Object.keys(enemies) as EnemyKind[]).filter(
+    (k) => enemies[k].contactDamage === 'strong' && !enemies[k].boss,
+  );
+  const unlocked = strong.filter((k) => enemies[k].unlockMinute <= state.time / 60);
+  const pool = unlocked.length > 0 ? unlocked : strong;
+  const by =
+    unlocked.length > 0
+      ? (k: EnemyKind) => enemies[k].spawnWeight
+      : (k: EnemyKind) => -enemies[k].unlockMinute;
+  const kind = pool.reduce<EnemyKind | undefined>(
+    (best, k) => (!best || by(k) > by(best) ? k : best),
+    undefined,
+  );
+  if (!kind) return;
+  const at = spawnAround(state, distance);
+  const e = addEnemy(state, kind, at.x, at.y, hp * ag.hpMultiplier);
+  e.aggregate = true;
+  e.radius *= ag.sizeMultiplier;
+  e.speed *= ag.speedMultiplier;
+  e.xp *= ag.xpMultiplier;
+  if (!state.seenAggregates.includes(kind)) state.seenAggregates.push(kind);
+  state.events.push({ type: 'aggregate', kind });
 }
 
 function moveEnemies(state: RunState, dt: number): void {

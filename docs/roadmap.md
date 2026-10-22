@@ -29,7 +29,7 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | 5.7 | Mapas gerados | Cada run tem um mapa diferente, sem deixar o agente preso? | 2, 5.5 | não iniciada |
 | 5.8 | Receptores no level up | O level up fica mais curto e cada escolha pesa mais? | 2, 3 | implementada, falta validar no celular |
 | 5.9 | Suplementos e ampolas | Os suplementos dão motivo para andar pelo mapa e montam um build diferente a cada run? | 5.5, 5.8 | implementada, falta validar no celular |
-| 5.10 | Agregados (mini chefes) | Entre um chefe e outro sempre tem um alvo que vale o risco? | 5.9 | não iniciada |
+| 5.10 | Agregados (mini chefes) | Entre um chefe e outro sempre tem um alvo que vale o risco? | 5.9 | implementada, falta validar no celular |
 | 5.11 | Sinapses e estruturas | O jogador sai do lugar para buscar bônus no mapa? | 5.6, 5.9, 5.10 | não iniciada |
 | 6 | Arte, polimento e lançamento | Dá para mandar o link para os amigos? | 1 a 5.11 | não iniciada |
 | 7 | Lojas e plataformas | O mesmo jogo roda e é publicado em Android, iOS, Steam e Microsoft Store? | 6 | não iniciada |
@@ -359,11 +359,11 @@ Os atributos que saíram do level up voltam como **suplementos**, passivos que a
 
 Um mini chefe a cada 2 minutos, que sempre solta ampola. Regras em [megabonk.md](megabonk.md#3-drops-xp-com-chance-ampolas-e-agregados) ([decisão 0028](decisoes/0028-suplementos-e-ampolas.md)).
 
-- [ ] Agregado da molécula forte mais comum na onda (amido, triglicerídeo, cortisol): vida ×12, tamanho ×1,5, mais lento, contorno vermelho; números em `run.json`.
-- [ ] Nasce a cada 2 minutos a partir do minuto 2, menos nos minutos de chefe.
-- [ ] Cascata ao decompor, gema vermelha e ampola de mínimo Raro.
-- [ ] Seta na borda da tela enquanto está fora de vista; conta para Especificidade e Anticorpo.
-- [ ] Agregados no Compêndio e na wiki.
+- [x] Agregado da molécula forte mais comum na onda (amido, triglicerídeo, cortisol): vida ×12, tamanho ×1,5, mais lento, contorno vermelho; números em `run.json`. "Mais comum" é o maior peso de nascimento, que já vem puxado pela doença; antes de qualquer molécula forte liberar (minuto 2), vem a que libera primeiro.
+- [x] Nasce a cada 2 minutos a partir do minuto 2, menos nos minutos de chefe. Não é reposicionado quando fica longe, como o chefe.
+- [x] Cascata ao decompor, gema vermelha e ampola de mínimo Raro.
+- [x] Seta na borda da tela enquanto está fora de vista; conta para Especificidade e Anticorpo.
+- [x] Agregados no Compêndio e na wiki.
 
 **Critério de saída:** entre dois chefes sempre aparecem dois agregados, e decompor um deles é uma decisão de risco, não um passeio.
 

@@ -168,6 +168,11 @@ function dropXp(state: RunState, e: Enemy): void {
  */
 function dropAmpoule(state: RunState, e: Enemy): void {
   const a = state.rules.drops.ampoule;
+  if (e.aggregate) {
+    const min = state.rules.run.aggregates.minRarity;
+    state.pickups.push({ x: e.x, y: e.y, kind: 'ampoule', attracted: false, minRarity: min });
+    return;
+  }
   if (e.boss) {
     state.pickups.push({
       x: e.x,

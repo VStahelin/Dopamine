@@ -28,6 +28,9 @@ Moléculas decompostas soltam gemas azuis. Passe perto para coletar. Encheu a ba
 ### Ondas e chefes
 A dificuldade sobe com o tempo. A cada 5 minutos vem um pico de onda (o tempo fica laranja), com mais moléculas, seguido de um respiro curto. A cada 5 minutos também aparece um chefe: a Partícula de LDL.
 
+### Agregados
+A cada 2 minutos (menos nos minutos de chefe) nasce um agregado: a molécula forte mais comum no momento, grudada numa massa só. É maior, mais lenta e tem 12 vezes a vida, com um contorno vermelho e uma seta na borda da tela quando está longe. Decompor um agregado sempre solta uma ampola Rara ou melhor e uma gema vermelha, e ele se quebra em cascata como a molécula normal. A doença do indivíduo decide qual molécula vira agregado.
+
 ### Decomposição em cascata
 Moléculas fortes não somem de uma vez: elas se quebram em moléculas menores, que continuam vindo. O Amido vira Maltose, que vira Glicose. Vale planejar a área de ataque para as cascatas.
 

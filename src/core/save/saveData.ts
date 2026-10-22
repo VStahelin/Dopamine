@@ -35,6 +35,8 @@ export interface SaveData {
   seenItems: string[];
   /** Suplementos já tomados, para o Compêndio (fase 5.9). */
   seenSupplements: string[];
+  /** Moléculas que já vieram como agregado, para o Compêndio (fase 5.10). */
+  seenAggregates: string[];
   /** Cápsulas abertas no save, para a sorte de principiante. */
   capsulesOpened: number;
   /** ATP guardado, ganho nas runs e gasto no Laboratório e nos desbloqueios. */
@@ -58,6 +60,7 @@ export function defaultSave(options: Options): SaveData {
     seen: [],
     seenItems: [],
     seenSupplements: [],
+    seenAggregates: [],
     capsulesOpened: 0,
     atp: 0,
     meta: defaultProgress(),
@@ -81,6 +84,7 @@ export function migrateSave(raw: unknown, defaults: Options): SaveData {
     seen: unknown;
     seenItems: unknown;
     seenSupplements: unknown;
+    seenAggregates: unknown;
     capsulesOpened: unknown;
     atp: unknown;
     meta: unknown;
@@ -108,6 +112,7 @@ export function migrateSave(raw: unknown, defaults: Options): SaveData {
     seen: Array.isArray(data.seen) ? data.seen.filter((k) => typeof k === 'string') : [],
     seenItems: strings(data.seenItems) ?? [],
     seenSupplements: strings(data.seenSupplements) ?? [],
+    seenAggregates: strings(data.seenAggregates) ?? [],
     capsulesOpened: num(data.capsulesOpened, 0),
     atp: num(data.atp, 0),
     meta: migrateProgress(data.meta),
@@ -138,6 +143,7 @@ export function recordRun(
       seen: [...new Set([...save.seen, ...result.seen])],
       seenItems: [...new Set([...save.seenItems, ...result.seenItems])],
       seenSupplements: [...new Set([...save.seenSupplements, ...result.seenSupplements])],
+      seenAggregates: [...new Set([...save.seenAggregates, ...result.seenAggregates])],
       capsulesOpened: save.capsulesOpened + result.capsulesOpened,
       atp: save.atp + result.atp,
     },

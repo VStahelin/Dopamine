@@ -329,6 +329,7 @@ export function renderCompendium(
   seen: readonly string[],
   seenItems: readonly string[],
   seenSupplements: readonly string[] = [],
+  seenAggregates: readonly string[] = [],
 ): Obj[] {
   const { left, width } = column(x, w);
   const g = scene.add.graphics();
@@ -379,7 +380,9 @@ export function renderCompendium(
     }
     cy += h + 4;
   }
-  const items = renderItems(scene, g, left, cy + 12, width, seenItems);
+  const aggregates = renderAggregates(scene, g, left, cy + 12, width, seenAggregates);
+  out.push(...aggregates.objects);
+  const items = renderItems(scene, g, left, aggregates.bottom + 12, width, seenItems);
   out.push(...items.objects);
   out.push(...renderSupplements(scene, g, left, items.bottom + 12, width, seenSupplements));
   return out;
@@ -439,6 +442,55 @@ function renderSupplements(
     cy += h + 4;
   }
   return out;
+}
+
+/** Seção "Agregados": as moléculas fortes que já vieram como mini chefe (fase 5.10). */
+function renderAggregates(
+  scene: Phaser.Scene,
+  g: Phaser.GameObjects.Graphics,
+  left: number,
+  y: number,
+  width: number,
+  seen: readonly string[],
+): { objects: Obj[]; bottom: number } {
+  const kinds = (Object.keys(ENEMIES) as EnemyKind[]).filter(
+    (k) => ENEMIES[k].contactDamage === 'strong' && !ENEMIES[k].boss,
+  );
+  const known = kinds.filter((k) => seen.includes(k)).length;
+  const out: Obj[] = [header(scene, left, y, `AGREGADOS · ${known}/${kinds.length}`)];
+  let cy = y + 16;
+  for (const kind of kinds) {
+    const isSeen = seen.includes(kind);
+    const h = 50;
+    drawInkBox(g, left, cy, width, h, PALETTE.panel);
+    g.fillStyle(PALETTE.interaction).fillRect(left + 4, cy + 4, 38, 42);
+    drawCreamSlot(g, left + 6, cy + 6, 34, 38);
+    const img = sprite(scene, ENEMY_TEXTURES[kind], left + 23, cy + 25, 32);
+    if (!isSeen) img.setTint(0x15172e).setTintMode(Phaser.TintModes.FILL);
+    out.push(img);
+    out.push(
+      isSeen
+        ? scene.add.text(
+            left + 50,
+            cy + 6,
+            `Agregado de ${ENEMIES[kind].name.toLowerCase()}`,
+            withShadow(bodyText(14, PALETTE_CSS.text), PALETTE_CSS.ink, 1),
+          )
+        : scene.add.text(left + 50, cy + 14, '???', impactText(13, PALETTE_CSS.textMuted)),
+    );
+    if (isSeen) {
+      out.push(
+        scene.add.text(
+          left + 50,
+          cy + 26,
+          'MINI CHEFE · SEMPRE SOLTA AMPOLA',
+          labelText(8, PALETTE_CSS.interaction),
+        ),
+      );
+    }
+    cy += h + 4;
+  }
+  return { objects: out, bottom: cy };
 }
 
 /** Seção "Itens" do Compêndio: os itens das vesículas (fase 5.5). */

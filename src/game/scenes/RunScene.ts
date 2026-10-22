@@ -271,12 +271,13 @@ export class RunScene extends Phaser.Scene {
     const frozen = this.run.effects.freeze > 0;
 
     sync(this, this.enemySprites, this.run.enemies, 5, (s, e) => {
+      // O agregado é a mesma molécula, maior (fase 5.10).
+      const size = e.aggregate ? RUN.aggregates.sizeMultiplier : 1;
       s.setTexture(this.tex(ENEMY_TEXTURES[e.kind]))
-        .setScale(1 / this.detail)
+        .setScale(size / this.detail)
         .setPosition(e.x, e.y)
         .setFlipX(e.x > agent.x);
       if (e.hitFlash > 0) s.setTint(0xffffff).setTintMode(Phaser.TintModes.FILL);
-      // Gelo seco: moléculas pintadas de azul.
       // Gelo seco ou Nitrogênio líquido: moléculas pintadas de azul.
       else if (frozen || e.frozen > 0) {
         s.setTint(PALETTE.water).setTintMode(Phaser.TintModes.MULTIPLY);
@@ -357,6 +358,10 @@ export class RunScene extends Phaser.Scene {
       if (ev.type === 'boss') {
         this.cameras.main.shake(400, 0.01);
         this.showFloater(a.x, a.y - 30, 'CHEFE!', 'hurt');
+      }
+      if (ev.type === 'aggregate') {
+        this.cameras.main.shake(200, 0.005);
+        this.showFloater(a.x, a.y - 30, 'AGREGADO!', 'hurt');
       }
       if (ev.type === 'special') this.cameras.main.flash(200, 255, 179, 71);
       if (ev.type === 'vesicle') this.addPopFx(ev);
@@ -462,6 +467,35 @@ export class RunScene extends Phaser.Scene {
       pixelRing(g, p.x, p.y, p.radius, 2, px);
     }
     this.drawItemEffects(g, px);
+    this.drawAggregates(g, px);
+  }
+
+  /**
+   * Agregados: contorno vermelho em volta e, fora da tela, uma seta vermelha na borda apontando
+   * para ele (fase 5.10).
+   */
+  private drawAggregates(g: Phaser.GameObjects.Graphics, px: number): void {
+    const v = this.cameras.main.worldView;
+    const { agent } = this.run;
+    const margin = 18;
+    for (const e of this.run.enemies) {
+      if (!e.aggregate || e.hp <= 0) continue;
+      g.fillStyle(PALETTE.interaction, 0.9);
+      pixelRing(g, e.x, e.y, e.radius + 3, 2, px);
+      if (v.contains(e.x, e.y)) continue;
+      const angle = Math.atan2(e.y - agent.y, e.x - agent.x);
+      const x = Phaser.Math.Clamp(e.x, v.x + margin, v.right - margin);
+      const y = Phaser.Math.Clamp(e.y, v.y + margin, v.bottom - margin);
+      const tip = (r: number, a: number) => ({ x: x + Math.cos(a) * r, y: y + Math.sin(a) * r });
+      const p1 = tip(14, angle);
+      const p2 = tip(11, angle + 2.4);
+      const p3 = tip(11, angle - 2.4);
+      g.fillStyle(PALETTE.outline, 1).fillTriangle(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
+      const q1 = tip(10, angle);
+      const q2 = tip(7.5, angle + 2.4);
+      const q3 = tip(7.5, angle - 2.4);
+      g.fillStyle(PALETTE.interaction, 1).fillTriangle(q1.x, q1.y, q2.x, q2.y, q3.x, q3.y);
+    }
   }
 
   /** Efeitos de item com tempo: lança-chamas, anel do Gelo seco e borda da Febre de ATP. */
