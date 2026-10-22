@@ -165,6 +165,54 @@ O Etanol chega em grupos. O Acetaldeído se quebra em Etanol. Vêm muito quando 
 
 ---
 
+## Itens no mapa
+
+*Números de `drops.json`. O Compêndio mostra cada item depois que você o coleta.*
+
+### Vesículas
+Bolsas translúcidas paradas no chão, com dopamina dentro. Aparecem fora da tela, uma a cada 15 segundos (no máximo 6). Qualquer golpe rompe a vesícula, que solta um item. Itens raros só começam a sair depois de certo nível da run.
+
+### Coleta
+O Raio de coleta puxa os itens como puxa as gemas. A Sorte deixa os itens raros mais comuns, menos o ATP e a Glicose.
+
+### ATP, Glicose e Glicogênio
+O ATP vale uma moeda; a Glicose, 5; o Glicogênio, 25 (a partir do nível 5). A moeda vale mais quanto mais tempo de run, e o Rendimento multiplica tudo.
+
+### Soro
+Recupera 30 interações.
+
+### Vitamina
++10% de Sorte até o fim da run. Acumula.
+
+### Gelo seco
+A partir do nível 4. Congela todas as moléculas por 10 segundos: elas param e não gastam suas interações, e você as empurra ao passar.
+
+### Osmose
+A partir do nível 12. Todas as gemas de XP do mapa correm até você.
+
+### Lisossomo
+A partir do nível 8. Decompõe todas as moléculas na tela, com cascata e gemas. O chefe não é afetado.
+
+### Bico de Bunsen
+Lança-chamas na direção em que você anda, por 10 segundos. Usa a sua Reatividade e a sua Difusão.
+
+### Glucagon e Febre de ATP
+A partir do nível 30. Puxa todo o ATP do chão e começa a Febre de ATP: por 10 segundos toda molécula decomposta solta ATP, e cada ATP coletado soma meio segundo à febre.
+
+### Gemas de XP
+A cor mostra o valor: ciano vale até 2 de XP, verde até 9, vermelha mais que isso. Com gemas demais no chão, o XP novo se junta numa gema só.
+
+### Cápsula do chefe
+Todo chefe solta uma cápsula, que você precisa tocar. Ela sobe um nível de 1, 3 ou 5 armas ou modificadores que você já tem, com raridade pela Sorte, e dá ATP. A Sorte também aumenta a chance de 3 e 5. As seis primeiras cápsulas do save dão 1, 1, 3, 1, 1 e 5.
+
+### Cápsula de prata
+Depois dos 10 minutos a cápsula é de prata: se uma arma estiver no nível máximo com o reagente certo, ela evolui.
+
+### Fosfocreatina
+Quando a cápsula ou o level up não têm mais o que subir, você ganha Fosfocreatina: ATP igual a 10 moedas.
+
+---
+
 ## Menu e progressão
 
 *Números de `meta.json` e `economy.json`.*

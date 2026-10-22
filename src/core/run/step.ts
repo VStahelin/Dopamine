@@ -42,13 +42,15 @@ export function stepRun(state: RunState, input: StepInput, dt: number): void {
   grid.clear();
   state.enemies.forEach((e, i) => grid.insert(i, e.x, e.y));
 
+  // Acontecimentos a partir daqui são deste passo (as vesículas olham só os golpes dele).
+  const firstEvent = state.events.length;
   applyFields(state, dt, grid);
   moveEnemies(state, dt);
   updateWeapons(state, dt, grid);
   moveProjectiles(state, dt, grid);
   updatePulses(state, dt, grid);
   updateZones(state, dt, grid);
-  updateItems(state, dt, grid);
+  updateItems(state, dt, grid, firstEvent);
   touchAgent(state, dt);
   updateGems(state, dt);
   updateCoins(state, dt);

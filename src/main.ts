@@ -8,6 +8,7 @@ import { BootScene } from './game/scenes/BootScene';
 import { GameOverScene } from './game/scenes/GameOverScene';
 import { HudScene } from './game/scenes/HudScene';
 import { IdleScene } from './game/scenes/IdleScene';
+import { CapsuleScene } from './game/scenes/CapsuleScene';
 import { LevelUpScene } from './game/scenes/LevelUpScene';
 import { CatalogScene } from './game/scenes/CatalogScene';
 import { HubScene } from './game/scenes/HubScene';
@@ -67,6 +68,7 @@ const game = new Phaser.Game({
     RunScene,
     HudScene,
     LevelUpScene,
+    CapsuleScene,
     PauseScene,
     GameOverScene,
     UpdatePromptScene,

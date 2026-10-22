@@ -13,4 +13,5 @@ export const SCENES = {
   gameOver: 'gameOver',
   updatePrompt: 'updatePrompt',
   idle: 'idle',
+  capsule: 'capsule',
 } as const;

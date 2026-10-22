@@ -533,6 +533,10 @@ export const ITEM_IDS = [
 export type ItemId = (typeof ITEM_IDS)[number];
 
 export interface ItemDef {
+  /** Nome mostrado no jogo e no Compêndio. */
+  name: string;
+  /** O que o item faz, numa frase, para o Compêndio. */
+  description: string;
   /** Peso no sorteio da vesícula. */
   weight: number;
   /** Nível da run a partir do qual o item pode sair. */

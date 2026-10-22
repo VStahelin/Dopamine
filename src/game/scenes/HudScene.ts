@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import { PASSIVES, type PassiveId } from '../../config';
+import { DROPS, PASSIVES, type PassiveId } from '../../config';
 import { waveAt } from '../../core/run/progression';
 import { specialReadiness } from '../../core/run/specials';
 import type { RunState } from '../../core/run/state';
@@ -317,7 +317,10 @@ export class HudScene extends Phaser.Scene {
     this.killsText.setText(run.kills.toLocaleString('pt-BR'));
   }
 
-  /** Efeitos temporários do especial: ativo (verde) e a queda depois dele (vermelho). */
+  /**
+   * Efeitos temporários: o especial ativo (verde), a queda depois dele (vermelho) e os itens com
+   * tempo (Gelo seco, Bico de Bunsen, Febre de ATP).
+   */
   private updateEffects(g: Phaser.GameObjects.Graphics, run: RunState): void {
     const def = run.rules.agents[run.agentId].special;
     const icon = iconTexture('specials', def.kind);
@@ -332,6 +335,18 @@ export class HudScene extends Phaser.Scene {
       effects.push({
         content: { frame: 'debuff', icon },
         left: run.special.crash / def.crashSeconds,
+      });
+    }
+    const items = [
+      ['dryIce', run.effects.freeze],
+      ['bunsen', run.effects.flame],
+      ['glucagon', run.effects.fever],
+    ] as const;
+    for (const [id, left] of items) {
+      if (left <= 0) continue;
+      effects.push({
+        content: { frame: 'buff', icon: iconTexture('items', id) },
+        left: left / (DROPS.items[id].seconds ?? 1),
       });
     }
     this.effectSlots.forEach((slot, i) => {

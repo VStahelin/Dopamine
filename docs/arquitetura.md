@@ -54,6 +54,7 @@ As telas de interface usam [uiLayout.ts](../src/game/ui/uiLayout.ts): zoom intei
 - [state.ts](../src/core/run/state.ts): estado da run (agente, inimigos, disparos, gemas, nível) e `createRun(semente)`.
 - [step.ts](../src/core/run/step.ts): `stepRun` avança um passo: movimento, nascimento de inimigos, perseguição, arma, dano, contato e gemas. Usa uma [grade espacial](../src/core/run/spatialGrid.ts) para achar vizinhos.
 - [upgrades.ts](../src/core/run/upgrades.ts): opções de level up com raridade (Sorte), Rerrolar, Pular, Banir e espaços de modificador.
+- [items.ts](../src/core/run/items.ts): itens no mapa (fase 5.5): vesículas, os itens que elas soltam, efeitos com tempo (Gelo seco, Bico de Bunsen, Febre de ATP) e a cápsula do chefe. Números em `drops.json`; a cápsula aberta para a run até a tela da cápsula fechar.
 - [stats.ts](../src/core/run/stats.ts) e [progression.ts](../src/core/run/progression.ts): atributos com modificadores, arma por nível, XP e dificuldade.
 - [rules.ts](../src/core/run/rules.ts): as regras chegam como parâmetro (`RunRules`), com os JSON como padrão.
 - O `core` registra acontecimentos (`events`) que a cena lê para efeitos, sem o `core` saber de desenho.

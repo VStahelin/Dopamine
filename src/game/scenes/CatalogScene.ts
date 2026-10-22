@@ -7,6 +7,7 @@ import { renderAgents, renderCompendium } from '../ui/catalogViews';
 import { drawGrid } from '../ui/icons';
 import { impactText, withShadow } from '../ui/theme';
 import { PALETTE_CSS } from '../render/palette';
+import { addScrollArea, type ScrollArea } from '../ui/scrollArea';
 import { setupUiLayout } from '../ui/uiLayout';
 import { SCENES } from './keys';
 
@@ -22,6 +23,8 @@ export class CatalogScene extends Phaser.Scene {
   private root?: Phaser.GameObjects.Container;
   private view: CatalogView = 'agents';
   private size = { w: 0, h: 0 };
+  /** Lista do Compêndio, maior que a tela. */
+  private scroll?: ScrollArea;
 
   constructor() {
     super(SCENES.catalog);
@@ -46,6 +49,9 @@ export class CatalogScene extends Phaser.Scene {
 
   private build(): void {
     this.root?.destroy();
+    const offset = this.scroll?.offset() ?? 0;
+    this.scroll?.destroy();
+    this.scroll = undefined;
     const { w, h } = this.size;
     const bg = this.add.graphics();
     drawGrid(bg, 0, 0, w, h);
@@ -83,12 +89,15 @@ export class CatalogScene extends Phaser.Scene {
               },
             },
           )
-        : renderCompendium(this, 0, 64, w, save.seen);
+        : renderCompendium(this, 0, 64, w, save.seen, save.seenItems);
     const bw = Math.min(w - 32, 220);
+    if (this.view === 'compendium') {
+      this.scroll = addScrollArea(this, body, { x: 0, y: 60, width: w, height: h - 132 }, offset);
+    }
     this.root = this.add.container(0, 0, [
       bg,
       title,
-      ...body,
+      ...(this.view === 'compendium' ? [] : body),
       addButton(this, {
         x: Math.floor((w - bw) / 2),
         y: h - 62,
@@ -99,5 +108,6 @@ export class CatalogScene extends Phaser.Scene {
         onClick: () => this.back(),
       }),
     ]);
+    this.scroll?.isolate();
   }
 }

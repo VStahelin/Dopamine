@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import { AGENTS, DISPLAY, RUN, SECTORS } from '../../config';
+import { AGENTS, DISPLAY, DROPS, RUN, SECTORS } from '../../config';
 import { addRunStars, playableAgent, rulesWithProgress } from '../../core/meta/progress';
 import { applyHealth, earn, rulesWithOrganism, runHealth } from '../../core/organism/organism';
 import { DEFAULT_RULES } from '../../core/run/rules';
@@ -16,6 +16,9 @@ import {
   ENEMY_TEXTURES,
   PROJECTILE_TEXTURES,
   TEXTURES,
+  iconKey,
+  iconTexture,
+  loadIconsForZoom,
   textureKey,
 } from '../render/textures';
 import { getSave, setSave } from '../storage/saveStore';
@@ -59,11 +62,18 @@ const AURA_COLORS: Record<string, number> = {
  * Campo crônico: roda a simulação do core em passos fixos (decisão 0012) e desenha o estado.
  * Não guarda regra de jogo.
  */
+/** Tamanho dos itens no chão, em unidades do mundo (o desenho ocupa só o miolo do ícone). */
+const GEM_SIZE = 18;
+const ITEM_SIZE = 16;
+const VESICLE_SIZE = 20;
+const CAPSULE_SIZE = 22;
+
 export class RunScene extends Phaser.Scene {
   run!: RunState;
   private paused = false;
   private accumulator = 0;
   private levelUpOpen = false;
+  private capsuleOpen = false;
   private overHandled = false;
   private gaveUp = false;
   private ground!: Phaser.GameObjects.TileSprite;
@@ -72,6 +82,8 @@ export class RunScene extends Phaser.Scene {
   private projectileSprites: Phaser.GameObjects.Image[] = [];
   private gemSprites: Phaser.GameObjects.Image[] = [];
   private coinSprites: Phaser.GameObjects.Image[] = [];
+  private vesicleSprites: Phaser.GameObjects.Image[] = [];
+  private pickupSprites: Phaser.GameObjects.Image[] = [];
   /** Opção "números de dano", relida ao voltar da pausa. */
   private showNumbers = true;
   private electronSprites: Phaser.GameObjects.Image[] = [];
@@ -105,7 +117,10 @@ export class RunScene extends Phaser.Scene {
       save.selectedAgent in AGENTS ? save.selectedAgent : 'dopamine',
     );
     // Organismo: setores mudam atributos, a doença puxa as moléculas e o indivíduo dá a dificuldade.
-    const rules = rulesWithOrganism(rulesWithProgress(DEFAULT_RULES, save.meta), save.organism);
+    const rules = {
+      ...rulesWithOrganism(rulesWithProgress(DEFAULT_RULES, save.meta), save.organism),
+      capsulesOpened: save.capsulesOpened,
+    };
     this.run = createRun(Date.now() >>> 0, rules, agentId);
     this.specialQueued = false;
     this.electronSprites = [];
@@ -113,12 +128,15 @@ export class RunScene extends Phaser.Scene {
     this.paused = false;
     this.accumulator = 0;
     this.levelUpOpen = false;
+    this.capsuleOpen = false;
     this.overHandled = false;
     this.gaveUp = false;
     this.enemySprites = [];
     this.projectileSprites = [];
     this.gemSprites = [];
     this.coinSprites = [];
+    this.vesicleSprites = [];
+    this.pickupSprites = [];
     this.showNumbers = getSave(this).options.showDamageNumbers;
     this.floaters = [];
     this.areaSums.clear();
@@ -164,7 +182,7 @@ export class RunScene extends Phaser.Scene {
 
   /** Abre ou fecha a pausa (tecla Esc, P ou o botão da HUD). */
   togglePause(): void {
-    if (this.run.over || this.levelUpOpen) return;
+    if (this.run.over || this.levelUpOpen || this.capsuleOpen) return;
     this.paused = !this.paused;
     this.showNumbers = getSave(this).options.showDamageNumbers;
     if (this.paused) this.scene.launch(SCENES.pause);
@@ -202,7 +220,14 @@ export class RunScene extends Phaser.Scene {
   }
 
   private stopOverlays(): void {
-    for (const key of [SCENES.hud, SCENES.levelUp, SCENES.pause, SCENES.options, SCENES.gameOver]) {
+    for (const key of [
+      SCENES.hud,
+      SCENES.levelUp,
+      SCENES.capsule,
+      SCENES.pause,
+      SCENES.options,
+      SCENES.gameOver,
+    ]) {
       this.scene.stop(key);
     }
   }
@@ -220,7 +245,7 @@ export class RunScene extends Phaser.Scene {
       stepRun(this.run, { ...input, special: this.specialQueued }, step);
       this.specialQueued = false;
       this.accumulator -= step;
-      if (this.run.over || this.run.pendingLevelUps > 0) {
+      if (this.run.over || this.run.pendingLevelUps > 0 || this.run.capsule) {
         this.accumulator = 0;
         break;
       }
@@ -241,6 +266,7 @@ export class RunScene extends Phaser.Scene {
       .setAlpha(blink ? 0.4 : 1);
 
     this.drawGround();
+    const frozen = this.run.effects.freeze > 0;
 
     sync(this, this.enemySprites, this.run.enemies, 5, (s, e) => {
       s.setTexture(this.tex(ENEMY_TEXTURES[e.kind]))
@@ -248,6 +274,8 @@ export class RunScene extends Phaser.Scene {
         .setPosition(e.x, e.y)
         .setFlipX(e.x > agent.x);
       if (e.hitFlash > 0) s.setTint(0xffffff).setTintMode(Phaser.TintModes.FILL);
+      // Gelo seco: moléculas pintadas de azul.
+      else if (frozen) s.setTint(PALETTE.water).setTintMode(Phaser.TintModes.MULTIPLY);
       else s.clearTint();
     });
     this.drawFields();
@@ -270,10 +298,32 @@ export class RunScene extends Phaser.Scene {
         .setScale(1 / this.detail)
         .setPosition(c.x, c.y);
     });
+    // Gemas: ciano, verde ou vermelha pelo XP (drops.json gems).
     sync(this, this.gemSprites, this.run.gems, 2, (s, g) => {
-      s.setTexture(this.tex(TEXTURES.gem))
-        .setScale(1 / this.detail)
-        .setPosition(g.x, g.y);
+      const id =
+        g.value <= DROPS.gems.smallMaxXp
+          ? 'gemSmall'
+          : g.value <= DROPS.gems.mediumMaxXp
+            ? 'gemMedium'
+            : 'gemLarge';
+      this.placeIcon(s, id, g.x, g.y, GEM_SIZE);
+    });
+    sync(this, this.vesicleSprites, this.run.vesicles, 2, (s, v) => {
+      this.placeIcon(
+        s,
+        'vesicle',
+        v.x,
+        v.y + Math.sin(this.run.time * 2 + v.x) * 1.5,
+        VESICLE_SIZE,
+      );
+    });
+    // Itens piscam devagar; a cápsula é maior.
+    const glow = 0.75 + 0.25 * Math.sin(this.run.time * 5);
+    sync(this, this.pickupSprites, this.run.pickups, 3, (s, p) => {
+      const capsule = p.kind === 'capsule';
+      const id = capsule ? (p.silver ? 'capsuleSilver' : 'capsuleBronze') : p.kind;
+      this.placeIcon(s, id, p.x, p.y, capsule ? CAPSULE_SIZE : ITEM_SIZE);
+      s.setAlpha(glow);
     });
 
     for (const ev of drainEvents(this.run)) {
@@ -304,6 +354,11 @@ export class RunScene extends Phaser.Scene {
         this.showFloater(a.x, a.y - 30, 'CHEFE!', 'hurt');
       }
       if (ev.type === 'special') this.cameras.main.flash(200, 255, 179, 71);
+      if (ev.type === 'vesicle') this.addPopFx(ev);
+      if (ev.type === 'lysosome') this.cameras.main.flash(300, 255, 255, 255);
+      if (ev.type === 'item' && ev.kind !== 'capsule' && !DROPS.items[ev.kind].coins) {
+        this.showFloater(a.x, a.y - 16, DROPS.items[ev.kind].name.toUpperCase(), 'info');
+      }
     }
     this.flushSums(dt);
     this.updateFloaters(dt);
@@ -395,6 +450,57 @@ export class RunScene extends Phaser.Scene {
       const a = 1 - p.radius / p.maxRadius;
       g.fillStyle(PALETTE.dopaminePink, 0.8 * a + 0.2);
       pixelRing(g, p.x, p.y, p.radius, 2, px);
+    }
+    this.drawItemEffects(g, px);
+  }
+
+  /** Efeitos de item com tempo: lança-chamas, anel do Gelo seco e borda da Febre de ATP. */
+  private drawItemEffects(g: Phaser.GameObjects.Graphics, px: number): void {
+    const { agent, effects, stats } = this.run;
+    if (effects.flame > 0) {
+      const f = DROPS.flame;
+      const angle = Math.atan2(agent.dirY, agent.dirX);
+      const flicker = 0.85 + 0.15 * Math.sin(this.run.time * 30);
+      g.fillStyle(PALETTE.woodHi, 0.45);
+      pixelSector(
+        g,
+        agent.x,
+        agent.y,
+        f.rangePx * stats.area * flicker,
+        angle,
+        f.spreadRadians * stats.area,
+        2,
+      );
+      g.fillStyle(PALETTE.goldHi, 0.5);
+      pixelSector(
+        g,
+        agent.x,
+        agent.y,
+        f.rangePx * stats.area * 0.5,
+        angle,
+        f.spreadRadians * stats.area * 0.6,
+        2,
+      );
+    }
+    if (effects.freeze > 0) {
+      g.fillStyle(PALETTE.water, 0.8);
+      pixelRing(g, agent.x, agent.y, 14, 1, px);
+    }
+    if (effects.fever > 0) {
+      // Borda de 8 pixels CSS: ouro escuro por fora e claro por dentro, para aparecer na areia.
+      const v = this.cameras.main.worldView;
+      const t = (4 * Math.min(window.devicePixelRatio || 1, 4)) / this.zoom;
+      const border = (inset: number) =>
+        g
+          .fillRect(v.x + inset, v.y + inset, v.width - inset * 2, t)
+          .fillRect(v.x + inset, v.bottom - inset - t, v.width - inset * 2, t)
+          .fillRect(v.x + inset, v.y + inset, t, v.height - inset * 2)
+          .fillRect(v.right - inset - t, v.y + inset, t, v.height - inset * 2);
+      const pulse = 0.75 + 0.25 * Math.sin(this.run.time * 8);
+      g.fillStyle(PALETTE.goldDark, pulse);
+      border(0);
+      g.fillStyle(PALETTE.goldHi, pulse);
+      border(t);
     }
   }
 
@@ -510,6 +616,18 @@ export class RunScene extends Phaser.Scene {
   }
 
   private checkTransitions(): void {
+    // A cápsula abre antes do level up que o XP do chefe trouxer.
+    if (this.run.capsule && !this.capsuleOpen && !this.levelUpOpen && !this.run.over) {
+      this.capsuleOpen = true;
+      this.scene.launch(SCENES.capsule, {
+        run: this.run,
+        onDone: () => {
+          this.capsuleOpen = false;
+        },
+      });
+      return;
+    }
+    if (this.capsuleOpen) return;
     if (this.run.pendingLevelUps > 0 && !this.levelUpOpen && !this.run.over) {
       this.levelUpOpen = true;
       this.scene.launch(SCENES.levelUp, {
@@ -552,6 +670,20 @@ export class RunScene extends Phaser.Scene {
     }
   }
 
+  /** Ícone de item (prancheta "Itens do mapa") no mundo, com `size` unidades de lado. */
+  private placeIcon(
+    s: Phaser.GameObjects.Image,
+    id: string,
+    x: number,
+    y: number,
+    size: number,
+  ): void {
+    s.setTexture(iconKey(this, iconTexture('items', id), size))
+      .setDisplaySize(size, size)
+      .setPosition(x, y)
+      .setAlpha(1);
+  }
+
   private tex(name: string): string {
     return textureKey(name, this.detail);
   }
@@ -567,6 +699,8 @@ export class RunScene extends Phaser.Scene {
     const scale = worldScale(this.scale.width, this.scale.height, target, DISPLAY.spriteDetails);
     this.zoom = scale.zoom;
     this.cameras.main.setZoom(scale.zoom);
+    // Ícones dos itens no tamanho do zoom do mundo.
+    loadIconsForZoom(this, scale.zoom, () => undefined);
     for (const f of this.floaters) f.text.setResolution(scale.zoom);
     if (scale.detail === this.detail) return;
     this.detail = scale.detail;

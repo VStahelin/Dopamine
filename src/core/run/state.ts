@@ -127,7 +127,7 @@ export interface ItemEffects {
 export type CapsuleItem =
   | { kind: 'weapon'; id: WeaponId; level: number }
   | { kind: 'evolve'; id: WeaponId; into: WeaponId }
-  | { kind: 'passive'; id: PassiveId; level: number; rarity: number }
+  | { kind: 'passive'; id: PassiveId; level: number; rarity: number; amount: number }
   | { kind: 'phosphocreatine'; atp: number };
 
 export interface CapsuleResult {

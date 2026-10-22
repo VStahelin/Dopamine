@@ -6,16 +6,84 @@
     "despawnViewMultiplier": 2
   },
   "items": {
-    "atp": { "weight": 50, "minLevel": 0, "luck": false, "coins": 1 },
-    "serum": { "weight": 12, "minLevel": 0, "luck": true, "heal": 30 },
-    "glucose": { "weight": 10, "minLevel": 0, "luck": false, "coins": 5 },
-    "dryIce": { "weight": 2, "minLevel": 4, "luck": true, "seconds": 10 },
-    "osmosis": { "weight": 2, "minLevel": 12, "luck": true },
-    "glycogen": { "weight": 1, "minLevel": 5, "luck": true, "coins": 25 },
-    "lysosome": { "weight": 1, "minLevel": 8, "luck": true },
-    "bunsen": { "weight": 1, "minLevel": 0, "luck": true, "seconds": 10 },
-    "vitamin": { "weight": 1, "minLevel": 0, "luck": true, "luckBonus": 0.1 },
-    "glucagon": { "weight": 1, "minLevel": 30, "luck": true, "seconds": 10 }
+    "atp": {
+      "name": "ATP",
+      "description": "Uma moeda de ATP com o valor atual.",
+      "weight": 50,
+      "minLevel": 0,
+      "luck": false,
+      "coins": 1
+    },
+    "serum": {
+      "name": "Soro",
+      "description": "Recupera 30 interações.",
+      "weight": 12,
+      "minLevel": 0,
+      "luck": true,
+      "heal": 30
+    },
+    "glucose": {
+      "name": "Glicose",
+      "description": "ATP igual a 5 moedas.",
+      "weight": 10,
+      "minLevel": 0,
+      "luck": false,
+      "coins": 5
+    },
+    "dryIce": {
+      "name": "Gelo seco",
+      "description": "Congela todas as moléculas por 10 s.",
+      "weight": 2,
+      "minLevel": 4,
+      "luck": true,
+      "seconds": 10
+    },
+    "osmosis": {
+      "name": "Osmose",
+      "description": "Todas as gemas de XP correm até o agente.",
+      "weight": 2,
+      "minLevel": 12,
+      "luck": true
+    },
+    "glycogen": {
+      "name": "Glicogênio",
+      "description": "ATP igual a 25 moedas.",
+      "weight": 1,
+      "minLevel": 5,
+      "luck": true,
+      "coins": 25
+    },
+    "lysosome": {
+      "name": "Lisossomo",
+      "description": "Decompõe as moléculas na tela, menos o chefe.",
+      "weight": 1,
+      "minLevel": 8,
+      "luck": true
+    },
+    "bunsen": {
+      "name": "Bico de Bunsen",
+      "description": "Lança-chamas na direção do movimento por 10 s.",
+      "weight": 1,
+      "minLevel": 0,
+      "luck": true,
+      "seconds": 10
+    },
+    "vitamin": {
+      "name": "Vitamina",
+      "description": "+10% de Sorte até o fim da run.",
+      "weight": 1,
+      "minLevel": 0,
+      "luck": true,
+      "luckBonus": 0.1
+    },
+    "glucagon": {
+      "name": "Glucagon",
+      "description": "Puxa o ATP do chão e começa a Febre de ATP.",
+      "weight": 1,
+      "minLevel": 30,
+      "luck": true,
+      "seconds": 10
+    }
   },
   "flame": {
     "damagePerSecond": 30,
@@ -34,9 +102,9 @@
     "fiveChance": 0.03,
     "threeChance": 0.1,
     "coins": {
-      "1": [10, 20],
-      "3": [30, 60],
-      "5": [50, 100]
+      "1": [5, 10],
+      "3": [15, 30],
+      "5": [25, 50]
     },
     "beginner": [1, 1, 3, 1, 1, 5],
     "touchRadiusPx": 14

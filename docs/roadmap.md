@@ -24,7 +24,7 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | 3 | Meta-progressão e save | Dá vontade de jogar mais uma run? | 2, 2.5, 2.6, 2.7 | implementada, falta validar no celular |
 | 4 | Campo longo (idle) | O idle ajuda a run sem substituí-la? | 3 | implementada, falta validar no celular |
 | 5 | Organismo | Cuidar do corpo muda o jeito de jogar? | 3, 4 | implementada, falta validar no celular |
-| 5.5 | Itens no mapa | Os itens do chão deixam a run mais variada sem quebrar a economia? | 2, 3 | não iniciada |
+| 5.5 | Itens no mapa | Os itens do chão deixam a run mais variada sem quebrar a economia? | 2, 3 | implementada, falta validar no celular |
 | 5.6 | Variedade da run | A run muda de cara a cada pico, e cada agente cresce do seu jeito? | 2 | não iniciada |
 | 5.7 | Mapas gerados | Cada run tem um mapa diferente, sem deixar o agente preso? | 2, 5.5 | não iniciada |
 | 6 | Arte, polimento e lançamento | Dá para mandar o link para os amigos? | 1 a 5.7 | não iniciada |
@@ -254,15 +254,15 @@ Decisão: [0023](decisoes/0023-organismo.md). Números em `src/config/organism.j
 
 Os itens que caem no chão da run, com o mesmo conjunto do Vampire Survivors adaptado à química: vesículas que soltam itens, gemas de XP em três cores e a cápsula do chefe. Regras em [itens.md](itens.md) ([decisão 0024](decisoes/0024-itens-no-mapa.md)); números em `src/config/drops.json`.
 
-- [ ] Vesículas: nascem em volta do agente, rompem com um golpe e sorteiam um item por peso, com nível mínimo e Sorte.
-- [ ] Itens de ATP: Glicose e Glicogênio, além da moeda que já existe.
-- [ ] Soro (recupera interações) e Vitamina (+10% de Sorte, acumula).
-- [ ] Itens de tela: Lisossomo, Gelo seco, Osmose, Bico de Bunsen e Glucagon (Febre de ATP), com os efeitos com tempo na fila de efeitos da HUD.
-- [ ] Gemas de XP em ciano, verde e vermelha pelo valor, juntando o excesso numa gema só.
-- [ ] Cápsula do chefe: bronze e prata, 1, 3 ou 5 upgrades com raridade (a Sorte mexe na quantidade e na raridade, regra da [decisão 0013](decisoes/0013-raridade-e-sorte.md)), ATP, sorte de principiante e a evolução de arma pela cápsula de prata.
-- [ ] Fosfocreatina quando a cápsula ou o level up não têm mais o que subir.
-- [ ] Ícones de 16×16 de cada item e da vesícula em `src/assets/sprites/`, e a seção "Itens" no Compêndio.
-- [ ] Rodar o `npm run sim` com os drops e ajustar os valores de ATP.
+- [x] Vesículas: nascem em volta do agente, rompem com um golpe e sorteiam um item por peso, com nível mínimo e Sorte.
+- [x] Itens de ATP: Glicose e Glicogênio, além da moeda que já existe.
+- [x] Soro (recupera interações) e Vitamina (+10% de Sorte, acumula).
+- [x] Itens de tela: Lisossomo, Gelo seco, Osmose, Bico de Bunsen e Glucagon (Febre de ATP), com os efeitos com tempo na fila de efeitos da HUD.
+- [x] Gemas de XP em ciano, verde e vermelha pelo valor, juntando o excesso numa gema só.
+- [x] Cápsula do chefe: bronze e prata, 1, 3 ou 5 upgrades com raridade (a Sorte mexe na quantidade e na raridade, regra da [decisão 0013](decisoes/0013-raridade-e-sorte.md)), ATP, sorte de principiante e a evolução de arma pela cápsula de prata.
+- [x] Fosfocreatina quando a cápsula ou o level up não têm mais o que subir.
+- [x] Ícones de 16×16 de cada item e da vesícula em `src/assets/sprites/`, e a seção "Itens" no Compêndio.
+- [x] Rodar o `npm run sim` com os drops e ajustar os valores de ATP. Com a cápsula pela metade da proposta (5 a 10, 15 a 30 e 25 a 50 moedas), os drops somam cerca de 16% de ATP por run (média de três sementes).
 
 **Critério de saída:** numa run de 15 minutos aparecem itens de quase todos os tipos, pelo menos um muda o rumo da run (um Lisossomo num pico, um Gelo seco no chefe), e o simulador não mostra a economia acelerando mais que 20%.
 

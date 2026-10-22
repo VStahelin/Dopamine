@@ -139,6 +139,6 @@ A HUD atual (`src/game/scenes/HudScene.ts`) já tem barra de XP no topo, nível,
 
 - [ ] Interações só embaixo do agente (como o VS), ou também um número fixo na banda?
 - [x] Os reagentes que evoluem armas (Peróxido, Ozônio) são os mesmos modificadores de atributo da linha de baixo, ou um tipo de item separado? → modificadores da linha de baixo marcados como reagente ([decisão 0015](decisoes/0015-acao-do-agente-e-armas.md)).
-- [ ] Os efeitos temporários existem? Quais (itens no chão, especial ativo, efeitos de inimigo)? Itens no chão: proposta em [itens.md](itens.md) (Gelo seco, Bico de Bunsen e Febre de ATP).
+- [x] Os efeitos temporários existem? Quais (itens no chão, especial ativo, efeitos de inimigo)? Na HUD hoje: o especial ativo, a queda depois dele e os itens Gelo seco, Bico de Bunsen e Febre de ATP ([itens.md](itens.md), fase 5.5).
 - [x] O especial tem nome e ícone próprios por agente (a proposta usa "Pico" para a Dopamina)? → sim: Pico de recompensa, Emulsão e Captação, com ícones no canvas.
 - [x] Números de dano ligados por padrão, ou desligados como opção de desempenho no celular? → ligados, com o interruptor "Números de dano" nas Opções (fase 2.7).

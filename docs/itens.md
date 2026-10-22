@@ -70,7 +70,7 @@ Com os pesos acima, uma vesícula solta ATP ou Glicose em cerca de 75% das vezes
 - **Prata** (chefe depois dos 10 min): se houver arma em MAX com o reagente certo, evolui essa arma em vez de sortear (é o que a prancheta "Crônico" já diz: a arma em MAX evolui no próximo baú).
 - **Quantos itens:** 5 itens com 3%, 3 itens com 10%, 1 item no resto; a Sorte multiplica as chances de 5 e 3.
 - **Raridade:** cada modificador que a cápsula sobe sorteia uma raridade, com a mesma regra do level up ([decisão 0013](decisoes/0013-raridade-e-sorte.md)): a Sorte deixa as raridades altas mais prováveis e o valor somado sai multiplicado por ela. Assim a Sorte mexe na quantidade e na raridade das recompensas.
-- **ATP:** 10 a 20 moedas (1 item), 30 a 60 (3 itens), 50 a 100 (5 itens), × Rendimento.
+- **ATP:** 5 a 10 moedas (1 item), 15 a 30 (3 itens), 25 a 50 (5 itens), × Rendimento. A proposta era o dobro; o simulador mostrou a economia acelerando demais.
 - **Sorte de principiante:** as seis primeiras cápsulas do save dão 1, 1, 3, 1, 1 e 5 itens.
 - Item que já está no máximo e não evolui vira Fosfocreatina.
 
@@ -101,7 +101,7 @@ Quando virar código, um `src/config/drops.json` com o tipo em `src/config/types
 
 - [ ] Os nomes funcionam (Soro, Glicose, Glicogênio, Gelo seco, Osmose, Lisossomo, Bico de Bunsen, Vitamina, Glucagon, Cápsula, Fosfocreatina)?
 - [ ] Vesículas nascendo sozinhas em volta do agente, ou pontos fixos no mapa como os castiçais do VS? Proposta em [mapas.md](mapas.md#relação-com-as-outras-fases): as duas (anel + ninhos de vesículas).
-- [ ] Valores de ATP mais baixos que o VS (5× e 25×) ou os mesmos (10× e 100×)?
-- [ ] A evolução sai do level up e passa a ser só pela cápsula de prata, como no VS, ou fica nos dois?
-- [ ] O Lisossomo poupa elites também, ou só o chefe?
+- [ ] Valores de ATP mais baixos que o VS (5× e 25×) ou os mesmos (10× e 100×)? No código: 5× e 25×, e a cápsula com metade da faixa acima (5 a 10, 15 a 30, 25 a 50 moedas), para os drops somarem menos de 20% de ATP no simulador.
+- [ ] A evolução sai do level up e passa a ser só pela cápsula de prata, como no VS, ou fica nos dois? No código, por enquanto, fica nos dois.
+- [ ] O Lisossomo poupa elites também, ou só o chefe? No código, só o chefe.
 - [ ] Os itens de DLC do VS (torta, ovo dourado e outros) ficam de fora, como proposto?

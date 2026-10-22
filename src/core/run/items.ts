@@ -18,13 +18,13 @@ import { weaponMaxLevel } from './weaponParams';
  * Itens no mapa (fase 5.5, docs/itens.md): vesículas que soltam itens, os efeitos com tempo e a
  * cápsula do chefe. Roda depois das armas, para os golpes do passo romperem as vesículas.
  */
-export function updateItems(state: RunState, dt: number, grid: SpatialGrid): void {
+export function updateItems(state: RunState, dt: number, grid: SpatialGrid, firstEvent = 0): void {
   const fx = state.effects;
   fx.freeze = Math.max(0, fx.freeze - dt);
   fx.flame = Math.max(0, fx.flame - dt);
   fx.fever = Math.max(0, fx.fever - dt);
   spawnVesicles(state, dt);
-  breakVesicles(state);
+  breakVesicles(state, firstEvent);
   if (fx.flame > 0) burn(state, dt, grid);
   movePickups(state, dt);
 }
@@ -50,7 +50,7 @@ function spawnVesicles(state: RunState, dt: number): void {
 }
 
 /** Qualquer golpe deste passo rompe a vesícula: disparos, áreas, anéis, órbitas, cones, raios. */
-function breakVesicles(state: RunState): void {
+function breakVesicles(state: RunState, firstEvent: number): void {
   if (state.vesicles.length === 0) return;
   const r = state.rules.drops.vesicles.radiusPx;
   const near = (x: number, y: number, vx: number, vy: number, reach: number) =>
@@ -71,7 +71,7 @@ function breakVesicles(state: RunState): void {
       state.pulses.some((p) => near(p.x, p.y, v.x, v.y, p.radius)) ||
       auras.some((a) => near(agent.x, agent.y, v.x, v.y, a)) ||
       orbs.some((o) => near(o.x, o.y, v.x, v.y, o.radius)) ||
-      state.events.some((e) => {
+      state.events.slice(firstEvent).some((e) => {
         if (e.type === 'strike') return near(e.x, e.y, v.x, v.y, e.radius);
         if (e.type === 'cone') {
           const dx = v.x - e.x;
@@ -282,11 +282,7 @@ export function openCapsule(state: RunState, silver: boolean): void {
       continue;
     }
     applyUpgrade(state, pick);
-    items.push(
-      pick.kind === 'weapon'
-        ? pick
-        : { kind: 'passive', id: pick.id, level: pick.level, rarity: pick.rarity },
-    );
+    items.push(pick);
   }
   const [min = 0, max = 0] = c.coins[String(count) as '1' | '3' | '5'] ?? [];
   const coins = state.rng.range(min, max) * gain;

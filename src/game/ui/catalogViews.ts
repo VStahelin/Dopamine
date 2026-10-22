@@ -1,7 +1,9 @@
-import type * as Phaser from 'phaser';
+import * as Phaser from 'phaser';
 import {
   AGENTS,
+  DROPS,
   ENEMIES,
+  ITEM_IDS,
   PASSIVES,
   WEAPONS,
   type AgentId,
@@ -279,13 +281,14 @@ export function renderArsenal(
   return out;
 }
 
-/** Moléculas já vistas, com tipo e cascata; as outras em silhueta. */
+/** Moléculas já vistas, com tipo e cascata, e os itens do mapa já coletados; o resto em silhueta. */
 export function renderCompendium(
   scene: Phaser.Scene,
   x: number,
   y: number,
   w: number,
   seen: readonly string[],
+  seenItems: readonly string[],
 ): Obj[] {
   const { left, width } = column(x, w);
   const g = scene.add.graphics();
@@ -300,7 +303,7 @@ export function renderCompendium(
     drawInkBox(g, left, cy, width, h, PALETTE.panel);
     drawCreamSlot(g, left + 6, cy + 6, 34, 34);
     const img = sprite(scene, ENEMY_TEXTURES[kind], left + 23, cy + 23, 30);
-    if (!isSeen) img.setTint(0x15172e).setTintMode(2);
+    if (!isSeen) img.setTint(0x15172e).setTintMode(Phaser.TintModes.FILL);
     out.push(img);
     if (!isSeen) {
       out.push(scene.add.text(left + 50, cy + 14, '???', impactText(13, PALETTE_CSS.textMuted)));
@@ -332,6 +335,49 @@ export function renderCompendium(
           frag ? `QUEBRA EM ${frag}` : 'DECOMPOSTA POR COMPLETO',
           labelText(8, frag ? PALETTE_CSS.gold : PALETTE_CSS.textMuted),
         ),
+      );
+    }
+    cy += h + 4;
+  }
+  out.push(...renderItems(scene, g, left, cy + 12, width, seenItems));
+  return out;
+}
+
+/** Seção "Itens" do Compêndio: os itens das vesículas (fase 5.5). */
+function renderItems(
+  scene: Phaser.Scene,
+  g: Phaser.GameObjects.Graphics,
+  left: number,
+  y: number,
+  width: number,
+  seen: readonly string[],
+): Obj[] {
+  const known = ITEM_IDS.filter((id) => seen.includes(id)).length;
+  const out: Obj[] = [header(scene, left, y, `ITENS · ${known}/${ITEM_IDS.length}`)];
+  let cy = y + 16;
+  for (const id of ITEM_IDS) {
+    const def = DROPS.items[id];
+    const isSeen = seen.includes(id);
+    const h = 40;
+    drawInkBox(g, left, cy, width, h, PALETTE.panel);
+    drawCreamSlot(g, left + 6, cy + 4, 32, 32);
+    const icon = addIcon(scene, left + 6, cy + 4, iconTexture('items', id), 32);
+    if (!isSeen) icon.setTint(0x15172e).setTintMode(Phaser.TintModes.FILL);
+    out.push(icon);
+    if (!isSeen) {
+      out.push(scene.add.text(left + 48, cy + 11, '???', impactText(13, PALETTE_CSS.textMuted)));
+    } else {
+      out.push(
+        scene.add.text(
+          left + 48,
+          cy + 4,
+          def.name,
+          withShadow(bodyText(13, PALETTE_CSS.text), PALETTE_CSS.ink, 1),
+        ),
+        scene.add.text(left + 48, cy + 22, def.description, {
+          ...bodyText(9, PALETTE_CSS.textSoft),
+          wordWrap: { width: width - 56 },
+        }),
       );
     }
     cy += h + 4;
