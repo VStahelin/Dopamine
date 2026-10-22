@@ -317,7 +317,7 @@ O level up passa a oferecer só armas e **receptores**, os tomos do Megabonk: 16
 
 Os atributos que saíram do level up voltam como **suplementos**, passivos que acumulam e saem de **ampolas** no chão. Nem toda molécula solta XP. Regras em [megabonk.md](megabonk.md#2-suplementos) ([decisão 0028](decisoes/0028-suplementos-e-ampolas.md)).
 
-- [ ] `supplements.json` com os 24 suplementos e os 4 reagentes, em quatro raridades; sorteio de raridade pela Sorte e depois do suplemento.
+- [ ] `supplements.json` com os 25 suplementos e os 4 reagentes, em quatro raridades; sorteio de raridade pela Sorte e depois do suplemento.
 - [ ] Suplementos que mudam atributo (somam até o teto na run) e os de efeito: Nitrogênio líquido, Aquaporina, Eletrodo, Termita, Criopreservação, Quimiotaxia (esta depende da 5.11).
 - [ ] Reagentes como suplemento, com peso ×10 quando a arma deles está no MAX; tirar os reagentes das cartas do level up.
 - [ ] Vitamina sai da vesícula e vira suplemento.

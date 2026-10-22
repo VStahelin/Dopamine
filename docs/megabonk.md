@@ -82,7 +82,7 @@ Os suplementos são o equivalente aos itens do Megabonk: coisas que o agente tom
 - Um suplemento que já bateu o teto do atributo sai do sorteio.
 - Aparecem na aba Arsenal da pausa numa grade com o número de cópias (`×3`), e o último pego aparece por 2 s embaixo da HUD.
 
-**A lista inicial** (24, mais os 4 reagentes):
+**A lista inicial** (25, mais os 4 reagentes):
 
 | Suplemento | Raridade | Efeito por cópia | Inspirado em |
 | --- | --- | --- | --- |
