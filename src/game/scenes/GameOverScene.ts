@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import { WEAPONS, type WeaponId } from '../../config';
+import { ORGANISM, WEAPONS, type Sector, type WeaponId } from '../../config';
 import type { RunResult } from '../../core/run/state';
 import type { RecordKind } from '../../core/save/saveData';
 import { PALETTE, PALETTE_CSS } from '../render/palette';
@@ -20,6 +20,8 @@ export interface GameOverData {
   /** Estrelas do caso conquistadas nesta run e o ATP que elas puseram no baú. */
   newStars: number;
   starReward: number;
+  /** Quanto cada setor de saúde mudou com esta run. */
+  healthChange: { sector: Sector; delta: number }[];
 }
 
 const ROW_H = 24;
@@ -133,6 +135,23 @@ export class GameOverScene extends Phaser.Scene {
         y += icon + 4;
       }
 
+      // Saúde: o que o agente fez no organismo nesta run.
+      if (data.healthChange.length > 0) {
+        const text = data.healthChange
+          .map(
+            (c) =>
+              `${c.delta > 0 ? '+' : '−'}${Math.abs(c.delta).toFixed(1).replace('.', ',')} ${ORGANISM.sectors[c.sector].name.toUpperCase()}`,
+          )
+          .join('  ·  ');
+        children.push(
+          this.add.text(left, y + 4, 'SAÚDE', labelText(9, PALETTE_CSS.sectionOrange)),
+          this.add.text(left, y + 18, text, {
+            ...bodyText(10, PALETTE_CSS.numberHeal),
+            wordWrap: { width },
+          }),
+        );
+        y += 40;
+      }
       const { buttons } = addButtonColumn(this, w, y + 12, [
         { label: 'JOGAR DE NOVO', onClick: () => run().restartRun() },
         { label: 'MENU', onClick: () => run().exitToMenu() },

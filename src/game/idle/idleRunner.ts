@@ -8,6 +8,16 @@ import {
   type IdleProgress,
   type OfflineGain,
 } from '../../core/idle/progress';
+import { IDLE } from '../../config';
+import type { IdleMods } from '../../core/idle/field';
+import {
+  applyHealth,
+  familyWeights,
+  idleHealth,
+  idleMultiplier,
+  individualDifficulty,
+  type OrganismState,
+} from '../../core/organism/organism';
 import type { SaveData } from '../../core/save/saveData';
 import { getSave, setSave } from '../storage/saveStore';
 
@@ -34,18 +44,44 @@ function save(): SaveData {
   return getSave(game!);
 }
 
-function writeIdle(idle: IdleProgress): void {
-  setSave(game!, { ...save(), idle });
+function writeIdle(idle: IdleProgress, organism?: OrganismState): void {
+  const current = save();
+  setSave(game!, { ...current, idle, organism: organism ?? current.organism });
 }
 
-function buildField(idle: IdleProgress): IdleField {
-  return createField(Date.now() >>> 0, idle.wave, fieldSlots(idle), fireRate(idle), maxSlots());
+/** O que o organismo muda no campo: dificuldade do indivíduo, doença e ATP (fase 5). */
+function modsFor(organism: OrganismState): IdleMods {
+  return {
+    hp: individualDifficulty(organism),
+    atp: idleMultiplier(organism),
+    typeWeights: familyWeights(organism),
+  };
+}
+
+function buildField(): IdleField {
+  const { idle, organism } = save();
+  return createField(
+    Date.now() >>> 0,
+    idle.wave,
+    fieldSlots(idle),
+    fireRate(idle),
+    maxSlots(),
+    IDLE,
+    modsFor(organism),
+  );
+}
+
+/** Saúde que os agentes da base dão em `hours` horas (também offline). */
+function idleHealthFor(idle: IdleProgress, organism: OrganismState, hours: number): OrganismState {
+  const agents = fieldSlots(idle).map((s) => IDLE.agents[s.agent]!);
+  return applyHealth(organism, idleHealth(agents, hours));
 }
 
 /** Passa o ATP do campo para o pendente e guarda onda e recorde. */
 function flush(now = Date.now()): void {
   if (!field || !game) return;
-  const idle = save().idle;
+  const { idle, organism } = save();
+  const hours = idle.lastSeen > 0 ? Math.max(0, now - idle.lastSeen) / 3_600_000 : 0;
   const next: IdleProgress = {
     ...idle,
     wave: field.wave,
@@ -54,20 +90,22 @@ function flush(now = Date.now()): void {
     lastSeen: now,
   };
   field.atp = 0;
-  writeIdle(next);
+  writeIdle(next, idleHealthFor(idle, organism, hours));
   sinceSave = 0;
   listeners.forEach((l) => l());
 }
 
 /** Soma o progresso offline do tempo fora (jogo fechado ou em segundo plano). */
 function payOffline(now: number): void {
-  const idle = save().idle;
+  const { idle, organism } = save();
   if (idle.lastSeen <= 0) {
     writeIdle({ ...idle, lastSeen: now });
     return;
   }
-  const gain = offlineGain(idle, (now - idle.lastSeen) / 1000, now >>> 0);
-  writeIdle({ ...idle, pending: idle.pending + gain.atp, lastSeen: now });
+  const gain = offlineGain(idle, (now - idle.lastSeen) / 1000, now >>> 0, IDLE, modsFor(organism));
+  // Offline os agentes da base também cuidam do organismo, até o mesmo teto de horas.
+  const health = idleHealthFor(idle, organism, gain.seconds / 3600);
+  writeIdle({ ...idle, pending: idle.pending + gain.atp, lastSeen: now }, health);
   if (gain.atp > 0) report = gain;
 }
 
@@ -76,7 +114,7 @@ export const idleRunner = {
   start(g: Phaser.Game): void {
     game = g;
     payOffline(Date.now());
-    field = buildField(save().idle);
+    field = buildField();
     g.events.on(Phaser.Core.Events.STEP, (_time: number, delta: number) => {
       if (!field) return;
       accumulator += Math.min(delta / 1000, 0.5) * speed;
@@ -106,7 +144,7 @@ export const idleRunner = {
   /** Recria o campo depois de mudar o pool, um nível ou uma melhoria (mantém a onda). */
   rebuild(): void {
     flush();
-    if (game) field = buildField(save().idle);
+    if (game) field = buildField();
   },
 
   /** Guarda já o que o campo produziu (antes de coletar ou gastar). */

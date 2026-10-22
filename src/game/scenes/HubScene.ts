@@ -1,5 +1,8 @@
 import * as Phaser from 'phaser';
-import { AGENTS, ECONOMY, type AgentId } from '../../config';
+import { AGENTS, ECONOMY, ENEMIES, ORGANISM, SECTORS, type AgentId } from '../../config';
+import { dischargeSave } from '../../core/organism/discharge';
+import { averageHealth, illnessName } from '../../core/organism/organism';
+import { renderOrganism, SECTOR_ORDER, SECTOR_STYLE } from '../ui/organismView';
 import { PALETTE, PALETTE_CSS } from '../render/palette';
 import { AGENT_TEXTURES, ENEMY_TEXTURES, textureKey } from '../render/textures';
 import { getSave, setSave } from '../storage/saveStore';
@@ -29,13 +32,13 @@ import {
   drawWoodFrame,
   type IconName,
 } from '../ui/icons';
-import { SCREENS, TAB_SECTIONS, TABS, type SectionDef, type TabId } from '../ui/menuContent';
-import { renderSection } from '../ui/sectionView';
+import { SCREENS, TABS, type SectionDef, type TabId } from '../ui/menuContent';
 import { bodyText, formatTime, impactText, labelText, withShadow } from '../ui/theme';
 import { addDim, setupUiLayout } from '../ui/uiLayout';
 import { addButton } from '../ui/button';
 import { collect, type OfflineGain } from '../../core/idle/progress';
 import { idleRunner } from '../idle/idleRunner';
+import { earn } from '../../core/organism/organism';
 import { updates } from '../update/updateManager';
 import { SCENES } from './keys';
 
@@ -47,14 +50,6 @@ const ACTION_H = 136;
 const TAB_H = 84;
 /** Largura máxima da coluna de conteúdo em telas largas. */
 const COLUMN_W = 480;
-
-/** Valores de exemplo dos 4 setores de saúde até a fase 5, como no mockup. */
-const SAMPLE_HEALTH = [
-  { label: 'F', value: 31, color: PALETTE.interaction },
-  { label: 'M', value: 72, color: PALETTE.chlorine },
-  { label: 'S', value: 64, color: PALETTE.progress },
-  { label: 'E', value: 65, color: PALETTE.sulfur },
-];
 
 const TAB_ICONS: Record<TabId, IconName> = {
   agents: 'agents',
@@ -77,6 +72,8 @@ export class HubScene extends Phaser.Scene {
   /** Rolagem de cada aba, para voltar ao mesmo ponto depois de uma compra. */
   private scrollOffsets: Partial<Record<TabId, number>> = {};
   private scrollTab?: TabId;
+  /** Primeiro toque em DAR ALTA pede confirmação. */
+  private confirmDischarge = false;
   /** Relatório do progresso offline, mostrado uma vez ao abrir o Hub. */
   private awayReport?: OfflineGain;
   /** Nó do Laboratório mostrado no painel de detalhe. */
@@ -154,7 +151,7 @@ export class HubScene extends Phaser.Scene {
   }
 
   /** Conteúdo das abas: Agentes e Arsenal já têm conteúdo; Laboratório e Organismo são placeholder. */
-  private tabContent(w: number, top: number, bottom: number): Phaser.GameObjects.GameObject[] {
+  private tabContent(w: number, top: number): Phaser.GameObjects.GameObject[] {
     switch (this.tab) {
       case 'agents':
         return renderAgents(
@@ -191,7 +188,28 @@ export class HubScene extends Phaser.Scene {
         );
       }
       case 'organism':
-        return renderSection(this, 0, top, w, bottom - top, TAB_SECTIONS[this.tab]);
+        return renderOrganism(
+          this,
+          0,
+          top + 14,
+          w,
+          getSave(this).organism,
+          this.confirmDischarge,
+          () => {
+            if (!this.confirmDischarge) {
+              this.confirmDischarge = true;
+              this.build();
+              return;
+            }
+            this.confirmDischarge = false;
+            idleRunner.flush();
+            const next = dischargeSave(getSave(this), Date.now());
+            if (!next) return;
+            setSave(this, next);
+            idleRunner.rebuild();
+            this.build();
+          },
+        );
       case 'case':
         return [];
     }
@@ -221,7 +239,12 @@ export class HubScene extends Phaser.Scene {
     if (this.tab === 'case') {
       out.push(...this.caseArea(g, colX, colW, midTop, midBottom - ACTION_H));
       out.push(...this.actionRow(g, w, colX, colW, midBottom - ACTION_H));
-    } else if (this.tab === 'agents' || this.tab === 'arsenal' || this.tab === 'lab') {
+    } else if (
+      this.tab === 'agents' ||
+      this.tab === 'arsenal' ||
+      this.tab === 'lab' ||
+      this.tab === 'organism'
+    ) {
       // Listas longas rolam dentro da área entre as barras. No Laboratório, o painel do nó
       // escolhido fica fixo em cima e só a árvore rola.
       let top = midTop;
@@ -242,7 +265,7 @@ export class HubScene extends Phaser.Scene {
         );
         top = midTop + 8 + LAB_DETAIL_H + 4;
       }
-      const content = this.tabContent(w, top, midBottom);
+      const content = this.tabContent(w, top);
       this.scroll = addScrollArea(
         this,
         content,
@@ -252,7 +275,7 @@ export class HubScene extends Phaser.Scene {
       this.scrollTab = this.tab;
       void labTreeHeight;
     } else {
-      out.push(...this.tabContent(w, midTop, midBottom));
+      out.push(...this.tabContent(w, midTop));
     }
     out.push(...this.tabBar(g, w, h, colX, colW));
     if (this.awayReport) out.push(...this.awayPanel(w, h, this.awayReport));
@@ -300,7 +323,8 @@ export class HubScene extends Phaser.Scene {
         onClick: () => {
           const save = getSave(this);
           const c = collect(save.idle, save.atp);
-          setSave(this, { ...save, idle: c.idle, atp: c.atp });
+          const organism = earn(save.organism, c.atp - save.atp);
+          setSave(this, { ...save, idle: c.idle, atp: c.atp, organism });
           this.awayReport = undefined;
           this.build();
         },
@@ -320,17 +344,28 @@ export class HubScene extends Phaser.Scene {
     drawBody(g, px + 14, 20, 2);
 
     const tx = px + 66;
-    const out: Obj[] = [this.add.text(tx, 20, 'INDIVÍDUO 1', labelText(12, PALETTE_CSS.text))];
-    SAMPLE_HEALTH.forEach((s, i) => {
+    const organism = getSave(this).organism;
+    const out: Obj[] = [
+      this.add.text(tx, 20, `INDIVÍDUO ${organism.individual}`, labelText(12, PALETTE_CSS.text)),
+    ];
+    SECTOR_ORDER.forEach((sector, i) => {
       const bx = tx + i * 35;
+      const value = organism.sectors[sector];
       g.fillStyle(PALETTE.ink).fillRect(bx, 40, 30, 12);
       g.fillStyle(PALETTE.panelDeep).fillRect(bx + 2, 42, 26, 8);
-      g.fillStyle(s.color).fillRect(bx + 2, 42, Math.round((26 * s.value) / 100), 8);
+      g.fillStyle(SECTOR_STYLE[sector].color).fillRect(
+        bx + 2,
+        42,
+        Math.round((26 * value) / 100),
+        8,
+      );
       out.push(
-        this.add.text(bx + 15, 54, s.label, labelText(9, PALETTE_CSS.textSoft)).setOrigin(0.5, 0),
+        this.add
+          .text(bx + 15, 54, SECTOR_STYLE[sector].label, labelText(9, PALETTE_CSS.textSoft))
+          .setOrigin(0.5, 0),
       );
     });
-    const avg = Math.round(SAMPLE_HEALTH.reduce((a, s) => a + s.value, 0) / SAMPLE_HEALTH.length);
+    const avg = Math.round(averageHealth(organism));
     out.push(
       this.add.text(
         tx + 4 * 35 + 2,
@@ -404,17 +439,21 @@ export class HubScene extends Phaser.Scene {
     const goals = ECONOMY.meta.caseStarMinutes;
 
     // Distintivo + nome do caso.
+    const organism = getSave(this).organism;
+    const lowest = [...SECTORS].sort((a, b) => organism.sectors[a] - organism.sectors[b])[0]!;
     const title = this.add.text(
       0,
       top + 14,
-      'Física baixa',
+      illnessName(organism.individual),
       withShadow(impactText(23, '#FFFFFF'), PALETTE_CSS.outline, 2),
     );
     const rowW = 34 + 8 + title.width;
     const rx = Math.floor(cx - rowW / 2);
     drawShield(g, rx, top + 14, 34, 38);
     out.push(
-      this.add.text(rx + 17, top + 18, '1', impactText(20, PALETTE_CSS.cyan)).setOrigin(0.5, 0),
+      this.add
+        .text(rx + 17, top + 18, String(organism.individual), impactText(20, PALETTE_CSS.cyan))
+        .setOrigin(0.5, 0),
     );
     title.setX(rx + 42);
     out.push(title);
@@ -462,17 +501,22 @@ export class HubScene extends Phaser.Scene {
         .text(
           scanX + scanW - 10,
           scanTop + scanH - 10,
-          'FÍSICA 31',
+          `${ORGANISM.sectors[lowest].name.toUpperCase()} ${Math.round(organism.sectors[lowest])}`,
           labelText(9, PALETTE_CSS.alert),
         )
         .setOrigin(1, 1),
     );
 
     // Moléculas flutuando em volta do scanner.
+    // As moléculas da doença: as da família do setor mais baixo.
+    const family = (Object.keys(ENEMY_TEXTURES) as (keyof typeof ENEMY_TEXTURES)[]).filter(
+      (k) => ORGANISM.sectors[lowest].families.includes(ENEMIES[k].type) && !ENEMIES[k].boss,
+    );
+    const pick = (i: number) => family[i % Math.max(1, family.length)] ?? 'glucose';
     const floaters: [keyof typeof ENEMY_TEXTURES, number, number][] = [
-      ['glucose', scanX - 24, scanTop + 30],
-      ['fattyAcid', scanX + scanW + 6, scanTop + scanH * 0.72],
-      ['triglyceride', scanX - 18, scanTop + scanH * 0.78],
+      [pick(0), scanX - 24, scanTop + 30],
+      [pick(1), scanX + scanW + 6, scanTop + scanH * 0.72],
+      [pick(2), scanX - 18, scanTop + scanH * 0.78],
     ];
     for (const [kind, fx, fy] of floaters) {
       out.push(this.add.image(fx, fy, textureKey(ENEMY_TEXTURES[kind], 3)).setScale(0.4));

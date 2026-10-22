@@ -14,6 +14,7 @@ import {
   type IdleProgress,
   type IdleUpgradeKey,
 } from '../../core/idle/progress';
+import { earn } from '../../core/organism/organism';
 import { idleRunner } from '../idle/idleRunner';
 import { PALETTE, PALETTE_CSS } from '../render/palette';
 import { ENEMY_TEXTURES, TEXTURES, textureKey } from '../render/textures';
@@ -92,7 +93,15 @@ export class IdleScene extends Phaser.Scene {
     idleRunner.flush();
     const save = getSave(this);
     const c = collect(save.idle, save.atp);
-    if (c.atp !== save.atp) setSave(this, { ...save, idle: c.idle, atp: c.atp });
+    // O ATP coletado conta para os pontos herdados do indivíduo.
+    if (c.atp !== save.atp) {
+      setSave(this, {
+        ...save,
+        idle: c.idle,
+        atp: c.atp,
+        organism: earn(save.organism, c.atp - save.atp),
+      });
+    }
   }
 
   /** Aplica uma compra no save e recria o campo com o pool novo. */

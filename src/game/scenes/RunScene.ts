@@ -1,6 +1,7 @@
 import * as Phaser from 'phaser';
-import { AGENTS, DISPLAY, RUN } from '../../config';
+import { AGENTS, DISPLAY, RUN, SECTORS } from '../../config';
 import { addRunStars, playableAgent, rulesWithProgress } from '../../core/meta/progress';
+import { applyHealth, earn, rulesWithOrganism, runHealth } from '../../core/organism/organism';
 import { DEFAULT_RULES } from '../../core/run/rules';
 import { auraRadius, orbitPositions } from '../../core/run/weapons';
 import { recordRun } from '../../core/save/saveData';
@@ -103,7 +104,9 @@ export class RunScene extends Phaser.Scene {
       save.meta,
       save.selectedAgent in AGENTS ? save.selectedAgent : 'dopamine',
     );
-    this.run = createRun(Date.now() >>> 0, rulesWithProgress(DEFAULT_RULES, save.meta), agentId);
+    // Organismo: setores mudam atributos, a doença puxa as moléculas e o indivíduo dá a dificuldade.
+    const rules = rulesWithOrganism(rulesWithProgress(DEFAULT_RULES, save.meta), save.organism);
+    this.run = createRun(Date.now() >>> 0, rules, agentId);
     this.specialQueued = false;
     this.electronSprites = [];
     this.fx = [];
@@ -524,11 +527,20 @@ export class RunScene extends Phaser.Scene {
       const { newRecords } = recorded;
       // Estrelas novas do caso enchem o baú do menu.
       const stars = addRunStars(recorded.save.meta, result.timeSeconds);
-      setSave(this, { ...recorded.save, meta: stars.progress });
+      // Saúde: o agente aplica o efeito dele pelos minutos da run; o ATP conta para a herança.
+      const health = runHealth(this.run.rules.agents[this.run.agentId], result.timeSeconds / 60);
+      const before = recorded.save.organism;
+      const organism = earn(applyHealth(before, health), result.atp + stars.reward);
+      setSave(this, { ...recorded.save, meta: stars.progress, organism });
+      const healthChange = SECTORS.map((s) => ({
+        sector: s,
+        delta: organism.sectors[s] - before.sectors[s],
+      })).filter((c) => Math.abs(c.delta) >= 0.05);
       const damage = this.run.weapons
         .map((w) => ({ id: w.id, value: this.run.tally.damageByWeapon[w.id] ?? 0 }))
         .sort((a, b) => b.value - a.value);
       const data: GameOverData = {
+        healthChange,
         result,
         newRecords,
         damage,
