@@ -18,7 +18,7 @@ As decisões de design tomadas antes deste registro continuam marcadas como "dec
 | [0010](0010-orientacao-livre.md) | Orientação livre no celular, pensada para vertical | técnica | proposta |
 | [0011](0011-rodar-localmente.md) | Rodar localmente durante o desenvolvimento | técnica | substituída por 0017 |
 | [0012](0012-passo-fixo-e-semente.md) | Simulação em passo fixo, com aleatoriedade por semente | técnica | proposta |
-| [0013](0013-raridade-e-sorte.md) | Raridade dos modificadores, movida pela Sorte | design | proposta |
+| [0013](0013-raridade-e-sorte.md) | Raridade dos modificadores, movida pela Sorte | design | proposta (0027 muda em parte) |
 | [0014](0014-fase-menu-principal.md) | Fase 1.5: esqueleto do menu principal antes da profundidade da run | processo | proposta |
 | [0015](0015-acao-do-agente-e-armas.md) | Ação própria do agente + armas do pool, com tipos de ataque em JSON | design | aceita |
 | [0016](0016-offline-e-atualizacoes.md) | Jogo offline, com atualização só por build completa e aviso só nos menus | técnica | proposta |
@@ -32,3 +32,6 @@ As decisões de design tomadas antes deste registro continuam marcadas como "dec
 | [0024](0024-itens-no-mapa.md) | Itens no mapa como fase 5.5, com o conjunto do Vampire Survivors | processo | proposta |
 | [0025](0025-variedade-da-run.md) | Fase 5.6: variedade da run (formações, perfil farmacológico, Superdosagem); Sorte também na raridade da cápsula | processo | aceita |
 | [0026](0026-mapas-gerados.md) | Mapas gerados por semente em blocos, em ambientes do corpo (fase 5.7) | design | proposta |
+| [0027](0027-level-up-com-receptores.md) | Level up só com armas e receptores (os tomos do Megabonk), com raridade também no nível de arma | design | proposta |
+| [0028](0028-suplementos-e-ampolas.md) | Suplementos de ampola, gema de XP com chance e agregados (mini chefes) | design | proposta |
+| [0029](0029-sinapses-e-estruturas.md) | Sinapses e estruturas no mapa (santuários do Megabonk) | design | proposta |
