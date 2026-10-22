@@ -173,7 +173,7 @@ O Etanol chega em grupos. O Acetaldeído se quebra em Etanol. Vêm muito quando 
 A moeda do jogo, a molécula de energia das células. Vem da run, das estrelas do caso e do campo longo, e é gasta no Laboratório e nos desbloqueios.
 
 ### Laboratório
-Árvore de melhorias permanentes que valem em todas as runs. Começa pela raiz (Interações) e se abre em seis caminhos: Força, Química, Corpo, Coleta, Controle e Especial. Um nó abre quando os nós ligados a ele têm pelo menos um nível. Cada nível custa 15% mais que o anterior.
+Árvore de melhorias permanentes que valem em todas as runs. Começa pela raiz (Interações) e se abre em seis caminhos: Força, Química, Corpo, Coleta, Controle e Especial. Um nó abre quando os nós ligados a ele têm pelo menos um nível. Cada nível custa 15% mais que o anterior. Tocar num nó mostra o que o atributo faz e quanto cada nível soma.
 
 ### Desbloqueios
 Você começa com a Dopamina e quatro armas. Lipase, Insulina, Poça de Solvente, Reação em Cadeia e Raio UV se desbloqueiam com ATP nas abas Agentes e Arsenal.

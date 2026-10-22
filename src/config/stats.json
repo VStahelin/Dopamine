@@ -1,52 +1,280 @@
 {
   "offense": {
-    "damage": { "name": "Reatividade", "base": 1, "runCap": null, "metaCap": 0.25 },
-    "projectiles": { "name": "Dose", "base": 0, "runCap": 5, "metaCap": 1 },
-    "cooldown": { "name": "Metabolismo", "base": 1, "runCap": 0.4, "metaCap": -0.05 },
-    "area": { "name": "Difusão", "base": 1, "runCap": 2.5, "metaCap": 0.1 },
-    "duration": { "name": "Meia-vida", "base": 1, "runCap": 3, "metaCap": 0.3 },
-    "projectileSpeed": { "name": "Cinética", "base": 1, "runCap": 2, "metaCap": 0.2 },
-    "range": { "name": "Alcance", "base": 1, "runCap": 2, "metaCap": 0.2 },
-    "pierce": { "name": "Penetração", "base": 0, "runCap": 5, "metaCap": 1 },
-    "ricochet": { "name": "Reação em cadeia", "base": 0, "runCap": 5, "metaCap": 0 },
-    "critChance": { "name": "Chance de catálise", "base": 0.05, "runCap": 1, "metaCap": 0.1 },
-    "critDamage": { "name": "Força da catálise", "base": 2, "runCap": 5, "metaCap": 0.25 },
-    "knockback": { "name": "Repulsão", "base": 1, "runCap": 2, "metaCap": 0 },
-    "eliteDamage": { "name": "Especificidade", "base": 1, "runCap": 2, "metaCap": 0.1 },
-    "effectChance": { "name": "Chance de efeito", "base": 0, "runCap": 1, "metaCap": 0.1 }
+    "damage": {
+      "name": "Reatividade",
+      "description": "Multiplica o dano de todos os ataques.",
+      "base": 1,
+      "runCap": null,
+      "metaCap": 0.25
+    },
+    "projectiles": {
+      "name": "Dose",
+      "description": "Projéteis extras em cada disparo.",
+      "base": 0,
+      "runCap": 5,
+      "metaCap": 1
+    },
+    "cooldown": {
+      "name": "Metabolismo",
+      "description": "Tempo entre ataques; menor é mais rápido.",
+      "base": 1,
+      "runCap": 0.4,
+      "metaCap": -0.05
+    },
+    "area": {
+      "name": "Difusão",
+      "description": "Tamanho de áreas, auras e explosões.",
+      "base": 1,
+      "runCap": 2.5,
+      "metaCap": 0.1
+    },
+    "duration": {
+      "name": "Meia-vida",
+      "description": "Quanto duram efeitos, auras e poças.",
+      "base": 1,
+      "runCap": 3,
+      "metaCap": 0.3
+    },
+    "projectileSpeed": {
+      "name": "Cinética",
+      "description": "Velocidade com que o disparo viaja.",
+      "base": 1,
+      "runCap": 2,
+      "metaCap": 0.2
+    },
+    "range": {
+      "name": "Alcance",
+      "description": "Distância até onde o agente mira.",
+      "base": 1,
+      "runCap": 2,
+      "metaCap": 0.2
+    },
+    "pierce": {
+      "name": "Penetração",
+      "description": "Quantas moléculas um disparo atravessa.",
+      "base": 0,
+      "runCap": 5,
+      "metaCap": 1
+    },
+    "ricochet": {
+      "name": "Reação em cadeia",
+      "description": "Quantas vezes o disparo pula para outra molécula.",
+      "base": 0,
+      "runCap": 5,
+      "metaCap": 0
+    },
+    "critChance": {
+      "name": "Chance de catálise",
+      "description": "Chance de um golpe ser catálise (crítico).",
+      "base": 0.05,
+      "runCap": 1,
+      "metaCap": 0.1
+    },
+    "critDamage": {
+      "name": "Força da catálise",
+      "description": "Multiplicador do golpe de catálise.",
+      "base": 2,
+      "runCap": 5,
+      "metaCap": 0.25
+    },
+    "knockback": {
+      "name": "Repulsão",
+      "description": "Quanto o golpe empurra a molécula.",
+      "base": 1,
+      "runCap": 2,
+      "metaCap": 0
+    },
+    "eliteDamage": {
+      "name": "Especificidade",
+      "description": "Dano extra contra chefes e moléculas fortes.",
+      "base": 1,
+      "runCap": 2,
+      "metaCap": 0.1
+    },
+    "effectChance": {
+      "name": "Chance de efeito",
+      "description": "Chance de aplicar lentidão, queimadura e afins.",
+      "base": 0,
+      "runCap": 1,
+      "metaCap": 0.1
+    }
   },
   "defense": {
-    "maxInteractions": { "name": "Interações", "base": 100, "runCap": null, "metaCap": 30 },
-    "armor": { "name": "Membrana", "base": 0, "runCap": 10, "metaCap": 3 },
-    "dodge": { "name": "Esquiva", "base": 0, "runCap": 0.6, "metaCap": 0.1 },
-    "regenPerSecond": { "name": "Homeostase", "base": 0, "runCap": 2, "metaCap": 0.5 },
-    "lifesteal": { "name": "Absorção", "base": 0, "runCap": 0.2, "metaCap": 0.03 },
-    "invulnerabilitySeconds": { "name": "Tolerância", "base": 0.5, "runCap": 1.5, "metaCap": 0.2 },
-    "revives": { "name": "Segunda dose", "base": 0, "runCap": 2, "metaCap": 1 },
-    "thorns": { "name": "Reflexo", "base": 0, "runCap": 2, "metaCap": 0 }
+    "maxInteractions": {
+      "name": "Interações",
+      "description": "Interações máximas: a vida do agente. A run acaba no zero.",
+      "base": 100,
+      "runCap": null,
+      "metaCap": 30
+    },
+    "armor": {
+      "name": "Membrana",
+      "description": "Tira um valor fixo de cada golpe recebido (mínimo 1).",
+      "base": 0,
+      "runCap": 10,
+      "metaCap": 3
+    },
+    "dodge": {
+      "name": "Esquiva",
+      "description": "Chance de não perder interações num golpe.",
+      "base": 0,
+      "runCap": 0.6,
+      "metaCap": 0.1
+    },
+    "regenPerSecond": {
+      "name": "Homeostase",
+      "description": "Interações recuperadas por segundo.",
+      "base": 0,
+      "runCap": 2,
+      "metaCap": 0.5
+    },
+    "lifesteal": {
+      "name": "Absorção",
+      "description": "Chance de recuperar 1 interação ao decompor uma molécula.",
+      "base": 0,
+      "runCap": 0.2,
+      "metaCap": 0.03
+    },
+    "invulnerabilitySeconds": {
+      "name": "Tolerância",
+      "description": "Tempo sem levar dano depois de um golpe.",
+      "base": 0.5,
+      "runCap": 1.5,
+      "metaCap": 0.2
+    },
+    "revives": {
+      "name": "Segunda dose",
+      "description": "Volta com metade das interações ao chegar a zero.",
+      "base": 0,
+      "runCap": 2,
+      "metaCap": 1
+    },
+    "thorns": {
+      "name": "Reflexo",
+      "description": "Devolve parte do dano a quem encostou.",
+      "base": 0,
+      "runCap": 2,
+      "metaCap": 0
+    }
   },
   "mobility": {
-    "moveSpeed": { "name": "Mobilidade", "base": 1, "runCap": 2, "metaCap": 0.1 },
-    "magnet": { "name": "Raio de coleta", "base": 1, "runCap": 4, "metaCap": 0.5 },
-    "xpGain": { "name": "Aprendizado", "base": 1, "runCap": 3, "metaCap": 0.15 },
-    "currencyGain": { "name": "Rendimento", "base": 1, "runCap": 3, "metaCap": 0.25 },
-    "luck": { "name": "Sorte", "base": 1, "runCap": 3, "metaCap": 0.3 }
+    "moveSpeed": {
+      "name": "Mobilidade",
+      "description": "Velocidade do agente no mapa.",
+      "base": 1,
+      "runCap": 2,
+      "metaCap": 0.1
+    },
+    "magnet": {
+      "name": "Raio de coleta",
+      "description": "Distância de onde XP e ATP são puxados.",
+      "base": 1,
+      "runCap": 4,
+      "metaCap": 0.5
+    },
+    "xpGain": {
+      "name": "Aprendizado",
+      "description": "Multiplica o XP recebido.",
+      "base": 1,
+      "runCap": 3,
+      "metaCap": 0.15
+    },
+    "currencyGain": {
+      "name": "Rendimento",
+      "description": "Multiplica o ATP recebido na run.",
+      "base": 1,
+      "runCap": 3,
+      "metaCap": 0.25
+    },
+    "luck": {
+      "name": "Sorte",
+      "description": "Melhora a raridade das escolhas no level up e os drops.",
+      "base": 1,
+      "runCap": 3,
+      "metaCap": 0.3
+    }
   },
   "levelUp": {
-    "choices": { "name": "Opções", "base": 3, "runCap": 5, "metaCap": 1 },
-    "rerolls": { "name": "Rerrolar", "base": 0, "runCap": null, "metaCap": 3 },
-    "skips": { "name": "Pular", "base": 0, "runCap": null, "metaCap": 3 },
-    "banishes": { "name": "Banir", "base": 0, "runCap": null, "metaCap": 3 },
-    "weaponSlots": { "name": "Espaços de arma", "base": 4, "runCap": 6, "metaCap": 1 },
-    "modifierSlots": { "name": "Espaços de modificador", "base": 4, "runCap": 6, "metaCap": 1 }
+    "choices": {
+      "name": "Opções",
+      "description": "Quantas escolhas aparecem no level up.",
+      "base": 3,
+      "runCap": 5,
+      "metaCap": 1
+    },
+    "rerolls": {
+      "name": "Rerrolar",
+      "description": "Sorteia as opções do level up de novo.",
+      "base": 0,
+      "runCap": null,
+      "metaCap": 3
+    },
+    "skips": {
+      "name": "Pular",
+      "description": "Recusa um level up em troca de um pouco de ATP.",
+      "base": 0,
+      "runCap": null,
+      "metaCap": 3
+    },
+    "banishes": {
+      "name": "Banir",
+      "description": "Tira uma opção do sorteio pelo resto da run.",
+      "base": 0,
+      "runCap": null,
+      "metaCap": 3
+    },
+    "weaponSlots": {
+      "name": "Espaços de arma",
+      "description": "Quantas armas o agente carrega.",
+      "base": 4,
+      "runCap": 6,
+      "metaCap": 1
+    },
+    "modifierSlots": {
+      "name": "Espaços de modificador",
+      "description": "Quantos modificadores o agente carrega.",
+      "base": 4,
+      "runCap": 6,
+      "metaCap": 1
+    }
   },
   "risk": {
-    "curse": { "name": "Estresse", "base": 0, "runCap": 1, "metaCap": 0.5 }
+    "curse": {
+      "name": "Estresse",
+      "description": "Moléculas mais fortes, rápidas e numerosas; em troca, mais XP e ATP.",
+      "base": 0,
+      "runCap": 1,
+      "metaCap": 0.5
+    }
   },
   "special": {
-    "cooldown": { "name": "Recarga do especial", "base": 1, "runCap": 0.5, "metaCap": -0.1 },
-    "power": { "name": "Força do especial", "base": 1, "runCap": 2, "metaCap": 0.2 },
-    "duration": { "name": "Duração do especial", "base": 1, "runCap": 2, "metaCap": 0.2 },
-    "charges": { "name": "Cargas", "base": 1, "runCap": 3, "metaCap": 1 }
+    "cooldown": {
+      "name": "Recarga do especial",
+      "description": "Tempo até o especial ficar pronto de novo.",
+      "base": 1,
+      "runCap": 0.5,
+      "metaCap": -0.1
+    },
+    "power": {
+      "name": "Força do especial",
+      "description": "Multiplica o efeito do especial.",
+      "base": 1,
+      "runCap": 2,
+      "metaCap": 0.2
+    },
+    "duration": {
+      "name": "Duração do especial",
+      "description": "Quanto dura o efeito do especial.",
+      "base": 1,
+      "runCap": 2,
+      "metaCap": 0.2
+    },
+    "charges": {
+      "name": "Cargas",
+      "description": "Quantos usos do especial ficam guardados de uma vez.",
+      "base": 1,
+      "runCap": 3,
+      "metaCap": 1
+    }
   }
 }

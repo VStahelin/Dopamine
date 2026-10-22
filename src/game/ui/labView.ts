@@ -8,6 +8,7 @@ import {
   type PassiveId,
   type RunStatKey,
   type SpecialKind,
+  type Stat,
 } from '../../config';
 import { labCost, labLevel, labState, type MetaProgress } from '../../core/meta/progress';
 import { PALETTE, PALETTE_CSS } from '../render/palette';
@@ -23,7 +24,7 @@ const NODE_SCALE = 2;
 const NODE = slotSize(NODE_SCALE);
 const ROW_H = 64;
 /** Altura do painel de detalhe, em cima da árvore. */
-export const LAB_DETAIL_H = 92;
+export const LAB_DETAIL_H = 112;
 
 /** Ícone do nó: o modificador do mesmo atributo; os do especial usam o especial do agente. */
 function nodeIcon(node: LabNode, special: SpecialKind): IconRef {
@@ -37,15 +38,15 @@ function nodeIcon(node: LabNode, special: SpecialKind): IconRef {
     : { group: 'ui', id: 'missing' };
 }
 
+function nodeStat(node: LabNode): Stat | undefined {
+  if (node.stat.startsWith('special.')) return STATS.special[node.stat.slice('special.'.length)];
+  return Object.entries(STATS).find(([g, group]) => g !== 'special' && group[node.stat])?.[1][
+    node.stat
+  ];
+}
+
 function statName(node: LabNode): string {
-  if (node.stat.startsWith('special.')) {
-    return STATS.special[node.stat.slice('special.'.length)]?.name ?? node.stat;
-  }
-  for (const group of Object.values(STATS)) {
-    const stat = group[node.stat];
-    if (stat) return stat.name;
-  }
-  return node.stat;
+  return nodeStat(node)?.name ?? node.stat;
 }
 
 /** Efeito de `levels` níveis do nó, curto: `+10%`, `−2%`, `+1`. */
@@ -171,13 +172,21 @@ export function renderLabDetail(
     scene.add
       .text(x + w - 10, y + 12, `NV ${level}/${node.maxLevel}`, labelText(8, PALETTE_CSS.textSoft))
       .setOrigin(1, 0),
+  ];
+  // O que o atributo faz e, logo embaixo, quanto cada nível soma.
+  const desc = scene.add.text(tx, y + 28, nodeStat(node)?.description ?? '', {
+    ...bodyText(9, PALETTE_CSS.textSoft),
+    wordWrap: { width: x + w - 10 - tx },
+  });
+  out.push(
+    desc,
     scene.add.text(
       tx,
-      y + 30,
+      y + 28 + desc.height + 4,
       `${effect(node, 1)} por nível${now}`,
       bodyText(10, PALETTE_CSS.cream),
     ),
-  ];
+  );
   const by = y + LAB_DETAIL_H - 40;
   if (state === 'maxed') {
     out.push(scene.add.text(tx, by + 10, 'NO MÁXIMO', labelText(9, PALETTE_CSS.goldIcon)));

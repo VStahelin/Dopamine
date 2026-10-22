@@ -12,6 +12,8 @@
 export interface Stat {
   /** Nome mostrado no jogo. */
   name: string;
+  /** O que o atributo faz, numa frase, para o Laboratório e as descrições. */
+  description: string;
   /** Valor com que todo agente começa, antes de upgrades. */
   base: number;
   /** Valor máximo que dá para chegar dentro da run (`null` = sem teto). */
