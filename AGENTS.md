@@ -11,6 +11,7 @@ Dopamina Blaster: roguelike incremental de auto-battle idle, em que agentes (rem
 | Arquivo | Para que serve |
 | --- | --- |
 | [docs/README.md](docs/README.md) | Índice da documentação de design do jogo |
+| [CHANGELOG.md](CHANGELOG.md) | O que mudou em cada versão, para o jogador; aparece no jogo em Opções › Novidades |
 | [docs/roadmap.md](docs/roadmap.md) | Fases de desenvolvimento, status e próximos itens |
 | [docs/arquitetura.md](docs/arquitetura.md) | Como o código está organizado hoje: stack, camadas, pastas e convenções |
 | [docs/decisoes/](docs/decisoes/README.md) | Registro de decisões, um arquivo por decisão |
@@ -40,6 +41,7 @@ Só as decisões **importantes**, que têm impacto na construção do jogo, vira
 
 - Marque os itens concluídos no [roadmap](docs/roadmap.md) e atualize o status da fase.
 - Mudou uma mecânica ou um número que o jogador vê? Atualize os textos da wiki em [docs/wiki.md](docs/wiki.md) no mesmo commit.
+- O jogador vai perceber a mudança (recurso novo, ajuste, bug corrigido)? Escreva uma linha na seção "Em desenvolvimento" do [CHANGELOG.md](CHANGELOG.md), em Novidades, Ajustes ou Correções, no mesmo commit. O jogo mostra esse arquivo em Opções › Novidades; escreva para quem joga.
 - Registre as decisões tomadas durante a tarefa.
 - Rode os testes e o lint antes de dizer que terminou (os comandos estão em [docs/arquitetura.md](docs/arquitetura.md) quando o projeto existir).
 

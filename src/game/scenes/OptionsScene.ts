@@ -156,7 +156,17 @@ export class OptionsScene extends Phaser.Scene {
         variant: 'secondary' as const,
         onClick: () => this.scale.toggleFullscreen(),
       },
-      ...(this.fromRun ? [] : [this.updateButton(), ...this.backupButtons()]),
+      ...(this.fromRun
+        ? []
+        : [
+            this.updateButton(),
+            ...this.backupButtons(),
+            {
+              label: 'NOVIDADES',
+              variant: 'secondary' as const,
+              onClick: () => this.scene.start(SCENES.changelog),
+            },
+          ]),
       { label: 'VOLTAR', onClick: () => this.back() },
     ];
     const top = Math.max(16, Math.floor((h - (44 + options.length * 50 + 44)) / 2));

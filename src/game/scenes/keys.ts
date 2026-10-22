@@ -14,4 +14,5 @@ export const SCENES = {
   updatePrompt: 'updatePrompt',
   idle: 'idle',
   capsule: 'capsule',
+  changelog: 'changelog',
 } as const;
