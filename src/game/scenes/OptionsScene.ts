@@ -120,8 +120,7 @@ export class OptionsScene extends Phaser.Scene {
       label: UPDATE_LABEL[updates.state.status],
       variant: updates.state.status === 'ready' ? ('primary' as const) : ('secondary' as const),
       onClick: () => {
-        if (updates.state.status === 'ready') void updates.apply();
-        else void updates.check();
+        void updates.checkAndApply();
       },
     };
   }

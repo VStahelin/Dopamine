@@ -2,6 +2,7 @@ import * as Phaser from 'phaser';
 import { preloadSprites } from '../render/textures';
 import { idleRunner } from '../idle/idleRunner';
 import { initSave, loadSave } from '../storage/saveStore';
+import { setLoaderProgress, setLoaderStatus } from '../ui/loader';
 import { SCENES } from './keys';
 
 export class BootScene extends Phaser.Scene {
@@ -10,10 +11,14 @@ export class BootScene extends Phaser.Scene {
   }
 
   preload(): void {
+    setLoaderStatus('CARREGANDO OS SPRITES...');
+    this.load.on('progress', (p: number) => setLoaderProgress(p));
     preloadSprites(this);
   }
 
   create(): void {
+    setLoaderStatus('ABRINDO O SAVE...');
+    setLoaderProgress(null);
     void loadSave().then((save) => {
       initSave(this, save);
       idleRunner.start(this.game);

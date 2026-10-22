@@ -4,6 +4,7 @@ import { AGENT_TEXTURES, textureKey } from '../render/textures';
 import { addButtonColumn } from '../ui/menuLayout';
 import { impactText, labelText } from '../ui/theme';
 import { setupUiLayout } from '../ui/uiLayout';
+import { hideLoader } from '../ui/loader';
 import { SCENES } from './keys';
 
 /** Tela de título: logo e um botão que leva ao hub. */
@@ -15,6 +16,8 @@ export class TitleScene extends Phaser.Scene {
   }
 
   create(): void {
+    // O jogo abriu: some a tela de carregamento do index.html.
+    hideLoader();
     this.input.keyboard?.on('keydown-ENTER', () => this.play());
     this.input.keyboard?.on('keydown-SPACE', () => this.play());
 

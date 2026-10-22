@@ -85,7 +85,9 @@ Enquanto o jogo roda só localmente ([decisão 0011](decisoes/0011-rodar-localme
 ## Na tela
 
 - **Hub:** quando há versão pronta, o aviso aparece por cima, no estilo dos outros popups (moldura de madeira, ATUALIZAR em madeira, DEPOIS em azul): "Nova versão pronta · v0.3.0 · Sua partida e seus recordes continuam salvos."
-- **Opções:** linha "VERSÃO v0.2.0 · build a1b2c3d" e o botão VERIFICAR ATUALIZAÇÃO, que mostra o estado: EM DIA, PROCURANDO, BAIXANDO, PRONTA (vira ATUALIZAR AGORA), SEM INTERNET.
+- **Abertura:** a tela de carregamento do `index.html` aparece antes de qualquer script, com a etapa (baixando o jogo, carregando os sprites com a porcentagem, abrindo o save) e some quando o título abre ([loader.ts](../src/game/ui/loader.ts)).
+- **Atualizando:** ao tocar em ATUALIZAR (no aviso do Hub ou nas Opções), a mesma tela aparece por cima de tudo, bloqueando o jogo, com "Instalando a versão vX. Não feche o jogo." até a página recarregar na versão nova.
+- **Opções:** linha "VERSÃO v0.2.0 · build a1b2c3d" e o botão VERIFICAR ATUALIZAÇÃO. Tocar nele procura, baixa e instala de uma vez, com a tela bloqueando o jogo (PROCURANDO VERSÃO NOVA, BAIXANDO A VERSÃO vX, ATUALIZANDO). Sem versão nova ou sem internet, a tela some e a linha de baixo diz o motivo (EM DIA, SEM INTERNET).
 - **Tela de título:** a versão no rodapé.
 - **Run:** nada. No máximo um ponto discreto no botão de pausa quando há versão pronta.
 

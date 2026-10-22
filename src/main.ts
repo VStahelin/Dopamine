@@ -19,9 +19,11 @@ import { RecordsScene } from './game/scenes/RecordsScene';
 import { RunScene } from './game/scenes/RunScene';
 import './game/ui/textFix';
 import { UpdatePromptScene } from './game/scenes/UpdatePromptScene';
+import { setLoaderStatus } from './game/ui/loader';
 import { loadFonts } from './game/ui/theme';
 import { updates } from './game/update/updateManager';
 
+setLoaderStatus('PREPARANDO O JOGO...');
 await loadFonts();
 
 /**

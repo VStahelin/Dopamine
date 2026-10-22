@@ -1,6 +1,6 @@
 import type * as Phaser from 'phaser';
 import { PALETTE, PALETTE_CSS } from '../render/palette';
-import { impactText } from './theme';
+import { impactText, withShadow } from './theme';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'danger';
 
@@ -79,10 +79,18 @@ export function addButton(scene: Phaser.Scene, opts: ButtonOptions): Phaser.Game
   const container = scene.add.container(x, y);
   const g = scene.add.graphics();
   const text = scene.add
-    .text(w / 2, (h - drop) / 2, opts.label, {
-      ...impactText(opts.fontSize ?? 14, s.text),
-      stroke: s.textOutline,
-    })
+    // Sombra embaixo, sem contorno e no peso 600, como na prancheta: o contorno e o negrito 700
+    // fechavam a abertura do C e ele virava O.
+    .text(
+      w / 2,
+      (h - drop) / 2,
+      opts.label,
+      withShadow(
+        { ...impactText(opts.fontSize ?? 14, s.text), strokeThickness: 0, fontStyle: '600' },
+        s.textOutline,
+        2,
+      ),
+    )
     .setOrigin(0.5);
 
   const draw = (pressed: boolean) => {
