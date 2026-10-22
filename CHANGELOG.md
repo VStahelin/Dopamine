@@ -4,6 +4,8 @@ O que mudou em cada versão do Dopamina Blaster. O jogo mostra este arquivo em O
 
 ## Em desenvolvimento
 
+## v0.9.0 · 22/10/2026
+
 ### Novidades
 - Agregados: a cada 2 minutos nasce um mini chefe, a molécula forte do momento grudada numa massa maior, mais lenta e com muito mais vida. Decompor um sempre dá uma ampola Rara ou melhor.
 - Uma seta vermelha na borda da tela aponta o agregado quando ele está longe.
