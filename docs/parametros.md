@@ -101,6 +101,10 @@ A saúde executiva pode somar uma opção extra por level up, como proposto na a
 | Duração do especial | Duração do especial | Quanto o efeito dura | 100% | +100% | +20% |
 | Cargas | Cargas | Quantos usos guardados de uma vez | 1 | 3 | +1 |
 
+## De onde vem cada atributo (proposta)
+
+Com as mudanças do Megabonk ([megabonk.md](megabonk.md), decisões [0027](decisoes/0027-level-up-com-receptores.md) e [0028](decisoes/0028-suplementos-e-ampolas.md)), só 16 atributos sobem no level up, como **receptores**: Reatividade, Metabolismo, Difusão, Cinética (com Alcance), Chance de catálise, Interações, Homeostase, Membrana, Mobilidade, Raio de coleta, e os desbloqueáveis Dose, Meia-vida, Aprendizado, Sorte, Estresse e Mutação. Os outros vêm de **suplementos** (ampolas) e de **sinapses**; Rerrolar, Pular, Banir e os espaços vêm do Laboratório. Os tetos desta aba continuam valendo para a soma de todas as fontes.
+
 ## Raridades e Sorte
 
 Cada modificador do level up sorteia uma raridade, que multiplica o valor dele. A **Sorte** deixa as raridades altas mais prováveis. Detalhes e fórmula na [decisão 0013](decisoes/0013-raridade-e-sorte.md); os números ficam em `src/config/rarities.json`.

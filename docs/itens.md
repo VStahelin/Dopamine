@@ -4,6 +4,8 @@ O campo crônico usa o mesmo conjunto de itens de chão do Vampire Survivors (VS
 
 Tudo aqui é **proposta**: nomes, pesos e valores são o primeiro chute para testar. Quando virar código, os números vão para `src/config/drops.json`.
 
+> **Mudança proposta (Megabonk):** as fases 5.9 a 5.11 somam outra categoria, os **suplementos**, passivos que ficam a run toda e saem de **ampolas** (o baú do Megabonk), além de gema de XP com chance e dos agregados (mini chefes). Os itens desta aba continuam como itens de consumo, menos a **Vitamina**, que vira suplemento. Ver [megabonk.md](megabonk.md) e a [decisão 0028](decisoes/0028-suplementos-e-ampolas.md).
+
 ## Como o Vampire Survivors faz
 
 - **Fontes de luz.** Castiçais e braseiros espalhados pelo mapa. Um golpe quebra a fonte, que solta um item sorteado por peso. Alguns itens só aparecem depois de um nível mínimo na run, e a Sorte aumenta a chance de tudo, menos das moedas ([fonte de luz](https://vampire.survivors.wiki/w/Light_source)).
@@ -59,8 +61,9 @@ Com os pesos acima, uma vesícula solta ATP ou Glicose em cerca de 75% das vezes
 
 | Drop | No VS | Quem solta | Efeito |
 | --- | --- | --- | --- |
-| **Gema de XP** | Experience Gem | Toda molécula decomposta | XP. Cor pelo valor: ciano até 2, verde até 9, vermelha acima. Acima do limite de gemas no chão, o excesso vai para uma gema vermelha só (como já pede a [aba Plataforma](plataforma.md)) |
+| **Gema de XP** | Experience Gem | Toda molécula decomposta (com a [fase 5.9](megabonk.md#3-drops-xp-com-chance-ampolas-e-agregados), só uma parte, valendo mais) | XP. Cor pelo valor: ciano até 2, verde até 9, vermelha acima. Acima do limite de gemas no chão, o excesso vai para uma gema vermelha só (como já pede a [aba Plataforma](plataforma.md)) |
 | **ATP** | Gold Coin | Molécula comum (3%), elite e chefe (sempre) | Já existe desde a fase 2.7 (`runCurrency` em `economy.json`) |
+| **Ampola** | Baú do Megabonk | Molécula (chance pequena), agregado e chefe (sempre) | Um suplemento com raridade pela Sorte ([megabonk.md](megabonk.md#2-suplementos)) |
 | **Cápsula** | Treasure Chest | Chefe | Sobe 1, 3 ou 5 armas ou modificadores que o agente já tem, um nível cada, com raridade pela Sorte, e dá ATP. Precisa ser tocada (o raio de coleta não puxa) |
 | **Fosfocreatina** | Big Coin Bag | Cápsula ou level up, quando tudo está no máximo | ATP igual a 10 moedas × Rendimento. A fosfocreatina é a reserva que o músculo usa para refazer ATP |
 
@@ -102,6 +105,6 @@ Quando virar código, um `src/config/drops.json` com o tipo em `src/config/types
 - [ ] Os nomes funcionam (Soro, Glicose, Glicogênio, Gelo seco, Osmose, Lisossomo, Bico de Bunsen, Vitamina, Glucagon, Cápsula, Fosfocreatina)?
 - [ ] Vesículas nascendo sozinhas em volta do agente, ou pontos fixos no mapa como os castiçais do VS? Proposta em [mapas.md](mapas.md#relação-com-as-outras-fases): as duas (anel + ninhos de vesículas).
 - [ ] Valores de ATP mais baixos que o VS (5× e 25×) ou os mesmos (10× e 100×)? No código: 5× e 25×, e a cápsula com metade da faixa acima (5 a 10, 15 a 30, 25 a 50 moedas), para os drops somarem menos de 20% de ATP no simulador.
-- [ ] A evolução sai do level up e passa a ser só pela cápsula de prata, como no VS, ou fica nos dois? No código, por enquanto, fica nos dois.
+- [ ] A evolução sai do level up e passa a ser só pela cápsula de prata, como no VS, ou fica nos dois? No código, por enquanto, fica nos dois. Com a [decisão 0028](decisoes/0028-suplementos-e-ampolas.md), o reagente vem da ampola e o level up deixa de oferecer reagentes.
 - [ ] O Lisossomo poupa elites também, ou só o chefe? No código, só o chefe.
 - [ ] Os itens de DLC do VS (torta, ovo dourado e outros) ficam de fora, como proposto?

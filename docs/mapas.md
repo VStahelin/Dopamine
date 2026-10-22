@@ -97,6 +97,7 @@ Pequenas montagens que quebram a repetição e dão um motivo para andar pelo ma
 | **Ninho de vesículas** | 3 a 5 vesículas numa clareira | Recompensa por explorar; é onde a Sorte mais aparece |
 | **Câmara** | Anel de obstáculos com uma abertura e um destrutível do ambiente no meio | Lugar seguro para respirar no pico, com uma saída só |
 | **Corredor** | Duas fileiras de obstáculos com 4 tiles de passagem | Afunila as moléculas para armas de linha (Raio UV, Jato Ácido) |
+| **Sinapse e estruturas** | Círculo de 3 tiles numa clareira: sinapse, sinapse potenciada, foco inflamatório, coágulo ou glândula adrenal | Bônus para quem sai do lugar, como os santuários do Megabonk ([megabonk.md](megabonk.md#4-sinapses-e-estruturas)); 1 a cada 3 blocos em média |
 | **Zona** | Mancha de 4 a 6 tiles da zona de terreno do ambiente | Muda a luta só naquele trecho |
 
 ## Relação com as outras fases

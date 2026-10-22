@@ -95,6 +95,8 @@ O botão de pausa (e Esc ou P no PC) abre um painel sobre o campo escurecido:
 
 ## Level up
 
+> **Mudança proposta (fase 5.8):** o level up passa a oferecer só armas e **receptores** ([megabonk.md](megabonk.md#1-level-up-com-armas-e-receptores)). O título vira `ESCOLHA UMA ARMA OU RECEPTOR`, a carta de nível de arma ganha a moldura de raridade, e a linha de reagentes da HUD mostra os receptores. A **sinapse** usa a mesma tela, com o título `SINAPSE` e sem a barra de ações.
+
 A tela abre sobre o campo escurecido, com o jogo parado. As pranchetas **Level up** (celular) e **Level up no PC** são interativas: dá para escolher, rerrolar, pular e banir.
 
 **No celular (390×844):**

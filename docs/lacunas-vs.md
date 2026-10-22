@@ -36,7 +36,7 @@ Esforço: **P** cabe em até um dia, **M** em alguns dias, **G** em uma semana o
 | Itens fixos no mapa e caixões | Itens e relíquias no chão; caixões liberam personagens | Não existe | **Cápsulas** que liberam agentes e **Descobertas** que liberam funções | M | Média |
 | Vitória e Ceifador | Sobreviver ao tempo do estágio vence; depois vem o Ceifador | Run infinita, estrelas aos 5, 10 e 15 min | **Alta** aos 30 min, depois a **Apoptose** (o Ceifador) | P | Média |
 | Eventos aleatórios | Roleta sorteia um evento no minuto seguinte | Não existe | **Sintomas**: Febre, Jejum, Refeição, Insônia | M | Baixa |
-| Mercador | Vende itens, rerrolagens e ovos na run | Não existe | **Farmácia** no mapa, paga com ATP da run | M | Baixa |
+| Mercador | Vende itens, rerrolagens e ovos na run | Não existe | **Farmácia** no mapa, paga com ATP da run (agora estrutura de [megabonk.md](megabonk.md#4-sinapses-e-estruturas), para depois) | M | Baixa |
 | Reembolso de PowerUps | Devolve todo o ouro gasto nos PowerUps | Laboratório sem reembolso | **Reembolso** no Laboratório | P | Baixa |
 | Level up aleatório | Opção que escolhe sozinha no level up | Não existe | **Escolha automática**, nas Opções | P | Baixa |
 | Transformação do personagem | Alguns personagens mudam de forma no nível 80 | Só a rampa do Venvanse | **Metabólito ativo**: o agente vira a forma ativa num nível alto | M | Baixa |

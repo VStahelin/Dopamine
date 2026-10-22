@@ -27,7 +27,11 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | 5.5 | Itens no mapa | Os itens do chão deixam a run mais variada sem quebrar a economia? | 2, 3 | implementada, falta validar no celular |
 | 5.6 | Variedade da run | A run muda de cara a cada pico, e cada agente cresce do seu jeito? | 2 | não iniciada |
 | 5.7 | Mapas gerados | Cada run tem um mapa diferente, sem deixar o agente preso? | 2, 5.5 | não iniciada |
-| 6 | Arte, polimento e lançamento | Dá para mandar o link para os amigos? | 1 a 5.7 | não iniciada |
+| 5.8 | Receptores no level up | O level up fica mais curto e cada escolha pesa mais? | 2, 3 | não iniciada |
+| 5.9 | Suplementos e ampolas | Os suplementos dão motivo para andar pelo mapa e montam um build diferente a cada run? | 5.5, 5.8 | não iniciada |
+| 5.10 | Agregados (mini chefes) | Entre um chefe e outro sempre tem um alvo que vale o risco? | 5.9 | não iniciada |
+| 5.11 | Sinapses e estruturas | O jogador sai do lugar para buscar bônus no mapa? | 5.9, 5.10 | não iniciada |
+| 6 | Arte, polimento e lançamento | Dá para mandar o link para os amigos? | 1 a 5.11 | não iniciada |
 
 ## Bugs relatados
 
@@ -39,6 +43,8 @@ Bugs que o Vitor achou jogando. Marque ao corrigir, com o commit da correção.
 - [x] Celular: campo longo longe da prancheta "Tela de batalha (mockup)": paredes largas demais, campo estreito, pool com espaços pequenos.
 - [x] Celular: o dedo que movia o agente escolhia uma carta do level up ao soltar. Corrigido: a carta só responde a um toque que começou nela.
 - [x] Pausa: o botão Opções não fazia nada. A tela abria escondida atrás da run e da HUD; agora vem para cima.
+
+**Ordem sugerida das fases 5.x:** 5.5 → 5.8 → 5.9 → 5.10 → 5.11 → 5.6 → 5.7. As fases 5.8 a 5.11 trazem as mecânicas do Megabonk ([megabonk.md](megabonk.md)) e mexem no level up e nos drops, então vêm antes da Superdosagem (5.6, que depende do level up novo) e dos mapas gerados (5.7, que passam a hospedar as estruturas como pontos de interesse). Os números das fases não mudam para não quebrar as decisões que citam cada uma.
 
 A arte não espera a fase 6: os sprites de molécula são montados por código a partir dos átomos (aba Design), então entram já na fase 1. A fase 6 cuida do resto: HUD final, som, telas e acabamento.
 
@@ -291,6 +297,67 @@ O mapa do campo crônico passa a ser gerado por semente, em blocos de 16×16 til
 - [ ] Validar no celular a 60 FPS com o mapa Denso.
 
 **Critério de saída:** duas runs seguidas dão mapas que dá para distinguir num print, nenhuma run prende o agente num beco, e o mapa Denso roda a 60 FPS no celular.
+
+## Fase 5.8: Receptores no level up
+
+O level up passa a oferecer só armas e **receptores**, os tomos do Megabonk: 16 atributos, 4 espaços. Os outros modificadores saem do sorteio. Regras em [megabonk.md](megabonk.md#1-level-up-com-armas-e-receptores) ([decisão 0027](decisoes/0027-level-up-com-receptores.md)).
+
+- [ ] `passives.json` vira `receptors.json`, com os 16 receptores (Cinética junta velocidade do projétil e alcance) e o custo dos 6 desbloqueáveis.
+- [ ] Sorteio do level up só com arma nova, nível de arma, receptor novo e nível de receptor; "Nova dose" quando nada sobe.
+- [ ] Raridade no nível de arma, multiplicando o ganho daquele nível (inteiros arredondados, nunca abaixo do comum).
+- [ ] "Espaços de modificador" vira "Espaços de receptor", só no Laboratório; Rerrolar, Pular e Banir saem das cartas e ficam no Laboratório e na saúde executiva.
+- [ ] Enquanto a fase 5.9 não chega, os reagentes continuam como carta e os modificadores que saíram ficam só no Laboratório.
+- [ ] Desbloqueio dos receptores com ATP no Arsenal, como as armas, e o "!" na aba quando dá para comprar.
+- [ ] Level up com o título `ESCOLHA UMA ARMA OU RECEPTOR` e moldura de raridade na carta de arma; HUD e pausa com "Receptores" no lugar de "Modificadores".
+- [ ] Atualizar [wiki.md](wiki.md) (modificadores viram receptores) e rodar o `npm run sim`.
+
+**Critério de saída:** uma run de 10 minutos chega com 4 armas e 4 receptores escolhidos, o level up nunca mostra mais de 8 tipos de carta diferentes, e o Vitor acha cada escolha mais pesada que antes.
+
+## Fase 5.9: Suplementos e ampolas
+
+Os atributos que saíram do level up voltam como **suplementos**, passivos que acumulam e saem de **ampolas** no chão. Nem toda molécula solta XP. Regras em [megabonk.md](megabonk.md#2-suplementos) ([decisão 0028](decisoes/0028-suplementos-e-ampolas.md)).
+
+- [ ] `supplements.json` com os 25 suplementos e os 4 reagentes, em quatro raridades; sorteio de raridade pela Sorte e depois do suplemento.
+- [ ] Suplementos que mudam atributo (somam até o teto na run) e os de efeito: Nitrogênio líquido, Aquaporina, Eletrodo, Termita, Criopreservação, Quimiotaxia (esta depende da 5.11).
+- [ ] Reagentes como suplemento, com peso ×10 quando a arma deles está no MAX; tirar os reagentes das cartas do level up.
+- [ ] Vitamina sai da vesícula e vira suplemento.
+- [ ] Gema de XP com chance por tipo de molécula (60% comum, 40% fragmento, 100% forte), valendo o XP dividido pela chance.
+- [ ] Ampola: chance por molécula (0,3% comum, 3% forte), multiplicada pela Sorte e pelo Estresse, com garantia aos 90 s e intervalo mínimo de 20 s; chefe solta uma ampola de mínimo Ultra raro junto da cápsula.
+- [ ] Abrir a ampola: pausa curta, quebra, suplemento com a moldura da raridade, toque para voltar.
+- [ ] Pausa com a grade de suplementos (`×N`), aviso de 2 s ao pegar, e "de onde vem" cada bônus na aba Atributos.
+- [ ] Sprites de 16×16: ampola (fechada e quebrando) e um ícone por suplemento; seção "Suplementos" no Compêndio.
+- [ ] Atualizar [wiki.md](wiki.md) e rodar o `npm run sim` com as ampolas.
+
+**Critério de saída:** numa run de 10 minutos saem de 6 a 10 ampolas, duas runs seguidas terminam com suplementos bem diferentes, e o XP por minuto fica a menos de 10% do de antes.
+
+## Fase 5.10: Agregados (mini chefes)
+
+Um mini chefe a cada 2 minutos, que sempre solta ampola. Regras em [megabonk.md](megabonk.md#3-drops-xp-com-chance-ampolas-e-agregados) ([decisão 0028](decisoes/0028-suplementos-e-ampolas.md)).
+
+- [ ] Agregado da molécula forte mais comum na onda (amido, triglicerídeo, cortisol): vida ×12, tamanho ×1,5, mais lento, contorno vermelho; números em `run.json`.
+- [ ] Nasce a cada 2 minutos a partir do minuto 2, menos nos minutos de chefe.
+- [ ] Cascata ao decompor, gema vermelha e ampola de mínimo Raro.
+- [ ] Seta na borda da tela enquanto está fora de vista; conta para Especificidade e Anticorpo.
+- [ ] Agregados no Compêndio e na wiki.
+
+**Critério de saída:** entre dois chefes sempre aparecem dois agregados, e decompor um deles é uma decisão de risco, não um passeio.
+
+## Fase 5.11: Sinapses e estruturas
+
+Estruturas no mapa em que é preciso ficar um tempo ou arriscar algo para ganhar um bônus, como os santuários do Megabonk. Regras em [megabonk.md](megabonk.md#4-sinapses-e-estruturas) ([decisão 0029](decisoes/0029-sinapses-e-estruturas.md)).
+
+- [ ] Sinapse: círculo de 48 px, barra que enche em 6 s dentro e esvazia devagar fora, e a tela de 3 cartões de bônus de atributo com raridade (reaproveitando a do level up).
+- [ ] Sinapse potenciada: 10% das sinapses, 10 s, só Lendário ou Especial.
+- [ ] Nascimento num anel fora da tela (uma sinapse perto no começo, depois uma estrutura a cada 45 s, no máximo 4), com pesos em `structures.json`.
+- [ ] Glândula adrenal (ATP por +5% de Estresse) e Coágulo (agregado extra com duas ampolas).
+- [ ] Foco inflamatório, depois do Cerco inflamatório da fase 5.6.
+- [ ] Seta na borda da tela para a estrutura mais perto; sprites das estruturas.
+- [ ] Com a fase 5.7: estruturas viram pontos de interesse dos blocos, numa clareira.
+- [ ] Atualizar [wiki.md](wiki.md) e jogar runs de 15 minutos para ajustar o tempo da sinapse no pico.
+
+**Critério de saída:** numa run de 10 minutos o jogador completa pelo menos 3 sinapses por vontade própria, e pelo menos uma delas no meio de uma onda.
+
+**Depois:** Ribossomo (duplica um suplemento) e Farmácia (vende suplementos pelo ATP da run), quando a economia da run com ampolas estiver medida.
 
 ## Fase 6: Arte, polimento e lançamento
 
