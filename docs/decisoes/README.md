@@ -30,3 +30,4 @@ As decisões de design tomadas antes deste registro continuam marcadas como "dec
 | [0022](0022-campo-longo.md) | Campo longo: defesa por ondas com pool de agentes, sempre rodando | design | proposta |
 | [0023](0023-organismo.md) | Organismo: setores com efeito no jogo, saúde vinda dos agentes e ALTA com herança | design | proposta |
 | [0024](0024-itens-no-mapa.md) | Itens no mapa como fase 5.5, com o conjunto do Vampire Survivors | processo | proposta |
+| [0025](0025-variedade-da-run.md) | Fase 5.6: variedade da run (formações, perfil farmacológico, Superdosagem); Sorte também na raridade da cápsula | processo | aceita |

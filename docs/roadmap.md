@@ -25,7 +25,8 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | 4 | Campo longo (idle) | O idle ajuda a run sem substituí-la? | 3 | implementada, falta validar no celular |
 | 5 | Organismo | Cuidar do corpo muda o jeito de jogar? | 3, 4 | implementada, falta validar no celular |
 | 5.5 | Itens no mapa | Os itens do chão deixam a run mais variada sem quebrar a economia? | 2, 3 | não iniciada |
-| 6 | Arte, polimento e lançamento | Dá para mandar o link para os amigos? | 1 a 5.5 | não iniciada |
+| 5.6 | Variedade da run | A run muda de cara a cada pico, e cada agente cresce do seu jeito? | 2 | não iniciada |
+| 6 | Arte, polimento e lançamento | Dá para mandar o link para os amigos? | 1 a 5.6 | não iniciada |
 
 A arte não espera a fase 6: os sprites de molécula são montados por código a partir dos átomos (aba Design), então entram já na fase 1. A fase 6 cuida do resto: HUD final, som, telas e acabamento.
 
@@ -253,6 +254,17 @@ Os itens que caem no chão da run, com o mesmo conjunto do Vampire Survivors ada
 
 **Critério de saída:** numa run de 15 minutos aparecem itens de quase todos os tipos, pelo menos um muda o rumo da run (um Lisossomo num pico, um Gelo seco no chefe), e o simulador não mostra a economia acelerando mais que 20%.
 
+## Fase 5.6: Variedade da run
+
+Três ideias do Vampire Survivors que deixam a run menos repetitiva, aprovadas pelo Vitor na comparação de [lacunas-vs.md](lacunas-vs.md) ([decisão 0025](decisoes/0025-variedade-da-run.md)). A cápsula do chefe e as estruturas destrutíveis, também aprovadas, ficam na fase 5.5 (itens no mapa), com a Sorte melhorando a quantidade e a raridade das recompensas da cápsula.
+
+- [ ] Ondas com formação, programadas em `run.json`: Pico glicêmico (enxame que atravessa a tela), Cerco inflamatório (anel de citocinas que fecha), Parede lipídica (fileira que varre o mapa) e Surto de cortisol.
+- [ ] Perfil farmacológico: cada agente ganha um atributo próprio a cada 10 níveis, até o nível 50, com os valores em `agents.json`; aparece na ficha do agente e na aba Atributos da pausa.
+- [ ] Superdosagem: com todas as armas e passivos no máximo, o level up oferece um aumento pequeno e sorteado (dano, área, recarga) numa arma, sem teto, ao lado da "Nova dose".
+- [ ] Jogar runs de 20 minutos com os três agentes e ajustar a frequência das formações.
+
+**Critério de saída:** numa run de 20 minutos aparecem pelo menos três formações diferentes, o level up continua útil depois que tudo chega ao máximo, e dá para dizer qual agente é qual só pelo jeito que ele cresce.
+
 ## Fase 6: Arte, polimento e lançamento
 
 Deixar o jogo com a cara do canvas de identidade visual e pronto para outras pessoas.
@@ -267,6 +279,10 @@ Deixar o jogo com a cara do canvas de identidade visual e pronto para outras pes
 - [x] Decidir como o jogo chega aos jogadores: GitHub Pages, publicado por versão ([0018](decisoes/0018-jogo-no-pages-servidor-futuro.md)).
 
 **Critério de saída:** um amigo instala pelo link, joga sem explicação e volta no dia seguinte.
+
+## Depois: conquistas
+
+Ideia aprovada para elaborar no futuro, sem fase definida: a aba Conquistas ganha metas ("Decompor 1.000 triglicerídeos", "Nível 50 com a Lipase") que dão ATP ou liberam conteúdo, como os desbloqueios do Vampire Survivors ([lacunas-vs.md](lacunas-vs.md#conquistas)). Falta decidir se substituem parte do desbloqueio por ATP ou só somam.
 
 ## Depois: servidor (não prioritário)
 
