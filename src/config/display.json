@@ -3,6 +3,7 @@
   "minVisibleShortSidePx": 360,
   "spriteDetails": [2, 3],
   "uiMinShortSidePx": 320,
+  "uiMinShortSidePxLarge": 480,
   "showFps": true,
   "iconSizesPx": [16, 32, 48, 64, 80, 96, 112, 128],
   "frameScales": [1, 2, 3],

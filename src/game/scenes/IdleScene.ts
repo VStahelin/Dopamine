@@ -35,6 +35,9 @@ const BOTTOM_H = 64;
 const WALL = 26;
 const BASE_STRIP = 22;
 const SLOT = 62;
+/** Largura sobre altura do campo na tela: limites para o campo esticado. */
+const MIN_ASPECT = 0.5;
+const MAX_ASPECT = 1.4;
 /** Detail das texturas de molécula usadas no campo (decisão 0009). */
 const DETAIL = 3;
 const UPGRADES: IdleUpgradeKey[] = ['fireRate', 'baseSlots', 'offlineCapHours'];
@@ -50,7 +53,8 @@ type Panel = { kind: 'slot'; pos: number } | { kind: 'upgrades' } | undefined;
 export class IdleScene extends Phaser.Scene {
   private root?: Phaser.GameObjects.Container;
   private size = { w: 0, h: 0 };
-  private fieldBox = { x: 0, y: 0, w: 0, h: 0, scale: 1 };
+  /** Onde o campo da simulação aparece: `sx`/`sy` levam posições, `scale` o tamanho dos sprites. */
+  private fieldBox = { x: 0, y: 0, w: 0, h: 0, sx: 1, sy: 1, scale: 1 };
   private dyn!: Phaser.GameObjects.Graphics;
   private enemyPool: Phaser.GameObjects.Image[] = [];
   private shotPool: Phaser.GameObjects.Image[] = [];
@@ -140,16 +144,20 @@ export class IdleScene extends Phaser.Scene {
     const fieldBottom = bottom - BOTTOM_H - POOL_H;
     out.push(...this.topBar(bg, w, top, save.idle));
 
-    // Campo com largura lógica fixa: escala para caber entre as paredes.
+    // O campo ocupa o espaço entre as paredes, como na prancheta: as posições da simulação esticam
+    // em cada eixo e os sprites ficam com a escala menor. A proporção fica entre MIN e MAX_ASPECT
+    // para o campo não virar uma faixa na tela deitada.
     const availW = w - WALL * 2;
     const availH = fieldBottom - fieldTop - BASE_STRIP;
-    const scale = Math.min(availW / IDLE.field.width, availH / IDLE.field.height);
-    const fw = IDLE.field.width * scale;
-    const fh = IDLE.field.height * scale;
+    const fw = Math.min(availW, availH * MAX_ASPECT);
+    const fh = Math.min(availH, fw / MIN_ASPECT);
+    const sx = fw / IDLE.field.width;
+    const sy = fh / IDLE.field.height;
+    const scale = Math.min(sx, sy);
     const fx = Math.round((w - fw) / 2);
     // A BASE encosta no pool; o que sobra fica no topo do campo, por onde as moléculas entram.
     const fy = Math.round(fieldBottom - BASE_STRIP - fh);
-    this.fieldBox = { x: fx, y: fy, w: fw, h: fh, scale };
+    this.fieldBox = { x: fx, y: fy, w: fw, h: fh, sx, sy, scale };
     this.drawField(bg, w, fieldTop, fieldBottom, fx, fy, fw, fh);
     out.push(
       this.add
@@ -282,7 +290,7 @@ export class IdleScene extends Phaser.Scene {
     const open = openSlots(idle);
     const total = maxSlots();
     for (let pos = 0; pos < total; pos++) {
-      const cx = this.fieldBox.x + slotX(pos, total) * this.fieldBox.scale;
+      const cx = this.fieldBox.x + slotX(pos, total) * this.fieldBox.sx;
       const sx = Math.round(cx - SLOT / 2);
       const sy = y + 42;
       const agent = idle.pool[pos];
@@ -531,9 +539,9 @@ export class IdleScene extends Phaser.Scene {
       this.collectNow();
     }
     const save = getSave(this);
-    const { x: fx, y: fy, scale } = this.fieldBox;
-    const toX = (v: number) => fx + v * scale;
-    const toY = (v: number) => fy + v * scale;
+    const { x: fx, y: fy, sx, sy, scale } = this.fieldBox;
+    const toX = (v: number) => fx + v * sx;
+    const toY = (v: number) => fy + v * sy;
 
     this.texts.best.setText(String(save.idle.bestWave));
     this.texts.atp.setText(Math.floor(save.atp + field.atp).toLocaleString('pt-BR'));
@@ -572,7 +580,7 @@ export class IdleScene extends Phaser.Scene {
     // Aura do Magnésio perto da base.
     const aura = field.slots.find((s) => IDLE.agents[s.agent]?.kind === 'aura');
     if (aura) {
-      const r = (IDLE.agents[aura.agent]!.radius ?? 120) * scale;
+      const r = (IDLE.agents[aura.agent]!.radius ?? 120) * sy;
       g.fillStyle(PALETTE.uv, 0.12).fillRect(fx, fy + this.fieldBox.h - r, this.fieldBox.w, r);
     }
 

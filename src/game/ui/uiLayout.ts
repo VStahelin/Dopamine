@@ -19,7 +19,7 @@ export function setupUiLayout(
     const { width, height } = scene.scale;
     const zoom = minSize
       ? Math.max(1, Math.floor(Math.min(width / minSize.width, height / minSize.height)))
-      : integerZoom(width, height, DISPLAY.uiMinShortSidePx);
+      : integerZoom(width, height, uiMinShortSide(width, height));
     scene.cameras.main.setOrigin(0, 0).setZoom(zoom);
     // Pelo menos 2×: em telas 1× o texto pequeno precisa de mais pixels (veja textFix.ts).
     setTextResolution(Math.max(2, zoom));
@@ -32,6 +32,14 @@ export function setupUiLayout(
   scene.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
     scene.scale.off(Phaser.Scale.Events.RESIZE, apply);
   });
+}
+
+/** Lado menor lógico que a interface precisa: maior em telas grandes, como o PC. */
+function uiMinShortSide(width: number, height: number): number {
+  const cssShort = Math.min(width, height) / Math.min(window.devicePixelRatio || 1, 4);
+  return cssShort >= DISPLAY.largeScreenShortSideCss
+    ? DISPLAY.uiMinShortSidePxLarge
+    : DISPLAY.uiMinShortSidePx;
 }
 
 /** Converte a posição de um ponteiro para as coordenadas lógicas de uma cena de interface. */

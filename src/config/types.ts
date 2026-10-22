@@ -437,6 +437,8 @@ export interface DisplayConfig {
    */
   largeScreenShortSideCss: number;
   minVisibleShortSidePxLarge: number;
+  /** O mesmo para as telas de interface: no PC, 320 unidades davam zoom 4× e os menus não cabiam. */
+  uiMinShortSidePxLarge: number;
   /**
    * Pixels de arte por unidade do mundo com que os sprites podem ser desenhados. A escala do
    * mundo escolhe um deles conforme a tela, para cada pixel de arte ser um número inteiro de

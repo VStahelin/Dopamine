@@ -33,9 +33,10 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 
 Bugs que o Vitor achou jogando. Marque ao corrigir, com o commit da correção.
 
-- [ ] PC: interface enorme na run (HUD ocupa um terço da tela), nas Opções (os botões não cabem) e no campo longo. Os menus não usam a regra de tela grande que a run já usa; falta também uma UI própria de tela larga, desenhada no canvas.
-- [ ] PC: campo longo deitado espreme o campo numa faixa fina entre a HUD e o pool.
-- [ ] Celular: campo longo longe da prancheta "Tela de batalha (mockup)": paredes largas demais, campo estreito, pool com espaços pequenos.
+- [x] PC: interface enorme na run (HUD ocupa um terço da tela), nas Opções (os botões não cabem) e no campo longo. Corrigido: as telas de interface usam a regra de tela grande da run (`uiMinShortSidePxLarge`).
+- [ ] PC: falta uma UI própria de tela larga, desenhada no canvas (HUD da run, campo longo e menus), em vez de esticar a do celular.
+- [x] PC: campo longo deitado espreme o campo numa faixa fina entre a HUD e o pool. Corrigido: o campo estica entre as paredes com proporção limitada.
+- [x] Celular: campo longo longe da prancheta "Tela de batalha (mockup)": paredes largas demais, campo estreito, pool com espaços pequenos.
 
 A arte não espera a fase 6: os sprites de molécula são montados por código a partir dos átomos (aba Design), então entram já na fase 1. A fase 6 cuida do resto: HUD final, som, telas e acabamento.
 
