@@ -146,10 +146,10 @@ A sinapse é onde a dopamina age: um neurônio solta o neurotransmissor e o outr
 
 **Sinapse:**
 
-- Círculo de 48 px de raio (3 tiles), com borda pontilhada ciano e um anel de progresso.
+- Círculo de 48 px de raio (3 tiles), com borda tracejada rosa (a cor da dopamina) e um anel de progresso por dentro. Nada de ciano nem dourado, que são das gemas e do ATP; o desenho está na prancheta "Estruturas de interação (sinapses)" do canvas.
 - Dentro do círculo, a barra enche em 6 s; fora, esvazia devagar (1/4 da velocidade), sem zerar. Cheia, a sinapse dispara e some.
 - **Recompensa:** abre uma tela como a do level up com 3 cartões, cada um um bônus de atributo sorteado entre **todos** os atributos (inclusive os que não são receptores), com raridade pela Sorte. O valor é o de um nível de receptor da raridade sorteada. Às vezes um cartão vem com +1 Rerrolar, Pular ou Banir. Não ocupa espaço e não tem teto além do teto na run do atributo.
-- **Sinapse potenciada** (10% das sinapses; o nome vem da potenciação de longo prazo, a base da memória): borda dourada, enche em 10 s e os três cartões são Lendários ou Especiais.
+- **Sinapse potenciada** (10% das sinapses; o nome vem da potenciação de longo prazo, a base da memória): borda violeta com brilhos brancos, enche em 10 s e os três cartões são Lendários ou Especiais.
 
 **Outras estruturas:**
 
@@ -165,7 +165,7 @@ A sinapse é onde a dopamina age: um neurônio solta o neurotransmissor e o outr
 
 - Antes dos mapas gerados ([fase 5.7](mapas.md)): nascem num anel fora da tela, como as vesículas. No começo da run há sempre uma sinapse a uns 300 px do agente; depois, uma estrutura nova a cada 45 s, no máximo 4 no mapa, sorteada por peso (Sinapse 60, Foco 15, Glândula 15, Coágulo 10).
 - Com os mapas gerados: viram **pontos de interesse** dos blocos ([mapas.md](mapas.md#pontos-de-interesse)), em média 1 a cada 3 blocos, sempre numa clareira sem obstáculos no círculo.
-- Uma seta pequena na borda da tela aponta a estrutura mais perto, na cor dela (ciano, dourado, vermelho).
+- Uma seta pequena na borda da tela aponta a estrutura mais perto, na cor dela: rosa (sinapse), violeta (potenciada), vermelho (foco), vinho (coágulo) e laranja (glândula).
 
 ## Como fica a run
 
