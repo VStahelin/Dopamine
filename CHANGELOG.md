@@ -4,6 +4,9 @@ O que mudou em cada versão do Dopamina Blaster. O jogo mostra este arquivo em O
 
 ## Em desenvolvimento
 
+### Ajustes
+- Cada suplemento ganhou um ícone próprio (antes usavam o ícone do atributo).
+
 ## v0.9.0 · 22/10/2026
 
 ### Novidades

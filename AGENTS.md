@@ -56,5 +56,6 @@ Duas skills do repositório cuidam disso (em `.claude/skills/`; quem não usa Cl
 
 - **Idioma:** documentação, mensagens de commit e textos do jogo em português do Brasil. Código (nomes de variáveis, funções, tipos) em inglês.
 - **Lógica separada do desenho:** nada em `src/core/` importa Phaser. Veja [docs/arquitetura.md](docs/arquitetura.md).
+- **Sprites** nascem no [canvas de identidade visual](https://claude.ai/artifact/MPV17zZywrhhXBUdfnUs6F): todo sprite novo (ícone, item, objeto) entra numa prancheta do canvas com a mesma grade de `src/assets/sprites/`, e a prancheta é copiada para [docs/identidade-visual/](docs/identidade-visual/README.md) no mesmo commit.
 - **Parâmetros** ficam só nos JSON de `src/config/`, lidos por `src/config/index.ts`, nunca soltos no código. Parâmetro novo: adicione no JSON e no tipo em `src/config/types.ts`.
 - **Commits** pequenos, um assunto por commit, direto na `main`. Sem branches nem PRs: o fluxo é simples de propósito. Antes de commitar, rode `npm run check`.

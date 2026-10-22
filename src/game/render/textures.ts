@@ -58,6 +58,8 @@ export function iconTexture(group: 'passives', id: PassiveId): IconRef;
 export function iconTexture(group: 'specials', id: SpecialKind): IconRef;
 /** Itens do mapa: os de ItemId e os extras da prancheta (gemas, cápsulas, vesícula, Fosfocreatina). */
 export function iconTexture(group: 'items', id: string): IconRef;
+/** Suplementos: um ícone por id de supplements.json (prancheta "Suplementos e ampolas"). */
+export function iconTexture(group: 'supplements', id: string): IconRef;
 export function iconTexture(group: IconGroup, id: string): IconRef {
   return ICONS[group][id] ? { group, id } : MISSING;
 }

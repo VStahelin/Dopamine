@@ -30,7 +30,7 @@ export type PixelGrid = readonly string[];
  * `stats`: atributos sem modificador no level up (só no Laboratório), desenhados no jogo.
  * `items`: itens do mapa da fase 5.5 (prancheta "Itens do mapa (drops)"), ainda sem uso no jogo.
  */
-export type IconGroup = 'weapons' | 'passives' | 'specials' | 'stats' | 'items';
+export type IconGroup = 'weapons' | 'passives' | 'specials' | 'stats' | 'items' | 'supplements';
 
 /** Cor em `#RRGGBB` para cada letra das grades de ícone. */
 export const ICON_PALETTE: Readonly<Record<string, string>> = paletteJson;

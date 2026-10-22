@@ -225,7 +225,6 @@ function loadSupplements(): SupplementsConfig {
   for (const [id, def] of Object.entries(cfg.items)) {
     const where = `supplements.json ${id}`;
     oneOf(def.rarity, SUPPLEMENT_RARITIES, `${where}.rarity`);
-    exists(def.icon, passivesJson, `${where}.icon`);
     const e = def.effect;
     if (e.kind === 'stat') oneOf(e.stat, RUN_STAT_KEYS, `${where}.effect.stat`);
     if (e.kind === 'reagent') exists(e.passive, passivesJson, `${where}.effect.passive`);

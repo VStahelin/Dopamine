@@ -661,8 +661,6 @@ export interface SupplementDef {
   name: string;
   rarity: SupplementRarity;
   description: string;
-  /** Ícone do grupo `passives` de icons.json, até os suplementos terem ícones próprios. */
-  icon: string;
   effect: SupplementEffect;
 }
 

@@ -4,7 +4,7 @@ import type { RunState } from '../../core/run/state';
 import { closeAmpoule, copies } from '../../core/run/supplements';
 import { PALETTE, PALETTE_CSS } from '../render/palette';
 import { addIcon, iconTexture } from '../render/textures';
-import { addIconSlot, passiveSlot } from '../ui/iconSlot';
+import { addIconSlot, supplementSlot } from '../ui/iconSlot';
 import { bodyText, hudLabelText, impactText, labelText } from '../ui/theme';
 import { addDim, setupUiLayout } from '../ui/uiLayout';
 import { SCENES } from './keys';
@@ -69,10 +69,7 @@ export class AmpouleScene extends Phaser.Scene {
     g.fillStyle(PALETTE.outline).fillRect(left, cy, cardW, cardH);
     g.fillStyle(hex(tier.color)).fillRect(left + 2, cy + 2, cardW - 4, cardH - 4);
     g.fillStyle(PALETTE.panel).fillRect(left + 5, cy + 5, cardW - 10, cardH - 10);
-    const slot = addIconSlot(this, left + 14, cy + 14, 2, {
-      ...passiveSlot(def.icon as never, 0),
-      label: n > 1 ? `×${n}` : undefined,
-    });
+    const slot = addIconSlot(this, left + 14, cy + 14, 2, supplementSlot(ampoule.id, n));
     const tx = left + 14 + slot.size + 10;
     this.root = this.add.container(0, 0, [
       addDim(this, w, h),

@@ -1,9 +1,21 @@
 {
   "rarities": {
-    "common": { "tier": "common", "weight": 60 },
-    "rare": { "tier": "rare", "weight": 25 },
-    "ultraRare": { "tier": "epic", "weight": 10 },
-    "legendary": { "tier": "legendary", "weight": 5 }
+    "common": {
+      "tier": "common",
+      "weight": 60
+    },
+    "rare": {
+      "tier": "rare",
+      "weight": 25
+    },
+    "ultraRare": {
+      "tier": "epic",
+      "weight": 10
+    },
+    "legendary": {
+      "tier": "legendary",
+      "weight": 5
+    }
   },
   "reagentBoost": 10,
   "items": {
@@ -11,197 +23,278 @@
       "name": "Creatina",
       "rarity": "common",
       "description": "+8% de Reatividade (dano).",
-      "icon": "reactivity",
-      "effect": { "kind": "stat", "stat": "damage", "value": 0.08 }
+      "effect": {
+        "kind": "stat",
+        "stat": "damage",
+        "value": 0.08
+      }
     },
     "vitamin": {
       "name": "Vitamina",
       "rarity": "common",
       "description": "+10% de Sorte.",
-      "icon": "luck",
-      "effect": { "kind": "stat", "stat": "luck", "value": 0.1 }
+      "effect": {
+        "kind": "stat",
+        "stat": "luck",
+        "value": 0.1
+      }
     },
     "iron": {
       "name": "Ferro",
       "rarity": "common",
       "description": "+15 interações máximas.",
-      "icon": "interactions",
-      "effect": { "kind": "stat", "stat": "maxInteractions", "value": 15 }
+      "effect": {
+        "kind": "stat",
+        "stat": "maxInteractions",
+        "value": 15
+      }
     },
     "electrolytes": {
       "name": "Eletrólitos",
       "rarity": "common",
       "description": "Recupera +0,15 interação por segundo.",
-      "icon": "homeostasis",
-      "effect": { "kind": "stat", "stat": "regenPerSecond", "value": 0.15 }
+      "effect": {
+        "kind": "stat",
+        "stat": "regenPerSecond",
+        "value": 0.15
+      }
     },
     "caffeine": {
       "name": "Cafeína",
       "rarity": "common",
       "description": "+8% de Mobilidade.",
-      "icon": "mobility",
-      "effect": { "kind": "stat", "stat": "moveSpeed", "value": 0.08 }
+      "effect": {
+        "kind": "stat",
+        "stat": "moveSpeed",
+        "value": 0.08
+      }
     },
     "bicarbonate": {
       "name": "Bicarbonato",
       "rarity": "common",
       "description": "+20% de Repulsão (empurrão).",
-      "icon": "repulsion",
-      "effect": { "kind": "stat", "stat": "knockback", "value": 0.2 }
+      "effect": {
+        "kind": "stat",
+        "stat": "knockback",
+        "value": 0.2
+      }
     },
     "formicAcid": {
       "name": "Ácido fórmico",
       "rarity": "common",
       "description": "Devolve 25% do dano a quem encostar, como a urtiga.",
-      "icon": "reflex",
-      "effect": { "kind": "stat", "stat": "thorns", "value": 0.25 }
+      "effect": {
+        "kind": "stat",
+        "stat": "thorns",
+        "value": 0.25
+      }
     },
     "mucin": {
       "name": "Mucina",
       "rarity": "common",
       "description": "+0,1 s sem levar dano depois de um golpe.",
-      "icon": "tolerance",
-      "effect": { "kind": "stat", "stat": "invulnerabilitySeconds", "value": 0.1 }
+      "effect": {
+        "kind": "stat",
+        "stat": "invulnerabilitySeconds",
+        "value": 0.1
+      }
     },
     "glutamine": {
       "name": "Glutamina",
       "rarity": "common",
       "description": "+2% de chance de recuperar 1 interação ao decompor.",
-      "icon": "absorption",
-      "effect": { "kind": "stat", "stat": "lifesteal", "value": 0.02 }
+      "effect": {
+        "kind": "stat",
+        "stat": "lifesteal",
+        "value": 0.02
+      }
     },
     "fluorescein": {
       "name": "Fluoresceína",
       "rarity": "common",
       "description": "+15% de alcance.",
-      "icon": "reach",
-      "effect": { "kind": "stat", "stat": "range", "value": 0.15 }
+      "effect": {
+        "kind": "stat",
+        "stat": "range",
+        "value": 0.15
+      }
     },
     "ginseng": {
       "name": "Ginseng",
       "rarity": "common",
       "description": "−8% na recarga do especial.",
-      "icon": "metabolism",
-      "effect": { "kind": "special", "stat": "cooldown", "value": -0.08 }
+      "effect": {
+        "kind": "special",
+        "stat": "cooldown",
+        "value": -0.08
+      }
     },
     "surfactant": {
       "name": "Surfactante",
       "rarity": "rare",
       "description": "Disparos atravessam +1 molécula.",
-      "icon": "penetration",
-      "effect": { "kind": "stat", "stat": "pierce", "value": 1 }
+      "effect": {
+        "kind": "stat",
+        "stat": "pierce",
+        "value": 1
+      }
     },
     "copper": {
       "name": "Cobre",
       "rarity": "rare",
       "description": "Disparos saltam para +1 molécula.",
-      "icon": "chainReaction",
-      "effect": { "kind": "stat", "stat": "ricochet", "value": 1 }
+      "effect": {
+        "kind": "stat",
+        "stat": "ricochet",
+        "value": 1
+      }
     },
     "antibody": {
       "name": "Anticorpo",
       "rarity": "rare",
       "description": "+15% de dano em moléculas fortes e chefes.",
-      "icon": "specificity",
-      "effect": { "kind": "stat", "stat": "eliteDamage", "value": 0.15 }
+      "effect": {
+        "kind": "stat",
+        "stat": "eliteDamage",
+        "value": 0.15
+      }
     },
     "mitochondria": {
       "name": "Mitocôndria",
       "rarity": "rare",
       "description": "+15% de ATP na run.",
-      "icon": "learning",
-      "effect": { "kind": "stat", "stat": "currencyGain", "value": 0.15 }
+      "effect": {
+        "kind": "stat",
+        "stat": "currencyGain",
+        "value": 0.15
+      }
     },
     "liquidNitrogen": {
       "name": "Nitrogênio líquido",
       "rarity": "rare",
       "description": "5% de chance de congelar a molécula atingida por 1 s.",
-      "icon": "evasion",
-      "effect": { "kind": "freezeOnHit", "chance": 0.05, "seconds": 1 }
+      "effect": {
+        "kind": "freezeOnHit",
+        "chance": 0.05,
+        "seconds": 1
+      }
     },
     "digestiveEnzyme": {
       "name": "Enzima digestiva",
       "rarity": "ultraRare",
       "description": "+25% de Força da catálise (dano crítico).",
-      "icon": "catalysisPower",
-      "effect": { "kind": "stat", "stat": "critDamage", "value": 0.25 }
+      "effect": {
+        "kind": "stat",
+        "stat": "critDamage",
+        "value": 0.25
+      }
     },
     "platinum": {
       "name": "Platina",
       "rarity": "ultraRare",
       "description": "+10% de chance de efeito (lentidão, queimadura).",
-      "icon": "catalysisChance",
-      "effect": { "kind": "stat", "stat": "effectChance", "value": 0.1 }
+      "effect": {
+        "kind": "stat",
+        "stat": "effectChance",
+        "value": 0.1
+      }
     },
     "aquaporin": {
       "name": "Aquaporina",
       "rarity": "ultraRare",
       "description": "A cada 60 s, todas as gemas do mapa correm até o agente.",
-      "icon": "magnet",
-      "effect": { "kind": "gemPulse", "seconds": 60 }
+      "effect": {
+        "kind": "gemPulse",
+        "seconds": 60
+      }
     },
     "electrode": {
       "name": "Eletrodo",
       "rarity": "ultraRare",
       "description": "Ao decompor, 10% de chance de uma faísca que atinge 3 moléculas perto.",
-      "icon": "kinetics",
-      "effect": { "kind": "spark", "chance": 0.1, "targets": 3, "damage": 12, "rangePx": 80 }
+      "effect": {
+        "kind": "spark",
+        "chance": 0.1,
+        "targets": 3,
+        "damage": 12,
+        "rangePx": 80
+      }
     },
     "nootropic": {
       "name": "Nootrópico",
       "rarity": "legendary",
       "description": "+1 opção em cada level up.",
-      "icon": "options",
-      "effect": { "kind": "stat", "stat": "choices", "value": 1 }
+      "effect": {
+        "kind": "stat",
+        "stat": "choices",
+        "value": 1
+      }
     },
     "booster": {
       "name": "Dose de reforço",
       "rarity": "legendary",
       "description": "+1 Segunda dose: volta com metade das interações.",
-      "icon": "secondDose",
-      "effect": { "kind": "stat", "stat": "revives", "value": 1 }
+      "effect": {
+        "kind": "stat",
+        "stat": "revives",
+        "value": 1
+      }
     },
     "thermite": {
       "name": "Termita",
       "rarity": "legendary",
       "description": "Molécula decomposta explode e queima as vizinhas.",
-      "icon": "diffusion",
-      "effect": { "kind": "thermite", "damage": 15, "radiusPx": 28 }
+      "effect": {
+        "kind": "thermite",
+        "damage": 15,
+        "radiusPx": 28
+      }
     },
     "cryopreservation": {
       "name": "Criopreservação",
       "rarity": "legendary",
       "description": "Ao perder interações, congela tudo na tela por 2 s (recarga de 30 s).",
-      "icon": "membrane",
-      "effect": { "kind": "cryo", "seconds": 2, "cooldownSeconds": 30 }
+      "effect": {
+        "kind": "cryo",
+        "seconds": 2,
+        "cooldownSeconds": 30
+      }
     },
     "peroxide": {
       "name": "Peróxido",
       "rarity": "rare",
       "description": "Reagente: com o Radical Livre no máximo, libera a evolução.",
-      "icon": "peroxide",
-      "effect": { "kind": "reagent", "passive": "peroxide" }
+      "effect": {
+        "kind": "reagent",
+        "passive": "peroxide"
+      }
     },
     "chlorine": {
       "name": "Cloro",
       "rarity": "rare",
       "description": "Reagente: com o Jato Ácido no máximo, libera a evolução.",
-      "icon": "chlorine",
-      "effect": { "kind": "reagent", "passive": "chlorine" }
+      "effect": {
+        "kind": "reagent",
+        "passive": "chlorine"
+      }
     },
     "ozone": {
       "name": "Ozônio",
       "rarity": "rare",
       "description": "Reagente: com o Raio UV no máximo, libera a evolução.",
-      "icon": "ozone",
-      "effect": { "kind": "reagent", "passive": "ozone" }
+      "effect": {
+        "kind": "reagent",
+        "passive": "ozone"
+      }
     },
     "coenzyme": {
       "name": "Coenzima",
       "rarity": "rare",
       "description": "Reagente: com o Catalisador no máximo, libera a evolução.",
-      "icon": "coenzyme",
-      "effect": { "kind": "reagent", "passive": "coenzyme" }
+      "effect": {
+        "kind": "reagent",
+        "passive": "coenzyme"
+      }
     }
   }
 }

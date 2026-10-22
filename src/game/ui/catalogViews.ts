@@ -30,7 +30,7 @@ import {
   type UnlockKind,
 } from '../../core/meta/progress';
 import { addButton } from './button';
-import { addIconSlot, passiveSlot, slotSize, weaponIcon } from './iconSlot';
+import { addIconSlot, passiveSlot, slotSize, supplementSlot, weaponIcon } from './iconSlot';
 import { receptorGain } from './upgradeText';
 import { drawCreamSlot, drawInkBox, drawLock, drawWoodFrame } from './icons';
 import { IDLE_AGENTS, RUN_AGENTS } from './menuContent';
@@ -406,11 +406,7 @@ function renderSupplements(
     const isSeen = seen.includes(id);
     const h = 40;
     drawInkBox(g, left, cy, width, h, PALETTE.panel);
-    const slot = addIconSlot(scene, left + 6, cy + 6, 1, {
-      ...passiveSlot(def.icon as PassiveId, 0),
-      label: undefined,
-      dim: !isSeen,
-    });
+    const slot = addIconSlot(scene, left + 6, cy + 6, 1, { ...supplementSlot(id), dim: !isSeen });
     out.push(...slot.objects);
     const tx = left + 6 + slot.size + 10;
     if (!isSeen) {

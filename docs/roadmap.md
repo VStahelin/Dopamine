@@ -350,7 +350,7 @@ Os atributos que saíram do level up voltam como **suplementos**, passivos que a
 - [x] Pausa com a grade de suplementos (`×N`). O aviso de 2 s ficou dispensável: a tela da ampola já mostra o suplemento.
 - [ ] "De onde vem" cada bônus na aba Atributos (receptor, suplemento, Laboratório).
 - [x] Sprites de 16×16 da ampola (fechada e quebrando) e seção "Suplementos" no Compêndio.
-- [ ] Um ícone próprio por suplemento (hoje usam o ícone do atributo); fica para uma prancheta do canvas.
+- [x] Um ícone próprio por suplemento, na prancheta "Suplementos e ampolas" do canvas e no grupo `supplements` de icons.json.
 - [x] Atualizar [wiki.md](wiki.md) e rodar o `npm run sim` com as ampolas. O nível médio numa run de 10 minutos fica 6% acima (25,7 contra 24,2), e o ATP por run sobe cerca de 20% (parte vem do robô, que agora pega os itens).
 
 **Critério de saída:** numa run de 10 minutos saem de 6 a 10 ampolas, duas runs seguidas terminam com suplementos bem diferentes, e o XP por minuto fica a menos de 10% do de antes.

@@ -129,6 +129,15 @@ export function weaponIcon(id: WeaponId): SlotContent {
   return { frame: evolved ? 'evolved' : 'weapon', icon: iconTexture('weapons', id) };
 }
 
+/** Ícone de um suplemento (fase 5.9), com o número de cópias quando passa de uma. */
+export function supplementSlot(id: string, copies = 0): SlotContent {
+  return {
+    frame: 'passive',
+    icon: iconTexture('supplements', id),
+    label: copies > 1 ? `×${copies}` : undefined,
+  };
+}
+
 /** Ícone de uma opção de level up. */
 export function choiceSlot(choice: UpgradeChoice): SlotContent {
   switch (choice.kind) {

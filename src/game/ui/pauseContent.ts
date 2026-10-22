@@ -1,12 +1,5 @@
 import * as Phaser from 'phaser';
-import {
-  PASSIVES,
-  STATS,
-  SUPPLEMENTS,
-  WEAPONS,
-  type PassiveId,
-  type RunStatKey,
-} from '../../config';
+import { PASSIVES, STATS, WEAPONS, type PassiveId, type RunStatKey } from '../../config';
 import type { RunState } from '../../core/run/state';
 import { statDef } from '../../core/run/stats';
 import { weaponMaxLevel } from '../../core/run/weaponParams';
@@ -18,6 +11,7 @@ import {
   passiveSlot,
   rowSlots,
   slotSize,
+  supplementSlot,
   weaponSlot,
   type SlotContent,
 } from './iconSlot';
@@ -228,14 +222,13 @@ function supplementGrid(run: RunState): Build {
     const height = rows * (size + gap) + 10;
     const children: Phaser.GameObjects.GameObject[] = [box(scene, width, height)];
     ids.forEach((id, i) => {
-      const def = SUPPLEMENTS.items[id]!;
       const n = run.supplements[id] ?? 0;
       const slot = addIconSlot(
         scene,
         6 + (i % perRow) * (size + gap),
         6 + Math.floor(i / perRow) * (size + gap),
         1,
-        { ...passiveSlot(def.icon as PassiveId, 0), label: n > 1 ? `×${n}` : undefined },
+        supplementSlot(id, n),
       );
       children.push(...slot.objects);
     });

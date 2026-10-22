@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Estruturas do mapa</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&amp;family=Silkscreen:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#FFB347}a:hover{color:#FFD08A}
+</style>
+</helmet>
+<div style="width: 1280px; height: 1560px; box-sizing: border-box; padding: 48px; background: #15172E; font-family: 'Pixelify Sans', monospace; color: #F4EFE0; display: flex; flex-direction: column; gap: 36px">
+
+  <div style="display: flex; flex-direction: column; gap: 8px">
+    <div style="font-size: 44px; font-weight: 700; color: #FF6FA8; text-shadow: -3px 0 #3A0A0C, 3px 0 #3A0A0C, 0 -3px #3A0A0C, 0 4px #3A0A0C">Estruturas de interação</div>
+    <div style="font-size: 15px; line-height: 1.4; color: #C9CCE6; max-width: 1080px">Os santuários do Megabonk adaptados ao corpo (fase 5.11, docs/megabonk.md). Cada estrutura é um objeto de 16×16 no centro de um círculo de 48 px de raio (3 tiles), com o contorno escuro de 1 pixel dos outros sprites. O círculo é tracejado em pixel e a cor diz o tipo: rosa da dopamina, violeta da potenciação, vermelho da inflamação, vinho do sangue e laranja da adrenalina. Nenhuma usa ciano nem dourado, que são das gemas e do ATP.</div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px">
+      <div style="font-size: 28px; font-weight: 700; color: #FF9A1F; text-shadow: -2px 0 #3A0A0C, 2px 0 #3A0A0C, 0 -2px #3A0A0C, 0 3px #3A0A0C">As cinco estruturas</div>
+      <div style="font-size: 14px; color: #A9AED0">sprite em 6× e, no chão de areia, o círculo inteiro em 2×</div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px">
+      <sc-for list="{{cards}}" as="it" hint-placeholder-count="5">
+        <div style="display: flex; flex-direction: column; gap: 10px; padding: 12px; background: #1B1E3A; border: 3px solid #07080F">
+          <div style="display: flex; align-items: center; gap: 10px">
+            <div style="position: relative; flex: none; width: 102px; height: 102px; box-sizing: border-box; border: 3px solid #07080F; background: #23264A">
+              <div style="position: absolute; left: 0; top: 0; width: 96px; height: 96px"><div style="{{it.big}}"></div></div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 4px">
+              <div style="width: 22px; height: 10px; background: {{it.color}}; border: 2px solid #07080F"></div>
+              <div style="font-family: 'Silkscreen', monospace; font-size: 9px; letter-spacing: 1px; color: #A9AED0">{{it.colorName}}</div>
+            </div>
+          </div>
+          <div style="position: relative; width: 206px; height: 206px; box-sizing: border-box; background: #D8B47A; border: 2px solid #07080F; overflow: hidden">
+            <div style="position: absolute; left: 13px; top: 13px; width: 176px; height: 176px; border-radius: 50%; background: {{it.tint}}"></div>
+            <div style="position: absolute; left: 0; top: 0; width: 202px; height: 202px"><div style="{{it.ring}}"></div></div>
+            <div style="position: absolute; left: 85px; top: 85px; width: 32px; height: 32px"><div style="{{it.x2}}"></div></div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 4px">
+            <div style="font-size: 17px; font-weight: 700">{{it.name}}</div>
+            <div style="font-family: 'Silkscreen', monospace; font-size: 9px; letter-spacing: 1px; color: #FFB347">{{it.mb}}</div>
+            <div style="font-size: 13px; line-height: 1.35; color: #C9CCE6">{{it.fx}}</div>
+            <div style="font-family: 'Silkscreen', monospace; font-size: 9px; letter-spacing: 1px; color: #FF9ECB">{{it.tag}}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px">
+      <div style="font-size: 28px; font-weight: 700; color: #FF9A1F; text-shadow: -2px 0 #3A0A0C, 2px 0 #3A0A0C, 0 -2px #3A0A0C, 0 3px #3A0A0C">A sinapse enchendo</div>
+      <div style="font-size: 14px; color: #A9AED0">o anel de dentro enche no sentido do relógio enquanto o agente fica no círculo</div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px">
+      <sc-for list="{{states}}" as="st" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 10px; padding: 12px; background: #1B1E3A; border: 3px solid #07080F; align-items: center">
+          <div style="position: relative; width: 206px; height: 206px; box-sizing: border-box; background: #D8B47A; border: 2px solid #07080F; overflow: hidden">
+            <div style="position: absolute; left: 13px; top: 13px; width: 176px; height: 176px; border-radius: 50%; background: {{st.tint}}"></div>
+            <div style="position: absolute; left: 0; top: 0; width: 202px; height: 202px"><div style="{{st.ring}}"></div></div>
+            <div style="position: absolute; left: 0; top: 0; width: 202px; height: 202px"><div style="{{st.progress}}"></div></div>
+            <div style="position: absolute; left: 85px; top: 85px; width: 32px; height: 32px"><div style="{{st.icon}}"></div></div>
+            <sc-for list="{{st.extras}}" as="e" hint-placeholder-count="2">
+              <div style="position: absolute; left: {{e.x}}px; top: {{e.y}}px; width: 32px; height: 32px"><div style="{{e.icon}}"></div></div>
+            </sc-for>
+            <div style="position: absolute; left: 0; right: 0; bottom: 8px; text-align: center; font-family: 'Silkscreen', monospace; font-size: 11px; color: #FFFFFF; text-shadow: -1px 0 #1A1424, 1px 0 #1A1424, 0 -1px #1A1424, 0 2px #1A1424">{{st.pct}}</div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 4px; align-self: stretch">
+            <div style="font-size: 17px; font-weight: 700">{{st.name}}</div>
+            <div style="font-size: 13px; line-height: 1.35; color: #C9CCE6">{{st.fx}}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 420px minmax(0, 1fr); gap: 24px">
+    <div style="display: flex; flex-direction: column; gap: 14px">
+      <div style="display: flex; align-items: baseline; gap: 16px">
+        <div style="font-size: 28px; font-weight: 700; color: #FF9A1F; text-shadow: -2px 0 #3A0A0C, 2px 0 #3A0A0C, 0 -2px #3A0A0C, 0 3px #3A0A0C">Seta na borda</div>
+      </div>
+      <div style="font-size: 13px; line-height: 1.35; color: #C9CCE6">Aponta a estrutura mais perto fora da tela, na cor dela, com o sprite em 1× atrás. Some quando a estrutura entra na tela. O agregado usa a mesma seta, em vermelho.</div>
+      <div style="display: flex; gap: 14px; flex-wrap: wrap">
+        <sc-for list="{{arrows}}" as="a" hint-placeholder-count="5">
+          <div style="display: flex; flex-direction: column; gap: 6px; align-items: center; padding: 10px; background: #1B1E3A; border: 3px solid #07080F">
+            <div style="position: relative; width: 36px; height: 36px"><div style="{{a.icon}}"></div></div>
+            <div style="font-family: 'Silkscreen', monospace; font-size: 9px; letter-spacing: 1px; color: #A9AED0">{{a.label}}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 14px">
+      <div style="display: flex; align-items: baseline; gap: 16px">
+        <div style="font-size: 28px; font-weight: 700; color: #FF9A1F; text-shadow: -2px 0 #3A0A0C, 2px 0 #3A0A0C, 0 -2px #3A0A0C, 0 3px #3A0A0C">Na tela da run, em 2×</div>
+        <div style="font-size: 14px; color: #A9AED0">trecho do campo com setas para o que está fora</div>
+      </div>
+      <div style="position: relative; height: 300px; background: #D8B47A; border: 3px solid #07080F; overflow: hidden">
+        <div style="position: absolute; left: 330px; top: 70px; width: 176px; height: 176px; border-radius: 50%; background: rgba(255, 111, 168, 0.18)"></div>
+        <div style="position: absolute; left: 317px; top: 57px; width: 202px; height: 202px"><div style="{{scene.ring}}"></div></div>
+        <div style="position: absolute; left: 317px; top: 57px; width: 202px; height: 202px"><div style="{{scene.progress}}"></div></div>
+        <div style="position: absolute; left: 402px; top: 142px; width: 32px; height: 32px"><div style="{{scene.synapse}}"></div></div>
+        <div style="position: absolute; left: 440px; top: 160px; width: 32px; height: 32px"><div style="{{scene.agent}}"></div></div>
+        <sc-for list="{{scene.mols}}" as="m" hint-placeholder-count="5">
+          <div style="position: absolute; left: {{m.x}}px; top: {{m.y}}px; width: 32px; height: 32px"><div style="{{m.icon}}"></div></div>
+        </sc-for>
+        <sc-for list="{{scene.edge}}" as="e" hint-placeholder-count="3">
+          <div style="position: absolute; left: {{e.x}}px; top: {{e.y}}px; width: 36px; height: 36px"><div style="{{e.icon}}"></div></div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1560}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const PAL = {"K":"#1A1424","W":"#FFFFFF","H":"#EDEBDD","A":"#8A90A0","a":"#4A4F5C","R":"#E0433A","r":"#8E1616","O":"#FF9A1F","o":"#B5541C","Y":"#F2C83A","P":"#B072F0","p":"#6A3AB0","N":"#FF6FA8","n":"#B03A70","T":"#F2D9A8","E":"#7A4A2A","e":"#4E2C18","G":"#5BC43A","g":"#2E7A1E"};
+    const ART = {
+      "synapse": ["................","..KKKKKKKKKKKK..",".KNNNNNNNNNNNnK.",".KNWNNNNNNNNnnK.",".KNNNnNNNnNNnnK.","..KNNNNNNNNnnK..","...KKKNNNnKKK...",".....KKKKKK.....","......N..N......","....N...N...N...","......N....N....",".....KKKKKK.....","...KKPPPPPPKK...","..KPWPPPPPPppK..",".KPPPPPPPPPPppK.",".KKKKKKKKKKKKKK."],
+      "synapseLTP": ["W..............W","..KKKKKKKKKKKK..",".KNNNNNNNNNNNnK.",".KNWNNNNNNNNnnK.",".KNNNnNNNnNNnnK.","..KNNNNNNNNnnK..","...KKKNNNnKKK..W",".....KKKKKK.....","..W...N..N......","....N...N...N...","......N....N....",".....KKKKKK..W..","...KKPPPPPPKK...","..KPWPPPPPPppK..",".KPPPPPPPPPPppK.",".KKKKKKKKKKKKKK."],
+      "focus": ["................",".......K........","......KRK.......","...K..KRK..K....","..KRK.KRRK.KRK..","..KRRKRORRKRRK..","...KRROOORRRK...","..KRROOYYOORRK..","..KROOYYYYOORK..",".KRROYYWYYORRK..",".KRROYYYYOORRK..","..KRROOOOORRK...","...KRRRRRRRK....","....KKKKKKK.....","................","................"],
+      "clot": ["................","....KKK...KKK...","...KRRRK.KRRRK..","..KRrrRRKRrrRK..","..KRrrRKHKRRRK..","...KRRKHKKKKK...","..KKKKH.HKRRRK..",".KRRRKH..KRrrRK.","KRrrRRKHHKRrrRK.","KRrrRK.KHKKRRK..",".KRRK..KRRRK.H..","..KK.HKRrrRRK...","....H.KRrrRK....",".......KRRK.....","........KK......","................"],
+      "adrenal": ["................",".......KK.......","......KOOK......",".....KOWOOK.....","....KOOOOOOK....","...KOOOOOOooK...","..KOOOOOOOoooK..","..KKKKKKKKKKKK..","..KEEEEEEEEEEK..",".KETEEEEEEEEEEK.",".KEEEEEEEEEEEeK.",".KEEEEEKKEEEEeK.","..KEEEK..KEEeK..","...KKK....KKK...","................","................"],
+      "agent": ["................","......KKKK......","....KKHHHHKK....","...KHWWHHHHAK...","..KHWHHHHHHAAK..","..KHHHNNHHHAAK..","..KHHNNNNHHAAK..","..KHHHNNHHAAAK..","..KHHHHHHAAAaK..","...KHHHHAAAaK...","....KKAAAaKK....","......KKKK......","................","................","................","................"],
+      "mol": ["................","................","................","......KKKK......",".....KHWHAK.....","....KHWHHHAK....","....KHHHHHAK..K.","....KHHHHAAKKKAK","....KAHHAAAK.KAK",".....KAAAaK...K.","......KKKK......","................","................","................","................","................"],
+      "arrow": ["................","................",".......KK.......","......KXXK......",".....KXXXXK.....","....KXXXXXXK....","...KXXXXXXXXK...","..KXXXXXXXXXXK..","..KKKKXXXXKKKK..",".....KXXXXK.....",".....KXXXXK.....",".....KXXXXK.....",".....KKKKKK.....","................","................","................"]
+    };
+    const sprite = (key, c, swap) => {
+      const s = [];
+      ART[key].forEach((row, y) => [...row].forEach((ch, x) => {
+        const col = ch === 'X' ? swap : PAL[ch];
+        if (col) s.push(`${(x + 1) * c}px ${(y + 1) * c}px 0 0 ${col}`);
+      }));
+      return `position:absolute;left:${-c}px;top:${-c}px;width:${c}px;height:${c}px;box-shadow:${s.join(',')}`;
+    };
+    // Anel em pixels: raio e espessura em pixels do jogo, desenhado em blocos de `cell` px. fn(fração do ângulo) devolve a cor ou nada.
+    const ring = (r, thick, cell, fn) => {
+      const R = 50, s = [];
+      for (let y = 0; y <= 2 * R; y++) for (let x = 0; x <= 2 * R; x++) {
+        const dx = x - R, dy = y - R, d = Math.sqrt(dx * dx + dy * dy);
+        if (d < r - thick + 0.5 || d >= r + 0.5) continue;
+        const a = ((Math.atan2(dx, -dy) + 2 * Math.PI) % (2 * Math.PI)) / (2 * Math.PI);
+        const col = fn(a);
+        if (col) s.push(`${(x + 1) * cell}px ${(y + 1) * cell}px 0 0 ${col}`);
+      }
+      return `position:absolute;left:${-cell}px;top:${-cell}px;width:${cell}px;height:${cell}px;box-shadow:${s.join(',')}`;
+    };
+    const dashed = (col, dark) => (a) => (Math.floor(a * 40) % 2 === 0 ? col : dark);
+    const fill = (frac, col) => (a) => (a < frac ? col : 'rgba(26, 20, 36, 0.35)');
+    const T = {
+      synapse: { color: '#FF6FA8', dark: '#B03A70', tint: 'rgba(255, 111, 168, 0.16)' },
+      synapseLTP: { color: '#B072F0', dark: '#6A3AB0', tint: 'rgba(176, 114, 240, 0.2)' },
+      focus: { color: '#E0433A', dark: '#8E1616', tint: 'rgba(224, 67, 58, 0.14)' },
+      clot: { color: '#8E1616', dark: '#3A0A0C', tint: 'rgba(142, 22, 22, 0.16)' },
+      adrenal: { color: '#FF9A1F', dark: '#B5541C', tint: 'rgba(255, 154, 31, 0.16)' }
+    };
+    const card = ([key, name, colorName, mb, fx, tag]) => ({
+      name, colorName, mb, fx, tag, color: T[key].color, tint: T[key].tint,
+      big: sprite(key, 6), x2: sprite(key, 2), ring: ring(48, 2, 2, dashed(T[key].color, T[key].dark))
+    });
+    const cards = [
+      ['synapse', 'Sinapse', 'ROSA', 'SANTUÁRIO DE CARGA', 'Fique 6 s no círculo; cheia, escolha 1 de 3 bônus de atributo com raridade.', '60% DAS ESTRUTURAS'],
+      ['synapseLTP', 'Sinapse potenciada', 'VIOLETA', 'SANTUÁRIO DOURADO', 'Enche em 10 s e só oferece bônus Lendário ou Especial.', '10% DAS SINAPSES'],
+      ['focus', 'Foco inflamatório', 'VERMELHO', 'SANTUÁRIO DE DESAFIO', 'Entrar chama um cerco de citocinas; decompor todo em 30 s dá uma ampola Rara.', 'UM USO'],
+      ['clot', 'Coágulo', 'VINHO', 'MALDIÇÃO DO CHEFE', 'Tocar chama um agregado 50% mais forte, que solta duas ampolas.', 'UM USO'],
+      ['adrenal', 'Glândula adrenal', 'LARANJA', 'SANTUÁRIO DA GANÂNCIA', 'Tocar dá 20 moedas de ATP e +5% de Estresse até o fim da run.', 'ATÉ 3 TOQUES']
+    ].map(card);
+    const S = T.synapse;
+    const synRing = ring(48, 2, 2, dashed(S.color, S.dark));
+    const st = (name, fx, frac, pct, opts) => ({
+      name, fx, pct,
+      tint: opts.tint || S.tint,
+      ring: opts.ring || synRing,
+      progress: frac > 0 ? ring(44, 3, 2, fill(frac, opts.fill || '#FF6FA8')) : '',
+      icon: sprite('synapse', 2),
+      extras: (opts.extras || []).map(([k, x, y]) => ({ x, y, icon: sprite(k, 2) }))
+    });
+    const states = [
+      st('Parada', 'Só o círculo tracejado e o sprite. Nenhum anel de progresso.', 0, '', {}),
+      st('Agente dentro, 40%', 'O anel de dentro aparece e enche em rosa. As moléculas continuam vindo.', 0.4, '40%', { extras: [['agent', 120, 112], ['mol', 4, 30], ['mol', 168, 150]] }),
+      st('Agente saiu, 70%', 'Fora do círculo o anel esvazia a 1/4 da velocidade, sem zerar. O círculo pisca devagar.', 0.7, '70%', { extras: [['agent', 176, 8], ['mol', 20, 160]] }),
+      st('Disparou', 'Anel branco por 0,3 s, a sinapse some e abre a tela de 3 cartões, como no level up.', 1, 'ESCOLHA 1 DE 3', { tint: 'rgba(255, 255, 255, 0.45)', ring: ring(48, 2, 2, () => '#FFFFFF'), fill: '#FFFFFF', extras: [['agent', 110, 100]] })
+    ];
+    const arrowsSrc = [
+      ['synapse', 'SINAPSE'], ['synapseLTP', 'POTENCIADA'], ['focus', 'FOCO'], ['clot', 'COÁGULO'], ['adrenal', 'GLÂNDULA']
+    ];
+    const arrows = arrowsSrc.map(([k, label]) => ({ label, icon: sprite('arrow', 2, T[k].color) + ';transform-origin:16px 16px' }));
+    const rot = (k, deg) => sprite('arrow', 2, T[k].color) + `;transform:rotate(${deg}deg);transform-origin:${18}px ${18}px`;
+    const scene = {
+      ring: synRing,
+      progress: ring(44, 3, 2, fill(0.55, '#FF6FA8')),
+      synapse: sprite('synapse', 2),
+      agent: sprite('agent', 2),
+      mols: [[150, 40], [190, 200], [600, 30], [640, 210], [560, 120]].map(([x, y]) => ({ x, y, icon: sprite('mol', 2) })),
+      edge: [
+        { x: 4, y: 130, icon: rot('focus', -90) },
+        { x: 380, y: 4, icon: rot('synapseLTP', 0) },
+        { x: 700, y: 250, icon: rot('adrenal', 135) }
+      ]
+    };
+    return { cards, states, arrows, scene };
+  }
+}
+</script>
+</body>
+</html>
