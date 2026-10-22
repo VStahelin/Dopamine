@@ -29,9 +29,14 @@ function capped(value: number, def: Stat): number {
   return def.runCap < def.base ? Math.max(value, def.runCap) : Math.min(value, def.runCap);
 }
 
-export function computeStats(rules: RunRules, passives: PassiveLevels): RunStats {
+/** Atributos com os modificadores e, em `bonus`, o que os itens da run somaram (Vitamina). */
+export function computeStats(
+  rules: RunRules,
+  passives: PassiveLevels,
+  bonus: Partial<RunStats> = {},
+): RunStats {
   const stats = {} as RunStats;
-  for (const key of RUN_STAT_KEYS) stats[key] = statDef(rules, key).base;
+  for (const key of RUN_STAT_KEYS) stats[key] = statDef(rules, key).base + (bonus[key] ?? 0);
   for (const [id, p] of Object.entries(passives) as [PassiveId, PassiveState][]) {
     stats[rules.passives[id].stat] += p.bonus;
   }

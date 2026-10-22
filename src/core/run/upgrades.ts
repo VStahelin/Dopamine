@@ -17,14 +17,16 @@ export type UpgradeChoice =
       /** Quanto soma ao atributo, já com o multiplicador da raridade. */
       amount: number;
     }
-  | { kind: 'heal'; amount: number };
+  | { kind: 'heal'; amount: number }
+  /** Nada mais para subir: ATP em moedas do valor atual (Fosfocreatina). */
+  | { kind: 'phosphocreatine'; coins: number };
 
 /** Interações recuperadas quando não sobra nenhum upgrade para oferecer. */
 const FALLBACK_HEAL = 30;
 
 /** Identifica a opção para banir: a arma ou um modificador, sem nível nem raridade. */
 export function choiceKey(choice: UpgradeChoice): string {
-  if (choice.kind === 'heal') return 'heal';
+  if (choice.kind === 'heal' || choice.kind === 'phosphocreatine') return choice.kind;
   return `${choice.kind}:${choice.id}`;
 }
 
@@ -71,7 +73,7 @@ function availablePassives(state: RunState): PassiveId[] {
 }
 
 /** Evoluções prontas: arma no nível máximo com o reagente que ela pede. */
-function readyEvolutions(state: RunState): UpgradeChoice[] {
+export function readyEvolutions(state: RunState): UpgradeChoice[] {
   const out: UpgradeChoice[] = [];
   for (const w of state.weapons) {
     const def = state.rules.weapons[w.id];
@@ -136,7 +138,12 @@ export function levelUpOffer(state: RunState): UpgradeChoice[] {
       amount: passiveAmount(def, state.rules.rarities.tiers[rarity]!.multiplier),
     });
   }
-  if (offer.length === 0) offer.push({ kind: 'heal', amount: FALLBACK_HEAL });
+  if (offer.length === 0) {
+    offer.push(
+      { kind: 'heal', amount: FALLBACK_HEAL },
+      { kind: 'phosphocreatine', coins: state.rules.drops.phosphocreatine.coins },
+    );
+  }
 
   state.offer = offer;
   return offer;
@@ -144,7 +151,13 @@ export function levelUpOffer(state: RunState): UpgradeChoice[] {
 
 export function applyChoice(state: RunState, choice: UpgradeChoice): void {
   if (state.pendingLevelUps <= 0) return;
+  applyUpgrade(state, choice);
+  state.offer = null;
+  state.pendingLevelUps--;
+}
 
+/** Aplica um upgrade (do level up ou da cápsula) e recalcula os atributos. */
+export function applyUpgrade(state: RunState, choice: UpgradeChoice): void {
   const before = state.stats.maxInteractions;
   switch (choice.kind) {
     case 'weapon': {
@@ -172,13 +185,24 @@ export function applyChoice(state: RunState, choice: UpgradeChoice): void {
         state.agent.interactions + choice.amount,
       );
       break;
+    case 'phosphocreatine':
+      state.atp += choice.coins * coinValue(state) * state.stats.currencyGain;
+      break;
   }
-  state.stats = computeStats(state.rules, state.passives);
+  refreshStats(state);
   // Interações máximas a mais também entram no estoque atual.
   state.agent.interactions += Math.max(0, state.stats.maxInteractions - before);
+}
 
-  state.offer = null;
-  state.pendingLevelUps--;
+/** Recalcula os atributos com os modificadores e a Sorte das Vitaminas. */
+export function refreshStats(state: RunState): void {
+  state.stats = computeStats(state.rules, state.passives, { luck: state.itemLuck });
+}
+
+/** Valor de uma moeda de ATP agora: cresce com o tempo de run (economy.json runCurrency). */
+export function coinValue(state: RunState): number {
+  const c = state.rules.economy.runCurrency;
+  return c.baseValue * (1 + (c.valuePerMinute * state.time) / 60);
 }
 
 /** Sorteia novas opções, gastando um Rerrolar. Devolve false se não houver usos. */
@@ -200,7 +224,8 @@ export function skipLevelUp(state: RunState): boolean {
 
 /** Tira a opção do sorteio pelo resto da run e sorteia de novo, gastando um Banir. */
 export function banishChoice(state: RunState, choice: UpgradeChoice): boolean {
-  if (choice.kind === 'heal' || state.pendingLevelUps <= 0) return false;
+  if (choice.kind === 'heal' || choice.kind === 'phosphocreatine') return false;
+  if (state.pendingLevelUps <= 0) return false;
   if (remaining(state, 'banishes') === 0) return false;
   state.used.banishes++;
   state.banished.push(choiceKey(choice));

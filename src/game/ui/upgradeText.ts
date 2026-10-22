@@ -111,5 +111,11 @@ export function describeChoice(choice: UpgradeChoice): ChoiceText {
         level: '',
         description: `Recupera ${num(choice.amount)} interações`,
       };
+    case 'phosphocreatine':
+      return {
+        title: 'Fosfocreatina',
+        level: '',
+        description: `ATP igual a ${num(choice.coins)} moedas`,
+      };
   }
 }

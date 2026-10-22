@@ -2,6 +2,7 @@ import type { EnemyKind } from '../../config';
 import { clampLength, type Vec2 } from '../math/vec2';
 import { damageEnemy, heal } from './combat';
 import { difficultyAt, waveFactorAt, xpToNextLevel } from './progression';
+import { extendFever, updateItems } from './items';
 import { SpatialGrid } from './spatialGrid';
 import { updateSpecial } from './specials';
 import { addEnemy, type Enemy, type RunState } from './state';
@@ -30,8 +31,9 @@ const grid = new SpatialGrid(GRID_CELL);
  * encerrada ou com um level up esperando escolha.
  */
 export function stepRun(state: RunState, input: StepInput, dt: number): void {
-  if (state.over || state.pendingLevelUps > 0) return;
+  if (state.over || state.pendingLevelUps > 0 || state.capsule) return;
   state.time += dt;
+  state.viewRadius = input.viewRadius;
 
   moveAgent(state, input.move, dt);
   updateSpecial(state, input.special === true, dt);
@@ -46,6 +48,7 @@ export function stepRun(state: RunState, input: StepInput, dt: number): void {
   moveProjectiles(state, dt, grid);
   updatePulses(state, dt, grid);
   updateZones(state, dt, grid);
+  updateItems(state, dt, grid);
   touchAgent(state, dt);
   updateGems(state, dt);
   updateCoins(state, dt);
@@ -58,6 +61,11 @@ function moveAgent(state: RunState, intent: Vec2, dt: number): void {
   state.agent.x += dir.x * speed * dt;
   state.agent.y += dir.y * speed * dt;
   if (dir.x !== 0) state.agent.facingX = Math.sign(dir.x);
+  const len = Math.hypot(dir.x, dir.y);
+  if (len > 0.01) {
+    state.agent.dirX = dir.x / len;
+    state.agent.dirY = dir.y / len;
+  }
 }
 
 function spawnAround(state: RunState, distance: number): { x: number; y: number } {
@@ -133,13 +141,15 @@ function spawnEnemies(state: RunState, viewRadius: number, dt: number): void {
 function moveEnemies(state: RunState, dt: number): void {
   const { agent } = state;
   const push = Math.min(1, state.rules.run.separation.strength * dt);
+  // Gelo seco: as moléculas ficam paradas, inclusive as que chegam durante o efeito.
+  const frozen = state.effects.freeze > 0;
   for (let i = 0; i < state.enemies.length; i++) {
     const e = state.enemies[i]!;
     e.hitFlash = Math.max(0, e.hitFlash - dt);
     const dx = agent.x - e.x;
     const dy = agent.y - e.y;
     const dist = Math.hypot(dx, dy);
-    if (dist > 0.001) {
+    if (dist > 0.001 && !frozen) {
       const step = Math.min(e.speed * e.slow * dt, dist);
       e.x += (dx / dist) * step;
       e.y += (dy / dist) * step;
@@ -170,9 +180,24 @@ function touchAgent(state: RunState, dt: number): void {
   // Homeostase: recupera interações aos poucos.
   if (stats.regenPerSecond > 0) heal(state, stats.regenPerSecond * dt);
   agent.invulnerableFor = Math.max(0, agent.invulnerableFor - dt);
+  const agentRadius = rules.run.agent.radiusPx;
+  // Gelo seco: moléculas congeladas não gastam interações, e o agente as empurra.
+  if (state.effects.freeze > 0) {
+    grid.query(agent.x, agent.y, agentRadius + GRID_CELL * 2, (j) => {
+      const e = state.enemies[j];
+      if (!e) return;
+      const dx = e.x - agent.x;
+      const dy = e.y - agent.y;
+      const d = Math.hypot(dx, dy);
+      const overlap = e.radius + agentRadius - d;
+      if (overlap <= 0 || d < 0.001 || e.boss) return;
+      e.x += (dx / d) * overlap;
+      e.y += (dy / d) * overlap;
+    });
+    return;
+  }
   if (agent.invulnerableFor > 0) return;
 
-  const agentRadius = rules.run.agent.radiusPx;
   let attacker: Enemy | undefined;
   grid.query(agent.x, agent.y, agentRadius + GRID_CELL * 2, (j) => {
     const e = state.enemies[j];
@@ -220,6 +245,7 @@ function updateCoins(state: RunState, dt: number): void {
     const dist = Math.hypot(dx, dy);
     if (dist <= rules.run.gems.collectRadiusPx) {
       state.atp += c.value * stats.currencyGain;
+      extendFever(state);
       state.coins[i] = state.coins[state.coins.length - 1]!;
       state.coins.pop();
       continue;

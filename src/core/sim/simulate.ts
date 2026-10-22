@@ -16,6 +16,7 @@ import {
 import { DEFAULT_RULES, type RunRules } from '../run/rules';
 import { createRun, type RunState } from '../run/state';
 import { stepRun } from '../run/step';
+import { closeCapsule } from '../run/items';
 import { applyChoice, levelUpOffer } from '../run/upgrades';
 
 /**
@@ -117,6 +118,7 @@ export function botRun(
   const run = createRun(seed, rules, agent);
   let t = 0;
   while (!run.over && run.time < maxSeconds) {
+    if (run.capsule) closeCapsule(run);
     if (run.pendingLevelUps > 0) {
       const offer = levelUpOffer(run);
       const pick =

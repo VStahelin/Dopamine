@@ -1,6 +1,7 @@
 import type { EnemyKind, WeaponId } from '../../config';
 import { difficultyAt } from './progression';
 import { addEnemy, type Enemy, type RunState } from './state';
+import { coinValue } from './upgrades';
 
 /** Inimigo vivo mais perto de (x, y), ignorando os ids em `skip`. */
 export function nearestEnemy(
@@ -86,6 +87,11 @@ export function damageEnemy(
   state.events.push({ type: 'kill', x: e.x, y: e.y, kind: e.kind });
   dropGem(state, e.x, e.y, e.xp);
   dropCoin(state, e);
+  // O chefe solta a cápsula; a de prata, depois dos 10 minutos, pode evoluir uma arma.
+  if (e.boss) {
+    const silver = state.time >= state.rules.drops.capsule.silverAfterMinutes * 60;
+    state.pickups.push({ x: e.x, y: e.y, kind: 'capsule', attracted: false, silver });
+  }
   // Absorção: chance de recuperar 1 interação ao decompor.
   if (state.rng.next() < state.stats.lifesteal) heal(state, 1);
   for (const w of state.weapons) {
@@ -123,12 +129,15 @@ export function heal(state: RunState, amount: number): void {
   if (gained > 0) state.events.push({ type: 'heal', amount: gained });
 }
 
-/** ATP no chão: chance por molécula, sempre nas elites; vale mais com o tempo de run. */
+/**
+ * ATP no chão: chance por molécula, sempre nas elites e durante a Febre de ATP; vale mais com o
+ * tempo de run.
+ */
 function dropCoin(state: RunState, e: Enemy): void {
   const c = state.rules.economy.runCurrency;
-  const chance = e.elite || e.boss ? c.eliteDropChance : c.dropChance;
+  const chance = e.elite || e.boss ? c.eliteDropChance : state.effects.fever > 0 ? 1 : c.dropChance;
   if (state.rng.next() >= chance) return;
-  let value = c.baseValue * (1 + (c.valuePerMinute * state.time) / 60);
+  let value = coinValue(state);
   if (e.boss) value *= c.bossValueMultiplier;
   state.coins.push({ x: e.x, y: e.y, value, attracted: false });
 }

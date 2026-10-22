@@ -1,0 +1,47 @@
+{
+  "vesicles": {
+    "everySeconds": 15,
+    "maxOnField": 6,
+    "radiusPx": 9,
+    "despawnViewMultiplier": 2
+  },
+  "items": {
+    "atp": { "weight": 50, "minLevel": 0, "luck": false, "coins": 1 },
+    "serum": { "weight": 12, "minLevel": 0, "luck": true, "heal": 30 },
+    "glucose": { "weight": 10, "minLevel": 0, "luck": false, "coins": 5 },
+    "dryIce": { "weight": 2, "minLevel": 4, "luck": true, "seconds": 10 },
+    "osmosis": { "weight": 2, "minLevel": 12, "luck": true },
+    "glycogen": { "weight": 1, "minLevel": 5, "luck": true, "coins": 25 },
+    "lysosome": { "weight": 1, "minLevel": 8, "luck": true },
+    "bunsen": { "weight": 1, "minLevel": 0, "luck": true, "seconds": 10 },
+    "vitamin": { "weight": 1, "minLevel": 0, "luck": true, "luckBonus": 0.1 },
+    "glucagon": { "weight": 1, "minLevel": 30, "luck": true, "seconds": 10 }
+  },
+  "flame": {
+    "damagePerSecond": 30,
+    "rangePx": 70,
+    "spreadRadians": 0.7
+  },
+  "fever": {
+    "secondsPerCoin": 0.5
+  },
+  "gems": {
+    "smallMaxXp": 2,
+    "mediumMaxXp": 9
+  },
+  "capsule": {
+    "silverAfterMinutes": 10,
+    "fiveChance": 0.03,
+    "threeChance": 0.1,
+    "coins": {
+      "1": [10, 20],
+      "3": [30, 60],
+      "5": [50, 100]
+    },
+    "beginner": [1, 1, 3, 1, 1, 5],
+    "touchRadiusPx": 14
+  },
+  "phosphocreatine": {
+    "coins": 10
+  }
+}

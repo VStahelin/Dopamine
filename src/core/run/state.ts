@@ -1,4 +1,4 @@
-import type { AgentId, EnemyKind, MoleculeType, WeaponId } from '../../config';
+import type { AgentId, EnemyKind, ItemId, MoleculeType, PassiveId, WeaponId } from '../../config';
 import { Rng } from '../random';
 import { xpToNextLevel } from './progression';
 import { DEFAULT_RULES, type RunRules } from './rules';
@@ -97,6 +97,46 @@ export interface Coin {
   attracted: boolean;
 }
 
+/** Vesícula sináptica parada no chão: qualquer golpe rompe e solta um item (fase 5.5). */
+export interface Vesicle {
+  x: number;
+  y: number;
+}
+
+/** Item no chão: o que a vesícula soltou, ou a cápsula do chefe (precisa ser tocada). */
+export interface Pickup {
+  x: number;
+  y: number;
+  kind: ItemId | 'capsule';
+  attracted: boolean;
+  /** Cápsula de prata (chefe depois dos 10 min): pode evoluir uma arma. */
+  silver?: boolean;
+}
+
+/** Segundos que faltam de cada efeito de item com tempo. */
+export interface ItemEffects {
+  /** Gelo seco: moléculas paradas e sem encostar. */
+  freeze: number;
+  /** Bico de Bunsen: lança-chamas na direção do movimento. */
+  flame: number;
+  /** Febre de ATP (Glucagon): toda molécula decomposta solta ATP. */
+  fever: number;
+}
+
+/** O que uma cápsula aberta deu, para a tela da cápsula. */
+export type CapsuleItem =
+  | { kind: 'weapon'; id: WeaponId; level: number }
+  | { kind: 'evolve'; id: WeaponId; into: WeaponId }
+  | { kind: 'passive'; id: PassiveId; level: number; rarity: number }
+  | { kind: 'phosphocreatine'; atp: number };
+
+export interface CapsuleResult {
+  silver: boolean;
+  items: CapsuleItem[];
+  /** ATP da cápsula, já com Rendimento. */
+  atp: number;
+}
+
 export interface Gem {
   x: number;
   y: number;
@@ -128,7 +168,10 @@ export type RunEvent =
   | { type: 'strike'; x: number; y: number; radius: number }
   | { type: 'special'; kind: string }
   | { type: 'boss'; kind: EnemyKind }
-  | { type: 'levelUp'; level: number };
+  | { type: 'levelUp'; level: number }
+  | { type: 'vesicle'; x: number; y: number }
+  | { type: 'item'; kind: ItemId | 'capsule'; x: number; y: number }
+  | { type: 'lysosome' };
 
 export interface SpecialState {
   /** Segundos até ganhar mais uma carga (0 = cargas cheias). */
@@ -152,6 +195,9 @@ export interface RunState {
     interactions: number;
     invulnerableFor: number;
     facingX: number;
+    /** Última direção de movimento, para o Bico de Bunsen. */
+    dirX: number;
+    dirY: number;
   };
   level: number;
   xp: number;
@@ -163,6 +209,20 @@ export interface RunState {
   pulses: Pulse[];
   gems: Gem[];
   coins: Coin[];
+  vesicles: Vesicle[];
+  /** Segundos até a próxima vesícula. */
+  vesicleTimer: number;
+  pickups: Pickup[];
+  effects: ItemEffects;
+  /** Sorte somada pelas Vitaminas nesta run. */
+  itemLuck: number;
+  /** Cápsula aberta esperando o jogador ver; a simulação para enquanto houver uma. */
+  capsule: CapsuleResult | null;
+  capsulesOpened: number;
+  /** Itens coletados nesta run, para o Compêndio. */
+  seenItems: ItemId[];
+  /** Distância do agente até a borda mais longe da tela no último passo. */
+  viewRadius: number;
   /** ATP coletado nesta run. */
   atp: number;
   weapons: WeaponInstance[];
@@ -203,6 +263,8 @@ export interface RunResult {
   /** ATP coletado na run, que vai para o save. */
   atp: number;
   seen: EnemyKind[];
+  seenItems: ItemId[];
+  capsulesOpened: number;
 }
 
 export function newWeapon(id: WeaponId): WeaponInstance {
@@ -220,7 +282,15 @@ export function createRun(
     rng: new Rng(seed),
     agentId,
     time: 0,
-    agent: { x: 0, y: 0, interactions: stats.maxInteractions, invulnerableFor: 0, facingX: 1 },
+    agent: {
+      x: 0,
+      y: 0,
+      interactions: stats.maxInteractions,
+      invulnerableFor: 0,
+      facingX: 1,
+      dirX: 1,
+      dirY: 0,
+    },
     level: 1,
     xp: 0,
     xpToNext: xpToNextLevel(1, rules.economy.xp),
@@ -231,6 +301,15 @@ export function createRun(
     pulses: [],
     gems: [],
     coins: [],
+    vesicles: [],
+    vesicleTimer: rules.drops.vesicles.everySeconds,
+    pickups: [],
+    effects: { freeze: 0, flame: 0, fever: 0 },
+    itemLuck: 0,
+    capsule: null,
+    capsulesOpened: 0,
+    seenItems: [],
+    viewRadius: 300,
     atp: 0,
     weapons: [newWeapon(rules.agents[agentId].action as WeaponId)],
     special: {
@@ -298,6 +377,8 @@ export function runResult(state: RunState): RunResult {
     kills: state.kills,
     atp: Math.floor(state.atp),
     seen: [...state.seen],
+    seenItems: [...state.seenItems],
+    capsulesOpened: state.capsulesOpened,
   };
 }
 

@@ -1,5 +1,6 @@
 import {
   AGENTS,
+  DROPS,
   ECONOMY,
   ENEMIES,
   PASSIVES,
@@ -9,6 +10,7 @@ import {
   WEAPONS,
   type AgentDef,
   type AgentId,
+  type DropsConfig,
   type EconomyConfig,
   type EnemyDef,
   type EnemyKind,
@@ -35,6 +37,9 @@ export interface RunRules {
   passives: Record<PassiveId, PassiveDef>;
   rarities: RarityConfig;
   agents: Record<AgentId, AgentDef>;
+  drops: DropsConfig;
+  /** Cápsulas já abertas no save, para a sorte de principiante; sem o número, 0. */
+  capsulesOpened?: number;
   /** Armas do pool liberadas na meta-progressão; sem a lista, todas. */
   unlockedWeapons?: readonly WeaponId[];
 }
@@ -48,6 +53,7 @@ export const DEFAULT_RULES: RunRules = {
   passives: PASSIVES,
   rarities: RARITIES,
   agents: AGENTS,
+  drops: DROPS,
 };
 
 /**

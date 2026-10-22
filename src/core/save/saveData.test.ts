@@ -31,6 +31,8 @@ describe('recordRun', () => {
       kills: 50,
       atp: 12,
       seen: ['glucose'],
+      seenItems: [],
+      capsulesOpened: 0,
     }).save;
     const { save, newRecords } = recordRun(start, {
       timeSeconds: 80,
@@ -38,6 +40,8 @@ describe('recordRun', () => {
       kills: 50,
       atp: 30,
       seen: ['ldl', 'glucose'],
+      seenItems: [],
+      capsulesOpened: 0,
     });
     expect(newRecords).toEqual(['level']);
     expect(save.records).toEqual({ bestTimeSeconds: 100, bestLevel: 7, mostKills: 50, runs: 2 });

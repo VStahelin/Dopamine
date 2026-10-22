@@ -145,6 +145,8 @@ export function choiceSlot(choice: UpgradeChoice): SlotContent {
       return { ...passiveSlot(choice.id, 0), label: undefined };
     case 'heal':
       return { frame: 'buff', icon: iconTexture('passives', 'homeostasis') };
+    case 'phosphocreatine':
+      return { frame: 'buff', icon: iconTexture('items', 'phosphocreatine') };
   }
 }
 

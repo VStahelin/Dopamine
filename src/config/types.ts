@@ -516,3 +516,66 @@ export interface OrganismConfig {
   /** Bônus de ATP (run e idle) por ponto herdado. */
   inheritedAtpBonusPerPoint: number;
 }
+
+/** Itens que as vesículas soltam (docs/itens.md, decisão 0024). */
+export const ITEM_IDS = [
+  'atp',
+  'serum',
+  'glucose',
+  'dryIce',
+  'osmosis',
+  'glycogen',
+  'lysosome',
+  'bunsen',
+  'vitamin',
+  'glucagon',
+] as const;
+export type ItemId = (typeof ITEM_IDS)[number];
+
+export interface ItemDef {
+  /** Peso no sorteio da vesícula. */
+  weight: number;
+  /** Nível da run a partir do qual o item pode sair. */
+  minLevel: number;
+  /** A Sorte multiplica o peso (todos menos ATP e Glicose, como no Vampire Survivors). */
+  luck: boolean;
+  /** ATP em moedas do valor atual, × Rendimento (ATP, Glicose, Glicogênio). */
+  coins?: number;
+  /** Interações recuperadas (Soro). */
+  heal?: number;
+  /** Duração do efeito (Gelo seco, Bico de Bunsen, Febre de ATP). */
+  seconds?: number;
+  /** Sorte somada até o fim da run (Vitamina). */
+  luckBonus?: number;
+}
+
+/** Itens no mapa da fase 5.5 (drops.json). */
+export interface DropsConfig {
+  vesicles: {
+    everySeconds: number;
+    maxOnField: number;
+    radiusPx: number;
+    /** A vesícula a mais que este tanto de telas de distância some. */
+    despawnViewMultiplier: number;
+  };
+  items: Record<ItemId, ItemDef>;
+  /** Bico de Bunsen: dano por segundo (× Reatividade), alcance e abertura (× Difusão). */
+  flame: { damagePerSecond: number; rangePx: number; spreadRadians: number };
+  /** Febre de ATP: segundos somados a cada ATP coletado. */
+  fever: { secondsPerCoin: number };
+  /** Cor da gema pelo XP: ciano até `smallMaxXp`, verde até `mediumMaxXp`, vermelha acima. */
+  gems: { smallMaxXp: number; mediumMaxXp: number };
+  capsule: {
+    /** Chefe a partir deste minuto solta a cápsula de prata, que pode evoluir arma. */
+    silverAfterMinutes: number;
+    fiveChance: number;
+    threeChance: number;
+    /** Faixa de ATP, em moedas, por quantidade de itens. */
+    coins: Record<'1' | '3' | '5', number[]>;
+    /** Sorte de principiante: quantidade fixa das primeiras cápsulas do save. */
+    beginner: number[];
+    touchRadiusPx: number;
+  };
+  /** ATP, em moedas, quando a cápsula ou o level up não têm mais o que subir. */
+  phosphocreatine: { coins: number };
+}

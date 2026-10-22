@@ -7,6 +7,7 @@
  */
 import agentsJson from './agents.json';
 import displayJson from './display.json';
+import dropsJson from './drops.json';
 import economyJson from './economy.json';
 import enemiesJson from './enemies.json';
 import idleJson from './idle.json';
@@ -23,6 +24,8 @@ import {
   type AgentDef,
   type ContactDamageKind,
   type DisplayConfig,
+  type DropsConfig,
+  ITEM_IDS,
   type EconomyConfig,
   type EnemyDef,
   type IdleAgentKind,
@@ -43,7 +46,7 @@ import {
 } from './types';
 
 export type * from './types';
-export { RUN_STAT_KEYS, SECTORS } from './types';
+export { ITEM_IDS, RUN_STAT_KEYS, SECTORS } from './types';
 
 export type EnemyKind = keyof typeof enemiesJson;
 export type WeaponId = keyof typeof weaponsJson;
@@ -192,6 +195,8 @@ export const WEAPONS: Record<WeaponId, WeaponDef> = loadWeapons();
 export const PASSIVES: Record<PassiveId, PassiveDef> = loadPassives();
 export const AGENTS: Record<AgentId, AgentDef> = loadAgents();
 export const RARITIES: RarityConfig = raritiesJson;
+export const DROPS: DropsConfig = dropsJson;
+for (const id of ITEM_IDS) exists(id, dropsJson.items, 'drops.json items');
 if (RARITIES.tiers.length === 0) {
   throw new Error('Configuração inválida: rarities.json sem raridades');
 }

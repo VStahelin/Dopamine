@@ -31,6 +31,10 @@ export interface SaveData {
   selectedAgent: string;
   /** Moléculas já vistas em alguma run, para o Compêndio. */
   seen: string[];
+  /** Itens do mapa já coletados, para o Compêndio (fase 5.5). */
+  seenItems: string[];
+  /** Cápsulas abertas no save, para a sorte de principiante. */
+  capsulesOpened: number;
   /** ATP guardado, ganho nas runs e gasto no Laboratório e nos desbloqueios. */
   atp: number;
   /** Laboratório, desbloqueios e estrelas do caso (fase 3). */
@@ -50,6 +54,8 @@ export function defaultSave(options: Options): SaveData {
     options: { ...options },
     selectedAgent: 'dopamine',
     seen: [],
+    seenItems: [],
+    capsulesOpened: 0,
     atp: 0,
     meta: defaultProgress(),
     idle: defaultIdle(),
@@ -70,6 +76,8 @@ export function migrateSave(raw: unknown, defaults: Options): SaveData {
     options: Partial<Options>;
     selectedAgent: unknown;
     seen: unknown;
+    seenItems: unknown;
+    capsulesOpened: unknown;
     atp: unknown;
     meta: unknown;
     idle: unknown;
@@ -94,6 +102,8 @@ export function migrateSave(raw: unknown, defaults: Options): SaveData {
     },
     selectedAgent: typeof data.selectedAgent === 'string' ? data.selectedAgent : base.selectedAgent,
     seen: Array.isArray(data.seen) ? data.seen.filter((k) => typeof k === 'string') : [],
+    seenItems: strings(data.seenItems) ?? [],
+    capsulesOpened: num(data.capsulesOpened, 0),
     atp: num(data.atp, 0),
     meta: migrateProgress(data.meta),
     idle: migrateIdle(data.idle),
@@ -121,6 +131,8 @@ export function recordRun(
         runs: r.runs + 1,
       },
       seen: [...new Set([...save.seen, ...result.seen])],
+      seenItems: [...new Set([...save.seenItems, ...result.seenItems])],
+      capsulesOpened: save.capsulesOpened + result.capsulesOpened,
       atp: save.atp + result.atp,
     },
     newRecords,
