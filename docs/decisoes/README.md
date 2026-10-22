@@ -29,3 +29,4 @@ As decisões de design tomadas antes deste registro continuam marcadas como "dec
 | [0021](0021-meta-progressao.md) | Meta-progressão: Laboratório em árvore, desbloqueios com ATP e baú das estrelas | design | proposta |
 | [0022](0022-campo-longo.md) | Campo longo: defesa por ondas com pool de agentes, sempre rodando | design | proposta |
 | [0023](0023-organismo.md) | Organismo: setores com efeito no jogo, saúde vinda dos agentes e ALTA com herança | design | proposta |
+| [0025](0025-variedade-da-run.md) | Fase 5.6: variedade da run (formações, perfil farmacológico, Superdosagem); Sorte também na raridade da cápsula | processo | aceita |

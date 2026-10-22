@@ -6,14 +6,16 @@ O Vampire Survivors (VS) tem pelo menos 20 sistemas que ainda não desenhamos; 6
 
 ## Resumo
 
-As seis primeiras recomendações, em ordem:
+O Vitor aprovou cinco das seis recomendações em 22/10/2026 e deixou as Conquistas para depois:
 
-1. **Baú do chefe com evolução.** O chefe solta uma vesícula que abre com 1, 3 ou 5 recompensas, e é ali que a arma no máximo evolui. Fecha a pendência da fase 2.7.
-2. **Ondas com formação.** Enxames que cruzam a tela e anéis que fecham em volta do agente, além do dente de serra que já existe.
-3. **Perfil de crescimento por agente.** Cada agente ganha um bônus próprio a cada N níveis, como os personagens do VS. Barato e diferencia os agentes.
-4. **Superdosagem (Limit Break).** Depois que tudo chega ao máximo, cada level up ainda sobe um pouco uma arma. Mantém o level up útil em runs de 20 minutos ou mais.
-5. **Conquistas que liberam conteúdo.** O placeholder de Conquistas ganha função: cada meta libera algo no pool ou dá ATP, como os desbloqueios do VS.
-6. **Estruturas destrutíveis no mapa.** Células e vesículas espalhadas pelo chão que, quebradas, soltam um item de [itens.md](itens.md).
+| # | Recomendação | Decisão | Onde entra no roadmap |
+| --- | --- | --- | --- |
+| 1 | **Baú do chefe com evolução.** O chefe solta uma cápsula que abre com 1, 3 ou 5 recompensas, e é ali que a arma no máximo evolui. A **Sorte** melhora a quantidade e também a raridade das recompensas | aprovada | Fase 5.5 (cápsula do chefe, [itens.md](itens.md)) |
+| 2 | **Ondas com formação.** Enxames que cruzam a tela e anéis que fecham em volta do agente, além do dente de serra que já existe | aprovada | [Fase 5.6](roadmap.md#fase-56-variedade-da-run) |
+| 3 | **Perfil farmacológico.** Cada agente ganha um bônus próprio a cada 10 níveis, como os personagens do VS | aprovada | [Fase 5.6](roadmap.md#fase-56-variedade-da-run) |
+| 4 | **Superdosagem (Limit Break).** Depois que tudo chega ao máximo, cada level up ainda sobe um pouco uma arma | aprovada | [Fase 5.6](roadmap.md#fase-56-variedade-da-run) |
+| 5 | **Conquistas que liberam conteúdo.** Cada meta libera algo no pool ou dá ATP | para elaborar no futuro | [Depois](roadmap.md#depois-conquistas) |
+| 6 | **Estruturas destrutíveis no mapa.** Bolsas no chão que, quebradas, soltam um item | aprovada | Fase 5.5 (vesículas, [itens.md](itens.md)) |
 
 Esforço: **P** cabe em até um dia, **M** em alguns dias, **G** em uma semana ou mais. É estimativa, sem medir no código.
 
@@ -21,12 +23,12 @@ Esforço: **P** cabe em até um dia, **M** em alguns dias, **G** em uma semana o
 
 | Sistema do VS | Como é no VS | Nós hoje | Versão química proposta | Esforço | Prioridade |
 | --- | --- | --- | --- | --- | --- |
-| Baú do chefe | Chefe solta baú com 1, 3 ou 5 itens; depois dos 10 min evolui uma arma no máximo | Evolução é opção do level up; a prancheta já previa o baú | **Vesícula do chefe**: abre com roleta de 1, 3 ou 5 recompensas e faz a evolução | M | Alta |
-| Formações de inimigos | Morcegos cruzando a tela, anéis e paredes que fecham | Só spawn em volta e o pico a cada 5 min | **Pico glicêmico** (enxame de açúcar atravessa), **Cerco inflamatório** (anel de citocinas) | P–M | Alta |
-| Bônus do personagem | Cada personagem tem atributos base e um bônus que cresce por nível | Agente tem ação, especial e afinidade; sem bônus por nível | **Perfil farmacológico**: +X num atributo a cada 10 níveis, até um teto | P | Alta |
-| Limit Break | Depois de tudo no máximo, o level up continua subindo armas | "Nova dose" recupera interações quando não sobra upgrade | **Superdosagem**: um aumento pequeno e aleatório numa arma por level up | P | Alta |
-| Conquistas e desbloqueios | Quase todo o conteúdo libera por meta (nível 50 com X, minuto 31 em Y) | Desbloqueio só com ATP; Conquistas é placeholder | **Conquistas** que liberam itens do pool, protocolos e agentes, ou dão ATP | M | Alta |
-| Fontes de luz (destrutíveis) | Tochas espalhadas, 10 de vida, soltam um item | Não existe | **Células e lipossomos** no chão que soltam um item ao quebrar | P–M | Alta |
+| Baú do chefe | Chefe solta baú com 1, 3 ou 5 itens; depois dos 10 min evolui uma arma no máximo | Evolução é opção do level up; a prancheta já previa o baú | **Cápsula do chefe**: roleta de 1, 3 ou 5 recompensas, quantidade e raridade pela Sorte, e faz a evolução | M | Alta (fase 5.5) |
+| Formações de inimigos | Morcegos cruzando a tela, anéis e paredes que fecham | Só spawn em volta e o pico a cada 5 min | **Pico glicêmico** (enxame de açúcar atravessa), **Cerco inflamatório** (anel de citocinas) | P–M | Alta (fase 5.6) |
+| Bônus do personagem | Cada personagem tem atributos base e um bônus que cresce por nível | Agente tem ação, especial e afinidade; sem bônus por nível | **Perfil farmacológico**: +X num atributo a cada 10 níveis, até um teto | P | Alta (fase 5.6) |
+| Limit Break | Depois de tudo no máximo, o level up continua subindo armas | "Nova dose" recupera interações quando não sobra upgrade | **Superdosagem**: um aumento pequeno e aleatório numa arma por level up | P | Alta (fase 5.6) |
+| Conquistas e desbloqueios | Quase todo o conteúdo libera por meta (nível 50 com X, minuto 31 em Y) | Desbloqueio só com ATP; Conquistas é placeholder | **Conquistas** que liberam itens do pool, protocolos e agentes, ou dão ATP | M | Futuro |
+| Fontes de luz (destrutíveis) | Tochas espalhadas, 10 de vida, soltam um item | Não existe | **Células e lipossomos** no chão que soltam um item ao quebrar | P–M | Alta (fase 5.5) |
 | Uniões | Duas armas viram uma, liberando um espaço | Só evolução arma + reagente | **Síntese**: duas armas do pool reagem e viram uma | M | Média |
 | Arcanas | Cartas de tarô que mudam regras; 1 no início e mais 2 em baús aos 11 e 21 min | Não existe | **Protocolos** clínicos: 1 no início, mais 2 em vesículas especiais | G | Média |
 | Estágios | Mapas com layout, inimigos, chefes e tempo próprios | Um mapa só; o organismo muda as moléculas | **Locais do corpo**: corrente sanguínea, fígado, intestino, pulmão, cérebro | G | Média |
@@ -46,9 +48,10 @@ Já cobertos: ataque automático, level up com escolhas, armas com 8 níveis, pa
 
 ## As propostas em detalhe
 
-### Vesícula do chefe (baú)
+### Cápsula do chefe (baú)
 
-- O chefe solta uma vesícula no chão. Ao encostar, abre uma roleta curta e entrega 1, 3 ou 5 recompensas; a Sorte aumenta a chance de 3 e 5.
+- O chefe solta uma cápsula no chão (o nome final está em [itens.md](itens.md)). Ao encostar, abre uma roleta curta e entrega 1, 3 ou 5 recompensas.
+- A **Sorte** mexe nas duas coisas: aumenta a chance de 3 e 5 recompensas e melhora a raridade de cada uma, com a mesma regra de raridade do level up ([decisão 0013](decisoes/0013-raridade-e-sorte.md)).
 - Recompensa = um nível numa arma ou passivo que o agente já tem. Se houver arma no máximo com o reagente certo, a primeira recompensa vira a evolução, como no VS.
 - A evolução sai da tela de level up. Antes dos 10 minutos a vesícula só dá níveis.
 - O drop da vesícula é do chefe; o conteúdo e a cerimônia de abrir ficam aqui.
@@ -78,7 +81,7 @@ A aba Conquistas lista metas como "Decompor 1.000 triglicerídeos", "Chegar ao n
 
 ### Estruturas destrutíveis
 
-Células velhas e lipossomos espalhados pelo mapa, com pouca vida. As armas quebram de passagem e cada uma solta um item sorteado de [itens.md](itens.md). Aparecem mais com a Sorte, como as fontes de luz do VS.
+Viraram as **vesículas** da fase 5.5: bolsas paradas no chão que se rompem com um golpe e soltam um item sorteado, com mais chance de item raro pela Sorte, como as fontes de luz do VS. As regras estão em [itens.md](itens.md).
 
 ### Síntese (uniões)
 
@@ -143,11 +146,11 @@ A run continua infinita, mas aos 30 minutos o caso recebe **Alta**: conta como v
 
 ## Perguntas em aberto
 
-- [ ] As 6 recomendações de prioridade alta entram como uma fase nova no roadmap (por exemplo, "2.8 Variedade da run"), ou se espalham pelas fases que já existem?
+- [x] As recomendações de prioridade alta entram no roadmap? → sim: 1 e 6 na fase 5.5, 2 a 4 na fase 5.6, Conquistas depois.
 - [ ] A Alta aos 30 minutos e a Apoptose valem, ou a run continua infinita sem vitória?
 - [ ] Locais do corpo são escolhidos pelo jogador, ou o caso decide o local?
 - [ ] Conquistas substituem parte do desbloqueio por ATP, ou só somam?
-- [ ] Os nomes (Vesícula, Protocolo, Síntese, Superdosagem, Alta, Apoptose) funcionam?
+- [ ] Os nomes (Protocolo, Síntese, Superdosagem, Apoptose) funcionam? A "Alta aos 30 minutos" precisa de outro nome, porque ALTA já é o reset do organismo na fase 5.
 - [ ] Coop local interessa para jogar com os amigos, ou fica fora do escopo?
 
 ## Fontes
