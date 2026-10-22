@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Crônico: level up no PC</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&amp;family=Silkscreen:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#FFB347}a:hover{color:#FFD08A}
+button{font:inherit}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; position: relative; overflow: hidden; background-color: #D8B47A; background-image: linear-gradient(#CDA56C 3px, transparent 3px), linear-gradient(90deg, #CDA56C 3px, transparent 3px); background-size: 40px 40px; font-family: 'Pixelify Sans', monospace; color: #F4EFE0">
+  <div style="position: absolute; inset: 0; background: rgba(7,8,15,0.8)"></div>
+  <div style="position: absolute; left: 32px; right: 32px; top: 32px; bottom: 32px; display: grid; grid-template-columns: 300px minmax(0, 1fr) 300px; gap: 32px">
+
+    <div style="display: flex; flex-direction: column; gap: 10px; padding: 16px; box-sizing: border-box; overflow: hidden; background: #15172E; border: 3px solid #3A0A0C; box-shadow: inset 0 0 0 3px #E0702A, inset 0 0 0 5px #07080F">
+      <div style="display: flex; justify-content: space-between; align-items: baseline">
+        <div style="font-family: 'Silkscreen', monospace; font-size: 12px; letter-spacing: 1px; color: #FFB347">ATRIBUTOS</div>
+        <div style="font-family: 'Silkscreen', monospace; font-size: 8px; color: #8A8EB8">COMO NA PAUSA</div>
+      </div>
+      <sc-for list="{{statGroups}}" as="g" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 1px">
+          <div style="font-family: 'Silkscreen', monospace; font-size: 9px; letter-spacing: 1px; color: #7EF0FF; padding-bottom: 2px; border-bottom: 2px solid #2A2E55">{{g.title}}</div>
+          <sc-for list="{{g.rows}}" as="r" hint-placeholder-count="5">
+            <div style="display: flex; align-items: baseline; gap: 6px; padding: 2px 4px; {{r.bg}}">
+              <div style="flex: 1; font-size: 13px; font-weight: 600">{{r.name}}</div>
+              <div style="text-align: right; font-size: 13px; font-weight: 700; color: {{r.color}}">{{r.value}}</div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 16px; min-width: 0; max-width: 560px; width: 100%; justify-self: center">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 4px">
+      <div style="font-size: 44px; font-weight: 700; color: {{titleColor}}; text-shadow: -3px 0 #07080F, 3px 0 #07080F, 0 -3px #07080F, 0 3px #07080F, 0 5px #07080F">{{title}}</div>
+      <div style="font-family: 'Silkscreen', monospace; font-size: 10px; letter-spacing: 1px; color: {{subColor}}">{{subtitle}}</div>
+    </div>
+      <div style="display: flex; flex-direction: column; gap: 10px">
+        <sc-for list="{{cards}}" as="c" hint-placeholder-count="4">
+          <button type="button" onClick="{{c.pick}}" onMouseEnter="{{c.enter}}" style="position: relative; display: flex; gap: 10px; align-items: flex-start; width: 100%; box-sizing: border-box; padding: 10px 12px 10px 16px; text-align: left; cursor: pointer; color: #F4EFE0; {{c.style}}">
+            <div style="position: absolute; left: 5px; top: 5px; bottom: 5px; width: 4px; {{c.stripe}}"></div>
+            <div style="position: relative; flex: none; width: 40px; height: 40px; box-sizing: border-box; {{c.frame}}">
+              <div style="position: absolute; left: 2px; top: 2px; width: 32px; height: 32px"><div style="{{c.icon}}"></div></div>
+            </div>
+            <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px">
+              <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px">
+                <div style="font-size: 18px; font-weight: 700; text-shadow: 0 2px #07080F">{{c.name}}</div>
+                <div style="font-family: 'Silkscreen', monospace; font-size: 8px; letter-spacing: 1px; text-align: right; color: {{c.tagColor}}">{{c.tag}}</div>
+              </div>
+              <div style="font-size: 14px; line-height: 1.3; color: #F4EFE0">{{c.desc}}</div>
+              <div style="font-size: 13px; font-weight: 700; color: #8CF06A">{{c.preview}}</div>
+              <sc-if value="{{c.hasEvo}}" hint-placeholder-val="{{ false }}">
+                <div style="font-family: 'Silkscreen', monospace; font-size: 8px; letter-spacing: 1px; color: #F2C83A">{{c.evo}}</div>
+              </sc-if>
+            </div>
+            <sc-if value="{{c.banishTag}}" hint-placeholder-val="{{ false }}">
+              <div style="position: absolute; right: 8px; top: -9px; padding: 2px 6px; background: #D83A3A; border: 2px solid #3A0A0C; font-family: 'Silkscreen', monospace; font-size: 9px; color: #FFFFFF">BANIR</div>
+            </sc-if>
+            <div style="position: absolute; right: 8px; bottom: 6px; font-family: 'Silkscreen', monospace; font-size: 10px; color: #7EF0FF">{{c.key}}</div>
+          </button>
+        </sc-for>
+      </div>
+      <div style="flex: 1"></div>
+      <sc-if value="{{hasBanished}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: center">
+        <div style="font-family: 'Silkscreen', monospace; font-size: 9px; letter-spacing: 1px; color: #FF8A7A">BANIDOS NESTA RUN</div>
+        <sc-for list="{{banished}}" as="b" hint-placeholder-count="1">
+          <div style="padding: 2px 6px; background: #3A0A0C; border: 2px solid #D83A3A; font-size: 12px; font-weight: 600; color: #FFE0D0; text-decoration: line-through">{{b.name}}</div>
+        </sc-for>
+      </div>
+    </sc-if>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+        <sc-for list="{{actions}}" as="a" hint-placeholder-count="3">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 4px">
+            <button type="button" onClick="{{a.onClick}}" disabled="{{a.disabled}}" style="position: relative; width: 100%; height: 56px; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; padding: 0 8px; font-family: 'Silkscreen', monospace; font-size: 11px; letter-spacing: 1px; {{a.style}}">
+              <span style="position: relative; flex: none; width: 32px; height: 32px; {{a.iconBox}}"><span style="display: block; {{a.icon}}"></span></span>
+              <span>{{a.label}}</span>
+              <span style="position: absolute; right: -6px; top: -9px; min-width: 22px; padding: 1px 4px; box-sizing: border-box; background: #15172E; border: 2px solid #07080F; font-size: 10px; color: {{a.countColor}}">{{a.count}}</span>
+            </button>
+            <div style="font-family: 'Silkscreen', monospace; font-size: 8px; color: #8A8EB8">{{a.key}} · {{a.hint}}</div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="font-family: 'Silkscreen', monospace; font-size: 9px; letter-spacing: 1px; text-align: center; color: #8A8EB8">1 A 4 ESCOLHEM · PASSE O MOUSE PARA VER O EFEITO NOS ATRIBUTOS</div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 8px; padding: 16px; box-sizing: border-box; overflow: hidden; background: #15172E; border: 3px solid #3A0A0C; box-shadow: inset 0 0 0 3px #E0702A, inset 0 0 0 5px #07080F">
+      <div style="display: flex; justify-content: space-between">
+        <div style="font-family: 'Silkscreen', monospace; font-size: 12px; letter-spacing: 1px; color: #FFB347">ARMAS</div>
+        <div style="font-family: 'Silkscreen', monospace; font-size: 10px; color: #FFB347">4/6</div>
+      </div>
+      <sc-for list="{{arsenalWeapons}}" as="w" hint-placeholder-count="6">
+        <div style="display: flex; gap: 8px; align-items: center; padding: 4px 6px; border: 2px solid #07080F; {{w.bg}}">
+          <div style="position: relative; flex: none; width: 24px; height: 24px; box-sizing: border-box; {{w.frame}}">
+            <div style="position: absolute; left: 2px; top: 2px; width: 16px; height: 16px"><div style="{{w.icon}}"></div></div>
+          </div>
+          <div style="flex: 1; min-width: 0; font-size: 13px; font-weight: 600; color: {{w.nameColor}}">{{w.name}}</div>
+          <div style="font-family: 'Silkscreen', monospace; font-size: 9px; color: {{w.lvlColor}}">{{w.lvl}}</div>
+        </div>
+      </sc-for>
+      <div style="display: flex; justify-content: space-between; margin-top: 6px">
+        <div style="font-family: 'Silkscreen', monospace; font-size: 12px; letter-spacing: 1px; color: #7EF0FF">REAGENTES</div>
+        <div style="font-family: 'Silkscreen', monospace; font-size: 10px; color: #7EF0FF">4/6</div>
+      </div>
+      <sc-for list="{{arsenalPassives}}" as="w" hint-placeholder-count="6">
+        <div style="display: flex; gap: 8px; align-items: center; padding: 4px 6px; border: 2px solid #07080F; {{w.bg}}">
+          <div style="position: relative; flex: none; width: 24px; height: 24px; box-sizing: border-box; {{w.frame}}">
+            <div style="position: absolute; left: 2px; top: 2px; width: 16px; height: 16px"><div style="{{w.icon}}"></div></div>
+          </div>
+          <div style="flex: 1; min-width: 0; font-size: 13px; font-weight: 600; color: {{w.nameColor}}">{{w.name}}</div>
+          <div style="font-family: 'Silkscreen', monospace; font-size: 9px; color: {{w.lvlColor}}">{{w.lvl}}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  <sc-if value="{{hasToast}}" hint-placeholder-val="{{ false }}">
+    <div style="position: absolute; inset: 0; background: rgba(7,8,15,0.75); display: flex; align-items: center; justify-content: center; padding: 24px">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 20px 24px; background: #2A2E55; border: 3px solid #07080F; box-shadow: inset 0 3px 0 #474C85">
+        <div style="font-size: 22px; font-weight: 700; color: #7EF0FF; text-align: center; text-shadow: 0 2px #07080F">{{toast}}</div>
+        <div style="font-size: 13px; color: #C9CCE6; text-align: center">{{toastSub}}</div>
+        <button type="button" onClick="{{reset}}" style="height: 44px; padding: 0 18px; cursor: pointer; font-family: 'Silkscreen', monospace; font-size: 11px; letter-spacing: 1px; color: #FFFFFF; background: #E0702A; border: 3px solid #3A0A0C; box-shadow: inset 0 -3px 0 #9C3F12, inset 0 3px 0 #FFB347">VER DE NOVO</button>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+const START = { round: 0, rerolls: 2, skips: 1, banishes: 1, mode: 'choose', gone: [], banished: [], toast: '', toastSub: '', focus: 0 };
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = START;
+  }
+  renderVals() {
+    const PAL = {"K":"#1A1424","W":"#FFFFFF","H":"#EDEBDD","A":"#8A90A0","a":"#4A4F5C","R":"#E0433A","r":"#8E1616","C":"#39D3F0","L":"#7EF0FF","B":"#3F6FE0","b":"#23408F","G":"#5BC43A","g":"#2E7A1E","l":"#A6F07A","Y":"#F2C83A","y":"#B88A1C","O":"#FF9A1F","o":"#B5541C","P":"#B072F0","p":"#6A3AB0","N":"#FF6FA8","n":"#B03A70","T":"#F2D9A8","E":"#7A4A2A"};
+    const ART = {"radical":["................",".....K..........","...KKRKK........","..KRRRRRK.......",".KRWWRRRRK......",".KRWRRRRRK......","KRRRRRRRRrKKK...",".KRRRRRRrWHHHK..",".KRRRRRrrHHHHHK.","..KRRRrrKHHHHAK.","...KKrKKKHHHAAK.","...KYK...KHAAK..","..KYWYK...KKK...","...KYK..........","....K...........","................"],"uvRay":[".............KK.","............KPWK","...........KPWPK","..........KPWPpK",".........KPWPpK.","........KPWPpK..",".......KPWPpK...","......KPWPpK....","...KKKPWPpK.....","..KPPPWPpK......",".KWPPPPpK.......","KPPPPPpK........","KPPPPppK........",".KaappK.........","KaaaaK..........",".KKKK..........."],"solventPool":[".....KKKKKK.....","....KAAAAAAK....",".....KLWLLK.....",".....KLWLLK.....","....KLWLLLLK....","...KLWLLLLLLK...","..KLGGGGGGGGLK..",".KLGlGGGGWGGGLK.",".KLGGGGGGGGGgLK.",".KLGGGWGGGGggLK.","..KLLLLLLLLLLK..","..KKKKKKKKKKKK..",".KgGGGGGGGGGGgK.","KgGGlGGGGGGGGGgK",".KgggggggggggggK","..KKKKKKKKKKKKK."],"catalyst":["....KKK..KKK....","...KOOOKKOOOK...","...KOKK..KKOK...",".KK.K.KKKK.K.KK.","KOOK.KYYYYK.KOOK","KOK.KYWWYYyK.KOK","KOKKYWYYYYyyKKOK",".K.KYYYYYYyyK.K.",".K.KYYYYYyyyK.K.","KOKKyYYYyyyyKKOK","KOK.KyyyyyyK.KOK","KOOK.KyyyyK.KOOK",".KK.K.KKKK.K.KK.","...KOKK..KKOK...","...KOOOKKOOOK...","....KKK..KKK...."],"chainReaction":["..KK............",".KOOK...........","KOWOOKK.........","KOOOoYYK........",".KooKKKYKK..KK..","..KK...KYYKKOOK.","........KKYOWOOK","..........KOOOoK","...........KooK.","..........KKYK..","....KK...KYYK...","...KOOKKKYKK....","..KOWOOYYK......","..KOOOoKK.......","...KooK.........","....KK.........."],"reactivity":["................","......K.........",".....KRK........",".....KRRK..K....","....KRRRK.KRK...","....KRORKKRRK...","...KRROORRRRK...","..KRROOORRORK...","..KROOYOOOORK...",".KRROYYYOOORRK..",".KROOYYWYOOORK..",".KROYYWWYYOORK..",".KROYYWWWYYORK..","..KROYYWYYORK...","...KRRRRRRRK....","....KKKKKKK....."],"luck":["................","................","...KKKK.KKKK....","..KlGGGKlGGGK...","..KGGGGGGGGGGK..","..KGGGGgGGGGgK..","..KGGGggGGGggK..","...KGggKKGggK...","..KlGGGKlGGGK...","..KGGGGGGGGGGK..","..KGGGGgGGGGgK..","..KGGGggGGGggK..","...KGggKKGgggK..","....KKK..KKKggK.","............KggK",".............KK."],"membrane":["................","..KKKKKKKKKKKK..",".KLLLLLLBBBBBBK.",".KLWLLLLBBBBBBK.",".KLLLLLLBBBBBBK.",".KYHYHYHYHYHYHK.",".KYYYYYYYYYYYYK.",".KYYYYYYYYYYYYK.","..KHYHYHYHYHYK..","..KLLLLLBBBBBK..","...KLLLLBBBBK...","....KLLLBBBK....",".....KLLBBK.....","......KLBK......",".......KK.......","................"],"homeostasis":["...........KWK..","......KKKKKWlWK.",".....KlGGGKKWK..",".....KlGGGK.K...",".....KlGGGK.....","..KKKKlGGGKKKK..",".KllllGGGGGGGGK.",".KGGGGGGGGGGGGK.",".KGGGGGGGGGGGGK.",".KGGGGGGGGggggK.","..KKKKGGGgKKKK..",".....KGGGgK.....",".....KGGGgK.....",".....KGGGgK.....","......KKKK......","................"],"coenzyme":["................","................","...KKKK.........","..KYYYYK........",".KYWWYYYK.......","KYWKKKYYyKKKKKK.","KYYK..KYYYYYYYYK","KYYK..KYyyyyyYyK","KyYKKKyyKKKyYKyK",".KyyyyyyK.KyyKK.","..KyyyyK...KK...","...KKKK.........","................","................","................","................"],"peroxide":["................",".KKK............","KWHHK...........","KHHHAK..........",".KHAKKKK........","..KKWRRRK.......","...KRRRRKKKK....","..KRRRRRWRRRK...","...KRRRrRRRRRK..","...KRRrrRRRRrK..","....KKKKRRRrrK..","........KRrrKKK.",".........KKKWHHK","...........KHHHK","...........KHHAK","............KKK."],"interactions":["................","................","...KKK...KKK....","..KRRRK.KRRRK...",".KRWWRRKRRRRRK..","KRWWRRRRRRRRRRK.","KRWRRRRRRRRRRRK.","KRRRRRRRRRRRRrK.",".KRRRRRRRRRRrK..","..KRRRRRRRRrK...","...KRRRRRRrK....","....KRRRRrK.....",".....KRRrK......","......KrK.......",".......K........","................"],"reroll":["................",".....KKKKK......","...KKOOOOOKK.K..","..KOOOOOOOOOKOK.",".KOOOKKKKKOOOOK.",".KOOK.....KOOOK.","KOOK.....KOOOOK.","KOOK......KKKKK.",".KKKKK......KOOK",".KOOOOK.....KOOK",".KOOOK.....KOOK.",".KOOOOKKKKKOOOK.",".KOKOOOOOOOOOK..","..K.KKOOOOOKK...","......KKKKK.....","................"],"skip":["................","................","................","...K...K....KK..","..KHK.KHK..KHHK.","..KHHKKHHK.KHHK.","..KHHHKHHHKKHHK.","..KHHHHHHHHKHHK.","..KAHHHAHHHKAAK.","..KAAAKAAAKKAAK.","..KAAKKAAK.KAAK.","..KAK.KAK..KAAK.","...K...K....KK..","................","................","................"],"banish":[".....KKKKKK.....","....KRRRRRRK....","...KRRRRRRRRK...","..KRRRKKKKRRRK..",".KRRRRK...KKRRK.","KRRRRRRK...KRRRK","KRRKKRRRK...KRRK","KRRK.KRRRK..KRRK","KRRK..KRRRK.KRRK","KRRK...KRRRKKRRK","KRRRK...KRRRRRRK",".KRRKK...KRRRRK.","..KRRRKKKKRRRK..","...KRRRRRRRRK...","....KRRRRRRK....",".....KKKKKK....."]};
+    const icon = (k, c) => {
+      const s = [];
+      ART[k].forEach((row, y) => [...row].forEach((ch, x) => { if (PAL[ch]) s.push(`${(x + 1) * c}px ${(y + 1) * c}px 0 0 ${PAL[ch]}`); }));
+      return `position:absolute;left:${-c}px;top:${-c}px;width:${c}px;height:${c}px;box-shadow:${s.join(',')}`;
+    };
+    const FR = {
+      weapon: 'border:2px solid #3A0A0C;box-shadow:inset 0 0 0 2px #E0702A;background:#F2D9A8',
+      ready: 'border:2px solid #3A0A0C;box-shadow:inset 0 0 0 2px #F2C83A;background:#F2D9A8',
+      passive: 'border:2px solid #07080F;box-shadow:inset 0 0 0 2px #39D3F0;background:#1B1E3A',
+      heal: 'border:2px solid #07080F;box-shadow:inset 0 0 0 2px #6CD43F;background:#1B1E3A',
+      empty: 'border:2px dashed #474C85;background:#1B1E3A',
+      locked: 'border:2px solid #07080F;background:#0E1024'
+    };
+    const RAR = { common: ['Comum', '#C8C8C8'], uncommon: ['Incomum', '#1EFF00'], rare: ['Raro', '#2F8CFF'], epic: ['Ultra raro', '#A335EE'], legendary: ['Lendário', '#FF8000'] };
+    const O = (id, ic, slot, name, tag, rarity, desc, stat, from, to, extra) => Object.assign({ id, ic, slot, name, tag, rarity, desc, stat, from, to, evo: '' }, extra || {});
+    const OFFERS = [
+      [
+        O('uv', 'uvRay', 'weapon', 'Raio UV', 'ARMA · NV 4 → 5', null, '−0,25 s de recarga', 'Raio UV', 'NV 4', 'NV 5'),
+        O('react', 'reactivity', 'passive', 'Reatividade', 'NV 3 → 4', 'rare', '+20% de dano', 'Reatividade', '130%', '150%'),
+        O('chain', 'chainReaction', 'weapon', 'Reação em Cadeia', 'ARMA NOVA', null, 'O disparo acerta um inimigo e salta para o próximo', 'Armas', '4/6', '5/6'),
+        O('luck', 'luck', 'passive', 'Sorte', 'NV 1 → 2', 'uncommon', '+15% de sorte: raridades melhores', 'Sorte', '115%', '130%')
+      ],
+      [
+        O('cat', 'catalyst', 'weapon', 'Catalisador', 'ARMA · NV 7 → MAX', null, '+10 de área. No máximo, pronta para evoluir', 'Catalisador', 'NV 7', 'MAX', { evo: 'MAX + COENZIMA → ENZIMA' }),
+        O('mem', 'membrane', 'passive', 'Membrana', 'NV 2 → 3', 'epic', '−2,5 de dano em cada golpe recebido', 'Membrana', '2', '4,5'),
+        O('coe', 'coenzyme', 'passive', 'Coenzima', 'REAGENTE NOVO', 'common', '+10% de duração. Evolui o Catalisador', 'Meia-vida', '100%', '110%', { evo: 'CATALISADOR MAX + COENZIMA → ENZIMA' }),
+        O('homeo', 'homeostasis', 'passive', 'Homeostase', 'NOVO', 'legendary', 'Recupera +0,6 interação por segundo', 'Homeostase', '0/s', '0,6/s')
+      ]
+    ];
+    const SPARE = O('heal', 'interactions', 'heal', 'Soro', 'CURA', null, 'Recupera 30 interações agora', 'Interações', '72/100', '100/100');
+    const st = this.state;
+    const set = (patch) => this.setState(patch);
+    const offer = OFFERS[st.round % 2].filter((o) => !st.gone.includes(o.id));
+    while (offer.length < 4) offer.push(SPARE);
+    const banishing = st.mode === 'banish';
+    const pick = (o, i) => () => {
+      if (st.toast) return;
+      if (banishing) {
+        set({ gone: [...st.gone, o.id], banished: [...st.banished, o.name], banishes: st.banishes - 1, mode: 'choose', focus: i });
+      } else {
+        set({ toast: `${o.name.toUpperCase()} ESCOLHIDO`, toastSub: 'A run continua de onde parou.' });
+      }
+    };
+    const reroll = () => { if (st.rerolls > 0 && !st.toast) set({ rerolls: st.rerolls - 1, round: st.round + 1, mode: 'choose', focus: 0 }); };
+    const skip = () => { if (st.skips > 0 && !st.toast) set({ skips: st.skips - 1, mode: 'choose', toast: 'LEVEL UP PULADO', toastSub: 'Nenhuma escolha. A run continua.' }); };
+    const banish = () => { if (st.banishes > 0 && !st.toast) set({ mode: banishing ? 'choose' : 'banish' }); };
+    const reset = () => set(START);
+    const cards = offer.map((o, i) => {
+      const rar = o.rarity ? RAR[o.rarity] : null;
+      const color = rar ? rar[1] : (o.slot === 'heal' ? '#6CD43F' : '#39D3F0');
+      const focused = st.focus === i;
+      const ring = banishing ? '#D83A3A' : color;
+      return {
+        name: o.name, desc: o.desc, key: String(i + 1),
+        tag: [rar ? rar[0].toUpperCase() : null, o.tag].filter(Boolean).join(' · '),
+        tagColor: color,
+        frame: FR[o.slot], icon: icon(o.ic, 2),
+        preview: `${o.stat} ${o.from} → ${o.to}`,
+        hasEvo: !!o.evo, evo: o.evo,
+        style: `border:3px solid ${banishing ? '#3A0A0C' : '#07080F'};box-shadow:inset 0 0 0 3px ${ring}${focused && !banishing ? ', 0 0 0 3px #FFFFFF' : ''};background:${banishing ? '#3A1420' : '#2A2E55'}`,
+        stripe: `background:${ring}`,
+        banishTag: banishing,
+        pick: pick(o, i),
+        enter: () => { if (st.focus !== i) set({ focus: i }); }
+      };
+    });
+    const ACT = [
+      ['reroll', 'REROLAR', st.rerolls, reroll, 'R', 'Sorteia outras opções'],
+      ['skip', 'PULAR', st.skips, skip, 'S', 'Recusa este level up'],
+      ['banish', banishing ? 'CANCELAR' : 'BANIR', st.banishes, banish, 'B', 'Tira uma opção da run']
+    ];
+    const actions = ACT.map(([ic, label, n, fn, key, hint]) => {
+      const on = n > 0;
+      const active = ic === 'banish' && banishing;
+      return {
+        label, key, hint, count: on ? `×${n}` : '0', onClick: fn, disabled: !on,
+        icon: icon(ic, 2),
+        iconBox: on ? '' : 'opacity:0.35',
+        style: active
+          ? 'color:#FFFFFF;background:#8E1616;border:3px solid #07080F;box-shadow:inset 0 -3px 0 #5A1416, inset 0 3px 0 #D83A3A'
+          : on
+            ? 'color:#F4EFE0;background:#2A2E55;border:3px solid #07080F;box-shadow:inset 0 -3px 0 #171A36, inset 0 3px 0 #474C85'
+            : 'color:#5C6090;background:#15172E;border:3px solid #07080F;box-shadow:none;cursor:default',
+        countColor: on ? '#FFB347' : '#5C6090'
+      };
+    });
+    const focusOffer = offer[Math.min(st.focus, offer.length - 1)];
+
+    const title = banishing ? 'BANIR' : 'NÍVEL 13!';
+    const subtitle = banishing ? 'TOQUE NA OPÇÃO QUE SAI DA RUN' : 'ESCOLHA UM MODIFICADOR';
+    const titleColor = banishing ? '#FF6A5A' : '#7EF0FF';
+    const subColor = banishing ? '#FF8A7A' : '#F2D9A8';
+    const banishedList = st.banished.map((name) => ({ name }));
+    const slotRow = (list) => list.map(([kind, ic, lvl]) => ({ frame: FR[kind], icon: ic ? icon(ic, 1) : '', lvl: lvl || '', lvlColor: lvl === 'MAX' ? '#F2C83A' : '#FFFFFF' }));
+    const weaponSlots = slotRow([['ready', 'radical', 'MAX'], ['weapon', 'uvRay', '4'], ['weapon', 'solventPool', '2'], ['weapon', 'catalyst', '7'], ['empty'], ['locked']]);
+    const passiveSlots = slotRow([['passive', 'reactivity', '3'], ['passive', 'peroxide', '1'], ['passive', 'membrane', '2'], ['passive', 'luck', '1'], ['empty'], ['locked']]);
+    const common = { cards, actions, title, subtitle, titleColor, subColor, banished: banishedList, hasBanished: banishedList.length > 0, hasToast: !!st.toast, toast: st.toast, toastSub: st.toastSub, reset, weaponSlots, passiveSlots };
+
+    const f = focusOffer;
+    const hi = (name) => !banishing && f && f.stat === name;
+    const G = '#8CF06A', N = '#F4EFE0', R = '#FF8A7A';
+    const row = (name, value, color) => hi(name)
+      ? { name, value: `${f.from} → ${f.to}`, color: G, bg: 'background:#1E3A2A;box-shadow:inset 3px 0 0 #8CF06A' }
+      : { name, value, color: color || N, bg: '' };
+    const statGroups = [
+      { title: 'OFENSIVOS', rows: [row('Reatividade', '130%', G), row('Dose', '+0'), row('Metabolismo', '−16%', G), row('Difusão', '100%'), row('Alcance', '100%'), row('Chance de catálise', '5%'), row('Meia-vida', '100%')] },
+      { title: 'DEFENSIVOS', rows: [row('Interações', '72/100'), row('Membrana', '2', G), row('Esquiva', '0%'), row('Homeostase', '0/s'), row('Absorção', '0%')] },
+      { title: 'MOBILIDADE E COLETA', rows: [row('Mobilidade', '90%', R), row('Raio de coleta', '100%'), row('Aprendizado', '100%'), row('Sorte', '115%', G)] },
+      { title: 'LEVEL UP E RISCO', rows: [row('Opções', '4'), row('Rerrolar', String(st.rerolls)), row('Pular', String(st.skips)), row('Banir', String(st.banishes)), row('Estresse', '0%')] }
+    ];
+    const A = (kind, ic, name, lvl, statName) => {
+      const on = hi(statName || name);
+      return {
+        frame: FR[kind], icon: ic ? icon(ic, 1) : '', name,
+        lvl: on ? `${f.from} → ${f.to}` : lvl,
+        lvlColor: on ? G : (lvl === 'MAX' ? '#F2C83A' : '#C9CCE6'),
+        nameColor: kind === 'empty' || kind === 'locked' ? '#8A8EB8' : N,
+        bg: on ? 'background:#1E3A2A;box-shadow:inset 3px 0 0 #8CF06A' : 'background:#1B1E3A'
+      };
+    };
+    const newWeapon = hi('Armas');
+    const arsenalWeapons = [
+      A('ready', 'radical', 'Radical Livre', 'MAX'),
+      A('weapon', 'uvRay', 'Raio UV', 'NV 4'),
+      A('weapon', 'solventPool', 'Poça de Solvente', 'NV 2'),
+      A('weapon', 'catalyst', 'Catalisador', 'NV 7'),
+      newWeapon
+        ? { frame: FR.weapon, icon: icon('chainReaction', 1), name: 'Reação em Cadeia', lvl: 'NOVA', lvlColor: G, nameColor: N, bg: 'background:#1E3A2A;box-shadow:inset 3px 0 0 #8CF06A' }
+        : A('empty', null, 'Espaço livre', ''),
+      A('locked', null, 'Bloqueado', '')
+    ];
+    const newPassive = !banishing && f && ['Homeostase', 'Meia-vida'].includes(f.stat) && (f.id === 'homeo' || f.id === 'coe');
+    const arsenalPassives = [
+      A('passive', 'reactivity', 'Reatividade', 'NV 3'),
+      A('passive', 'peroxide', 'Peróxido', 'NV 1'),
+      A('passive', 'membrane', 'Membrana', 'NV 2'),
+      A('passive', 'luck', 'Sorte', 'NV 1'),
+      newPassive
+        ? { frame: FR.passive, icon: icon(f.ic, 1), name: f.name, lvl: 'NOVO', lvlColor: G, nameColor: N, bg: 'background:#1E3A2A;box-shadow:inset 3px 0 0 #8CF06A' }
+        : A('empty', null, 'Espaço livre', ''),
+      A('locked', null, 'Bloqueado', '')
+    ];
+    return Object.assign(common, { statGroups, arsenalWeapons, arsenalPassives });
+  }
+}
+</script>
+</body>
+</html>

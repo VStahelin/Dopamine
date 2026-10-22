@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Guia de estilo</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&amp;family=Silkscreen:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#FFB347}a:hover{color:#FFD08A}
+</style>
+</helmet>
+<div style="width: 1280px; height: 980px; box-sizing: border-box; padding: 48px 56px; background: #15172E; font-family: 'Pixelify Sans', monospace; color: #F4EFE0; display: flex; flex-direction: column; gap: 36px; image-rendering: pixelated">
+
+  <div style="display: flex; gap: 48px; align-items: center">
+    <div style="width: 620px; height: 250px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 0px">
+      <div style="transform: rotate(-5deg); background: #8E1616; border: 6px solid #3A0A0C; box-shadow: 0 10px 0 #3A0A0C; padding: 14px 56px 18px; clip-path: polygon(0 0, 100% 0, 96% 50%, 100% 100%, 0 100%, 4% 50%)">
+        <div style="font-family: 'Pixelify Sans', monospace; font-weight: 700; font-size: 92px; line-height: 1; letter-spacing: 2px; color: #FF9A1F; text-shadow: -4px 0 #3A0A0C, 4px 0 #3A0A0C, 0 -4px #3A0A0C, 0 4px #3A0A0C, -4px -4px #3A0A0C, 4px 4px #3A0A0C, -4px 4px #3A0A0C, 4px -4px #3A0A0C, 0 8px #3A0A0C">DOPAMINA</div>
+      </div>
+      <div style="transform: rotate(-5deg); margin-top: -6px; margin-left: 120px; font-family: 'Pixelify Sans', monospace; font-weight: 700; font-size: 80px; line-height: 1; letter-spacing: 2px; color: #6CD43F; text-shadow: -4px 0 #123A0C, 4px 0 #123A0C, 0 -4px #123A0C, 0 4px #123A0C, -4px -4px #123A0C, 4px 4px #123A0C, -4px 4px #123A0C, 4px -4px #123A0C, 0 8px #123A0C">BLASTER</div>
+    </div>
+    <div style="flex: 1; display: flex; flex-direction: column; gap: 14px">
+      <div style="font-family: 'Silkscreen', monospace; font-size: 14px; color: #39D3F0; letter-spacing: 1px">IDENTIDADE VISUAL · V0</div>
+      <div style="font-size: 30px; font-weight: 700; line-height: 1.15">Cartucho de laboratório: HUD de RPG 16-bit com química saturada</div>
+      <div style="font-size: 18px; line-height: 1.45; color: #C9CCE6">Pixel art 2D, molduras de madeira laranja, contorno vermelho-escuro grosso e texto com sombra dura. A química vive nos sprites: cada átomo é um pixel redondo com a cor do seu elemento.</div>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 16px">
+    <div style="font-family: 'Silkscreen', monospace; font-size: 16px; color: #FFB347; letter-spacing: 1px">PALETA</div>
+    <div style="display: flex; gap: 32px">
+      <sc-for list="{{groups}}" as="g" hint-placeholder-count="3">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="font-size: 16px; font-weight: 600; color: #F4EFE0">{{g.name}}</div>
+          <div style="display: flex; gap: 10px">
+            <sc-for list="{{g.colors}}" as="c" hint-placeholder-count="4">
+              <div style="display: flex; flex-direction: column; gap: 6px; width: 66px">
+                <div style="height: 56px; border: 4px solid #07080F; box-shadow: inset -6px -6px 0 rgba(0,0,0,0.25), inset 6px 6px 0 rgba(255,255,255,0.18); background: {{c.hex}}"></div>
+                <div style="font-size: 12px; line-height: 1.2; color: #F4EFE0">{{c.name}}</div>
+                <div style="font-family: 'Silkscreen', monospace; font-size: 11px; color: #A9AED0">{{c.hex}}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 48px">
+    <div style="width: 440px; display: flex; flex-direction: column; gap: 16px">
+      <div style="font-family: 'Silkscreen', monospace; font-size: 16px; color: #FFB347; letter-spacing: 1px">TIPOGRAFIA</div>
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <div style="font-size: 44px; font-weight: 700; color: #FF9A1F; text-shadow: -3px 0 #3A0A0C, 3px 0 #3A0A0C, 0 -3px #3A0A0C, 0 3px #3A0A0C, 0 6px #3A0A0C">ONDA 7</div>
+        <div style="font-size: 13px; color: #A9AED0">Pixelify Sans 700 · títulos e números de impacto, contorno 3 px</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <div style="font-size: 22px; font-weight: 600">Metano decomposto em 3 partes</div>
+        <div style="font-size: 13px; color: #A9AED0">Pixelify Sans 600 · textos de interface</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <div style="font-family: 'Silkscreen', monospace; font-size: 14px; letter-spacing: 1px">INTERAÇÕES · OURO · NÍVEL</div>
+        <div style="font-size: 13px; color: #A9AED0">Silkscreen · rótulos curtos em caixa alta</div>
+      </div>
+    </div>
+
+    <div style="flex: 1; display: flex; flex-direction: column; gap: 16px">
+      <div style="font-family: 'Silkscreen', monospace; font-size: 16px; color: #FFB347; letter-spacing: 1px">COMPONENTES DE UI</div>
+      <div style="display: flex; gap: 28px; align-items: flex-start">
+        <div style="display: flex; flex-direction: column; gap: 14px">
+          <div style="display: flex; align-items: center; gap: 10px">
+            <div style="width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 700; color: #7EF0FF; text-shadow: -3px 0 #0A2A3A, 3px 0 #0A2A3A, 0 -3px #0A2A3A, 0 3px #0A2A3A">12</div>
+            <div style="width: 300px; border: 4px solid #3A0A0C; background: #B5541C; padding: 4px; box-shadow: inset 0 0 0 2px #F0913A">
+              <div style="background: #1B1E3A; padding: 4px; display: flex; gap: 3px">
+                <sc-for list="{{pips}}" as="p" hint-placeholder-count="10">
+                  <div style="flex: 1; height: 18px; background: {{p.fill}}; box-shadow: inset 0 -4px 0 {{p.shade}}"></div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+          <div style="font-size: 13px; color: #A9AED0">Barra de interações: cada pip é uma batida que a base aguenta</div>
+          <div style="display: flex; gap: 16px; align-items: center">
+            <button style="font-family: 'Pixelify Sans', monospace; font-weight: 700; font-size: 26px; color: #FFFFFF; background: #E0702A; border: 4px solid #3A0A0C; box-shadow: inset 0 -6px 0 #9C3F12, inset 0 4px 0 #FFB347, 0 6px 0 #3A0A0C; padding: 10px 28px; cursor: pointer; text-shadow: 0 3px #6E1E0A">JOGAR</button>
+            <button style="font-family: 'Pixelify Sans', monospace; font-weight: 600; font-size: 18px; color: #F4EFE0; background: #2A2E55; border: 4px solid #07080F; box-shadow: inset 0 -5px 0 #171A36, inset 0 3px 0 #474C85, 0 5px 0 #07080F; padding: 10px 20px; cursor: pointer">Upgrades</button>
+            <div style="display: flex; align-items: center; gap: 8px">
+              <div style="width: 28px; height: 28px; background: #8A5A0C; clip-path: polygon(25% 0,75% 0,75% 12.5%,87.5% 12.5%,87.5% 25%,100% 25%,100% 75%,87.5% 75%,87.5% 87.5%,75% 87.5%,75% 100%,25% 100%,25% 87.5%,12.5% 87.5%,12.5% 75%,0 75%,0 25%,12.5% 25%,12.5% 12.5%,25% 12.5%); position: relative">
+                <div style="position: absolute; inset: 4px; background: #F2B233; clip-path: polygon(25% 0,75% 0,75% 12.5%,87.5% 12.5%,87.5% 25%,100% 25%,100% 75%,87.5% 75%,87.5% 87.5%,75% 87.5%,75% 100%,25% 100%,25% 87.5%,12.5% 87.5%,12.5% 75%,0 75%,0 25%,12.5% 25%,12.5% 12.5%,25% 12.5%)"></div>
+                <div style="position: absolute; left: 11px; top: 8px; width: 6px; height: 12px; background: #FFE08A"></div>
+              </div>
+              <div style="font-size: 24px; font-weight: 700; color: #FFFFFF; text-shadow: 0 3px #07080F">1.250</div>
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 10px; align-items: center">
+          <div style="position: relative; width: 92px; height: 92px; border: 4px solid #3A0A0C; background: #B5541C; box-shadow: inset 0 0 0 3px #F0913A; display: flex; align-items: center; justify-content: center">
+            <div style="width: 74px; height: 74px; background: #F2D9A8; box-shadow: inset 4px 4px 0 #C9A066; display: flex; align-items: center; justify-content: center">
+              <div style="position: relative; {{slot.box}}">
+                <sc-for list="{{slot.bonds}}" as="b" hint-placeholder-count="2">
+                  <div style="position: absolute; transform-origin: 0 50%; background: #1A1424; {{b.style}}"></div>
+                </sc-for>
+                <sc-for list="{{slot.atoms}}" as="a" hint-placeholder-count="3">
+                  <div style="position: absolute; clip-path: polygon(25% 0,75% 0,75% 12.5%,87.5% 12.5%,87.5% 25%,100% 25%,100% 75%,87.5% 75%,87.5% 87.5%,75% 87.5%,75% 100%,25% 100%,25% 87.5%,12.5% 87.5%,12.5% 75%,0 75%,0 25%,12.5% 25%,12.5% 12.5%,25% 12.5%); {{a.outer}}">
+                    <div style="position: absolute; inset: 3px; clip-path: polygon(25% 0,75% 0,75% 12.5%,87.5% 12.5%,87.5% 25%,100% 25%,100% 75%,87.5% 75%,87.5% 87.5%,75% 87.5%,75% 100%,25% 100%,25% 87.5%,12.5% 87.5%,12.5% 75%,0 75%,0 25%,12.5% 25%,12.5% 12.5%,25% 12.5%); {{a.inner}}"></div>
+                    <div style="position: absolute; {{a.hi}}"></div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="position: absolute; right: -10px; bottom: -10px; font-size: 18px; font-weight: 700; color: #FFFFFF; text-shadow: -2px 0 #07080F, 2px 0 #07080F, 0 -2px #07080F, 0 2px #07080F">+3</div>
+          </div>
+          <div style="font-size: 13px; color: #A9AED0; text-align: center; width: 140px">Slot de agente com nível</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"interacoes":{"editor":"int","default":7,"min":0,"max":10},"$preview":{"width":1280,"height":980}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const EL = {
+      C: { m: '#4A4F5C', d: '#1C1E25', l: '#8A90A0', s: 28 },
+      H: { m: '#EDEBDD', d: '#6E6C5E', l: '#FFFFFF', s: 16 },
+      O: { m: '#E0433A', d: '#5A0E10', l: '#FF9A8A', s: 26 }
+    };
+    const build = (mol, k) => {
+      const atoms = mol.atoms.map(([e, x, y]) => {
+        const c = EL[e], s = c.s * k, h = Math.max(3, Math.round(s / 5));
+        return {
+          outer: `left:${x * k - s / 2}px;top:${y * k - s / 2}px;width:${s}px;height:${s}px;background:${c.d}`,
+          inner: `background:${c.m}`,
+          hi: `left:${Math.round(s * 0.24)}px;top:${Math.round(s * 0.24)}px;width:${h}px;height:${h}px;background:${c.l}`
+        };
+      });
+      const bonds = [];
+      mol.bonds.forEach(([a, b, n]) => {
+        const [, x1, y1] = mol.atoms[a], [, x2, y2] = mol.atoms[b];
+        const dx = (x2 - x1) * k, dy = (y2 - y1) * k, len = Math.hypot(dx, dy);
+        const ang = Math.atan2(dy, dx) * 180 / Math.PI, t = 5 * k;
+        (n === 2 ? [-4 * k, 4 * k] : [0]).forEach(o => {
+          const px = -dy / len * o, py = dx / len * o;
+          bonds.push({ style: `left:${x1 * k + px}px;top:${y1 * k + py - t / 2}px;width:${len}px;height:${t}px;transform:rotate(${ang}deg)` });
+        });
+      });
+      return { atoms, bonds, box: `width:${mol.w * k}px;height:${mol.h * k}px` };
+    };
+    const water = { w: 60, h: 48, atoms: [['O', 30, 18], ['H', 10, 36], ['H', 50, 36]], bonds: [[0, 1, 1], [0, 2, 1]] };
+    const n = Math.max(0, Math.min(10, this.props.interacoes ?? 7));
+    const pips = Array.from({ length: 10 }, (_, i) => i < n
+      ? { fill: '#D83A3A', shade: '#8E1616' }
+      : { fill: '#2A2E55', shade: '#1B1E3A' });
+    const groups = [
+      { name: 'Interface', colors: [
+        { name: 'Noite', hex: '#15172E' }, { name: 'Painel', hex: '#2A2E55' },
+        { name: 'Madeira', hex: '#E0702A' }, { name: 'Contorno', hex: '#3A0A0C' } ] },
+      { name: 'Mundo', colors: [
+        { name: 'Areia', hex: '#D8B47A' }, { name: 'Pedra', hex: '#5B6E8E' },
+        { name: 'Água', hex: '#39D3F0' }, { name: 'Ouro', hex: '#F2B233' } ] },
+      { name: 'Elementos', colors: [
+        { name: 'Carbono', hex: '#4A4F5C' }, { name: 'Hidrogênio', hex: '#EDEBDD' },
+        { name: 'Oxigênio', hex: '#E0433A' }, { name: 'Nitrogênio', hex: '#3F6FE0' },
+        { name: 'Cloro', hex: '#5BC43A' }, { name: 'Enxofre', hex: '#F2C83A' } ] }
+    ];
+    return { groups, pips, slot: build(water, 1) };
+  }
+}
+</script>
+</body>
+</html>

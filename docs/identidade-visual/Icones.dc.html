@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Ícones de armas e habilidades</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&amp;family=Silkscreen:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#FFB347}a:hover{color:#FFD08A}
+</style>
+</helmet>
+<div style="width: 1280px; height: 1800px; box-sizing: border-box; padding: 48px; background: #15172E; font-family: 'Pixelify Sans', monospace; color: #F4EFE0; display: flex; flex-direction: column; gap: 36px">
+
+  <div style="display: flex; flex-direction: column; gap: 8px">
+    <div style="font-size: 44px; font-weight: 700; color: #6CD43F; text-shadow: -3px 0 #3A0A0C, 3px 0 #3A0A0C, 0 -3px #3A0A0C, 0 4px #3A0A0C">Ícones de armas e habilidades</div>
+    <div style="font-size: 15px; line-height: 1.4; color: #C9CCE6; max-width: 980px">52 ícones em pixel art de 16×16, todos com a paleta da identidade visual e contorno escuro de 1 pixel. Aqui aparecem em 3×, dentro das molduras da HUD do modo crônico: madeira para arma, dourado para MAX e evolução, ciano para passivo, madeira grande para o especial.</div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 14px">
+    <div style="font-size: 28px; font-weight: 700; color: #FF9A1F; text-shadow: -2px 0 #3A0A0C, 2px 0 #3A0A0C, 0 -2px #3A0A0C, 0 3px #3A0A0C">Armas do sorteio</div>
+    <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 12px">
+      <sc-for list="{{weapons}}" as="w" hint-placeholder-count="7">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 8px 12px; background: #1B1E3A; border: 3px solid #07080F">
+          <div style="display: flex; gap: 14px">
+            <div style="position: relative; flex: none; width: 60px; height: 60px; box-sizing: border-box; {{w.a.frame}}">
+              <div style="position: absolute; left: 3px; top: 3px; width: 48px; height: 48px"><div style="{{w.a.icon}}"></div></div>
+              <div style="position: absolute; right: -6px; bottom: -7px; font-family: 'Silkscreen', monospace; font-size: 11px; line-height: 1; color: {{w.a.lvlColor}}; text-shadow: -1px 0 #07080F, 1px 0 #07080F, 0 -1px #07080F, 0 1px #07080F">{{w.a.lvl}}</div>
+            </div>
+            <div style="position: relative; flex: none; width: 60px; height: 60px; box-sizing: border-box; {{w.b.frame}}">
+              <div style="position: absolute; left: 3px; top: 3px; width: 48px; height: 48px"><div style="{{w.b.icon}}"></div></div>
+              <div style="position: absolute; right: -6px; bottom: -7px; font-family: 'Silkscreen', monospace; font-size: 11px; line-height: 1; color: {{w.b.lvlColor}}; text-shadow: -1px 0 #07080F, 1px 0 #07080F, 0 -1px #07080F, 0 1px #07080F">{{w.b.lvl}}</div>
+            </div>
+          </div>
+          <div style="font-size: 15px; font-weight: 700; text-align: center; margin-top: 4px">{{w.name}}</div>
+          <div style="font-family: 'Silkscreen', monospace; font-size: 9px; letter-spacing: 1px; text-align: center; color: #A9AED0">{{w.kind}}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px">
+    <div style="display: flex; flex-direction: column; gap: 14px">
+      <div style="font-size: 28px; font-weight: 700; color: #FF9A1F; text-shadow: -2px 0 #3A0A0C, 2px 0 #3A0A0C, 0 -2px #3A0A0C, 0 3px #3A0A0C">Armas de agente</div>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+        <sc-for list="{{agentWeapons}}" as="w" hint-placeholder-count="3">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 8px 12px; background: #1B1E3A; border: 3px solid #07080F">
+            <div style="position: relative; flex: none; width: 60px; height: 60px; box-sizing: border-box; {{w.a.frame}}">
+              <div style="position: absolute; left: 3px; top: 3px; width: 48px; height: 48px"><div style="{{w.a.icon}}"></div></div>
+              <div style="position: absolute; right: -6px; bottom: -7px; font-family: 'Silkscreen', monospace; font-size: 11px; line-height: 1; color: {{w.a.lvlColor}}; text-shadow: -1px 0 #07080F, 1px 0 #07080F, 0 -1px #07080F, 0 1px #07080F">{{w.a.lvl}}</div>
+            </div>
+            <div style="font-size: 15px; font-weight: 700; text-align: center; margin-top: 4px">{{w.name}}</div>
+            <div style="font-family: 'Silkscreen', monospace; font-size: 9px; letter-spacing: 1px; text-align: center; color: #A9AED0">{{w.kind}}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 14px">
+      <div style="font-size: 28px; font-weight: 700; color: #FF9A1F; text-shadow: -2px 0 #3A0A0C, 2px 0 #3A0A0C, 0 -2px #3A0A0C, 0 3px #3A0A0C">Especiais</div>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+        <sc-for list="{{specials}}" as="s" hint-placeholder-count="3">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px 8px; background: #1B1E3A; border: 3px solid #07080F">
+            <div style="position: relative; flex: none; width: 64px; height: 64px; box-sizing: border-box; background: #E0702A; border: 4px solid #3A0A0C; box-shadow: inset 0 -5px 0 #9C3F12, inset 0 4px 0 #FFB347">
+              <div style="position: absolute; left: 4px; top: 3px; width: 48px; height: 48px"><div style="{{s.icon}}"></div></div>
+              <div style="position: absolute; right: -6px; bottom: -7px; font-family: 'Silkscreen', monospace; font-size: 11px; line-height: 1; color: #FFFFFF; text-shadow: -1px 0 #07080F, 1px 0 #07080F, 0 -1px #07080F, 0 1px #07080F">x1</div>
+            </div>
+            <div style="font-size: 15px; font-weight: 700; text-align: center">{{s.name}}</div>
+            <div style="font-family: 'Silkscreen', monospace; font-size: 9px; letter-spacing: 1px; text-align: center; color: #A9AED0">{{s.kind}}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 14px">
+    <div style="font-size: 28px; font-weight: 700; color: #FF9A1F; text-shadow: -2px 0 #3A0A0C, 2px 0 #3A0A0C, 0 -2px #3A0A0C, 0 3px #3A0A0C">Evoluções: arma no máximo + reagente</div>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+      <sc-for list="{{evolutions}}" as="e" hint-placeholder-count="4">
+        <div style="display: flex; align-items: center; gap: 14px; padding: 12px 16px; background: #1B1E3A; border: 3px solid #07080F">
+          <div style="position: relative; flex: none; width: 60px; height: 60px; box-sizing: border-box; {{e.w.frame}}">
+              <div style="position: absolute; left: 3px; top: 3px; width: 48px; height: 48px"><div style="{{e.w.icon}}"></div></div>
+              <div style="position: absolute; right: -6px; bottom: -7px; font-family: 'Silkscreen', monospace; font-size: 11px; line-height: 1; color: {{e.w.lvlColor}}; text-shadow: -1px 0 #07080F, 1px 0 #07080F, 0 -1px #07080F, 0 1px #07080F">{{e.w.lvl}}</div>
+            </div>
+          <div style="font-size: 24px; font-weight: 700; color: #F2C83A">+</div>
+          <div style="position: relative; flex: none; width: 60px; height: 60px; box-sizing: border-box; {{e.r.frame}}">
+              <div style="position: absolute; left: 3px; top: 3px; width: 48px; height: 48px"><div style="{{e.r.icon}}"></div></div>
+              <div style="position: absolute; right: -6px; bottom: -7px; font-family: 'Silkscreen', monospace; font-size: 11px; line-height: 1; color: {{e.r.lvlColor}}; text-shadow: -1px 0 #07080F, 1px 0 #07080F, 0 -1px #07080F, 0 1px #07080F">{{e.r.lvl}}</div>
+            </div>
+          <div style="font-size: 24px; font-weight: 700; color: #F2C83A">→</div>
+          <div style="position: relative; flex: none; width: 60px; height: 60px; box-sizing: border-box; {{e.v.frame}}">
+              <div style="position: absolute; left: 3px; top: 3px; width: 48px; height: 48px"><div style="{{e.v.icon}}"></div></div>
+              <div style="position: absolute; right: -6px; bottom: -7px; font-family: 'Silkscreen', monospace; font-size: 11px; line-height: 1; color: {{e.v.lvlColor}}; text-shadow: -1px 0 #07080F, 1px 0 #07080F, 0 -1px #07080F, 0 1px #07080F">{{e.v.lvl}}</div>
+            </div>
+          <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0; margin-left: 6px">
+            <div style="font-size: 16px; font-weight: 700; color: #FFE08A">{{e.name}}</div>
+            <div style="font-family: 'Silkscreen', monospace; font-size: 9px; letter-spacing: 1px; color: #A9AED0">{{e.recipe}}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 16px">
+    <div style="font-size: 28px; font-weight: 700; color: #FF9A1F; text-shadow: -2px 0 #3A0A0C, 2px 0 #3A0A0C, 0 -2px #3A0A0C, 0 3px #3A0A0C">Passivos (atributos)</div>
+    <div style="display: flex; flex-direction: column; gap: 8px">
+        <div style="font-family: 'Silkscreen', monospace; font-size: 12px; letter-spacing: 1px; color: #7EF0FF">OFENSIVOS</div>
+        <div style="display: grid; grid-template-columns: repeat(10, 104px); gap: 10px">
+          <sc-for list="{{offense}}" as="p" hint-placeholder-count="13">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding-top: 4px">
+              <div style="position: relative; flex: none; width: 60px; height: 60px; box-sizing: border-box; {{p.a.frame}}">
+              <div style="position: absolute; left: 3px; top: 3px; width: 48px; height: 48px"><div style="{{p.a.icon}}"></div></div>
+              <div style="position: absolute; right: -6px; bottom: -7px; font-family: 'Silkscreen', monospace; font-size: 11px; line-height: 1; color: {{p.a.lvlColor}}; text-shadow: -1px 0 #07080F, 1px 0 #07080F, 0 -1px #07080F, 0 1px #07080F">{{p.a.lvl}}</div>
+            </div>
+              <div style="font-size: 13px; font-weight: 600; line-height: 1.15; text-align: center; color: #F4EFE0">{{p.name}}</div>
+              <div style="font-family: 'Silkscreen', monospace; font-size: 9px; letter-spacing: 1px; text-align: center; color: #A9AED0">{{p.stat}}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    <div style="display: flex; flex-direction: column; gap: 8px">
+        <div style="font-family: 'Silkscreen', monospace; font-size: 12px; letter-spacing: 1px; color: #7EF0FF">DEFENSIVOS</div>
+        <div style="display: grid; grid-template-columns: repeat(8, 104px); gap: 10px">
+          <sc-for list="{{defense}}" as="p" hint-placeholder-count="8">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding-top: 4px">
+              <div style="position: relative; flex: none; width: 60px; height: 60px; box-sizing: border-box; {{p.a.frame}}">
+              <div style="position: absolute; left: 3px; top: 3px; width: 48px; height: 48px"><div style="{{p.a.icon}}"></div></div>
+              <div style="position: absolute; right: -6px; bottom: -7px; font-family: 'Silkscreen', monospace; font-size: 11px; line-height: 1; color: {{p.a.lvlColor}}; text-shadow: -1px 0 #07080F, 1px 0 #07080F, 0 -1px #07080F, 0 1px #07080F">{{p.a.lvl}}</div>
+            </div>
+              <div style="font-size: 13px; font-weight: 600; line-height: 1.15; text-align: center; color: #F4EFE0">{{p.name}}</div>
+              <div style="font-family: 'Silkscreen', monospace; font-size: 9px; letter-spacing: 1px; text-align: center; color: #A9AED0">{{p.stat}}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    <div style="display: flex; gap: 28px">
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        <div style="font-family: 'Silkscreen', monospace; font-size: 12px; letter-spacing: 1px; color: #7EF0FF">MOBILIDADE E COLETA</div>
+        <div style="display: grid; grid-template-columns: repeat(4, 104px); gap: 10px">
+          <sc-for list="{{mobility}}" as="p" hint-placeholder-count="4">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding-top: 4px">
+              <div style="position: relative; flex: none; width: 60px; height: 60px; box-sizing: border-box; {{p.a.frame}}">
+              <div style="position: absolute; left: 3px; top: 3px; width: 48px; height: 48px"><div style="{{p.a.icon}}"></div></div>
+              <div style="position: absolute; right: -6px; bottom: -7px; font-family: 'Silkscreen', monospace; font-size: 11px; line-height: 1; color: {{p.a.lvlColor}}; text-shadow: -1px 0 #07080F, 1px 0 #07080F, 0 -1px #07080F, 0 1px #07080F">{{p.a.lvl}}</div>
+            </div>
+              <div style="font-size: 13px; font-weight: 600; line-height: 1.15; text-align: center; color: #F4EFE0">{{p.name}}</div>
+              <div style="font-family: 'Silkscreen', monospace; font-size: 9px; letter-spacing: 1px; text-align: center; color: #A9AED0">{{p.stat}}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        <div style="font-family: 'Silkscreen', monospace; font-size: 12px; letter-spacing: 1px; color: #7EF0FF">LEVEL UP</div>
+        <div style="display: grid; grid-template-columns: repeat(5, 104px); gap: 10px">
+          <sc-for list="{{levelUp}}" as="p" hint-placeholder-count="5">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding-top: 4px">
+              <div style="position: relative; flex: none; width: 60px; height: 60px; box-sizing: border-box; {{p.a.frame}}">
+              <div style="position: absolute; left: 3px; top: 3px; width: 48px; height: 48px"><div style="{{p.a.icon}}"></div></div>
+              <div style="position: absolute; right: -6px; bottom: -7px; font-family: 'Silkscreen', monospace; font-size: 11px; line-height: 1; color: {{p.a.lvlColor}}; text-shadow: -1px 0 #07080F, 1px 0 #07080F, 0 -1px #07080F, 0 1px #07080F">{{p.a.lvl}}</div>
+            </div>
+              <div style="font-size: 13px; font-weight: 600; line-height: 1.15; text-align: center; color: #F4EFE0">{{p.name}}</div>
+              <div style="font-family: 'Silkscreen', monospace; font-size: 9px; letter-spacing: 1px; text-align: center; color: #A9AED0">{{p.stat}}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        <div style="font-family: 'Silkscreen', monospace; font-size: 12px; letter-spacing: 1px; color: #7EF0FF">RISCO</div>
+        <div style="display: grid; grid-template-columns: repeat(1, 104px); gap: 10px">
+          <sc-for list="{{risk}}" as="p" hint-placeholder-count="1">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding-top: 4px">
+              <div style="position: relative; flex: none; width: 60px; height: 60px; box-sizing: border-box; {{p.a.frame}}">
+              <div style="position: absolute; left: 3px; top: 3px; width: 48px; height: 48px"><div style="{{p.a.icon}}"></div></div>
+              <div style="position: absolute; right: -6px; bottom: -7px; font-family: 'Silkscreen', monospace; font-size: 11px; line-height: 1; color: {{p.a.lvlColor}}; text-shadow: -1px 0 #07080F, 1px 0 #07080F, 0 -1px #07080F, 0 1px #07080F">{{p.a.lvl}}</div>
+            </div>
+              <div style="font-size: 13px; font-weight: 600; line-height: 1.15; text-align: center; color: #F4EFE0">{{p.name}}</div>
+              <div style="font-family: 'Silkscreen', monospace; font-size: 9px; letter-spacing: 1px; text-align: center; color: #A9AED0">{{p.stat}}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 40px; align-items: flex-end">
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="font-family: 'Silkscreen', monospace; font-size: 12px; letter-spacing: 1px; color: #7EF0FF">ESCALA INTEIRA: 1× 2× 3× 4×</div>
+      <div style="display: flex; gap: 20px; align-items: flex-end">
+        <sc-for list="{{scales}}" as="z" hint-placeholder-count="4">
+          <div style="position: relative; width: {{z.size}}px; height: {{z.size}}px"><div style="{{z.icon}}"></div></div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="font-size: 13px; line-height: 1.45; color: #C9CCE6; max-width: 640px">Ícones de 16×16 em vez de 8×8: com 52 ícones, 8×8 não deixa cada um com forma própria. Na HUD eles aparecem em 2× (32 px), na pausa e no level up em 3× (48 px). Cada pixel de arte ocupa um número inteiro de pixels da tela, como no resto da interface.</div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const PAL = {"K":"#1A1424","W":"#FFFFFF","H":"#EDEBDD","A":"#8A90A0","a":"#4A4F5C","R":"#E0433A","r":"#8E1616","C":"#39D3F0","L":"#7EF0FF","B":"#3F6FE0","b":"#23408F","G":"#5BC43A","g":"#2E7A1E","l":"#A6F07A","Y":"#F2C83A","y":"#B88A1C","O":"#FF9A1F","o":"#B5541C","P":"#B072F0","p":"#6A3AB0","N":"#FF6FA8","n":"#B03A70","T":"#F2D9A8","E":"#7A4A2A"};
+    const ART = {"radical":["................",".....K..........","...KKRKK........","..KRRRRRK.......",".KRWWRRRRK......",".KRWRRRRRK......","KRRRRRRRRrKKK...",".KRRRRRRrWHHHK..",".KRRRRRrrHHHHHK.","..KRRRrrKHHHHAK.","...KKrKKKHHHAAK.","...KYK...KHAAK..","..KYWYK...KKK...","...KYK..........","....K...........","................"],"acidJet":["................","...........K....",".........KKlK.K.",".......KKllK.KlK",".....KKllWllK.K.","..KKKllWlllllKK.",".KaaallllllllllK","KaAAAlllllllGllK","KaAAAllllllGGllK",".KaaalllllGGGlK.","..KKKlllGGGGGK..",".....KKGGGGGKlK.",".......KKGGKKK..",".........KKKlK..","............K...","................"],"electronCloud":[".....KKKKKKK....","....KBBBWCCCK...","...KBBKKCCCCK...","..KBKK..KCCCBK..",".KBK.....KKKKBK.","KBBK..KKKK..KBBK","KBK..KWRRRK..KBK","WCCK.KRRBRK..KBK","CCCCKKRBBrK..KBK","CCCCKKRRrrK..KBK","KCCK..KKKKKKKBBK",".KBK.....KWCCBK.","..KBKK...KCCCCK.","...KBBKKKKCCCCK.","....KBBBBBBKKK..",".....KKKKKK....."],"catalyst":["....KKK..KKK....","...KOOOKKOOOK...","...KOKK..KKOK...",".KK.K.KKKK.K.KK.","KOOK.KYYYYK.KOOK","KOK.KYWWYYyK.KOK","KOKKYWYYYYyyKKOK",".K.KYYYYYYyyK.K.",".K.KYYYYYyyyK.K.","KOKKyYYYyyyyKKOK","KOK.KyyyyyyK.KOK","KOOK.KyyyyK.KOOK",".KK.K.KKKK.K.KK.","...KOKK..KKOK...","...KOOOKKOOOK...","....KKK..KKK...."],"solventPool":[".....KKKKKK.....","....KAAAAAAK....",".....KLWLLK.....",".....KLWLLK.....","....KLWLLLLK....","...KLWLLLLLLK...","..KLGGGGGGGGLK..",".KLGlGGGGWGGGLK.",".KLGGGGGGGGGgLK.",".KLGGGWGGGGggLK.","..KLLLLLLLLLLK..","..KKKKKKKKKKKK..",".KgGGGGGGGGGGgK.","KgGGlGGGGGGGGGgK",".KgggggggggggggK","..KKKKKKKKKKKKK."],"chainReaction":["..KK............",".KOOK...........","KOWOOKK.........","KOOOoYYK........",".KooKKKYKK..KK..","..KK...KYYKKOOK.","........KKYOWOOK","..........KOOOoK","...........KooK.","..........KKYK..","....KK...KYYK...","...KOOKKKYKK....","..KOWOOYYK......","..KOOOoKK.......","...KooK.........","....KK.........."],"uvRay":[".............KK.","............KPWK","...........KPWPK","..........KPWPpK",".........KPWPpK.","........KPWPpK..",".......KPWPpK...","......KPWPpK....","...KKKPWPpK.....","..KPPPWPpK......",".KWPPPPpK.......","KPPPPPpK........","KPPPPppK........",".KaappK.........","KaaaaK..........",".KKKK..........."],"dopaminePulse":["....KKKKKKKK....","...KNNNNNNNNK...","..KNNKKKKKKNNK..",".KNKKKnnnnKKKNK.","KNNKnnKKKKnnKNNK","KNKKnKKKK.KnKKNK","KNKnKKWNNK.KnKNK","KNKnKKNNNNKKnKNK","KNKnKKNNNnKKnKNK","KNKnK.KNnK.KnKNK","KNKKnK.KK.KnKKNK","KNNKnnKKKKnnKNNK",".KNKKKnnnnKKKNK.","..KNNKKKKKKNNK..","...KNNNNNNNNK...","....KKKKKKKK...."],"lipaseStrike":[".......K........","......KCK.......","......KCK.......",".....KCLCK......",".....KCWCK......","......KCK.......",".......K........","...KK.KWK..KKK..","..KYYKKWKKKYYYK.",".KWYYWWWWWWYYYYK","KYYYYYYWKKYYYYYK","KYYYYYyWKKYYYYyK",".KYYYyKK.KYYYyyK","..KYyK....KYyyK.","...KK......KKK..","................"],"insulinField":["....KKKKKKKK....","...KBBBBBBBBK...","..KBBbbbbbbBBK..",".KBbbbbbbbbbbBK.","KBBbbbHHHHbbbBBK","KBbbbHbbbbHbbbBK","KBbbHbbbbbbHbbBK","KBbbHbbWWbbHbbBK","KBbbHbbWWbbHbbBK","KBbbHbbbbbbHbbBK","KBbbbHbbbbHbbbBK","KBBbbbHHHHbbbBBK",".KBbbbbbbbbbbBK.","..KBBbbbbbbBBK..","...KBBBBBBBBK...","....KKKKKKKK...."],"fenton":[".KK..KWKK.......","KWRK..KRRK..KK..","KRRrK.KRrK.KWRK.",".KrKK..KK.KKRRrK","..KKYKKKKKYKKrK.","K...KKooooK..K..","WKK.KoOOoooK.KK.","RRRKKoOooooKKWRK","RRrKKoooooEKKRRr","KKK.KooooEEK.KrK",".KKKYKooEEYK..K.","KWRKK.KKKKK.KK..","KRRrK.KKK..KWRK.",".KrK.KWRRK.KRRrK","..K...KRRK..KrK.","......KRrK...K.."],"aquaRegia":["....K.KOK..KOK..","...KOKKOK.KOOK..","..KOOK.K..KOWK..","..KOWK.....KK...","...KK.KKKK......","....KKYYYOK.....","...KYYYYYYOK....","...KYWWYYyyOK...","..KYYWYYYYyyOK..","..KYYYYYYYYyyK..","..KYyYYYYYYyyK..","..KYyyYYYYyyyK..","...KYyyYYyyyK...","...KYYyyyyyyK...","....KKYyyyKK....","......KKKK......"],"laser":["...........KpPWW","..........KpPWWW",".........KpPWWWP","....K...KpPWWWPp","...KYK.KpPWWWPpK","..KYWYKpPWWWPpK.","...KYKpPWWWPpK..","....KpPWWWPpK...","...KpPWWWPpK.K..",".KKpPWWWPpK.KYK.","KaaPWWWPpK.KYWYK","aAAaWWPpK.K.KYK.","aAAaWPpK.KYK.K..","KaaKKKK.KYWYK...",".KK......KYK....","..........K....."],"enzyme":["................","......KK........","....KKGGKK......","..KKGGGGGGKK....",".KGGGGGGGGGGK...",".KGllKGGGGGGK...","KGGlGGGGGGGKKKK.","KGGGGGGGGKKWOOOK","KGGGGGGKK.KOOOoK","KGGGGGGGGKKOOooK","KGGGGGGGGGgKKKK.",".KGGGGGGGgggK...",".KGGGGGGggggK...","..KKGGGgggKK....","....KKggKK......","......KK........"],"peroxide":["................",".KKK............","KWHHK...........","KHHHAK..........",".KHAKKKK........","..KKWRRRK.......","...KRRRRKKKK....","..KRRRRRWRRRK...","...KRRRrRRRRRK..","...KRRrrRRRRrK..","....KKKKRRRrrK..","........KRrrKKK.",".........KKKWHHK","...........KHHHK","...........KHHAK","............KKK."],"chlorine":["................","................","................","................","...KKKK..KKKK...","..KGGGGKKGGGGK..",".KGllGGGllGGGGK.",".KGlGGGGlGGGGGGK",".KGGGGGGGGGGGGgK",".KGGGGGgGGGGGggK",".KGGGGggGGGGggK.","..KGGggKKGGggK..","...KKKK..KKKK...","................","................","................"],"ozone":["................","................","......KKKK......",".....KWRRRK.....",".....KRRRRRK....","....KRRRRRrK....",".....KRRRrrK....",".KKKKKRRrrKKKKK.","KWRRRKKKKKKWRRRK","KRRRRRK...KRRRRK","KRRRRrK..KRRRRRr","KRRRrrK...KRRRrK",".KRrrK....KRRrrK","..KKK......KKKK.","................","................"],"coenzyme":["................","................","...KKKK.........","..KYYYYK........",".KYWWYYYK.......","KYWKKKYYyKKKKKK.","KYYK..KYYYYYYYYK","KYYK..KYyyyyyYyK","KyYKKKyyKKKyYKyK",".KyyyyyyK.KyyKK.","..KyyyyK...KK...","...KKKK.........","................","................","................","................"],"frenzy":[".........KYK....","........KYWYK...",".........KYK....","..........K.....",".........KNK....","........KNNNK...","........KNNNKKK.",".......KNNKNNNNK",".......KNKKNNNNK","...KKKKNNK.KNNK.","..KNNNKNK...KK..",".KNNNNNNK.......","KNNNKNNK........","KNNK.KK.........",".KK.............","................"],"emulsion":["................","....KKK....KK...","...KYYYK..KYYK..","..KWWYYYKKWYYYK.",".KYWYYYYYKYYYYK.",".KYYYYYYyKYYYyK.",".KYYYYYyyKKYyK..","..KYYYyyKKKKK...","...KYyyKWWYYYK..","....KKKYWYYYYYK.","..KKK.KYYYYYYYK.",".KWYYKKYYYYYYyK.",".KYYYKKYYYYYyyKK",".KYYyK.KYYYyyWYY","..KKK...KKKKKYYy",".............KKK"],"uptake":[".KK...KWWK...KK.","KWWK..KHAK..KWWK","KHAK...KK...KHAK",".KKK....K...KKK.","..KCK..KCK.KCK..","..KCCK.KCKKCCK..","...KCK.KK.KCK...","....KKKBBKKK....","....KLLBBBBK....","....KLBBBBBK....","...KBBBBBBBbK...","...KBBBBBBbbK...","....KBBBBbbK....","....KBBBbbbK....",".....KKbbKK.....",".......KK......."],"reactivity":["................","......K.........",".....KRK........",".....KRRK..K....","....KRRRK.KRK...","....KRORKKRRK...","...KRROORRRRK...","..KRROOORRORK...","..KROOYOOOORK...",".KRROYYYOOORRK..",".KROOYYWYOOORK..",".KROYYWWYYOORK..",".KROYYWWWYYORK..","..KROYYWYYORK...","...KRRRRRRRK....","....KKKKKKK....."],"dose":["................","................","...KKKKKKKKKK...","..KRRRRRHHHHHK..",".KRWWRRRHWWHHAK.",".KRRRRRrHHHHAAK.","..KrrrrrAAAAAK..","...KKKKKKKKKK...","...KKKKKKKKKK...","..KBBBBBHHHHHK..",".KBWWBBBHWWHHAK.",".KBBBBBbHHHHAAK.","..KbbbbbAAAAAK..","...KKKKKKKKKK...","................","................"],"metabolism":["......KKKK......",".....KBBBBK.....",".....KKBBKK.....","...KKBBBBBBKK...","..KBBWWWWWWBBK..",".KBWWWWaWWWWWBK.",".KBWWWWaWWWWWBK.","KBWWWWWaWWWWWWBK","KBWWWWWaaaaWWWBK","KBWWWWWWWWWWWWBK","KBWWWWWWWWWWWABK",".KBWWWWWWWWWABK.",".KBAWWWWWWWAABK.","..KBBAAAAAABBK..","...KKBBBBBBKK...",".....KKKKKK....."],"diffusion":[".KKK........KKK.","KLLLK......KLLLK","KLLK........KLLK","KLKLK......KLKLK",".K.K........K.K.","......KKKK......",".....KWCCCK.....",".....KCCCCK.....",".....KCCCbK.....",".....KCCbbK.....","......KKKK......",".K.K........K.K.","KLKLK......KLKLK","KLLK........KLLK","KLLLK......KLLLK",".KKK........KKK."],"kinetics":["................","................","................","........KKKK....",".KKK...KCCCCK...","KLLLK.KCLWCCCK..",".KKKKKCLWCCCCCK.",".KLLLLCCCCCCCCCK",".KKKKKCCCCCCCbbK","KLLLK.KCCCCCbbK.",".KKK...KbbbbKK..","........KKKK....","................","................","................","................"],"reach":[".......K........","....KKKWKKK.....","...KRRRWRRRK....","..KRRKKWKKRRK...",".KRRK.KWK.KRRK..",".KRK...K...KRK..",".KRKK..K..KKRK..","KWWWWKKRKKWWWWK.",".KRKK..K..KKRK..",".KRK...K...KRK..",".KRRK.KWK.KRRK..","..KRRKKWKKRRK...","...KRRRWRRRK....","....KKKWKKK.....",".......K........","................"],"penetration":["................","................","................","......KKKKK.....",".K...KaaaaaK....","KoK.KaAAaaaaK...",".KoKKaAaaaaaWK..","KOOOOOOOOOOOWWK.","KOoOOOOOOOOOWK..","KoKKKaaaaaKKK...",".K..KaaaaKKK....",".....KaaKKK.....","......KK........","................","................","................"],"ricochet":["..........KKKK..",".KK......KOOOOK.","KOOK......KKOOK.","KOOK.......KOOK.",".KOOK.....KOOK..",".KOOOK...KOOOK..","..KOOK...KOOK...","...KOOK.KOOK....","...KOOK.KOOK....","....KOOKOOK.....",".....KOOOK......",".....KOOOK......","..KKKKKOKKKKKK..",".KAAAAAAAAAAAAK.",".KaaaaaaaaaaaaK.","..KKKKKKKKKKKK.."],"catalysisChance":[".......K........","......KYK.......","......KYK.......",".....KYWYK......",".....KYWYK......",".KKKKYYWYYKKKK..","KYYYYWWWWWYYYYK.",".KKKKYYWYYKKKK..",".....KYWYK...K..",".....KYWYK..KYK.","......KYK..KYWYK","......KYK...KYK.",".......K.....K..","................","................","................"],"catalysisPower":["........K.......","...K...KOK...K..","..KOK..KOK..KOK.","...KOKKOROKKOK..","....KOORRROOK...","...KKORRYRROKK..",".KKOORRYWYRROOKK","KOOORYYWWWYYROOO",".KKOORRYWYRROOKK","...KKORRYRROKK..","....KOORRROOK...","...KOKKOROKKOK..","..KOK..KOK..KOK.","...K...KOK...K..","........K.......","................"],"repulsion":["................",".KK.............","KAaKKK...KK.....","KAaKCCK.KCCK....","KAaKCCK.KCCK....","KAaKKCCK.KCCK...","KAaK.KCCK.KCCK..","KAaK..KCCK.KCCK.","KAaK..KCCK.KCCK.","KAaK.KCCCKKCCCK.","KAaKKCCCKKCCCK..","KAaKCCCKKCCCK...","KAaKCCK.KCCK....","KAaKKK...KK.....",".KK.............","................"],"specificity":["................","................","..K....KK....K..",".KWK..KWWK..KWK.",".KYK..KYYK..KYK.",".KYYKKYYYYKKYYK.",".KYYYKYYYYKYYYK.",".KYYYYYYYYYYYYK.",".KYYYYYRRYYYYYK.",".KYYBYYRRYYBYYK.",".KYYYYYYYYYYYYK.",".KyyyyyyyyyyyyK.",".KYYYYYYYYYYYYK.",".KyyyyyyyyyyyyK.","..KKKKKKKKKKKK..","................"],"halfLife":["..KKKKKKKKKKKK..",".KEEEEEEEEEEEEK.","..KHLLLLLLLLHK..","..KHLYYYYYYLHK..","...KHYYYYYYHK...","....KHYYYYHK....",".....KHYYHK.....","......KYYK......","......KYYK......",".....KHLYHK.....","....KHLLYLHK....","...KHLLYYYLHK...","..KHLYYYYYYLHK..","..KHYYYYYYYYHK..",".KEEEEEEEEEEEEK.","..KKKKKKKKKKKK.."],"interactions":["................","................","...KKK...KKK....","..KRRRK.KRRRK...",".KRWWRRKRRRRRK..","KRWWRRRRRRRRRRK.","KRWRRRRRRRRRRRK.","KRRRRRRRRRRRRrK.",".KRRRRRRRRRRrK..","..KRRRRRRRRrK...","...KRRRRRRrK....","....KRRRRrK.....",".....KRRrK......","......KrK.......",".......K........","................"],"membrane":["................","..KKKKKKKKKKKK..",".KLLLLLLBBBBBBK.",".KLWLLLLBBBBBBK.",".KLLLLLLBBBBBBK.",".KYHYHYHYHYHYHK.",".KYYYYYYYYYYYYK.",".KYYYYYYYYYYYYK.","..KHYHYHYHYHYK..","..KLLLLLBBBBBK..","...KLLLLBBBBK...","....KLLLBBBK....",".....KLLBBK.....","......KLBK......",".......KK.......","................"],"evasion":["............KK..","..........KKHHK.",".........KHHHHK.","........KHHHHAK.",".......KHHHHAHK.","......KHHHHAHHK.",".....KHHHHAHHHK.","....KHHHHAHHHK..","...KHHHHAHHHK...","...KHHHAHHHK....","...KHHAHHHK.....","...KHAHHHK......","...KAHHKK.......","..KAKKK.........",".KAK............","..K............."],"homeostasis":["...........KWK..","......KKKKKWlWK.",".....KlGGGKKWK..",".....KlGGGK.K...",".....KlGGGK.....","..KKKKlGGGKKKK..",".KllllGGGGGGGGK.",".KGGGGGGGGGGGGK.",".KGGGGGGGGGGGGK.",".KGGGGGGGGggggK.","..KKKKGGGgKKKK..",".....KGGGgK.....",".....KGGGgK.....",".....KGGGgK.....","......KKKK......","................"],"absorption":[".......K........","......KRK.......","......KRK.......",".....KRRRK......",".....KRRRK......","....KRRRRRK.....","...KRRRRRRRK....","..KRRWRRRRRRK...","..KRWRRRRRRRK...",".KRRWRRRRRRRRK..",".KRRRRRRRRRRrK..",".KRRRRRRRRRRrK..","..KRRRRRRRRrK...","...KrRRRRrrK....","....KrrrrrK.....",".....KKKKK......"],"tolerance":[".....KKKKKK.....","....KLLLLLLK....","...KLLKKKKLLK...","..KLKK....KKLK..",".KLKWWK.....KLK.","KLLWKK......KLLK","KLKWK........KLK","KLKK.........KLK","KLK..........KLK","KLK..........KLK","KLLK.......KKLLK",".KLK......KWKLK.","..KLKK....KKLK..","...KLLKKKKLLK...","....KLLLLLLK....",".....KKKKKK....."],"secondDose":["...........K....","..........KaK...","........KKKaaK..",".......KAAKKaaK.","........KAAAAaaK",".......KHHAAKKaa","......KHHHHAAKKK",".....KHHCCHHAAK.","....KHHCCHHKKAK.","...KHHCCHHK..K..","..KHHCCHHK......","..KHCCHHK.......","..KAHHHK........",".KAAHHK.........",".KAKKK..........","KAK............."],"reflex":[".....K....K.....","....KAK..KAK....","....KAK..KAK....",".....KAKKAK.....",".KK..KARRAK..KK.","KAAKKWWRRRRKKAAK",".KKAAWRRRRRAAKK.","...KRRRRRRRrK...","...KRRRRRRrrK...",".KKAARRRRrrAAKK.","KAAKKRRRrrrKKAAK",".KK..KArrAK..KK.",".....KAKKAK.....","....KAK..KAK....","....KAK..KAK....",".....K....K....."],"mobility":["................","................","................","................","...KKKKK.....K..","..KllGGGK...KlK.",".KGlGGGGGK..KKlK","KGGGGGGGGGKKlKK.","KGGGGGGGGlKKK...",".KGGGGGGGKKlK...","..KgggggKKlK....","...KKKKK..K.....","................","................","................","................"],"magnet":["................","..KKKK....KKKK..",".KAAAAK..KAAAAK.",".KHHHHK..KHHHHK.",".KRWRRK..KRRRRK.",".KRWRRK..KRRRRK.",".KRWRRK..KRRRrK.",".KRRRRK..KRRRrK.",".KRRRRRKKRRRRrK.",".KrRRRRRRRRRRrK.","..KrRRRRRRRRrK..","...KrrrrrrrrK...","..K.KKKKKKKK.K..",".KLKKLK..KLKKLK.","..K..K....K..K..","................"],"learning":["................",".......KK.......","......KCCK......",".....KCLWCK.....",".KKKKKKCCKKKKKK.","KHHHHHHKKHHHHHHK","KHWWWWWHHWWWWWHK","KHWAAAWHHWAAAWHK","KHWWWWWHHWWWWWHK","KHWAAAWHHWAAAWHK","KHWWWWWHHWWWWWHK","KHWAAWWHHWAAWWHK","KBBBBBBBBBBBBBBK",".KbbbbbbbbbbbbK.","..KKKKKKKKKKKK..","................"],"luck":["................","................","...KKKK.KKKK....","..KlGGGKlGGGK...","..KGGGGGGGGGGK..","..KGGGGgGGGGgK..","..KGGGggGGGggK..","...KGggKKGggK...","..KlGGGKlGGGK...","..KGGGGGGGGGGK..","..KGGGGgGGGGgK..","..KGGGggGGGggK..","...KGggKKGgggK..","....KKK..KKKggK.","............KggK",".............KK."],"options":["................","................",".....KKKKKK.....",".....KWWWWK.....",".KKKKKWWWWKKKKK.",".KCCCKWYWWKOOOK.",".KCCCKYYYWKOOOK.",".KCCCKWYYWKOOOK.",".KCCbKWWWWKOoOK.",".KCCCKWWWWKOOOK.",".KCCCKWWWWKOOOK.",".KCCCKKKKKKOOOK.",".KKKKKK..KKKKKK.","................","................","................"],"reroll":["................",".....KKKKK......","...KKOOOOOKK.K..","..KOOOOOOOOOKOK.",".KOOOKKKKKOOOOK.",".KOOK.....KOOOK.","KOOK.....KOOOOK.","KOOK......KKKKK.",".KKKKK......KOOK",".KOOOOK.....KOOK",".KOOOK.....KOOK.",".KOOOOKKKKKOOOK.",".KOKOOOOOOOOOK..","..K.KKOOOOOKK...","......KKKKK.....","................"],"skip":["................","................","................","...K...K....KK..","..KHK.KHK..KHHK.","..KHHKKHHK.KHHK.","..KHHHKHHHKKHHK.","..KHHHHHHHHKHHK.","..KAHHHAHHHKAAK.","..KAAAKAAAKKAAK.","..KAAKKAAK.KAAK.","..KAK.KAK..KAAK.","...K...K....KK..","................","................","................"],"banish":[".....KKKKKK.....","....KRRRRRRK....","...KRRRRRRRRK...","..KRRRKKKKRRRK..",".KRRRRK...KKRRK.","KRRRRRRK...KRRRK","KRRKKRRRK...KRRK","KRRK.KRRRK..KRRK","KRRK..KRRRK.KRRK","KRRK...KRRRKKRRK","KRRRK...KRRRRRRK",".KRRKK...KRRRRK.","..KRRRKKKKRRRK..","...KRRRRRRRRK...","....KRRRRRRK....",".....KKKKKK....."],"modifierSlots":["................","..K.KK.KK.KK.K..",".KAKAAKAAKAAKAK.","..KAAAAAAAAAAK..",".KAAKKKKKKKKAAK.",".KAAK.KlGK.KAAK.","..KAKKKGGKKKAK..",".KAAKlGGGGGKAAK.",".KAAKGGGGGGKAAK.","..KAKKKGGKKKAK..",".KAAK.KGGK.KAAK.",".KAAKKKKKKKKAAK.","..KAAAAAAAAAAK..",".KAKAAKAAKAAKAK.","..K.KK.KK.KK.K..","................"],"stress":["................",".....KKKKKK.....","...KKPPPPPPKK...","..KPPPPPPPPPPK..",".KPPWPPPPPPPPPK.",".KPWPPPPPPPPPPK.",".KPPRRPPPPRRPpK.",".KPPRRRPPRRRPpK.",".KPPPRRPPRRPPpK.","..KPPPPppPPPpK..","...KPPPPPPPppK..","....KPKPKPKpK...","....KPPPPPPpK...",".....KppppppK...","......KKKKKK....","................"]};
+    const icon = (key, c) => {
+      const s = [];
+      ART[key].forEach((row, y) => [...row].forEach((ch, x) => { if (PAL[ch]) s.push(`${(x + 1) * c}px ${(y + 1) * c}px 0 0 ${PAL[ch]}`); }));
+      return `position:absolute;left:${-c}px;top:${-c}px;width:${c}px;height:${c}px;box-shadow:${s.join(',')}`;
+    };
+    const F = {
+      weapon: 'border:3px solid #3A0A0C;box-shadow:inset 0 0 0 3px #E0702A;background:#F2D9A8',
+      ready: 'border:3px solid #3A0A0C;box-shadow:inset 0 0 0 3px #F2C83A;background:#F2D9A8',
+      evolved: 'border:3px solid #6E500C;box-shadow:inset 0 0 0 3px #F2C83A;background:#FFF2A8',
+      passive: 'border:3px solid #07080F;box-shadow:inset 0 0 0 3px #39D3F0;background:#1B1E3A',
+      debuff: 'border:3px solid #07080F;box-shadow:inset 0 0 0 3px #D83A3A;background:#3A0A0C'
+    };
+    const slot = (key, frame, lvl) => ({ frame: F[frame], icon: icon(key, 3), lvl: lvl || '', lvlColor: lvl === 'MAX' || lvl === 'EVO' ? '#F2C83A' : '#FFFFFF' });
+    const weapons = [
+      ['radical', 'Radical Livre', 'MIRA AUTOMÁTICA'],
+      ['acidJet', 'Jato Ácido', 'GOLPE DIRECIONAL'],
+      ['electronCloud', 'Nuvem de Elétrons', 'ÓRBITA'],
+      ['catalyst', 'Catalisador', 'AURA'],
+      ['solventPool', 'Poça de Solvente', 'ZONA NO CHÃO'],
+      ['chainReaction', 'Reação em Cadeia', 'RICOCHETE'],
+      ['uvRay', 'Raio UV', 'PERFURAÇÃO']
+    ].map(([k, name, kind]) => ({ name, kind, a: slot(k, 'weapon', '3'), b: slot(k, 'ready', 'MAX') }));
+    const agentWeapons = [
+      ['dopaminePulse', 'Pulso dopaminérgico', 'DOPAMINA'],
+      ['lipaseStrike', 'Hidrólise', 'LIPASE'],
+      ['insulinField', 'Campo de captação', 'INSULINA']
+    ].map(([k, name, kind]) => ({ name, kind, a: slot(k, 'weapon', '3') }));
+    const specials = [
+      ['frenzy', 'Pico de recompensa', 'DOPAMINA'],
+      ['emulsion', 'Emulsão', 'LIPASE'],
+      ['uptake', 'Captação', 'INSULINA']
+    ].map(([k, name, kind]) => ({ name, kind, icon: icon(k, 3) }));
+    const evolutions = [
+      ['radical', 'peroxide', 'fenton', 'Reação de Fenton', 'RADICAL LIVRE + PERÓXIDO'],
+      ['acidJet', 'chlorine', 'aquaRegia', 'Água Régia', 'JATO ÁCIDO + CLORO'],
+      ['uvRay', 'ozone', 'laser', 'Laser', 'RAIO UV + OZÔNIO'],
+      ['catalyst', 'coenzyme', 'enzyme', 'Enzima', 'CATALISADOR + COENZIMA']
+    ].map(([w, r, v, name, recipe]) => ({ name, recipe, w: slot(w, 'ready', 'MAX'), r: slot(r, 'passive', '5'), v: slot(v, 'evolved', 'EVO') }));
+    const P = (list) => list.map(([k, name, stat, frame]) => ({ name, stat, a: slot(k, frame || 'passive', '') }));
+    const offense = P([
+      ['reactivity', 'Reatividade', 'DANO'],
+      ['dose', 'Dose', 'DISPAROS'],
+      ['metabolism', 'Metabolismo', 'RECARGA'],
+      ['diffusion', 'Difusão', 'ÁREA'],
+      ['kinetics', 'Cinética', 'VEL. DO DISPARO'],
+      ['reach', 'Alcance', 'ALCANCE'],
+      ['penetration', 'Penetração', 'PERFURAÇÃO'],
+      ['ricochet', 'Reação em cadeia', 'RICOCHETES'],
+      ['catalysisChance', 'Chance de catálise', 'CHANCE CRÍTICA'],
+      ['catalysisPower', 'Força da catálise', 'DANO CRÍTICO'],
+      ['repulsion', 'Repulsão', 'EMPURRÃO'],
+      ['specificity', 'Especificidade', 'DANO EM ELITE'],
+      ['halfLife', 'Meia-vida', 'DURAÇÃO']
+    ]);
+    const defense = P([
+      ['interactions', 'Interações', 'VIDA MÁXIMA'],
+      ['membrane', 'Membrana', 'ARMADURA'],
+      ['evasion', 'Esquiva', 'ESQUIVA'],
+      ['homeostasis', 'Homeostase', 'REGENERAÇÃO'],
+      ['absorption', 'Absorção', 'ROUBO DE VIDA'],
+      ['tolerance', 'Tolerância', 'INVULNERÁVEL'],
+      ['secondDose', 'Segunda dose', 'REVIVER'],
+      ['reflex', 'Reflexo', 'DANO DE VOLTA']
+    ]);
+    const mobility = P([
+      ['mobility', 'Mobilidade', 'VELOCIDADE'],
+      ['magnet', 'Raio de coleta', 'COLETA'],
+      ['learning', 'Aprendizado', 'XP'],
+      ['luck', 'Sorte', 'SORTE']
+    ]);
+    const levelUp = P([
+      ['options', 'Opções', 'ESCOLHAS'],
+      ['reroll', 'Rerrolar', 'REROLAGENS'],
+      ['skip', 'Pular', 'PULOS'],
+      ['banish', 'Banir', 'BANIMENTOS'],
+      ['modifierSlots', 'Espaços de modificador', 'ESPAÇOS']
+    ]);
+    const risk = P([['stress', 'Estresse', 'DIFICULDADE', 'debuff']]);
+    const scales = [1, 2, 3, 4].map((c) => ({ size: 16 * c, icon: icon('radical', c) }));
+    return { weapons, agentWeapons, specials, evolutions, offense, defense, mobility, levelUp, risk, scales };
+  }
+}
+</script>
+</body>
+</html>

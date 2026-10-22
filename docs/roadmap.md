@@ -29,6 +29,14 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | 5.7 | Mapas gerados | Cada run tem um mapa diferente, sem deixar o agente preso? | 2, 5.5 | não iniciada |
 | 6 | Arte, polimento e lançamento | Dá para mandar o link para os amigos? | 1 a 5.7 | não iniciada |
 
+## Bugs relatados
+
+Bugs que o Vitor achou jogando. Marque ao corrigir, com o commit da correção.
+
+- [ ] PC: interface enorme na run (HUD ocupa um terço da tela), nas Opções (os botões não cabem) e no campo longo. Os menus não usam a regra de tela grande que a run já usa; falta também uma UI própria de tela larga, desenhada no canvas.
+- [ ] PC: campo longo deitado espreme o campo numa faixa fina entre a HUD e o pool.
+- [ ] Celular: campo longo longe da prancheta "Tela de batalha (mockup)": paredes largas demais, campo estreito, pool com espaços pequenos.
+
 A arte não espera a fase 6: os sprites de molécula são montados por código a partir dos átomos (aba Design), então entram já na fase 1. A fase 6 cuida do resto: HUD final, som, telas e acabamento.
 
 ## Fase 0: Fundação

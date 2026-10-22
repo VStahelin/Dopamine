@@ -14,6 +14,7 @@ Dopamina Blaster: roguelike incremental de auto-battle idle, em que agentes (rem
 | [docs/roadmap.md](docs/roadmap.md) | Fases de desenvolvimento, status e próximos itens |
 | [docs/arquitetura.md](docs/arquitetura.md) | Como o código está organizado hoje: stack, camadas, pastas e convenções |
 | [docs/decisoes/](docs/decisoes/README.md) | Registro de decisões, um arquivo por decisão |
+| [docs/identidade-visual/](docs/identidade-visual/README.md) | Pranchetas do canvas de identidade visual: a referência de layout e de arte |
 
 ## Antes de começar uma tarefa
 

@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Crônico: pausa e status</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&amp;family=Silkscreen:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#FFB347}a:hover{color:#FFD08A}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background-color: #D8B47A; background-image: linear-gradient(#CDA56C 3px, transparent 3px), linear-gradient(90deg, #CDA56C 3px, transparent 3px); background-size: 40px 40px; font-family: 'Pixelify Sans', monospace; color: #F4EFE0">
+  <div style="position: absolute; inset: 0; background: rgba(7,8,15,0.8)"></div>
+
+  <div style="position: absolute; left: 12px; right: 12px; top: 44px; bottom: 20px; display: flex; flex-direction: column; gap: 10px">
+
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 2px">
+      <div style="font-size: 32px; font-weight: 700; color: #FF9A1F; text-shadow: -3px 0 #3A0A0C, 3px 0 #3A0A0C, 0 -3px #3A0A0C, 0 3px #3A0A0C, 0 5px #3A0A0C">PAUSADO</div>
+      <div style="font-family: 'Silkscreen', monospace; font-size: 10px; letter-spacing: 1px; color: #C9CCE6">DOPAMINA · NV 12 · 14:03 · ONDA 3</div>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: #2A2E55; border: 3px solid #07080F; box-shadow: inset 0 3px 0 #474C85">
+      <div style="flex: 1; display: flex; flex-direction: column; gap: 4px">
+        <div style="font-family: 'Silkscreen', monospace; font-size: 9px; letter-spacing: 1px; color: #C9CCE6">INTERAÇÕES 72/100</div>
+        <div style="border: 2px solid #3A0A0C; background: #B5541C; padding: 2px">
+          <div style="display: flex; gap: 2px; background: #1B1E3A; padding: 2px">
+            <sc-for list="{{pips}}" as="p" hint-placeholder-count="10">
+              <div style="flex: 1; height: 8px; background: {{p.fill}}"></div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px">
+        <div style="display: flex; align-items: center; gap: 5px">
+          <div style="font-size: 15px; font-weight: 700; color: #FFFFFF; text-shadow: 0 2px #07080F">1.250</div>
+          <div style="width: 12px; height: 12px; box-sizing: border-box; background: #F2B233; border: 2px solid #8A5A0C"></div>
+        </div>
+        <div style="font-family: 'Silkscreen', monospace; font-size: 9px; color: #C9CCE6">3.482 DECOMPOSTAS</div>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px">
+      <sc-for list="{{tabs}}" as="t" hint-placeholder-count="3">
+        <button style="height: 44px; cursor: pointer; font-family: 'Silkscreen', monospace; font-size: 11px; letter-spacing: 1px; padding: 0; {{t.style}}" onClick="{{t.pick}}">{{t.label}}</button>
+      </sc-for>
+    </div>
+
+    <div style="flex: 1; min-height: 0; overflow-y: auto; box-sizing: border-box; padding: 10px; background: #15172E; border: 3px solid #3A0A0C; box-shadow: inset 0 0 0 3px #E0702A, inset 0 0 0 5px #07080F">
+
+      <sc-if value="{{showArsenal}}" hint-placeholder-val="{{ true }}">
+        <div style="display: flex; flex-direction: column; gap: 6px; padding: 4px">
+          <div style="display: flex; justify-content: space-between; font-family: 'Silkscreen', monospace; font-size: 10px; letter-spacing: 1px; color: #FFB347">
+            <span>ARMAS</span><span>4/6</span>
+          </div>
+          <sc-for list="{{weapons}}" as="w" hint-placeholder-count="6">
+            <div style="display: flex; gap: 8px; align-items: flex-start; padding: 6px; background: #1B1E3A; border: 2px solid #07080F">
+              <div style="position: relative; flex: none; width: 32px; height: 32px; box-sizing: border-box; {{w.frame}}">
+                <div style="position: absolute; left: 3px; top: 3px; width: 24px; height: 24px">
+                  <div style="{{w.icon}}"></div>
+                </div>
+              </div>
+              <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px">
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px">
+                  <div style="font-size: 14px; font-weight: 600; color: {{w.nameColor}}">{{w.name}}</div>
+                  <div style="font-family: 'Silkscreen', monospace; font-size: 9px; color: {{w.lvlColor}}">{{w.lvl}}</div>
+                </div>
+                <sc-if value="{{w.hasPips}}" hint-placeholder-val="{{ true }}">
+                  <div style="display: flex; gap: 2px">
+                    <sc-for list="{{w.pips}}" as="p" hint-placeholder-count="8">
+                      <div style="width: 10px; height: 4px; background: {{p.fill}}"></div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+                <div style="font-size: 11px; color: #C9CCE6">{{w.desc}}</div>
+                <sc-if value="{{w.hasEvo}}" hint-placeholder-val="{{ false }}">
+                  <div style="font-family: 'Silkscreen', monospace; font-size: 8px; letter-spacing: 1px; color: #F2C83A">{{w.evo}}</div>
+                </sc-if>
+              </div>
+            </div>
+          </sc-for>
+
+          <div style="display: flex; justify-content: space-between; margin-top: 8px; font-family: 'Silkscreen', monospace; font-size: 10px; letter-spacing: 1px; color: #7EF0FF">
+            <span>REAGENTES</span><span>4/6</span>
+          </div>
+          <sc-for list="{{passives}}" as="w" hint-placeholder-count="6">
+            <div style="display: flex; gap: 8px; align-items: center; padding: 5px 6px; background: #1B1E3A; border: 2px solid #07080F">
+              <div style="position: relative; flex: none; width: 24px; height: 24px; box-sizing: border-box; {{w.frame}}">
+                <div style="position: absolute; left: 2px; top: 2px; width: 16px; height: 16px">
+                  <div style="{{w.icon}}"></div>
+                </div>
+              </div>
+              <div style="flex: 1; min-width: 0; font-size: 13px; font-weight: 600; color: {{w.nameColor}}">{{w.name}}</div>
+              <div style="display: flex; gap: 2px">
+                <sc-for list="{{w.pips}}" as="p" hint-placeholder-count="5">
+                  <div style="width: 6px; height: 6px; background: {{p.fill}}"></div>
+                </sc-for>
+              </div>
+              <div style="width: 58px; text-align: right; font-size: 12px; font-weight: 700; color: #8CF06A">{{w.desc}}</div>
+            </div>
+          </sc-for>
+
+          <div style="display: flex; justify-content: space-between; margin-top: 8px; font-family: 'Silkscreen', monospace; font-size: 10px; letter-spacing: 1px; color: #C9CCE6">
+            <span>EFEITOS ATIVOS</span><span>2</span>
+          </div>
+          <sc-for list="{{effects}}" as="f" hint-placeholder-count="2">
+            <div style="display: flex; gap: 8px; align-items: center; padding: 5px 6px; background: #1B1E3A; border: 2px solid #07080F">
+              <div style="position: relative; flex: none; width: 24px; height: 24px; box-sizing: border-box; {{f.frame}}">
+                <div style="position: absolute; left: 2px; top: 2px; width: 16px; height: 16px">
+                  <div style="{{f.icon}}"></div>
+                </div>
+              </div>
+              <div style="flex: 1; font-size: 13px; font-weight: 600">{{f.name}}</div>
+              <div style="font-size: 12px; font-weight: 700; color: {{f.color}}">{{f.desc}}</div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{showStats}}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 10px; padding: 4px">
+          <sc-for list="{{statGroups}}" as="g" hint-placeholder-count="4">
+            <div style="display: flex; flex-direction: column; gap: 2px">
+              <div style="font-family: 'Silkscreen', monospace; font-size: 10px; letter-spacing: 1px; color: #FFB347; padding-bottom: 2px; border-bottom: 2px solid #2A2E55">{{g.title}}</div>
+              <sc-for list="{{g.rows}}" as="r" hint-placeholder-count="6">
+                <div style="display: flex; align-items: baseline; gap: 6px; padding: 2px 0">
+                  <div style="flex: 1; font-size: 13px; font-weight: 600; color: #F4EFE0">{{r.name}}</div>
+                  <div style="font-family: 'Silkscreen', monospace; font-size: 8px; color: #8A8EB8">{{r.base}}</div>
+                  <div style="width: 64px; text-align: right; font-size: 13px; font-weight: 700; color: {{r.color}}">{{r.value}}</div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{showRun}}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 12px; padding: 4px">
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px">
+            <sc-for list="{{tiles}}" as="t" hint-placeholder-count="6">
+              <div style="padding: 8px; background: #1B1E3A; border: 2px solid #07080F; display: flex; flex-direction: column; gap: 2px">
+                <div style="font-family: 'Silkscreen', monospace; font-size: 8px; letter-spacing: 1px; color: #C9CCE6">{{t.label}}</div>
+                <div style="font-size: 20px; font-weight: 700; color: {{t.color}}; text-shadow: 0 2px #07080F">{{t.value}}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <div style="font-family: 'Silkscreen', monospace; font-size: 10px; letter-spacing: 1px; color: #FFB347">DANO POR ARMA</div>
+            <sc-for list="{{damage}}" as="d" hint-placeholder-count="4">
+              <div style="display: flex; flex-direction: column; gap: 3px">
+                <div style="display: flex; justify-content: space-between; font-size: 12px">
+                  <span style="font-weight: 600">{{d.name}}</span><span style="font-weight: 700">{{d.value}}</span>
+                </div>
+                <div style="height: 8px; background: #1B1E3A; border: 2px solid #07080F">
+                  <div style="height: 100%; background: #39D3F0; width: {{d.pct}}"></div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="font-size: 12px; color: #C9CCE6">Recorde: 18:22. Faltam 4:19 para bater.</div>
+        </div>
+      </sc-if>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <button style="height: 52px; cursor: pointer; font-family: 'Pixelify Sans', monospace; font-weight: 700; font-size: 20px; color: #FFFFFF; background: #E0702A; border: 4px solid #3A0A0C; box-shadow: inset 0 -5px 0 #9C3F12, inset 0 4px 0 #FFB347; text-shadow: 0 2px #6E1E0A">CONTINUAR</button>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+        <button style="height: 44px; cursor: pointer; font-family: 'Silkscreen', monospace; font-size: 11px; letter-spacing: 1px; color: #F4EFE0; background: #2A2E55; border: 3px solid #07080F; box-shadow: inset 0 -3px 0 #171A36, inset 0 3px 0 #474C85">OPÇÕES</button>
+        <button style="height: 44px; cursor: pointer; font-family: 'Silkscreen', monospace; font-size: 11px; letter-spacing: 1px; color: #FFE0D0; background: #5A1416; border: 3px solid #07080F; box-shadow: inset 0 -3px 0 #3A0A0C, inset 0 3px 0 #8E1616">DESISTIR</button>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { tab: 'arsenal' };
+  }
+  renderVals() {
+    const tab = this.state.tab;
+    const PAL = { K: '#1A1424', W: '#FFFFFF', H: '#EDEBDD', R: '#E0433A', r: '#8E1616', C: '#39D3F0', L: '#7EF0FF', B: '#3F6FE0', G: '#5BC43A', Y: '#F2C83A', P: '#B072F0', O: '#FF9A1F', A: '#8A90A0' };
+    const icon = (rows, c) => {
+      const s = [];
+      rows.forEach((row, y) => [...row].forEach((ch, x) => { if (PAL[ch]) s.push(`${(x + 1) * c}px ${(y + 1) * c}px 0 0 ${PAL[ch]}`); }));
+      return `position:absolute;left:${-c}px;top:${-c}px;width:${c}px;height:${c}px;box-shadow:${s.join(',')}`;
+    };
+    const I = {
+      electron: ['..CCCC..', '.C....C.', 'C..BB..C', 'C.BLLB.C', 'C.BLLB.C', 'C..BB..C', '.C....W.', '..CCCC..'],
+      uv: ['......PP', '.....PWP', '....PWP.', '...PWP..', '..PWP...', '.PWP....', 'PWP.....', 'PP......'],
+      solvent: ['..KKKK..', '...KK...', '...KK...', '..KGGK..', '.KGGGGK.', 'KGGWGGGK', 'KGGGGGGK', '.KKKKKK.'],
+      fenton: ['Y.RRR..Y', '.RRWRR..', 'RRWRRRR.', 'RRRRRRRY', 'RRRRRRR.', '.RRRRR..', 'Y.RRR.Y.', '...Y....'],
+      react: ['...O....', '..OO....', '..OYO...', '.OYYO.O.', '.OYWYOO.', 'OYYWWYO.', 'OYYYYYO.', '.OOOOO..'],
+      meta: ['..KKKK..', '.KHHHHK.', 'KHHKHHHK', 'KHHKHHHK', 'KHHKKKHK', 'KHHHHHHK', '.KHHHHK.', '..KKKK..'],
+      membrane: ['..BBBB..', '.BLLLLB.', 'BLWLLLLB', 'BLLLLLLB', 'BLLLLLLB', '.BLLLLB.', '..BLLB..', '...BB...'],
+      magnet: ['WW....WW', 'RR....RR', 'RR....RR', 'RR....RR', 'RRR..RRR', '.RRRRRR.', '..RRRR..', '........'],
+      speed: ['....CC..', '...CCCC.', 'CCCCCCCC', '...CCCC.', '....CC..', '.L......', 'LLLL....', '.L......'],
+      slow: ['..rrrr..', '.rRRRRr.', 'rRWRRRRr', 'rRRWWRRr', 'rRRRRWRr', 'rRRRRRRr', '.rRRRRr.', '..rrrr..'],
+      lock: ['........', '..AAAA..', '.A....A.', '.A....A.', 'AAAAAAAA', 'AAAKKAAA', 'AAAKKAAA', 'AAAAAAAA']
+    };
+    const F = {
+      weapon: 'border:2px solid #3A0A0C;box-shadow:inset 0 0 0 2px #E0702A;background:#F2D9A8',
+      evolved: 'border:2px solid #6E500C;box-shadow:inset 0 0 0 2px #F2C83A;background:#FFF2A8',
+      passive: 'border:2px solid #07080F;box-shadow:inset 0 0 0 2px #39D3F0;background:#1B1E3A',
+      empty: 'border:2px dashed #474C85;background:#1B1E3A',
+      locked: 'border:2px solid #07080F;background:#0E1024',
+      buff: 'border:2px solid #07080F;box-shadow:inset 0 0 0 2px #6CD43F;background:#1B1E3A',
+      debuff: 'border:2px solid #07080F;box-shadow:inset 0 0 0 2px #D83A3A;background:#3A0A0C'
+    };
+    const pipsOf = (lvl, max, color) => Array.from({ length: max }, (_, i) => ({ fill: i < lvl ? color : '#2A2E55' }));
+    const W = (kind, ic, name, lvl, max, desc, evo, extra) => Object.assign({
+      frame: F[kind], icon: ic ? icon(ic, 3) : '', name, desc,
+      lvl: lvl === null ? '' : (lvl >= max ? 'MAX' : `NV ${lvl}/${max}`),
+      lvlColor: lvl !== null && lvl >= max ? '#F2C83A' : '#C9CCE6',
+      nameColor: '#F4EFE0',
+      hasPips: lvl !== null, pips: lvl === null ? [] : pipsOf(lvl, max, lvl >= max ? '#F2C83A' : '#E0702A'),
+      hasEvo: !!evo, evo: evo || ''
+    }, extra || {});
+    const weapons = [
+      W('evolved', I.fenton, 'Reação de Fenton', null, 8, 'Rajada de radicais em leque. Dano 22 · 6 disparos · 0,7 s', 'EVOLUÍDA DE RADICAL LIVRE', { lvl: 'EVO', lvlColor: '#F2C83A', nameColor: '#FFE08A' }),
+      W('weapon', I.electron, 'Nuvem de Elétrons', 8, 8, '4 elétrons em órbita. Dano 9 por toque', null),
+      W('weapon', I.uv, 'Raio UV', 4, 8, 'Feixe que atravessa tudo. Dano 42 · 2,5 s', 'NV 8 + OZÔNIO → LASER'),
+      W('weapon', I.solvent, 'Poça de Solvente', 2, 8, 'Poça de 3 s com lentidão. 6 por segundo', null),
+      W('empty', null, 'Espaço livre', null, 8, 'Uma arma nova pode entrar no próximo level up', null, { nameColor: '#8A8EB8' }),
+      W('locked', I.lock, 'Bloqueado', null, 8, 'Libera no Laboratório (Espaços de arma)', null, { nameColor: '#8A8EB8' })
+    ];
+    const P = (kind, ic, name, lvl, desc, extra) => Object.assign({
+      frame: F[kind], icon: ic ? icon(ic, 2) : '', name, desc, nameColor: '#F4EFE0',
+      pips: lvl === null ? [] : pipsOf(lvl, 5, lvl >= 5 ? '#F2C83A' : '#39D3F0')
+    }, extra || {});
+    const passives = [
+      P('passive', I.react, 'Reatividade', 5, '+50% dano'),
+      P('passive', I.meta, 'Metabolismo', 3, '−24% recarga'),
+      P('passive', I.membrane, 'Membrana', 2, '−2 golpe'),
+      P('passive', I.magnet, 'Raio de coleta', 1, '+25%'),
+      P('empty', null, 'Espaço livre', null, '', { nameColor: '#8A8EB8' }),
+      P('locked', I.lock, 'Bloqueado', null, '', { nameColor: '#8A8EB8' })
+    ];
+    const effects = [
+      { frame: F.buff, icon: icon(I.speed, 2), name: 'Adrenalina · +30% mobilidade', desc: '5 s', color: '#8CF06A' },
+      { frame: F.debuff, icon: icon(I.slow, 2), name: 'Lentidão · −20% mobilidade', desc: '2 s', color: '#FF8A7A' }
+    ];
+    const G = '#8CF06A', R = '#FF8A7A', N = '#F4EFE0';
+    const row = (name, value, base, color) => ({ name, value, base: base ? `base ${base}` : '', color: color || N });
+    const statGroups = [
+      { title: 'OFENSIVOS', rows: [
+        row('Reatividade', '150%', '100%', G), row('Dose', '+1', '+0', G), row('Metabolismo', '−24%', '0%', G),
+        row('Difusão', '100%'), row('Alcance', '115%', '100%', G), row('Penetração', '0'),
+        row('Chance de catálise', '10%', '5%', G), row('Força da catálise', '200%')
+      ] },
+      { title: 'DEFENSIVOS', rows: [
+        row('Interações', '72/100'), row('Membrana', '2', '0', G), row('Esquiva', '0%'),
+        row('Homeostase', '0/s'), row('Absorção', '2%', '0%', G), row('Tolerância', '0,5 s')
+      ] },
+      { title: 'MOBILIDADE E COLETA', rows: [
+        row('Mobilidade', '80%', '100%', R), row('Raio de coleta', '125%', '100%', G),
+        row('Aprendizado', '100%'), row('Sorte', '130%', '100%', G)
+      ] },
+      { title: 'LEVEL UP E RISCO', rows: [
+        row('Opções', '3'), row('Rerrolar', '2'), row('Pular', '1'), row('Banir', '0'), row('Estresse', '0%')
+      ] }
+    ];
+    const tiles = [
+      { label: 'TEMPO', value: '14:03', color: '#FFFFFF' },
+      { label: 'NÍVEL', value: '12', color: '#7EF0FF' },
+      { label: 'DECOMPOSTAS', value: '3.482', color: '#FFFFFF' },
+      { label: 'ATP NA RUN', value: '1.250', color: '#F2B233' },
+      { label: 'INTERAÇÕES PERDIDAS', value: '128', color: '#FF8A7A' },
+      { label: 'CRÍTICOS', value: '241', color: '#F2C83A' }
+    ];
+    const damage = [
+      { name: 'Reação de Fenton', value: '48.210', pct: '100%' },
+      { name: 'Nuvem de Elétrons', value: '27.044', pct: '56%' },
+      { name: 'Raio UV', value: '18.390', pct: '38%' },
+      { name: 'Poça de Solvente', value: '6.912', pct: '14%' }
+    ];
+    const TABS = [['arsenal', 'ARSENAL'], ['stats', 'ATRIBUTOS'], ['run', 'RUN']];
+    const tabs = TABS.map(([id, label]) => ({
+      label,
+      pick: () => this.setState({ tab: id }),
+      style: id === tab
+        ? 'color:#FFFFFF;background:#E0702A;border:3px solid #3A0A0C;box-shadow:inset 0 -3px 0 #9C3F12, inset 0 3px 0 #FFB347'
+        : 'color:#C9CCE6;background:#2A2E55;border:3px solid #07080F;box-shadow:inset 0 -3px 0 #171A36, inset 0 3px 0 #474C85'
+    }));
+    const pips = Array.from({ length: 10 }, (_, i) => ({ fill: i < 7 ? '#D83A3A' : i === 7 ? '#FF8A7A' : '#2A2E55' }));
+    return {
+      tabs, pips, weapons, passives, effects, statGroups, tiles, damage,
+      showArsenal: tab === 'arsenal', showStats: tab === 'stats', showRun: tab === 'run'
+    };
+  }
+}
+</script>
+</body>
+</html>

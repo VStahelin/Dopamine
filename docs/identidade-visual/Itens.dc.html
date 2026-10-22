@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Itens do mapa</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&amp;family=Silkscreen:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#FFB347}a:hover{color:#FFD08A}
+</style>
+</helmet>
+<div style="width: 1280px; height: 1720px; box-sizing: border-box; padding: 48px; background: #15172E; font-family: 'Pixelify Sans', monospace; color: #F4EFE0; display: flex; flex-direction: column; gap: 32px">
+
+  <div style="display: flex; flex-direction: column; gap: 8px">
+    <div style="font-size: 44px; font-weight: 700; color: #6CD43F; text-shadow: -3px 0 #3A0A0C, 3px 0 #3A0A0C, 0 -3px #3A0A0C, 0 4px #3A0A0C">Itens do mapa (drops)</div>
+    <div style="font-size: 15px; line-height: 1.4; color: #C9CCE6; max-width: 1040px">18 sprites em pixel art de 16×16 para a fase 5.5, com a mesma paleta e o contorno escuro de 1 pixel dos ícones de armas. Cada cartão mostra o sprite ampliado em 6× e, no chão de areia, em 2× e no tamanho real (1×). Nomes, pesos e níveis são os de docs/itens.md (proposta).</div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px">
+      <div style="font-size: 28px; font-weight: 700; color: #FF9A1F; text-shadow: -2px 0 #3A0A0C, 2px 0 #3A0A0C, 0 -2px #3A0A0C, 0 3px #3A0A0C">Na vesícula</div>
+      <div style="font-size: 14px; color: #A9AED0">sorteados por peso quando a vesícula rompe</div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px">
+      <sc-for list="{{vesicleItems}}" as="it" hint-placeholder-count="10">
+        <div style="display: flex; flex-direction: column; gap: 10px; padding: 14px; background: #1B1E3A; border: 3px solid #07080F">
+          <div style="display: flex; align-items: flex-end; gap: 12px">
+            <div style="position: relative; flex: none; width: 102px; height: 102px; box-sizing: border-box; border: 3px solid #07080F; background: #23264A">
+              <div style="position: absolute; left: 0; top: 0; width: 96px; height: 96px"><div style="{{it.big}}"></div></div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px; align-items: center">
+              <div style="position: relative; flex: none; width: 48px; height: 48px; background: #D8B47A; border: 2px solid #07080F">
+                <div style="position: absolute; left: 8px; top: 8px; width: 32px; height: 32px"><div style="{{it.x2}}"></div></div>
+              </div>
+              <div style="position: relative; flex: none; width: 28px; height: 28px; background: #D8B47A; border: 2px solid #07080F">
+                <div style="position: absolute; left: 6px; top: 6px; width: 16px; height: 16px"><div style="{{it.x1}}"></div></div>
+              </div>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 4px">
+            <div style="font-size: 17px; font-weight: 700">{{it.name}}</div>
+            <div style="font-family: 'Silkscreen', monospace; font-size: 9px; letter-spacing: 1px; color: #FFB347">{{it.vs}}</div>
+            <div style="font-size: 13px; line-height: 1.35; color: #C9CCE6">{{it.fx}}</div>
+            <div style="font-family: 'Silkscreen', monospace; font-size: 9px; letter-spacing: 1px; color: #7EF0FF">{{it.tag}}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px">
+      <div style="font-size: 28px; font-weight: 700; color: #FF9A1F; text-shadow: -2px 0 #3A0A0C, 2px 0 #3A0A0C, 0 -2px #3A0A0C, 0 3px #3A0A0C">Das moléculas e do chefe</div>
+      <div style="font-size: 14px; color: #A9AED0">gemas de XP e a cápsula, no lugar do baú</div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px">
+      <sc-for list="{{dropItems}}" as="it" hint-placeholder-count="5">
+        <div style="display: flex; flex-direction: column; gap: 10px; padding: 14px; background: #1B1E3A; border: 3px solid #07080F">
+          <div style="display: flex; align-items: flex-end; gap: 12px">
+            <div style="position: relative; flex: none; width: 102px; height: 102px; box-sizing: border-box; border: 3px solid #07080F; background: #23264A">
+              <div style="position: absolute; left: 0; top: 0; width: 96px; height: 96px"><div style="{{it.big}}"></div></div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px; align-items: center">
+              <div style="position: relative; flex: none; width: 48px; height: 48px; background: #D8B47A; border: 2px solid #07080F">
+                <div style="position: absolute; left: 8px; top: 8px; width: 32px; height: 32px"><div style="{{it.x2}}"></div></div>
+              </div>
+              <div style="position: relative; flex: none; width: 28px; height: 28px; background: #D8B47A; border: 2px solid #07080F">
+                <div style="position: absolute; left: 6px; top: 6px; width: 16px; height: 16px"><div style="{{it.x1}}"></div></div>
+              </div>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 4px">
+            <div style="font-size: 17px; font-weight: 700">{{it.name}}</div>
+            <div style="font-family: 'Silkscreen', monospace; font-size: 9px; letter-spacing: 1px; color: #FFB347">{{it.vs}}</div>
+            <div style="font-size: 13px; line-height: 1.35; color: #C9CCE6">{{it.fx}}</div>
+            <div style="font-family: 'Silkscreen', monospace; font-size: 9px; letter-spacing: 1px; color: #7EF0FF">{{it.tag}}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  <div style="display: grid; grid-template-columns: 612px minmax(0, 1fr); gap: 24px">
+
+  <div style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px">
+      <div style="font-size: 28px; font-weight: 700; color: #FF9A1F; text-shadow: -2px 0 #3A0A0C, 2px 0 #3A0A0C, 0 -2px #3A0A0C, 0 3px #3A0A0C">A fonte e a sobra</div>
+      <div style="font-size: 14px; color: #A9AED0">vesícula e o ATP extra</div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+      <sc-for list="{{sourceItems}}" as="it" hint-placeholder-count="3">
+        <div style="display: flex; flex-direction: column; gap: 10px; padding: 14px; background: #1B1E3A; border: 3px solid #07080F">
+          <div style="display: flex; align-items: flex-end; gap: 12px">
+            <div style="position: relative; flex: none; width: 102px; height: 102px; box-sizing: border-box; border: 3px solid #07080F; background: #23264A">
+              <div style="position: absolute; left: 0; top: 0; width: 96px; height: 96px"><div style="{{it.big}}"></div></div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px; align-items: center">
+              <div style="position: relative; flex: none; width: 48px; height: 48px; background: #D8B47A; border: 2px solid #07080F">
+                <div style="position: absolute; left: 8px; top: 8px; width: 32px; height: 32px"><div style="{{it.x2}}"></div></div>
+              </div>
+              <div style="position: relative; flex: none; width: 28px; height: 28px; background: #D8B47A; border: 2px solid #07080F">
+                <div style="position: absolute; left: 6px; top: 6px; width: 16px; height: 16px"><div style="{{it.x1}}"></div></div>
+              </div>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 4px">
+            <div style="font-size: 17px; font-weight: 700">{{it.name}}</div>
+            <div style="font-family: 'Silkscreen', monospace; font-size: 9px; letter-spacing: 1px; color: #FFB347">{{it.vs}}</div>
+            <div style="font-size: 13px; line-height: 1.35; color: #C9CCE6">{{it.fx}}</div>
+            <div style="font-family: 'Silkscreen', monospace; font-size: 9px; letter-spacing: 1px; color: #7EF0FF">{{it.tag}}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+    <div style="display: flex; flex-direction: column; gap: 14px">
+      <div style="display: flex; align-items: baseline; gap: 16px">
+        <div style="font-size: 28px; font-weight: 700; color: #FF9A1F; text-shadow: -2px 0 #3A0A0C, 2px 0 #3A0A0C, 0 -2px #3A0A0C, 0 3px #3A0A0C">No chão, em 3×</div>
+        <div style="font-size: 14px; color: #A9AED0">como ficam juntos durante a run</div>
+      </div>
+      <div style="position: relative; height: 352px; background: #D8B47A; border: 3px solid #07080F; overflow: hidden">
+        <sc-for list="{{scene}}" as="s" hint-placeholder-count="12">
+          <div style="position: absolute; left: {{s.x}}px; top: {{s.y}}px; width: 48px; height: 48px">
+            <div style="position: absolute; left: -10px; top: -10px; width: 68px; height: 68px; border-radius: 50%; background: {{s.glow}}"></div>
+            <div style="position: absolute; left: 0; top: 0; width: 48px; height: 48px"><div style="{{s.icon}}"></div></div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="font-size: 13px; line-height: 1.35; color: #A9AED0">Vesícula inteira e uma rompendo, que acabou de soltar Glicose. Itens da vesícula têm um brilho claro que pisca devagar; gemas e ATP não brilham, para não poluir o chão.</div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const PAL = {"K":"#1A1424","W":"#FFFFFF","H":"#EDEBDD","A":"#8A90A0","a":"#4A4F5C","R":"#E0433A","r":"#8E1616","C":"#39D3F0","L":"#7EF0FF","B":"#3F6FE0","b":"#23408F","G":"#5BC43A","g":"#2E7A1E","l":"#A6F07A","Y":"#F2C83A","y":"#B88A1C","O":"#FF9A1F","o":"#B5541C","P":"#B072F0","p":"#6A3AB0","N":"#FF6FA8","n":"#B03A70","T":"#F2D9A8","E":"#7A4A2A"};
+    const ART = {"atp":["................","................",".....KKKKKK.....","...KKYYYYYYKK...","..KYYWYYYoYYyK..","..KYWYYYooYYyK..",".KYYYYYooYYYyyK.",".KYYYYooooYYyyK.",".KYYYYYYooYYyyK.",".KYYYYYooYYYyyK.","..KYYYYoYYYyyK..","..KYYYYYYYyyyK..","...KKyyyyyyKK...",".....KKKKKK.....","................","................"],"serum":["................","......KKKK......",".....KAKKAK.....","...KKKKKKKKKK...","...KWHHRRHHHK...","...KWRRRRRRHK...","...KHRRRRRRHK...","...KHHHRRHHAK...","...KLLLLLLLLK...","...KLWLLLLLCK...","...KLLLLLLCCK...","....KCCCCCCK....",".....KKKKKK.....",".......KK.......",".......KK.......","................"],"glucose":["................","............K...","...........KWK..",".......KK...K...",".....KKWWKK.....","...KKWWWWWWKK...","..KHWWWWWWWWAK..","..KHHHWWWWAAAK..","..KHHHHWWAAAAK..","..KHHHHHAAAAaK..","..KHHHHHAAAAaK..","..KHHHHHAAAaaK..","...KKHHHAAAKK...",".....KKKKKK.....","................","................"],"glycogen":[".............K..",".......KK...KYK.",".....KKWWKK..K..",".K..KWWWWWWK....","KYK.KHWWWWAK....",".K..KHHWWAAK....","....KHHHAAaK....","...KKKKHAKKKK...",".KKWWKKKKKKWWKK.","KWWWWWWKKWWWWWWK","KHWWWWAKKHWWWWAK","KHHWWAAKKHHWWAAK","KHHHAAaKKHHHAAaK",".KKHAKK..KKHAKK.","...KK......KK...","................"],"dryIce":[".....H..H..H....","....H..H..H.....",".....H..H..H....",".......KK...K...",".....KKWWKK.....","...KKWWWWWWKK...","..KLWWWWWWWWCK..","..KLLLWWWWCCCK..","..KLLLLWWCCCCK..","..KLLLLLCCCCBK..","..KLLLLLCCCCBK..","..KLLLLLCCCBBK..","...KKLLLCCCKK...",".....KKKKKK.....","................","................"],"osmosis":["................","................",".......KK.......","......KCCK......","......KCCK......",".....KCLCCK.....",".K...KLCCCK...K.","KWK.KCLCCCBK.KWK",".KWKKLWCCCBKKWK.","KWK.KLCCCCBK.KWK",".K..KCCCCBBK..K.",".....KCCBBK.....","......KKKK......","................","................","................"],"lysosome":["......KKK.......","....KKPPPKK.....","...KPPPPPPPK....","..KPPPPPPPPPK...",".KPPWWPPPPPPPK..",".KPWPPPPlGPPPK..","KPPPPPPPGPPPPPK.","KPPPPPPPPPPPPpK.","KPPPPPPPPPPPppK.",".KPPlGPPPPGppK..",".KPPPGPPPlGppK..","..KPPPPPPGppK...","...KPPPPpppK....","....KKPppKK.....","......KKK.......","................"],"bunsen":["......KK........",".....KOOK.......",".....KOYK.......","....KOYYOK......","....KBLYBK......","...KBLLLBK......","...KBLWLBBK.....","...KBLLLLBK.....","....KBLLBK......",".....KAAK.......",".....KAaK.......",".....KAaK..KKK..",".....KAaKKKAaK..","...KKAAAaaKKK...","..KaAAAAAaaaK...","...KKKKKKKKK...."],"vitamin":[".....KKKKK......","...KKOOOOOKK....","..KOOOTTTOOOK...",".KOOTTOOOTTOOK..",".KOTYYOOOTOTOK..","KOOTYOTOTOOTOOK.","KOTOOOOTOOOOTOK.","KOTTTTTTTTTTTOK.","KOTOOOOTOOOOTOK.","KOOTOOTOTOOTOOK.",".KOTOTOOOTOTOK..",".KOOTTOOOTTOOK..","..KOOOTTTOOOK...","...KKOOOOOKK....",".....KKKKK......","................"],"glucagon":["..K.........K...",".KWK.......KYK..","..K.KKKKK...K...","....KHAHK.......",".....KAK........",".....KHK........","....KHAHK.......","...KHWHHHK......","..KHWYYYYHK.....","..KHYWYYYyK.....","..KHYYYYyyK..K..","..KHYYYyyyK.KYK.","..KHYYyyyyK..K..","...KHyyyyK......","....KKKKK.......","................"],"phosphocreatine":["................","......KKKK......","....KKKAAKKK....","...KAAAAAAaaK...","...KAKKKKKKaK...","...KAKlGGGKaK...","...KAKGGGgKaK...","...KAKKKKKKaK...","...KAKlGGGKaK...","...KAKGGGgKaK...","...KAKKKKKKaK...","...KAKlGGGKaK...","...KAKGGGgKaK...","...KAKKKKKKaK...","...KaaaaaaaaK...","....KKKKKKKK...."],"gemSmall":["................","................","................",".......KK.......","......KLCK......",".....KLWCCK.....","....KLWCCCBK....","....KLCCCCBK....","....KCCCCBBK....",".....KCCBBK.....","......KCBK......",".......KK.......","................","................","................","................"],"gemMedium":["................","................","................",".......KK.......","......KlGK......",".....KlWGGK.....","....KlWGGGgK....","....KlGGGGgK....","....KGGGGggK....",".....KGGggK.....","......KGgK......",".......KK.......","................","................","................","................"],"gemLarge":["................","................","................",".......KK.......","......KNRK......",".....KNWRRK.....","....KNWRRRrK....","....KNRRRRrK....","....KRRRRrrK....",".....KRRrrK.....","......KRrK......",".......KK.......","................","................","................","................"],"capsuleBronze":[".........KKKKK..","........KTTTOOK.",".......KTTTOOOOK","......KTTTOOOOoK",".....KKTTOOOOooK","....KYYKOOOOoooK","...KKWYYKOOooooK","..KTWKYYYKooooK.",".KTWTOKYYyKooK..","KTTTOOOKyyyKK...","KTTOOOOoKyyK....","KTOOOOoooKK.....","KOOOOooooK......","KOOOooooK.......",".KOooooK........","..KKKKK........."],"capsuleSilver":[".K.......KKKKK..","KYK.....KWWWHHK.",".K.....KWWWHHHHK","......KWWWHHHHAK",".....KKWWHHHHAAK","....KCCKHHHHAAAK","...KKWCCKHHAAAAK","..KWWKCCCKAAAAK.",".KWWWHKCCBKAAK..","KWWWHHHKBBBKK...","KWWHHHHAKBBK....","KWHHHHAAAKK.....","KHHHHAAAAK......","KHHHAAAAK.....K.",".KHAAAAK.....KYK","..KKKKK.......K."],"vesicle":["....KKKKKKK.....","...KLLLLLLLK....","..KLLKKKKKCCK...",".KLLK.....KCCK..","KLLKWW.....KCCK.","KLK.W.......KCK.","KLK....N....KCK.","KCK....n....KCK.","KCK.......N.KCK.","KCK.......n.KCK.","KCCK..N....KCCK.",".KCCK.n..NKCCK..","..KCCKKKKnCCK...","...KCCCCCCCK....","....KKKKKKK.....","................"],"vesicleBroken":["....KKK....N....","...KLLLK..KK....","..KLLKK..KCCK...",".KLLK.....KCCKN.","KLLK.......KCCK.","KLK.......N.KCK.","KLK.........KCK.",".K.....W....KCK.",".......WW...KCK.","N.K..N......KCK.",".KCK.........K..",".KCCK.....K.....","..KCCKKKKKCK....","...KCCCCCCCK....","...NKKKKKKK.....","................"]};
+    const icon = (key, c) => {
+      const s = [];
+      ART[key].forEach((row, y) => [...row].forEach((ch, x) => { if (PAL[ch]) s.push(`${(x + 1) * c}px ${(y + 1) * c}px 0 0 ${PAL[ch]}`); }));
+      return `position:absolute;left:${-c}px;top:${-c}px;width:${c}px;height:${c}px;box-shadow:${s.join(',')}`;
+    };
+    const card = ([key, name, vs, fx, tag]) => ({ name, vs, fx, tag, big: icon(key, 6), x2: icon(key, 2), x1: icon(key, 1) });
+    const vesicleItems = [
+      ['atp', 'ATP', 'GOLD COIN', '+1 moeda de ATP, com o valor atual × Rendimento.', 'PESO 50'],
+      ['serum', 'Soro', 'FLOOR CHICKEN', 'Recupera 30 interações.', 'PESO 12'],
+      ['glucose', 'Glicose', 'COIN BAG', 'ATP igual a 5 moedas × Rendimento.', 'PESO 10'],
+      ['dryIce', 'Gelo seco', 'OROLOGION', 'Congela todas as moléculas por 10 s.', 'PESO 2 · NÍVEL 4'],
+      ['osmosis', 'Osmose', 'VACUUM', 'Todas as gemas de XP correm até o agente.', 'PESO 2 · NÍVEL 12'],
+      ['glycogen', 'Glicogênio', 'RICH COIN BAG', 'ATP igual a 25 moedas × Rendimento.', 'PESO 1 · NÍVEL 5'],
+      ['lysosome', 'Lisossomo', 'ROSARY', 'Decompõe todas as moléculas na tela, menos o chefe.', 'PESO 1 · NÍVEL 8'],
+      ['bunsen', 'Bico de Bunsen', 'NDUJA FRITTA TANTO', 'Lança-chamas na direção do movimento por 10 s.', 'PESO 1'],
+      ['vitamin', 'Vitamina', 'LITTLE CLOVER', '+10% de Sorte até o fim da run; acumula.', 'PESO 1'],
+      ['glucagon', 'Glucagon', 'GILDED CLOVER', 'Puxa todo o ATP do chão e começa a Febre de ATP.', 'PESO 1 · NÍVEL 30']
+    ].map(card);
+    const dropItems = [
+      ['gemSmall', 'Gema ciano', 'EXPERIENCE GEM', 'XP até 2.', 'TODA MOLÉCULA'],
+      ['gemMedium', 'Gema verde', 'EXPERIENCE GEM', 'XP até 9.', 'TODA MOLÉCULA'],
+      ['gemLarge', 'Gema vermelha', 'EXPERIENCE GEM', 'XP acima de 9 e o excesso de gemas no chão.', 'TODA MOLÉCULA'],
+      ['capsuleBronze', 'Cápsula de bronze', 'TREASURE CHEST', 'Chefe antes dos 10 min: sobe 1, 3 ou 5 níveis.', 'CHEFE · TOCAR'],
+      ['capsuleSilver', 'Cápsula de prata', 'TREASURE CHEST', 'Chefe depois dos 10 min: pode evoluir a arma em MAX.', 'CHEFE · TOCAR']
+    ].map(card);
+    const sourceItems = [
+      ['vesicle', 'Vesícula sináptica', 'LIGHT SOURCE', 'Bolsa translúcida com dopamina; qualquer golpe rompe.', '1 DE VIDA · ATÉ 6'],
+      ['vesicleBroken', 'Vesícula rompendo', 'QUADRO DE EFEITO', 'Membrana se abre e a dopamina escapa.', 'ANTES DE SUMIR'],
+      ['phosphocreatine', 'Fosfocreatina', 'BIG COIN BAG', 'ATP igual a 10 moedas, quando tudo está no máximo.', 'CÁPSULA OU LEVEL UP']
+    ].map(card);
+    const glowOn = 'rgba(255, 255, 255, 0.35)';
+    const scene = [
+      ['vesicle', 30, 40, 'transparent'], ['vesicleBroken', 250, 210, 'transparent'], ['glucose', 320, 150, glowOn],
+      ['gemSmall', 130, 120, 'transparent'], ['gemSmall', 175, 175, 'transparent'], ['gemMedium', 100, 250, 'transparent'],
+      ['gemLarge', 430, 60, 'transparent'], ['atp', 210, 50, 'transparent'], ['atp', 440, 270, 'transparent'],
+      ['dryIce', 350, 40, glowOn], ['capsuleBronze', 470, 170, glowOn], ['serum', 30, 270, glowOn]
+    ].map(([key, x, y, glow]) => ({ x, y, glow, icon: icon(key, 3) }));
+    return { vesicleItems, dropItems, sourceItems, scene };
+  }
+}
+</script>
+</body>
+</html>

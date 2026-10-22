@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Menu principal</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&amp;family=Silkscreen:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#FFB347}a:hover{color:#FFD08A}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #15172E; font-family: 'Pixelify Sans', monospace; color: #F4EFE0; display: flex; flex-direction: column">
+
+  <div style="height: 84px; box-sizing: border-box; padding: 14px 12px 12px; background: #15172E; border-bottom: 4px solid #07080F; display: flex; align-items: center; gap: 10px">
+    <div style="width: 56px; height: 56px; box-sizing: border-box; border: 4px solid #3A0A0C; background: #B5541C; box-shadow: inset 0 0 0 2px #F0913A; padding: 3px">
+      <div style="width: 100%; height: 100%; background: #101226; display: flex; align-items: center; justify-content: center">
+        <div style="display: grid; grid-template-columns: repeat(14, 2px)">
+          <sc-for list="{{bodyMini}}" as="c" hint-placeholder-count="308">
+            <div style="width: 2px; height: 2px; background: {{c.bg}}"></div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+    <div style="flex: 1; display: flex; flex-direction: column; gap: 6px">
+      <div style="font-family: 'Silkscreen', monospace; font-size: 12px; color: #F4EFE0; letter-spacing: 1px">INDIVÍDUO 1</div>
+      <div style="display: flex; align-items: center; gap: 5px">
+        <sc-for list="{{health}}" as="h" hint-placeholder-count="4">
+          <div style="display: flex; flex-direction: column; gap: 2px; width: 30px">
+            <div style="height: 8px; border: 2px solid #07080F; background: #1B1E3A">
+              <div style="height: 100%; {{h.bar}}"></div>
+            </div>
+            <div style="font-family: 'Silkscreen', monospace; font-size: 9px; color: #C9CCE6; text-align: center">{{h.k}}</div>
+          </div>
+        </sc-for>
+        <div style="font-size: 15px; font-weight: 700; color: #FFFFFF; text-shadow: 0 2px #07080F; margin-left: 2px; align-self: flex-start">58%</div>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 6px; background: #2A2E55; border: 3px solid #07080F; box-shadow: inset 0 -3px 0 #171A36; padding: 6px 10px 6px 8px">
+      <div style="width: 22px; height: 22px; position: relative; background: #8A5A0C; clip-path: polygon(25% 0,75% 0,75% 12.5%,87.5% 12.5%,87.5% 25%,100% 25%,100% 75%,87.5% 75%,87.5% 87.5%,75% 87.5%,75% 100%,25% 100%,25% 87.5%,12.5% 87.5%,12.5% 75%,0 75%,0 25%,12.5% 25%,12.5% 12.5%,25% 12.5%)">
+        <div style="position: absolute; inset: 3px; background: #F2B233; clip-path: polygon(25% 0,75% 0,75% 12.5%,87.5% 12.5%,87.5% 25%,100% 25%,100% 75%,87.5% 75%,87.5% 87.5%,75% 87.5%,75% 100%,25% 100%,25% 87.5%,12.5% 87.5%,12.5% 75%,0 75%,0 25%,12.5% 25%,12.5% 12.5%,25% 12.5%)"></div>
+        <div style="position: absolute; left: 9px; top: 6px; width: 4px; height: 10px; background: #FFE08A"></div>
+      </div>
+      <div style="display: flex; flex-direction: column">
+        <div style="font-size: 19px; font-weight: 700; line-height: 1; color: #FFFFFF; text-shadow: 0 3px #07080F">1.250</div>
+        <div style="font-family: 'Silkscreen', monospace; font-size: 9px; color: #F2B233; letter-spacing: 1px">ATP</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height: 64px; box-sizing: border-box; padding: 10px 12px; display: flex; align-items: center; gap: 8px">
+    <button aria-label="Opções" style="width: 44px; height: 44px; flex: none; background: #2A2E55; border: 4px solid #07080F; box-shadow: inset 0 -4px 0 #171A36, inset 0 3px 0 #474C85; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0">
+      <div style="display: grid; {{icMenu.grid}}">
+        <sc-for list="{{icMenu.cells}}" as="c" hint-placeholder-count="64"><div style="{{c.st}}"></div></sc-for>
+      </div>
+    </button>
+    <div style="flex: 1; height: 44px; box-sizing: border-box; border: 4px solid #3A0A0C; background: #B5541C; box-shadow: inset 0 0 0 2px #F0913A; padding: 3px">
+      <div style="height: 100%; box-sizing: border-box; background: #1B1E3A; padding: 3px 8px; display: flex; flex-direction: column; justify-content: center; gap: 3px">
+        <div style="display: flex; justify-content: space-between; align-items: baseline">
+          <div style="font-family: 'Silkscreen', monospace; font-size: 10px; color: #F4EFE0; letter-spacing: 1px">PRÓXIMO: LIPASE</div>
+          <div style="font-size: 11px; color: #C9CCE6">faltam 320 ATP</div>
+        </div>
+        <div style="height: 6px; background: #2A2E55">
+          <div style="width: 74%; height: 100%; background: #2D7FD6; box-shadow: inset 0 -2px 0 #1A4E8E"></div>
+        </div>
+      </div>
+    </div>
+    <button aria-label="Recordes" style="width: 44px; height: 44px; flex: none; position: relative; background: #2A2E55; border: 4px solid #07080F; box-shadow: inset 0 -4px 0 #171A36, inset 0 3px 0 #474C85; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0">
+      <div style="display: grid; {{icTrophy.grid}}">
+        <sc-for list="{{icTrophy.cells}}" as="c" hint-placeholder-count="64"><div style="{{c.st}}"></div></sc-for>
+      </div>
+    </button>
+  </div>
+
+  <sc-if value="{{isCaso}}" hint-placeholder-val="{{ true }}">
+    <div style="flex: 1; position: relative; overflow: hidden; background-color: #15172E; background-image: linear-gradient(#1B1E3A 2px, transparent 2px), linear-gradient(90deg, #1B1E3A 2px, transparent 2px); background-size: 26px 26px; display: flex; flex-direction: column; align-items: center; padding-top: 14px; gap: 6px">
+
+      <div style="display: flex; align-items: center; gap: 8px">
+        <div style="width: 34px; height: 38px; background: #07080F; clip-path: polygon(0 0,100% 0,100% 62%,50% 100%,0 62%); position: relative">
+          <div style="position: absolute; inset: 3px; background: #2A2E55; clip-path: polygon(0 0,100% 0,100% 62%,50% 100%,0 62%); display: flex; justify-content: center; padding-top: 3px; box-sizing: border-box">
+            <div style="font-size: 20px; font-weight: 700; color: #7EF0FF; line-height: 1">1</div>
+          </div>
+        </div>
+        <div style="font-size: 23px; font-weight: 700; color: #FFFFFF; letter-spacing: 1px; text-shadow: -3px 0 #3A0A0C, 3px 0 #3A0A0C, 0 -3px #3A0A0C, 0 3px #3A0A0C, 0 5px #3A0A0C">Física baixa</div>
+      </div>
+      <div style="font-size: 16px; font-weight: 700; color: #F2B233; text-shadow: 0 2px #3A0A0C">Melhor: 12:40</div>
+
+      <div style="position: relative; width: 250px; height: 214px; margin-top: 4px">
+        <div style="position: absolute; left: 32px; top: 8px; width: 186px; height: 198px; box-sizing: border-box; border: 4px solid #07080F; background-color: #101226; background-image: linear-gradient(#141936 2px, transparent 2px); background-size: 100% 6px; box-shadow: inset 0 0 0 2px #2A3A6E; display: flex; align-items: center; justify-content: center">
+          <div style="display: grid; grid-template-columns: repeat(14, 7px)">
+            <sc-for list="{{body}}" as="c" hint-placeholder-count="308">
+              <div style="width: 7px; height: 7px; background: {{c.bg}}"></div>
+            </sc-for>
+          </div>
+          <div style="position: absolute; left: 6px; top: 6px; font-family: 'Silkscreen', monospace; font-size: 9px; color: #7EF0FF; letter-spacing: 1px">SCAN</div>
+          <div style="position: absolute; right: 6px; bottom: 6px; font-family: 'Silkscreen', monospace; font-size: 9px; color: #FF8A80; letter-spacing: 1px">FÍSICA 31</div>
+        </div>
+        <sc-for list="{{floaters}}" as="m" hint-placeholder-count="3">
+          <div style="position: absolute; {{m.pos}}">
+            <div style="position: relative; {{m.box}}">
+              <sc-for list="{{m.bonds}}" as="b" hint-placeholder-count="2">
+                <div style="position: absolute; transform-origin: 0 50%; background: #1A1424; {{b.style}}"></div>
+              </sc-for>
+              <sc-for list="{{m.atoms}}" as="a" hint-placeholder-count="3">
+                <div style="position: absolute; clip-path: polygon(25% 0,75% 0,75% 12.5%,87.5% 12.5%,87.5% 25%,100% 25%,100% 75%,87.5% 75%,87.5% 87.5%,75% 87.5%,75% 100%,25% 100%,25% 87.5%,12.5% 87.5%,12.5% 75%,0 75%,0 25%,12.5% 25%,12.5% 12.5%,25% 12.5%); {{a.outer}}">
+                  <div style="position: absolute; inset: 2px; clip-path: polygon(25% 0,75% 0,75% 12.5%,87.5% 12.5%,87.5% 25%,100% 25%,100% 75%,87.5% 75%,87.5% 87.5%,75% 87.5%,75% 100%,25% 100%,25% 87.5%,12.5% 87.5%,12.5% 75%,0 75%,0 25%,12.5% 25%,12.5% 12.5%,25% 12.5%); {{a.inner}}"></div>
+                  <div style="position: absolute; {{a.hi}}"></div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 10px">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 3px; background: #1B1E3A; border: 3px solid #07080F; padding: 6px 12px 4px">
+          <div style="display: flex; gap: 10px">
+            <sc-for list="{{stars}}" as="s" hint-placeholder-count="3">
+              <div style="width: 26px; height: 26px; position: relative; background: #07080F; clip-path: polygon(50% 0,63% 35%,100% 38%,71% 60%,81% 100%,50% 78%,19% 100%,29% 60%,0 38%,37% 35%)">
+                <div style="position: absolute; inset: 4px; background: {{s.fill}}; clip-path: polygon(50% 0,63% 35%,100% 38%,71% 60%,81% 100%,50% 78%,19% 100%,29% 60%,0 38%,37% 35%)"></div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display: flex; gap: 10px">
+            <sc-for list="{{stars}}" as="s" hint-placeholder-count="3">
+              <div style="width: 26px; text-align: center; font-family: 'Silkscreen', monospace; font-size: 9px; color: #C9CCE6">{{s.t}}</div>
+            </sc-for>
+          </div>
+        </div>
+        <button aria-label="Baú das estrelas" style="width: 52px; height: 52px; position: relative; background: #2A2E55; border: 4px solid #07080F; box-shadow: inset 0 -4px 0 #171A36, inset 0 3px 0 #474C85; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0">
+          <div style="display: grid; {{icChest.grid}}">
+            <sc-for list="{{icChest.cells}}" as="c" hint-placeholder-count="64"><div style="{{c.st}}"></div></sc-for>
+          </div>
+          <sc-if value="{{selos}}" hint-placeholder-val="{{ true }}">
+            <span style="position: absolute; right: -9px; top: -9px; width: 18px; height: 18px; background: #D83A3A; border: 3px solid #3A0A0C; font-size: 13px; font-weight: 700; color: #FFFFFF; line-height: 18px; text-align: center">!</span>
+          </sc-if>
+        </button>
+      </div>
+
+      <div style="position: absolute; right: 10px; top: 14px; display: flex; flex-direction: column; gap: 10px; background: #1B1E3A; border: 3px solid #07080F; padding: 8px 6px">
+        <button aria-label="Compêndio" style="width: 48px; display: flex; flex-direction: column; align-items: center; gap: 3px; background: transparent; border: 0; padding: 0; cursor: pointer; position: relative">
+          <div style="width: 44px; height: 44px; box-sizing: border-box; background: #2A2E55; border: 3px solid #07080F; box-shadow: inset 0 -3px 0 #171A36, inset 0 3px 0 #474C85; display: flex; align-items: center; justify-content: center">
+            <div style="display: grid; {{icBook.grid}}">
+              <sc-for list="{{icBook.cells}}" as="c" hint-placeholder-count="64"><div style="{{c.st}}"></div></sc-for>
+            </div>
+          </div>
+          <span style="font-family: 'Silkscreen', monospace; font-size: 8px; color: #F4EFE0">COMPÊNDIO</span>
+          <sc-if value="{{selos}}" hint-placeholder-val="{{ true }}">
+            <span style="position: absolute; right: -10px; top: -8px; background: #D83A3A; border: 2px solid #3A0A0C; font-family: 'Silkscreen', monospace; font-size: 8px; color: #FFFFFF; padding: 1px 3px">NOVO</span>
+          </sc-if>
+        </button>
+        <button aria-label="Conquistas, em breve" style="width: 48px; display: flex; flex-direction: column; align-items: center; gap: 3px; background: transparent; border: 0; padding: 0; cursor: pointer">
+          <div style="width: 44px; height: 44px; box-sizing: border-box; background: #1B1E3A; border: 3px solid #07080F; display: flex; align-items: center; justify-content: center">
+            <div style="display: grid; {{icMedal.grid}}">
+              <sc-for list="{{icMedal.cells}}" as="c" hint-placeholder-count="64"><div style="{{c.st}}"></div></sc-for>
+            </div>
+          </div>
+          <span style="font-family: 'Silkscreen', monospace; font-size: 8px; color: #A9AED0">EM BREVE</span>
+        </button>
+      </div>
+    </div>
+
+    <div style="height: 136px; box-sizing: border-box; padding: 10px 12px 14px; display: flex; align-items: flex-end; justify-content: space-between; gap: 8px; border-top: 4px solid #07080F; background: #1B1E3A">
+      <button aria-label="Campo longo: 340 ATP acumulados" style="width: 88px; height: 106px; position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; background: transparent; border: 0; padding: 0; cursor: pointer">
+        <div style="width: 80px; height: 72px; box-sizing: border-box; border: 4px solid #3A0A0C; background: #B5541C; box-shadow: inset 0 0 0 2px #F0913A; padding: 4px">
+          <div style="width: 100%; height: 100%; box-sizing: border-box; background: #F2D9A8; box-shadow: inset 3px 3px 0 #C9A066; display: flex; justify-content: center; gap: 4px; padding: 4px 0">
+            <sc-for list="{{lanes}}" as="l" hint-placeholder-count="3">
+              <div style="width: 14px; height: 100%; background: #D8B47A; position: relative">
+                <div style="position: absolute; left: 3px; width: 8px; height: 8px; background: #4A4F5C; {{l.top}}"></div>
+                <div style="position: absolute; left: 3px; bottom: 2px; width: 8px; height: 4px; background: #39D3F0"></div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <span style="font-family: 'Silkscreen', monospace; font-size: 9px; color: #F4EFE0; letter-spacing: 1px">CAMPO LONGO</span>
+        <span style="position: absolute; left: 50%; top: -12px; transform: translateX(-50%); background: #F2B233; border: 3px solid #3A0A0C; font-size: 13px; font-weight: 700; color: #3A0A0C; padding: 0 5px; white-space: nowrap">+340</span>
+      </button>
+
+      <button style="flex: 1; height: 96px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; background: #E0702A; border: 4px solid #3A0A0C; box-shadow: inset 0 -8px 0 #9C3F12, inset 0 5px 0 #FFB347, 0 6px 0 #3A0A0C; cursor: pointer; padding: 0 0 6px; margin-bottom: 6px">
+        <span style="font-family: 'Pixelify Sans', monospace; font-weight: 700; font-size: 42px; line-height: 1; color: #FFFFFF; letter-spacing: 2px; text-shadow: -3px 0 #6E1E0A, 3px 0 #6E1E0A, 0 -3px #6E1E0A, 0 3px #6E1E0A, 0 5px #6E1E0A">JOGAR</span>
+        <span style="font-family: 'Silkscreen', monospace; font-size: 10px; color: #FFF2DC; letter-spacing: 1px; text-shadow: 0 2px #6E1E0A">CAMPO CRÔNICO</span>
+      </button>
+
+      <button aria-label="Agente: Dopamina, trocar" style="width: 88px; height: 106px; position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; background: transparent; border: 0; padding: 0; cursor: pointer">
+        <div style="width: 80px; height: 72px; box-sizing: border-box; border: 4px solid #3A0A0C; background: #B5541C; box-shadow: inset 0 0 0 2px #F0913A; padding: 4px">
+          <div style="width: 100%; height: 100%; background: #F2D9A8; box-shadow: inset 3px 3px 0 #C9A066; display: flex; align-items: center; justify-content: center">
+            <div style="position: relative; {{dopa.box}}">
+              <sc-for list="{{dopa.bonds}}" as="b" hint-placeholder-count="8">
+                <div style="position: absolute; transform-origin: 0 50%; background: #1A1424; {{b.style}}"></div>
+              </sc-for>
+              <sc-for list="{{dopa.atoms}}" as="a" hint-placeholder-count="11">
+                <div style="position: absolute; clip-path: polygon(25% 0,75% 0,75% 12.5%,87.5% 12.5%,87.5% 25%,100% 25%,100% 75%,87.5% 75%,87.5% 87.5%,75% 87.5%,75% 100%,25% 100%,25% 87.5%,12.5% 87.5%,12.5% 75%,0 75%,0 25%,12.5% 25%,12.5% 12.5%,25% 12.5%); {{a.outer}}">
+                  <div style="position: absolute; inset: 2px; clip-path: polygon(25% 0,75% 0,75% 12.5%,87.5% 12.5%,87.5% 25%,100% 25%,100% 75%,87.5% 75%,87.5% 87.5%,75% 87.5%,75% 100%,25% 100%,25% 87.5%,12.5% 87.5%,12.5% 75%,0 75%,0 25%,12.5% 25%,12.5% 12.5%,25% 12.5%); {{a.inner}}"></div>
+                  <div style="position: absolute; {{a.hi}}"></div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+        <span style="font-family: 'Silkscreen', monospace; font-size: 9px; color: #F4EFE0; letter-spacing: 1px">DOPAMINA ▸</span>
+      </button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{notCaso}}" hint-placeholder-val="{{ false }}">
+    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 0 32px; background-color: #15172E; background-image: linear-gradient(#1B1E3A 2px, transparent 2px), linear-gradient(90deg, #1B1E3A 2px, transparent 2px); background-size: 26px 26px; border-bottom: 4px solid #07080F">
+      <div style="width: 96px; height: 96px; box-sizing: border-box; border: 4px solid #3A0A0C; background: #B5541C; box-shadow: inset 0 0 0 2px #F0913A; padding: 4px">
+        <div style="width: 100%; height: 100%; background: #2A2E55; display: flex; align-items: center; justify-content: center">
+          <div style="display: grid; {{cur.big.grid}}">
+            <sc-for list="{{cur.big.cells}}" as="c" hint-placeholder-count="64"><div style="{{c.st}}"></div></sc-for>
+          </div>
+        </div>
+      </div>
+      <div style="font-size: 30px; font-weight: 700; color: #FF9A1F; text-shadow: -3px 0 #3A0A0C, 3px 0 #3A0A0C, 0 -3px #3A0A0C, 0 3px #3A0A0C, 0 5px #3A0A0C">{{cur.title}}</div>
+      <div style="font-size: 17px; line-height: 1.4; color: #C9CCE6; text-align: center">{{cur.text}}</div>
+      <div style="background: #8E1616; border: 3px solid #3A0A0C; padding: 6px 12px; font-family: 'Silkscreen', monospace; font-size: 12px; color: #FFE0D0; letter-spacing: 1px">EM BREVE · {{cur.fase}}</div>
+    </div>
+  </sc-if>
+
+  <nav aria-label="Seções" style="height: 84px; box-sizing: border-box; background: #2A2E55; border-top: 4px solid #07080F; box-shadow: inset 0 3px 0 #474C85; display: flex; align-items: flex-end; padding: 0 4px 6px; gap: 2px">
+    <sc-for list="{{tabs}}" as="t" hint-placeholder-count="5">
+      <button aria-label="{{t.label}}" onClick="{{t.pick}}" style="position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; padding: 0; {{t.st}}">
+        <div style="display: grid; {{t.icon.grid}}">
+          <sc-for list="{{t.icon.cells}}" as="c" hint-placeholder-count="64"><div style="{{c.st}}"></div></sc-for>
+        </div>
+        <span style="font-family: 'Silkscreen', monospace; font-size: 9px; letter-spacing: 0px; {{t.txt}}">{{t.short}}</span>
+        <sc-if value="{{t.badge}}" hint-placeholder-val="{{ false }}">
+          <span style="position: absolute; right: 6px; top: 2px; width: 16px; height: 16px; background: #D83A3A; border: 3px solid #3A0A0C; font-size: 12px; font-weight: 700; color: #FFFFFF; line-height: 16px; text-align: center">!</span>
+        </sc-if>
+      </button>
+    </sc-for>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"estrelas":{"editor":"int","default":2,"min":0,"max":3},"selos":{"editor":"boolean","default":true},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { tab: 'caso' };
+  }
+  renderVals() {
+    const EL = {
+      C: { m: '#4A4F5C', d: '#1C1E25', l: '#8A90A0', s: 28 },
+      H: { m: '#EDEBDD', d: '#6E6C5E', l: '#FFFFFF', s: 16 },
+      O: { m: '#E0433A', d: '#5A0E10', l: '#FF9A8A', s: 26 },
+      N: { m: '#3F6FE0', d: '#13245E', l: '#9FBEFF', s: 26 }
+    };
+    const build = (mol, k, extra) => {
+      const atoms = mol.atoms.map(([e, x, y]) => {
+        const c = EL[e], s = Math.round(c.s * k), h = Math.max(2, Math.round(s / 5));
+        return {
+          outer: `left:${x * k - s / 2}px;top:${y * k - s / 2}px;width:${s}px;height:${s}px;background:${c.d}`,
+          inner: `background:${c.m}`,
+          hi: `left:${Math.round(s * 0.24)}px;top:${Math.round(s * 0.24)}px;width:${h}px;height:${h}px;background:${c.l}`
+        };
+      });
+      const bonds = [];
+      mol.bonds.forEach(([a, b, n]) => {
+        const [, x1, y1] = mol.atoms[a], [, x2, y2] = mol.atoms[b];
+        const dx = (x2 - x1) * k, dy = (y2 - y1) * k, len = Math.hypot(dx, dy);
+        const ang = Math.atan2(dy, dx) * 180 / Math.PI, t = Math.max(2, 5 * k);
+        (n === 2 ? [-3.5 * k, 3.5 * k] : [0]).forEach(o => {
+          const px = -dy / len * o, py = dx / len * o;
+          bonds.push({ style: `left:${x1 * k + px}px;top:${y1 * k + py - t / 2}px;width:${len}px;height:${t}px;transform:rotate(${ang}deg)` });
+        });
+      });
+      return Object.assign({ atoms, bonds, box: `width:${mol.w * k}px;height:${mol.h * k}px` }, extra || {});
+    };
+
+    // Dopamina: anel catecol com dois OH e cadeia etilamina (sem hidrogênios)
+    const ringPt = i => {
+      const t = (Math.PI / 3) * i - Math.PI / 2;
+      return [56 + 26 * Math.cos(t), 62 + 26 * Math.sin(t)];
+    };
+    const dAtoms = [];
+    for (let i = 0; i < 6; i++) dAtoms.push(['C', ...ringPt(i)]);
+    dAtoms.push(['C', 104, 22], ['C', 132, 38], ['N', 160, 22], ['O', 56, 116], ['O', 10, 89]);
+    const dBonds = [];
+    for (let i = 0; i < 6; i++) dBonds.push([i, (i + 1) % 6, i % 2 === 0 ? 2 : 1]);
+    dBonds.push([1, 6, 1], [6, 7, 1], [7, 8, 1], [3, 9, 1], [4, 10, 1]);
+    const dopa = build({ w: 172, h: 128, atoms: dAtoms, bonds: dBonds }, 0.36);
+
+    const M = {
+      CH4: { w: 96, h: 96, atoms: [['C', 48, 48], ['H', 48, 16], ['H', 48, 80], ['H', 16, 48], ['H', 80, 48]], bonds: [[0, 1, 1], [0, 2, 1], [0, 3, 1], [0, 4, 1]] },
+      CO2: { w: 128, h: 48, atoms: [['O', 18, 24], ['C', 64, 24], ['O', 110, 24]], bonds: [[0, 1, 2], [1, 2, 2]] },
+      NH3: { w: 96, h: 80, atoms: [['N', 48, 28], ['H', 16, 56], ['H', 48, 68], ['H', 80, 56]], bonds: [[0, 1, 1], [0, 2, 1], [0, 3, 1]] }
+    };
+    const floaters = [
+      build(M.CH4, 0.5, { pos: 'left:0px;top:20px' }),
+      build(M.CO2, 0.42, { pos: 'left:196px;top:150px' }),
+      build(M.NH3, 0.45, { pos: 'left:2px;top:156px' })
+    ];
+
+    // Organismo pixelado: o = contorno, b = corpo, r = setor doente
+    const BODY = [
+      '....oooooo....', '...obbbbbbo...', '...obbbbbbo...', '...obbbbbbo...',
+      '....obbbbo....', '.....obbo.....', '..oooobboooo..', '.obbbbbbbbbbo.',
+      'obbbrrrrrrbbbo', 'obbbrrrrrrbbbo', 'obobrrrrrrbobo', 'obobrrrrrrbobo',
+      'obobbbbbbbbobo', 'obo.obbbbo.obo', 'ooo.obbbbo.ooo', '....obbbbo....',
+      '....obbobbo...', '....obbobbo...', '....obbobbo...', '....obbobbo...',
+      '...obbbobbbo..', '...ooooooooo..'
+    ];
+    const BC = { o: '#7EF0FF', b: '#1E4E8C', r: '#D83A3A', '.': 'transparent' };
+    const body = [];
+    BODY.forEach(row => row.split('').forEach(ch => body.push({ bg: BC[ch] })));
+
+    const icon = (rows, color, px) => ({
+      grid: `grid-template-columns:repeat(8,${px}px)`,
+      cells: rows.join('').split('').map(ch => ({ st: `width:${px}px;height:${px}px;background:${ch === 'o' ? color : 'transparent'}` }))
+    });
+    const IC = {
+      agentes: ['........', '.oo..oo.', '.oo..oo.', '..o..o..', '...oo...', '...oo...', '...oo...', '........'],
+      arsenal: ['..oooo..', '...oo...', '...oo...', '..oooo..', '.oooooo.', 'oooooooo', 'oooooooo', '.oooooo.'],
+      caso: ['...oo...', '...oo...', '...oo...', 'oooooooo', 'oooooooo', '...oo...', '...oo...', '...oo...'],
+      lab: ['o..o..o.', 'o..o..o.', 'o..o..o.', 'o..o..o.', 'oo.oo.oo', 'oo.oo.oo', '........', 'oooooooo'],
+      organismo: ['.oo..oo.', 'oooooooo', 'oooooooo', 'oooooooo', '.oooooo.', '..oooo..', '...oo...', '........'],
+      menu: ['........', 'oooooooo', '........', '........', 'oooooooo', '........', '........', 'oooooooo'],
+      trophy: ['oooooooo', 'oooooooo', '.oooooo.', '..oooo..', '...oo...', '...oo...', '..oooo..', '.oooooo.'],
+      book: ['.oooooo.', '.o....o.', '.o.oo.o.', '.o....o.', '.o.oo.o.', '.o....o.', '.oooooo.', '........'],
+      medal: ['o......o', '.o....o.', '..oooo..', '.oooooo.', '.oo..oo.', '.oooooo.', '..oooo..', '........'],
+      chest: ['........', '.oooooo.', 'oooooooo', 'oooooooo', 'ooo..ooo', 'oooooooo', 'oooooooo', '........']
+    };
+
+    const nStars = Math.max(0, Math.min(3, this.props.estrelas ?? 2));
+    const stars = ['5 MIN', '10 MIN', '15 MIN'].map((t, i) => ({ t, fill: i < nStars ? '#F2B233' : '#2A2E55' }));
+    const selos = this.props.selos ?? true;
+
+    const health = [
+      { k: 'F', v: 31, c: '#D83A3A' }, { k: 'M', v: 72, c: '#5BC43A' },
+      { k: 'S', v: 64, c: '#2D7FD6' }, { k: 'E', v: 65, c: '#F2C83A' }
+    ].map(h => ({ k: h.k, bar: `width:${h.v}%;background:${h.c}` }));
+
+    const TABS = [
+      { id: 'agentes', short: 'AGENTES', label: 'Agentes', title: 'Agentes', fase: 'FASE 2', text: 'Elenco da run e do idle, a ficha de cada agente e o desbloqueio com ATP.' },
+      { id: 'arsenal', short: 'ARSENAL', label: 'Arsenal', title: 'Arsenal', fase: 'FASE 2', text: 'As 7 armas, seus níveis, as evoluções e os reagentes que as liberam.' },
+      { id: 'caso', short: 'CASO', label: 'Caso', title: 'Caso', fase: '', text: '' },
+      { id: 'lab', short: 'LAB.', label: 'Laboratório', title: 'Laboratório', fase: 'FASE 3', text: 'Árvores de upgrades permanentes da run e do campo longo.' },
+      { id: 'organismo', short: 'ORGANISMO', label: 'Organismo', title: 'Organismo', fase: 'FASE 5', text: 'Os 4 setores de saúde, o efeito de cada um e o reset para o próximo indivíduo.' }
+    ];
+    const tab = this.state.tab;
+    const tabs = TABS.map(t => {
+      const on = t.id === tab, mid = t.id === 'caso';
+      const base = mid
+        ? `flex:1.3;height:${on ? 92 : 84}px;margin-top:-18px;border:4px solid #3A0A0C;`
+        : 'flex:1;height:62px;border:3px solid transparent;';
+      const bg = on
+        ? 'background:#E0702A;box-shadow:inset 0 -5px 0 #9C3F12, inset 0 4px 0 #FFB347;' + (mid ? '' : 'border-color:#3A0A0C;')
+        : (mid ? 'background:#B5541C;box-shadow:inset 0 -5px 0 #7A3510, inset 0 4px 0 #E0702A;' : 'background:transparent;');
+      return {
+        short: t.short, label: t.label,
+        st: base + bg,
+        txt: on || mid ? 'color:#FFFFFF;text-shadow:0 2px #6E1E0A' : 'color:#C9CCE6',
+        icon: icon(IC[t.id], on || mid ? '#FFFFFF' : '#C9CCE6', mid ? 4 : 3),
+        badge: selos && t.id === 'agentes' && !on,
+        pick: () => this.setState({ tab: t.id })
+      };
+    });
+    const curT = TABS.find(t => t.id === tab);
+    const cur = { title: curT.title, text: curT.text, fase: curT.fase, big: icon(IC[tab], '#F4EFE0', 7) };
+
+    return {
+      body, bodyMini: body, floaters, dopa, stars, selos, health, tabs, cur,
+      isCaso: tab === 'caso', notCaso: tab !== 'caso',
+      lanes: [{ top: 'top:6px' }, { top: 'top:22px' }, { top: 'top:12px' }],
+      icMenu: icon(IC.menu, '#F4EFE0', 3), icTrophy: icon(IC.trophy, '#F2B233', 3),
+      icBook: icon(IC.book, '#F4EFE0', 3), icMedal: icon(IC.medal, '#5B6380', 3),
+      icChest: icon(IC.chest, '#F2B233', 4)
+    };
+  }
+}
+</script>
+</body>
+</html>

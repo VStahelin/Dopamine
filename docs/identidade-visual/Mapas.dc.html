@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Mapas: objetos e chão</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&amp;family=Silkscreen:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#FFB347}a:hover{color:#FFD08A}
+</style>
+</helmet>
+<div style="width: 1280px; height: 1900px; box-sizing: border-box; padding: 48px; background: #15172E; font-family: 'Pixelify Sans', monospace; color: #F4EFE0; display: flex; flex-direction: column; gap: 36px">
+
+  <div style="display: flex; flex-direction: column; gap: 8px">
+    <div style="font-size: 44px; font-weight: 700; color: #6CD43F; text-shadow: -3px 0 #3A0A0C, 3px 0 #3A0A0C, 0 -3px #3A0A0C, 0 4px #3A0A0C">Mapas: objetos e chão</div>
+    <div style="font-size: 15px; line-height: 1.4; color: #C9CCE6; max-width: 1080px">Cinco ambientes do corpo para os mapas gerados da fase 5.7 (docs/mapas.md, proposta). Cada ambiente tem 3 tiles de chão de 16×16 que se repetem sem emenda, 2 obstáculos, 1 destrutível e 2 decorações em pixel art de 16×16, com a paleta e o contorno de 1 pixel dos ícones. O chão não tem contorno e usa 4 tons próximos, para as moléculas, as gemas e o ATP ficarem na frente.</div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px">
+      <div style="font-size: 28px; font-weight: 700; color: #FF9A1F; text-shadow: -2px 0 #3A0A0C, 2px 0 #3A0A0C, 0 -2px #3A0A0C, 0 3px #3A0A0C">Chão em tiles</div>
+      <div style="font-size: 14px; color: #A9AED0">base, variação 1 e variação 2 em 4×; embaixo, um retalho em 2× misturando os três</div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px">
+      <sc-for list="{{biomes}}" as="b" hint-placeholder-count="5">
+        <div style="display: flex; flex-direction: column; gap: 10px; padding: 14px; background: #1B1E3A; border: 3px solid #07080F">
+          <div style="font-size: 18px; font-weight: 700">{{b.name}}</div>
+          <div style="display: flex; gap: 4px">
+            <sc-for list="{{b.swatches}}" as="s" hint-placeholder-count="4">
+              <div style="flex: 1; display: flex; flex-direction: column; gap: 3px">
+                <div style="height: 14px; border: 2px solid #07080F; background: {{s.hex}}"></div>
+                <div style="font-family: 'Silkscreen', monospace; font-size: 8px; color: #A9AED0">{{s.hex}}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display: flex; gap: 8px">
+            <sc-for list="{{b.tiles}}" as="t" hint-placeholder-count="3">
+              <div style="display: flex; flex-direction: column; gap: 4px">
+                <div style="width: 64px; height: 64px; border: 2px solid #07080F; {{t.bg4}}"></div>
+                <div style="font-family: 'Silkscreen', monospace; font-size: 8px; letter-spacing: 1px; color: #7EF0FF">{{t.label}}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="position: relative; height: 192px; border: 2px solid #07080F; overflow: hidden; {{b.patchBg}}">
+            <sc-for list="{{b.patch}}" as="p" hint-placeholder-count="8">
+              <div style="position: absolute; left: {{p.x}}px; top: {{p.y}}px; width: 32px; height: 32px; {{p.bg}}"></div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px">
+      <div style="font-size: 28px; font-weight: 700; color: #FF9A1F; text-shadow: -2px 0 #3A0A0C, 2px 0 #3A0A0C, 0 -2px #3A0A0C, 0 3px #3A0A0C">Objetos por ambiente</div>
+      <div style="font-size: 14px; color: #A9AED0">em 4× sobre o chão do ambiente, com o tamanho real (1×) ao lado</div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px">
+      <sc-for list="{{biomes}}" as="b" hint-placeholder-count="5">
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <div style="font-size: 18px; font-weight: 700">{{b.name}}</div>
+          <sc-for list="{{b.objects}}" as="o" hint-placeholder-count="5">
+            <div style="display: flex; gap: 10px; align-items: center; padding: 8px; background: #1B1E3A; border: 3px solid #07080F">
+              <div style="position: relative; flex: none; width: 64px; height: 64px; border: 2px solid #07080F; {{b.floor4}}">
+                <div style="position: absolute; left: 0; top: 0; width: 64px; height: 64px; {{o.bg4}}"></div>
+              </div>
+              <div style="position: relative; flex: none; width: 16px; height: 16px; border: 2px solid #07080F; {{b.floor1}}">
+                <div style="position: absolute; left: 0; top: 0; width: 16px; height: 16px; {{o.bg1}}"></div>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0">
+                <div style="font-size: 14px; font-weight: 700">{{o.name}}</div>
+                <div style="font-family: 'Silkscreen', monospace; font-size: 8px; letter-spacing: 1px; color: {{o.tagColor}}">{{o.tag}}</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px">
+      <div style="font-size: 28px; font-weight: 700; color: #FF9A1F; text-shadow: -2px 0 #3A0A0C, 2px 0 #3A0A0C, 0 -2px #3A0A0C, 0 3px #3A0A0C">Um trecho gerado, em 2×</div>
+      <div style="font-size: 14px; color: #A9AED0">{{sceneTitle}}</div>
+    </div>
+    <div style="position: relative; width: 1184px; height: 480px; border: 3px solid #07080F; box-sizing: border-box; overflow: hidden; {{scene.floor}}">
+      <sc-for list="{{scene.tiles}}" as="p" hint-placeholder-count="20">
+        <div style="position: absolute; left: {{p.x}}px; top: {{p.y}}px; width: 32px; height: 32px; {{p.bg}}"></div>
+      </sc-for>
+      <div style="position: absolute; left: {{scene.startX}}px; top: {{scene.startY}}px; width: 256px; height: 256px; box-sizing: border-box; border: 3px dashed rgba(21, 23, 46, 0.45); border-radius: 50%"></div>
+      <sc-for list="{{scene.objects}}" as="o" hint-placeholder-count="30">
+        <div style="position: absolute; left: {{o.x}}px; top: {{o.y}}px; width: 32px; height: 32px; {{o.bg}}"></div>
+      </sc-for>
+    </div>
+    <div style="display: flex; gap: 28px; font-size: 13px; line-height: 1.35; color: #A9AED0">
+      <div style="flex: 1">O círculo tracejado é o começo livre: nada com colisão a menos de 4 tiles de onde o agente nasce.</div>
+      <div style="flex: 1">Obstáculos (e aglomerados de 2 ou 3) ficam a pelo menos 3 tiles um do outro, então sempre há passagem.</div>
+      <div style="flex: 1">As manchas do chão vêm de um ruído suave; a variação 2 aparece solta, em 4% dos tiles.</div>
+      <div style="flex: 1">O ninho de vesículas é um ponto de interesse: 3 a 5 vesículas numa clareira.</div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"biome":{"editor":"enum","options":["Corrente sanguínea","Fígado","Intestino","Pulmão","Cérebro"],"default":"Corrente sanguínea","section":"Trecho gerado"},"density":{"editor":"enum","options":["Aberto","Padrão","Denso"],"default":"Padrão","section":"Trecho gerado"},"seed":{"editor":"int","min":1,"max":9999,"default":7,"section":"Trecho gerado"},"$preview":{"width":1280,"height":1900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const PAL = {"K":"#1A1424","W":"#FFFFFF","H":"#EDEBDD","A":"#8A90A0","a":"#4A4F5C","R":"#E0433A","r":"#8E1616","C":"#39D3F0","L":"#7EF0FF","B":"#3F6FE0","b":"#23408F","G":"#5BC43A","g":"#2E7A1E","l":"#A6F07A","Y":"#F2C83A","y":"#B88A1C","O":"#FF9A1F","o":"#B5541C","P":"#B072F0","p":"#6A3AB0","N":"#FF6FA8","n":"#B03A70","T":"#F2D9A8","E":"#7A4A2A"};
+    const FLOOR = {"blood":{"1":"#B8935C","2":"#CDA56C","3":"#D8B47A","4":"#E6C891"},"liver":{"1":"#8F5444","2":"#A86654","3":"#B87562","4":"#C98670"},"intestine":{"1":"#BF7C5A","2":"#D4916C","3":"#E2A27E","4":"#EDB894"},"lung":{"1":"#C9A5A1","2":"#DDBDB9","3":"#E9CFCB","4":"#F5E1DE"},"brain":{"1":"#8F7FA3","2":"#A897B9","3":"#B7A6C6","4":"#C8B9D5"}};
+    const TILES = {"blood_base":["4333333333333332","3333333333333333","3333233333333333","3333332323333333","3333333333333333","3333333333333333","3333333333333333","3333333343333333","3333333333333333","3333333333333333","3334333333333333","3333333333333333","3333333333333332","3333333333332333","4333333333333332","3333333333333333"],"blood_flow":["4333333333333332","3333333333333333","3333233333333333","3333332323333333","3333333333333333","3333333333333333","3333332222333333","3333324444233333","3332243333422333","3334433333344333","3334333333333333","3333333333333333","3333333333333332","3333333333332333","4333333333333332","3333333333333333"],"blood_protein":["4333333333333332","3333333333333333","3333233333333333","3334332322133333","3333223333333333","3333213333333333","3333333333333333","3333333343333333","3333333333333333","3333333333433333","3334333333322333","3333333333312333","3333333333333332","3333333333332333","4333333333333332","3333333333333333"],"liver_base":["2222222222222222","2333333323333333","2333333323333333","2333333323333333","2333333323333334","2333333323333333","2333333323333333","2333333323333333","2222222222222222","3333233433332333","3333233333332333","3333233333332333","3334233333332333","3333233333332333","3333233333332333","3333233333332333"],"liver_nuclei":["2222222222222222","2333333323333333","2333333323333333","2334333323343333","2333133323331334","2333333323333333","2333333323333333","2333333323333333","2222222222222222","3333233433332333","3333233333332333","3333233433332334","1334233313332333","3333233333332333","3333233333332333","3333233333332333"],"liver_fat":["2222222222222222","2333333323333333","2333333323443333","2333333323442333","2333333323333334","2333333323333333","2333333323333333","2333333323333333","2222222222222222","3333233433332333","3334433333332333","3333433333332333","3334233333332333","3333233333332333","3333233333332333","3333233333332333"],"intestine_base":["2433333324333333","4333333243333332","3333332433333324","3333324333333243","3333243333332433","3332433333324333","3324333333243333","3243333332433333","2433333324333333","4333333243333332","3333332433333324","3333324333333243","3333243333332433","3332433333324333","3324333333243333","3243333332433333"],"intestine_crypts":["2433333324333333","4333333243333332","3333332433333324","3333324333433243","3333243333122433","3332433333324333","3324123333243333","3243333332433333","2433333324333333","4333333243333332","3333332433333324","3333324123334243","3333243333331233","3332433333324333","3324333333243333","3243333332433333"],"intestine_mucus":["2433333324333333","4333333243333332","3333332433333324","3333324333333243","3333243333332433","3332433333324333","3324334443243333","3243334444433333","2433333444333333","4333333243333332","3333332433333324","3333324333333243","3333243333332433","3332433333324333","3324333333243333","3243333332433333"],"lung_base":["3332233333322333","3223322332233223","3233332332333323","2333333223333332","2333333223333332","3233332332333323","3223322332233223","3332233333322333","3332233333322333","3223322332233223","3233332332333323","2333333223333332","2333333223333332","3233332332333323","3223322332233223","3332233333322333"],"lung_air":["3332233333322333","3224422332233223","3244442332333323","2444444223333332","2444444223333332","3244442332333323","3224422332233223","3332233333322333","3332233333322333","3223322332244223","3233332332444423","2333333224444442","2333333224444442","3233332332444423","3223322332244223","3332233333322333"],"lung_dust":["3332233333322333","3223322332233223","3233332332333323","2333333223333332","2333133223333332","3233332332333323","3223322332233223","3332233333322333","3332233333322333","3223322332233223","3233332332333323","2333333223331332","2333333223313332","3233332332333323","3223322332233223","3332233333322333"],"brain_base":["3333333334333333","3333333333333333","3333333333344433","3333333334411144","4333343341122211","1443334412233322","2114441123333333","3221112233333333","3332223333333333","3333333323333333","3333333333333333","3333333333333333","3333333333333333","3333333333333333","3333333333333333","3333333333333333"],"brain_glia":["3333333334333333","3333333333333333","3333333333344433","3333333334411144","4333343341122211","1443334412233322","2114441123333333","3221112233333333","3332223333333333","3333333323333333","3333333333343333","3333433333312333","3333123333333433","3333333333333123","3333333333333333","3333333333333333"],"brain_axon":["3333333334333333","3333333333333333","3333333333344433","3333333334411144","4333343341122211","1443334412233322","2114441123333333","3221112233333333","3332223333333333","3334333323333333","3331114333333333","3333331114333333","3333333331114333","3333333333331333","3333333333333333","3333333333333333"]};
+    const OBJ = {"redCell":["................",".....KKKKKK.....","....KNNNRRRK....","...KNNNRRRRRK...","..KNNWRRRRRRRK..",".KNNWRRRRRRRRRK.",".KNNRRrrrrRRRRK.","KNNRRrrrrrrRRRrK","KNRRRrrrrrrRRrrK",".KRRRrrrrrrRrrK.",".KRRRRrrrrRrrrK.","..KRRRRRRRrrrK..","...KRRRRRrrrK...","....KRRRrrrK....",".....KKKKKK.....","................"],"cholesterol":["................","................",".......KK.......",".....KKHHK......","....KWHWWHK.....","....KHWWHHHK....","...KHWWHHHAHK...","..KHWHHHAHAAHK..","..KWWHHAHHAAAK..","..KHHHAHWWHAAK..","...KHAAHWHHAK...","....KHAHHAAK....",".....KAAAAK.....","......KKKK......","................","................"],"fibrinClot":[".K....K.....K...","KHK..KHK...KHK..",".KHKKRRHK.KHK...","..KHRRRRHKHK....","..KRRHRrHHRRK...",".KHRRrHHRRRRHK..","KHHHHHRHRRrRHK..",".KKRRRHrHrrHK...",".KRRNRRHHHHHHK..","KHRRRrrHKRRHK...",".KHRrrHRRRRrHK..","..KHKHRRrRrHKHK.",".KHK.KHrrHKKHK..","KHK...KHKKKHK...",".K.....K...K....","................"],"platelet":["................","................","................","....KK..........","...KPPK.........","..KPlPPK..KK....","..KPPPpK.KPPK...","...KppK.KPlPpK..","....KKK..KPpK...","....KPPK..KK....","...KPlPpK.......","....KppK........",".....KK.........","................","................","................"],"albumin":["................","................","................",".......KK.......","......KTTK......",".....KTYYTK.....","....KTYTTyTK....","...KTYTKKTyTK...","...KTYKTTKyTK...","....KTyyyyTK....",".....KTTTTK.....","......KKKK......","................","................","................","................"],"hepatocyte":[".....KKKKK......","....KOOOOOK.....","...KOTOOOOOK....","..KOTOOOOOOoK...",".KOTOOOOOOOOoK..","KOOOOOEEEOOOooK.","KOOOOEyyyEOOooK.","KOOOOEyYyEOOooK.","KOOOOEyyyEOOooK.","KOOOOOEEEOOoooK.",".KOOOOOOOOOooK..","..KOOOOOOOooK...","...KoOOOOooK....","....KoooooK.....",".....KKKKK......","................"],"centralVein":[".......KK.......","....KKKRRKKK....","...KRNRRRRRRK...","..KRNRrrrrRRRK..",".KRNrrrrrrrrRRK.",".KRRrrrKKKrrRRK.",".KRrrrKKKKKrrRK.","KRRrrKKKaaKKrRRK","KRRrrKKaaaaKrRRK",".KRrrKKaaaKKrRK.",".KRRrrKKaKKrRRK.",".KRRrrrKKKrrRRK.","..KRRRrrrrRRRK..","...KRRRRRRRRK...","....KKKRRKKK....",".......KK......."],"fatDroplet":["................","........K.......",".......KHK......",".....KKHHTK.....","....KHHHTTTK....","...KHHHTTTTTK...","..KHHHTWTTTTTK..","..KHHTWTTTTTTK..",".KHHTTWTTTTTTyK.",".KHTTTTTTTTTyyK.","..KTTTTTTTTyyK..","..KTTTTTTTyyyK..","...KTTTTTyyyK...","....KTTTyyyK....",".....KKKKKK.....","................"],"bile":["................","................","................","................","................",".....KKKK.......","...KKGGGGKK.....","..KGGlGGGGGKK...",".KGlGGGGGGGGGK..","KGGGGGgGGGGGGgK.",".KGGGgggGGGggK..","..KgggKKggggK...","...KKK..KKKK....","................","................","................"],"kupffer":["................","................","................",".......K........","....K.KPK.K.....","...KPKKPKKPK....","....KPPpPPKK....","....KKpPPpPPK...","...KPPPlPpKK....","....KKPPpPK.....","....KPKKPKPK....","...KPK.KPKK.....","....K...K.......","................","................","................"],"villus":["................",".......KK.......","......KNNK......",".....KNWNNK.....","....KNWNNNnK....","....KNNNNNnK....","....KNNNNNnK....","....KNNNNnnK....","....KNNNNnnK....","....KNNNNnnK....","....KNNNNnnK....","...KNNNNNnnnK...","..KNNNNNNnnnnK..","..KnnnnnnnnnnK..","...KKKKKKKKKK...","................"],"fiber":["................","................","...K...K...K....","..KgK.KEK.KgK...",".KgGgKEoEKgGgK..","..KgGEoEoGggK...","..KKEGgGoEgK....",".KEEoEGgEoEEKK..","KEoEKoGGgoKEoEK.",".KEKgGoEoGgKEK..","..KgGgKEKgGgK...",".KgGgKEoEKKgGK..","..KgK.KEK..KgK..","...K...K....K...","................","................"],"bacterium":["................","................","...K............","..KGK...........","...KGKKKKK......","....KGlllGKK....","...KGlGGGGGGKK..","..KGlGGGGGGGGGK.","..KGGGGGGGGGgGK.","...KGGGGGGGgGK..","....KGGGGggGK...",".....KKKKGKKGK..",".......KGK..KGK.","........K....K..","................","................"],"mucus":["................","................","................","................","......KKKK......","....KKHHHHKK....","...KHHWHHHHHK...","..KHWHHHHHHHAK..",".KHHHHHHHHHAAK..","..KHHHHHHHAAAK..","...KAAHHHAAAK...","....KKAAAAKK....","......KKKK......","................","................","................"],"enzyme":["................","................","....KK....K.....","...KllK..KlK....","..KWlllKKWllK...",".KllllllKlllK...",".KllllllKKlK....","..KllllKKKK.....","...KllKKllK.....","...KKKKWlllK....","..KWlKKllllK....","..KlllKllllK....","...KlK.KllK.....","....K...KK......","................","................"],"alveolus":["................","....KKK.........","...KNNNK.KKK....","..KWNNNNKNNNK...",".KNNHHHHNWNNNK..",".KNNHHHNNHHHHNK.",".KNNHHHNNHHHHNK.","..KNHHHHNHHHNK..","...KNNNNNNNNK...","...KNWHHNWNNNK..","..KNNHHHNNHHHNK.","..KNNHHHNNHHHNK.","...KNNHHNNHHNK..","....KNNNKKNNK...",".....KKK..KK....","................"],"bronchus":[".......KK.......","....KKKHHKKK....","...KAHHHHHHHK...","..KHHHHNNHHHHK..",".KHHWNNNNNNHHHK.",".KAHNNNnnNNNHHK.",".KHHNNnnnnnNHHK.","KHHNNnnKKKnNNHHK","KHHNNnnKKKnNNHHK",".KHHNNnKKKnNHHK.",".KHHNNnnnnNNHAK.",".KHHHNNNNNNHHHK.","..KHHHHNNHHHHK..","...KHHHHHHHAK...","....KKKHHKKK....",".......KK......."],"soot":["................",".....K....K.....","..K.KaK..KaK....",".KaKKaaKKaaKK...","..KaaAaaaaKKaK..","..KKaaaaaaaaK...",".KaaaAaaaaaaKK..","KaaaaaaaaaaaaaK.",".KKaaaaaaAaaKK..","..KaaaaaaaaaaK..",".KaaKaaaaaaKK...",".KaK.KaaKKaaK...","..K...KaK.KaK...",".......K...K....","................","................"],"airBubble":["................","................","................","....KKKK........","...KHHHHK.......","..KHWHHHHK......","..KHHHHHHK......","..KHHHHHHKKK....","..KHHHHHHKHHK...","...KHHHHKHWHHK..","....KKKKKHHHHK..","...KWHK..KHHK...","...KHHK...KK....","....KK..........","................","................"],"macrophage":["................","................","................","......KKK.......","....KKBBBKK.....","...KBBBLBBBK....","..KBBLBBBBBbK...","..KBBBBbbBBBbK..","...KBBbYYbBbK...","...KKBBbbBbbK...","..KBBBBBBbbK....","...KbbBBbbK.....","....KKbbKK......","......KK........","................","................"],"neuron":[".K.....K........","KOK...KOK..K....",".KOK.KOK..KOK...","..KOKOKKKKOK....","...KOOOOOOK.....","..KOTOOOOOOK....",".KOTOOEEOOOoKKK.","KOOOOEyyEOOoOOOK",".KKOOEyyEOOoKKK.","...KOOEEOOooK...","....KOOOOooK....","...KOKKooKKoK...","..KOK..KoK.KoK..",".KOK...KoK..KoK.","KOK....KoK...K..",".K......K......."],"astrocyte":["................",".......K........","..K...KBK....K..",".KBK..KBK...KBK.","..KBK.KBK..KBK..","...KBKKBKKKBK...","....KBBLBBBK....",".KKKBLBBBBbBKKK.","KBBBBBBbbBBbBBBK",".KKKBBBbbBbbKKK.","....KBBbbbbK....","...KBKKbKKKbK...","..KBK.KbK..KbK..",".KBK..KbK...KbK.","..K....K.....K..","................"],"amyloid":["................","................",".....KK..K......","...KKEEKKEK.....","..KEEyEEyyEK....",".KEyyEyyEEyEK...","KEyEyyEEyyEyEK..",".KEEyyEyyEEyyEK.","KEyyEEyEEyyEEK..",".KEyyEyyEyEyyEK.","..KEEyyEEyyEKK..","...KEyEEyEEK....","....KEEKKEK.....",".....KK..K......","................","................"],"synapse":["................","................","...KK...........","..KOOK..........","...KOOKK........","....KOOOKK......","....KOTOOOK.....","....KOONOOOK....",".....KOOnNOK....","......KOONnK....",".......KOOK.....","........KNK.....",".......KNKNK....","........K.K.....","................","................"],"myelin":["................","................","................","................","................",".KKKKKKKKKKKKKK.","KHHHAHHHAHHHAHHK","KHWHAHWHAHWHAHHK","KAAAaAAAaAAAaAAK",".KKKKKKKKKKKKKK.","................","................","................","................","................","................"],"vesicle":["....KKKKKKK.....","...KLLLLLLLK....","..KLLKKKKKCCK...",".KLLK.....KCCK..","KLLKWW.....KCCK.","KLK.W.......KCK.","KLK....N....KCK.","KCK....n....KCK.","KCK.......N.KCK.","KCK.......n.KCK.","KCCK..N....KCCK.",".KCCK.n..NKCCK..","..KCCKKKKnCCK...","...KCCCCCCCK....","....KKKKKKK.....","................"]};
+    const BIOMES = [
+      { id: 'blood', name: 'Corrente sanguínea', tiles: [['blood_base', 'BASE'], ['blood_flow', 'FLUXO'], ['blood_protein', 'PROTEÍNA']],
+        obstacles: [['redCell', 'Hemácia'], ['cholesterol', 'Cristal de colesterol']], destructible: ['fibrinClot', 'Coágulo de fibrina', 'DESTRUTÍVEL · 3 GOLPES'],
+        decor: [['platelet', 'Plaqueta'], ['albumin', 'Albumina']] },
+      { id: 'liver', name: 'Fígado', tiles: [['liver_base', 'BASE'], ['liver_nuclei', 'NÚCLEOS'], ['liver_fat', 'GORDURA']],
+        obstacles: [['hepatocyte', 'Hepatócito'], ['centralVein', 'Veia central']], destructible: ['fatDroplet', 'Gota de gordura', 'DESTRUTÍVEL · SOLTA ATP'],
+        decor: [['bile', 'Bile'], ['kupffer', 'Célula de Kupffer']] },
+      { id: 'intestine', name: 'Intestino', tiles: [['intestine_base', 'BASE'], ['intestine_crypts', 'CRIPTAS'], ['intestine_mucus', 'MUCO']],
+        obstacles: [['villus', 'Vilosidade'], ['fiber', 'Bolo de fibra']], destructible: ['bacterium', 'Bactéria da flora', 'DESTRUTÍVEL · SOLTA GEMA'],
+        decor: [['mucus', 'Muco'], ['enzyme', 'Enzimas']] },
+      { id: 'lung', name: 'Pulmão', tiles: [['lung_base', 'BASE'], ['lung_air', 'AR'], ['lung_dust', 'POEIRA']],
+        obstacles: [['alveolus', 'Alvéolo'], ['bronchus', 'Brônquio']], destructible: ['soot', 'Fuligem', 'DESTRUTÍVEL · 2 GOLPES'],
+        decor: [['airBubble', 'Bolha de ar'], ['macrophage', 'Macrófago']] },
+      { id: 'brain', name: 'Cérebro', tiles: [['brain_base', 'BASE'], ['brain_glia', 'GLIA'], ['brain_axon', 'AXÔNIO']],
+        obstacles: [['neuron', 'Neurônio'], ['astrocyte', 'Astrócito']], destructible: ['amyloid', 'Placa amiloide', 'DESTRUTÍVEL · SOLTA VESÍCULA'],
+        decor: [['synapse', 'Sinapse'], ['myelin', 'Mielina']] }
+    ];
+    const cache = {};
+    const svgUrl = (grid, colors) => {
+      let r = '';
+      grid.forEach((row, y) => {
+        let x = 0;
+        while (x < row.length) {
+          const c = row[x];
+          let e = x + 1;
+          while (e < row.length && row[e] === c) e++;
+          if (colors[c]) r += `<rect x="${x}" y="${y}" width="${e - x}" height="1" fill="${colors[c]}"/>`;
+          x = e;
+        }
+      });
+      const s = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" shape-rendering="crispEdges">${r}</svg>`;
+      return `url('data:image/svg+xml,${encodeURIComponent(s)}')`;
+    };
+    const tileUrl = (biome, key) => cache['t' + key] || (cache['t' + key] = svgUrl(TILES[key], FLOOR[biome]));
+    const objUrl = (key) => cache['o' + key] || (cache['o' + key] = svgUrl(OBJ[key], PAL));
+    const bg = (url, size, repeat) => `background-image: ${url}; background-size: ${size}px ${size}px; background-repeat: ${repeat ? 'repeat' : 'no-repeat'}; image-rendering: pixelated`;
+    const rng = (seed) => {
+      let a = seed >>> 0;
+      return () => {
+        a = (a + 0x6D2B79F5) >>> 0;
+        let t = a;
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    };
+    const noise = (rand, scale) => {
+      const lat = {};
+      const at = (i, j) => { const k = i + ',' + j; if (!(k in lat)) lat[k] = rand(); return lat[k]; };
+      const sm = (t) => t * t * (3 - 2 * t);
+      return (x, y) => {
+        const gx = x / scale, gy = y / scale, i = Math.floor(gx), j = Math.floor(gy);
+        const tx = sm(gx - i), ty = sm(gy - j);
+        const a = at(i, j) * (1 - tx) + at(i + 1, j) * tx;
+        const b = at(i, j + 1) * (1 - tx) + at(i + 1, j + 1) * tx;
+        return a * (1 - ty) + b * ty;
+      };
+    };
+
+    const biomes = BIOMES.map((b, bi) => {
+      const rand = rng(100 + bi);
+      const patch = [];
+      for (let y = 0; y < 6; y++) for (let x = 0; x < 7; x++) {
+        const r = rand();
+        if (r < 0.3) patch.push({ x: x * 32, y: y * 32, bg: bg(tileUrl(b.id, b.tiles[r < 0.22 ? 1 : 2][0]), 32, false) });
+      }
+      const tag = (t, c) => ({ tag: t, tagColor: c });
+      const objects = [
+        ...b.obstacles.map(([k, n]) => ({ k, name: n, ...tag('OBSTÁCULO', '#FFB347') })),
+        { k: b.destructible[0], name: b.destructible[1], ...tag(b.destructible[2], '#FF6FA8') },
+        ...b.decor.map(([k, n]) => ({ k, name: n, ...tag('DECORAÇÃO', '#A6F07A') }))
+      ].map((o) => ({ ...o, bg4: bg(objUrl(o.k), 64, false), bg1: bg(objUrl(o.k), 16, false) }));
+      return {
+        name: b.name,
+        swatches: ['1', '2', '3', '4'].map((k) => ({ hex: FLOOR[b.id][k] })),
+        tiles: b.tiles.map(([k, label]) => ({ label, bg4: bg(tileUrl(b.id, k), 64, true) })),
+        patchBg: bg(tileUrl(b.id, b.tiles[0][0]), 32, true),
+        patch,
+        floor4: bg(tileUrl(b.id, b.tiles[0][0]), 64, true),
+        floor1: bg(tileUrl(b.id, b.tiles[0][0]), 16, true),
+        objects
+      };
+    });
+
+    // Trecho gerado: as mesmas regras de docs/mapas.md, num retângulo de 37×15 tiles.
+    const biomeName = this.props.biome ?? 'Corrente sanguínea';
+    const density = this.props.density ?? 'Padrão';
+    const seed = this.props.seed ?? 7;
+    const B = BIOMES.find((b) => b.name === biomeName) || BIOMES[0];
+    const rand = rng(seed * 7919 + BIOMES.indexOf(B));
+    const COLS = 37, ROWS = 15, T = 32;
+    const spots = noise(rand, 6);
+    const tiles = [];
+    for (let y = 0; y < ROWS; y++) for (let x = 0; x < COLS; x++) {
+      let key = null;
+      if (spots(x, y) > 0.62) key = B.tiles[1][0];
+      else if (rand() < 0.04) key = B.tiles[2][0];
+      if (key) tiles.push({ x: x * T, y: y * T, bg: bg(tileUrl(B.id, key), 32, false) });
+    }
+    const start = { x: 18.5, y: 7.5 };
+    const per = { 'Aberto': [7, 1], 'Padrão': [14, 3], 'Denso': [23, 4] }[density] || [14, 3];
+    const local = noise(rand, 14);
+    const solids = [];
+    const free = (x, y, d) => Math.hypot(x - start.x, y - start.y) >= 4 && solids.every((s) => Math.hypot(s.x - x, s.y - y) >= d + s.extra);
+    const objects = [];
+    const place = (k, x, y) => objects.push({ x: Math.round(x * T - 16), y: Math.round(y * T - 16), bg: bg(objUrl(k), 32, false), z: y });
+    // ninho de vesículas numa clareira, longe do começo
+    const nest = { x: rand() < 0.5 ? 5 : 32, y: 4 + rand() * 7 };
+    for (let i = 0; i < 4; i++) {
+      const a = (i / 4) * Math.PI * 2 + rand();
+      place('vesicle', nest.x + Math.cos(a) * 1.3, nest.y + Math.sin(a) * 1.3);
+    }
+    solids.push({ x: nest.x, y: nest.y, extra: 1.5 });
+    let tries = 0, count = 0;
+    while (count < per[0] && tries++ < 600) {
+      const x = 1 + rand() * (COLS - 2), y = 1 + rand() * (ROWS - 2);
+      if (local(x, y) < 0.3 || !free(x, y, 3)) continue;
+      const k = B.obstacles[rand() < 0.5 ? 0 : 1][0];
+      const cluster = rand() < 0.3 ? 1 + Math.floor(rand() * 2) : 0;
+      place(k, x, y);
+      for (let c = 0; c < cluster; c++) place(k, x + (c === 0 ? 0.85 : 0.4), y + (c === 0 ? 0.3 : 0.85));
+      solids.push({ x, y, extra: cluster ? 0.9 : 0 });
+      count++;
+    }
+    tries = 0; count = 0;
+    while (count < per[1] && tries++ < 400) {
+      const x = 1 + rand() * (COLS - 2), y = 1 + rand() * (ROWS - 2);
+      if (!free(x, y, 3)) continue;
+      place(B.destructible[0], x, y);
+      solids.push({ x, y, extra: 0 });
+      count++;
+    }
+    const decorN = 18 + Math.floor(rand() * 10);
+    const decor = [];
+    tries = 0;
+    while (decor.length < decorN && tries++ < 600) {
+      const x = 0.5 + rand() * (COLS - 1), y = 0.5 + rand() * (ROWS - 1);
+      if (solids.some((s) => Math.hypot(s.x - x, s.y - y) < 1.2 + s.extra)) continue;
+      decor.push({ x: Math.round(x * T - 16), y: Math.round(y * T - 16), bg: bg(objUrl(B.decor[rand() < 0.5 ? 0 : 1][0]), 32, false), z: -1 });
+    }
+    const all = decor.concat(objects.sort((a, b) => a.z - b.z));
+    const code = ((seed * 2654435761) >>> 0).toString(16).toUpperCase().slice(0, 4);
+    return {
+      biomes,
+      sceneTitle: `${B.name.toUpperCase()} · ${density.toUpperCase()} · #${code} (troque ambiente, densidade e semente em Tweaks)`,
+      scene: {
+        floor: bg(tileUrl(B.id, B.tiles[0][0]), 32, true),
+        tiles,
+        objects: all,
+        startX: Math.round(start.x * T - 128),
+        startY: Math.round(start.y * T - 128)
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

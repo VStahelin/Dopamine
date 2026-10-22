@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Crônico: HUD de batalha</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&amp;family=Silkscreen:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#FFB347}a:hover{color:#FFD08A}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background-color: #D8B47A; background-image: linear-gradient(#CDA56C 3px, transparent 3px), linear-gradient(90deg, #CDA56C 3px, transparent 3px); background-size: 40px 40px; font-family: 'Pixelify Sans', monospace; color: #F4EFE0">
+
+  <div style="position: absolute; left: 34px; top: 520px; width: 112px; height: 60px; background: rgba(91,196,58,0.5); clip-path: polygon(14% 0,86% 0,86% 16%,100% 16%,100% 84%,86% 84%,86% 100%,14% 100%,14% 84%,0 84%,0 16%,14% 16%)"></div>
+  <div style="position: absolute; left: 50px; top: 532px; width: 80px; height: 36px; border: 3px solid rgba(26,78,18,0.55); box-sizing: border-box"></div>
+
+  <div style="position: absolute; left: 192px; top: 137px; width: 6px; height: 340px; background: #B072F0; border-left: 3px solid #4A1E7A; border-right: 3px solid #4A1E7A; transform-origin: 50% 100%; transform: rotate(32deg)">
+    <div style="margin: 0 auto; width: 2px; height: 100%; background: #FFFFFF"></div>
+  </div>
+
+  <sc-for list="{{gems}}" as="g" hint-placeholder-count="10">
+    <div style="position: absolute; width: 7px; height: 7px; background: #39D3F0; border: 2px solid #0A5A7A; transform: rotate(45deg); {{g.pos}}"></div>
+  </sc-for>
+  <sc-for list="{{coins}}" as="c" hint-placeholder-count="3">
+    <div style="position: absolute; width: 8px; height: 8px; background: #F2B233; border: 2px solid #8A5A0C; {{c.pos}}"></div>
+  </sc-for>
+
+  <sc-for list="{{enemies}}" as="m" hint-placeholder-count="10">
+    <div style="position: absolute; {{m.pos}}">
+      <div style="position: relative; {{m.box}}">
+        <sc-for list="{{m.bonds}}" as="b" hint-placeholder-count="6">
+          <div style="position: absolute; transform-origin: 0 50%; background: #1A1424; {{b.style}}"></div>
+        </sc-for>
+        <sc-for list="{{m.atoms}}" as="a" hint-placeholder-count="6">
+          <div style="position: absolute; clip-path: polygon(25% 0,75% 0,75% 12.5%,87.5% 12.5%,87.5% 25%,100% 25%,100% 75%,87.5% 75%,87.5% 87.5%,75% 87.5%,75% 100%,25% 100%,25% 87.5%,12.5% 87.5%,12.5% 75%,0 75%,0 25%,12.5% 25%,12.5% 12.5%,25% 12.5%); {{a.outer}}">
+            <div style="position: absolute; clip-path: polygon(25% 0,75% 0,75% 12.5%,87.5% 12.5%,87.5% 25%,100% 25%,100% 75%,87.5% 75%,87.5% 87.5%,75% 87.5%,75% 100%,25% 100%,25% 87.5%,12.5% 87.5%,12.5% 75%,0 75%,0 25%,12.5% 25%,12.5% 12.5%,25% 12.5%); {{a.inner}}"></div>
+            <div style="position: absolute; {{a.hi}}"></div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-for>
+
+  <sc-for list="{{shots}}" as="s" hint-placeholder-count="5">
+    <div style="position: absolute; width: 8px; height: 8px; background: #7EF0FF; border: 2px solid #0A5A7A; {{s.pos}}"></div>
+  </sc-for>
+  <sc-for list="{{electrons}}" as="e" hint-placeholder-count="3">
+    <div style="position: absolute; width: 10px; height: 10px; background: #FFFFFF; border: 3px solid #2D7FD6; box-shadow: 0 0 0 2px #0A2A3A; {{e.pos}}"></div>
+  </sc-for>
+
+  <div style="position: absolute; left: {{agentLeft}}px; top: {{agentTop}}px">
+    <div style="position: relative; {{agent.box}}">
+      <sc-for list="{{agent.bonds}}" as="b" hint-placeholder-count="10">
+        <div style="position: absolute; transform-origin: 0 50%; background: #1A1424; {{b.style}}"></div>
+      </sc-for>
+      <sc-for list="{{agent.atoms}}" as="a" hint-placeholder-count="10">
+        <div style="position: absolute; clip-path: polygon(25% 0,75% 0,75% 12.5%,87.5% 12.5%,87.5% 25%,100% 25%,100% 75%,87.5% 75%,87.5% 87.5%,75% 87.5%,75% 100%,25% 100%,25% 87.5%,12.5% 87.5%,12.5% 75%,0 75%,0 25%,12.5% 25%,12.5% 12.5%,25% 12.5%); {{a.outer}}">
+          <div style="position: absolute; clip-path: polygon(25% 0,75% 0,75% 12.5%,87.5% 12.5%,87.5% 25%,100% 25%,100% 75%,87.5% 75%,87.5% 87.5%,75% 87.5%,75% 100%,25% 100%,25% 87.5%,12.5% 87.5%,12.5% 75%,0 75%,0 25%,12.5% 25%,12.5% 12.5%,25% 12.5%); {{a.inner}}"></div>
+          <div style="position: absolute; {{a.hi}}"></div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 167px; top: 516px; width: 56px; box-sizing: border-box; border: 2px solid #07080F; background: #07080F; display: flex; gap: 1px">
+    <sc-for list="{{pips}}" as="p" hint-placeholder-count="10">
+      <div style="flex: 1; height: 5px; background: {{p.fill}}"></div>
+    </sc-for>
+  </div>
+
+  <sc-for list="{{numbers}}" as="d" hint-placeholder-count="8">
+    <div style="position: absolute; font-weight: 700; line-height: 1; {{d.style}}">{{d.text}}</div>
+  </sc-for>
+
+  <div style="position: absolute; left: 0; top: 0; right: 0; height: 126px; background: rgba(21,23,46,0.86); border-bottom: 3px solid #07080F"></div>
+
+  <div style="position: absolute; left: 6px; right: 6px; top: 48px; height: 16px; box-sizing: border-box; border: 2px solid #3A0A0C; background: #B5541C; padding: 2px">
+    <div style="position: relative; height: 100%; background: #0E1024">
+      <div style="width: 63%; height: 100%; background: #39D3F0; box-shadow: inset 0 -2px 0 #1A8FB0"></div>
+      <div style="position: absolute; right: 4px; top: -1px; font-family: 'Silkscreen', monospace; font-size: 9px; color: #FFFFFF; text-shadow: 1px 1px #07080F">NV 12</div>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 8px; top: 72px; display: flex; flex-direction: column; gap: 3px">
+    <div style="display: flex; gap: 2px">
+      <sc-for list="{{weapons}}" as="w" hint-placeholder-count="6">
+        <div style="position: relative; width: 24px; height: 24px; box-sizing: border-box; {{w.frame}}">
+          <div style="position: absolute; left: 2px; top: 2px; width: 16px; height: 16px">
+            <div style="{{w.icon}}"></div>
+          </div>
+          <div style="position: absolute; right: -3px; bottom: -4px; font-family: 'Silkscreen', monospace; font-size: 8px; line-height: 1; color: {{w.lvlColor}}; text-shadow: -1px 0 #07080F, 1px 0 #07080F, 0 -1px #07080F, 0 1px #07080F">{{w.lvl}}</div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display: flex; gap: 2px">
+      <sc-for list="{{passives}}" as="w" hint-placeholder-count="6">
+        <div style="position: relative; width: 24px; height: 24px; box-sizing: border-box; {{w.frame}}">
+          <div style="position: absolute; left: 2px; top: 2px; width: 16px; height: 16px">
+            <div style="{{w.icon}}"></div>
+          </div>
+          <div style="position: absolute; right: -3px; bottom: -4px; font-family: 'Silkscreen', monospace; font-size: 8px; line-height: 1; color: {{w.lvlColor}}; text-shadow: -1px 0 #07080F, 1px 0 #07080F, 0 -1px #07080F, 0 1px #07080F">{{w.lvl}}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 160px; width: 70px; top: 72px; text-align: center; font-size: 24px; font-weight: 700; color: {{timerColor}}; text-shadow: -2px 0 #07080F, 2px 0 #07080F, 0 -2px #07080F, 0 3px #07080F">14:03</div>
+  <div style="position: absolute; left: 150px; width: 90px; top: 102px; text-align: center; font-family: 'Silkscreen', monospace; font-size: 8px; letter-spacing: 1px; color: {{waveColor}}">{{waveLabel}}</div>
+
+  <div style="position: absolute; right: 8px; top: 72px; display: flex; flex-direction: column; align-items: flex-end; gap: 6px">
+    <div style="display: flex; align-items: center; gap: 5px">
+      <div style="font-size: 16px; font-weight: 700; color: #FFFFFF; text-shadow: 0 2px #07080F">1.250</div>
+      <div style="width: 14px; height: 14px; box-sizing: border-box; background: #F2B233; border: 2px solid #8A5A0C; box-shadow: inset 2px 2px 0 #FFE08A"></div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 5px">
+      <div style="font-size: 16px; font-weight: 700; color: #FFFFFF; text-shadow: 0 2px #07080F">3.482</div>
+      <div style="position: relative; width: 14px; height: 14px">
+        <div style="position: absolute; left: 0; top: 4px; width: 6px; height: 6px; background: #4A4F5C; border: 1px solid #07080F"></div>
+        <div style="position: absolute; left: 7px; top: 2px; width: 2px; height: 3px; background: #F4EFE0"></div>
+        <div style="position: absolute; left: 7px; top: 9px; width: 2px; height: 3px; background: #F4EFE0"></div>
+        <div style="position: absolute; left: 10px; top: 4px; width: 4px; height: 4px; background: #E0433A; border: 1px solid #07080F"></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 8px; top: 136px; display: flex; gap: 6px">
+    <sc-for list="{{effects}}" as="f" hint-placeholder-count="2">
+      <div style="display: flex; flex-direction: column; gap: 2px; align-items: center">
+        <div style="position: relative; width: 24px; height: 24px; box-sizing: border-box; {{f.frame}}">
+          <div style="position: absolute; left: 2px; top: 2px; width: 16px; height: 16px">
+            <div style="{{f.icon}}"></div>
+          </div>
+        </div>
+        <div style="width: 24px; height: 4px; background: #07080F; padding: 1px; box-sizing: border-box">
+          <div style="height: 100%; background: {{f.barColor}}; width: {{f.left}}"></div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <sc-if value="{{boss}}" hint-placeholder-val="{{ true }}">
+    <div style="position: absolute; left: 95px; width: 200px; top: 138px; display: flex; flex-direction: column; gap: 3px; align-items: center">
+      <div style="font-family: 'Silkscreen', monospace; font-size: 9px; letter-spacing: 1px; color: #FFE0D0; text-shadow: 1px 1px #3A0A0C">CHEFE · COLESTEROL LDL</div>
+      <div style="width: 100%; height: 10px; box-sizing: border-box; border: 2px solid #3A0A0C; background: #0E1024">
+        <div style="width: 70%; height: 100%; background: #D83A3A; box-shadow: inset 0 -2px 0 #8E1616"></div>
+      </div>
+    </div>
+  </sc-if>
+
+  <button aria-label="Pausar" style="position: absolute; right: 8px; top: 136px; width: 44px; height: 44px; background: #2A2E55; border: 3px solid #07080F; box-shadow: inset 0 -3px 0 #171A36, inset 0 3px 0 #474C85; display: flex; align-items: center; justify-content: center; gap: 5px; cursor: pointer; padding: 0">
+    <span style="width: 6px; height: 16px; background: #F4EFE0"></span>
+    <span style="width: 6px; height: 16px; background: #F4EFE0"></span>
+  </button>
+
+  <div style="position: absolute; left: 42px; top: 690px; width: 96px; height: 96px; box-sizing: border-box; border: 3px solid rgba(244,239,224,0.45); clip-path: polygon(25% 0,75% 0,75% 12.5%,87.5% 12.5%,87.5% 25%,100% 25%,100% 75%,87.5% 75%,87.5% 87.5%,75% 87.5%,75% 100%,25% 100%,25% 87.5%,12.5% 87.5%,12.5% 75%,0 75%,0 25%,12.5% 25%,12.5% 12.5%,25% 12.5%); background: rgba(21,23,46,0.25)"></div>
+  <div style="position: absolute; left: 78px; top: 714px; width: 36px; height: 36px; background: rgba(244,239,224,0.6); border: 3px solid rgba(7,8,15,0.5); box-sizing: border-box"></div>
+
+  <div style="position: absolute; right: 18px; bottom: 44px; display: flex; flex-direction: column; align-items: center; gap: 4px">
+    <button aria-label="Especial: Pico de dopamina" style="position: relative; width: 76px; height: 76px; padding: 0; cursor: pointer; background: #E0702A; border: 4px solid #3A0A0C; box-shadow: inset 0 -5px 0 #9C3F12, inset 0 4px 0 #FFB347; overflow: hidden">
+      <div style="position: absolute; left: 22px; top: 18px; width: 24px; height: 24px">
+        <div style="{{specialIcon}}"></div>
+      </div>
+      <sc-if value="{{specialCharging}}" hint-placeholder-val="{{ false }}">
+        <div style="position: absolute; left: 0; right: 0; top: 0; height: 58%; background: rgba(7,8,15,0.6)"></div>
+        <div style="position: absolute; left: 0; right: 0; top: 24px; text-align: center; font-family: 'Pixelify Sans', monospace; font-weight: 700; font-size: 20px; color: #FFFFFF; text-shadow: 0 2px #07080F">6</div>
+      </sc-if>
+      <div style="position: absolute; right: 3px; top: 2px; font-family: 'Silkscreen', monospace; font-size: 9px; color: #FFFFFF; text-shadow: 1px 1px #3A0A0C">x1</div>
+    </button>
+    <div style="font-family: 'Silkscreen', monospace; font-size: 9px; letter-spacing: 1px; color: #FFF2DC; text-shadow: -1px 0 #3A0A0C, 1px 0 #3A0A0C, 0 -1px #3A0A0C, 0 1px #3A0A0C">PICO</div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"interacoes":{"editor":"int","default":72,"min":0,"max":100},"chefe":{"editor":"boolean","default":false},"pico":{"editor":"boolean","default":false},"especialPronto":{"editor":"boolean","default":true},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const EL = {
+      C: { m: '#4A4F5C', d: '#1C1E25', l: '#8A90A0', s: 28 },
+      H: { m: '#EDEBDD', d: '#6E6C5E', l: '#FFFFFF', s: 16 },
+      O: { m: '#E0433A', d: '#5A0E10', l: '#FF9A8A', s: 26 },
+      N: { m: '#3F6FE0', d: '#13245E', l: '#9FBEFF', s: 26 }
+    };
+    const build = (mol, k, extra) => {
+      const atoms = mol.atoms.map(([e, x, y]) => {
+        const c = EL[e], s = Math.round(c.s * k), h = Math.max(2, Math.round(s / 5)), ins = s >= 20 ? 3 : 2;
+        return {
+          outer: `left:${x * k - s / 2}px;top:${y * k - s / 2}px;width:${s}px;height:${s}px;background:${c.d}`,
+          inner: `inset:${ins}px;background:${c.m}`,
+          hi: `left:${Math.round(s * 0.24)}px;top:${Math.round(s * 0.24)}px;width:${h}px;height:${h}px;background:${c.l}`
+        };
+      });
+      const bonds = [];
+      mol.bonds.forEach(([a, b, n]) => {
+        const [, x1, y1] = mol.atoms[a], [, x2, y2] = mol.atoms[b];
+        const dx = (x2 - x1) * k, dy = (y2 - y1) * k, len = Math.hypot(dx, dy);
+        const ang = Math.atan2(dy, dx) * 180 / Math.PI, t = Math.max(2, Math.round(5 * k));
+        (n === 2 ? [-4 * k, 4 * k] : [0]).forEach(o => {
+          const px = -dy / len * o, py = dx / len * o;
+          bonds.push({ style: `left:${x1 * k + px}px;top:${y1 * k + py - t / 2}px;width:${len}px;height:${t}px;transform:rotate(${ang}deg)` });
+        });
+      });
+      return Object.assign({ atoms, bonds, box: `width:${mol.w * k}px;height:${mol.h * k}px` }, extra || {});
+    };
+    const at = (cx, cy, r, i) => {
+      const t = (Math.PI / 3) * i - Math.PI / 2;
+      return [cx + r * Math.cos(t), cy + r * Math.sin(t)];
+    };
+    const dopamine = (() => {
+      const cx = 46, cy = 54, atoms = [], bonds = [];
+      for (let i = 0; i < 6; i++) atoms.push(['C', ...at(cx, cy, 20, i)]);
+      for (let i = 0; i < 6; i++) bonds.push([i, (i + 1) % 6, i % 2 === 0 ? 2 : 1]);
+      atoms.push(['O', ...at(cx, cy, 40, 4)]); bonds.push([4, 6, 1]);
+      atoms.push(['O', ...at(cx, cy, 40, 5)]); bonds.push([5, 7, 1]);
+      const [x1, y1] = at(cx, cy, 40, 1);
+      atoms.push(['C', x1, y1]); bonds.push([1, 8, 1]);
+      atoms.push(['C', x1 + 20, y1 + 12]); bonds.push([8, 9, 1]);
+      atoms.push(['N', x1 + 40, y1]); bonds.push([9, 10, 1]);
+      return { w: 134, h: 100, atoms, bonds };
+    })();
+    const glucose = (() => {
+      const atoms = [], bonds = [], els = ['O', 'C', 'C', 'C', 'C', 'C'];
+      for (let i = 0; i < 6; i++) atoms.push([els[i], ...at(42, 42, 18, i)]);
+      for (let i = 0; i < 6; i++) bonds.push([i, (i + 1) % 6, 1]);
+      [1, 2, 3, 4].forEach((i, j) => { atoms.push(['O', ...at(42, 42, 36, i)]); bonds.push([i, 6 + j, 1]); });
+      return { w: 84, h: 84, atoms, bonds };
+    })();
+    const fatty = (() => {
+      const atoms = [], bonds = [];
+      for (let i = 0; i < 6; i++) { atoms.push(['C', 12 + i * 20, i % 2 ? 34 : 20]); if (i) bonds.push([i - 1, i, 1]); }
+      atoms.push(['O', 128, 6]); bonds.push([5, 6, 2]);
+      atoms.push(['O', 132, 40]); bonds.push([5, 7, 1]);
+      return { w: 144, h: 50, atoms, bonds };
+    })();
+    const triglyceride = (() => {
+      const atoms = [], bonds = [];
+      [14, 46, 78].forEach((y, r) => {
+        const b = atoms.length;
+        atoms.push(['C', 12, y]); if (r) bonds.push([b - 5, b, 1]);
+        atoms.push(['O', 34, y]); bonds.push([b, b + 1, 1]);
+        atoms.push(['C', 54, y + 6]); bonds.push([b + 1, b + 2, 1]);
+        atoms.push(['C', 74, y - 4]); bonds.push([b + 2, b + 3, 1]);
+        atoms.push(['C', 94, y + 6]); bonds.push([b + 3, b + 4, 1]);
+      });
+      return { w: 108, h: 94, atoms, bonds };
+    })();
+    const enemies = [
+      build(glucose, 0.42, { pos: 'left:40px;top:196px' }),
+      build(fatty, 0.42, { pos: 'left:250px;top:214px' }),
+      build(glucose, 0.42, { pos: 'left:140px;top:300px' }),
+      build(triglyceride, 0.45, { pos: 'left:300px;top:330px' }),
+      build(glucose, 0.42, { pos: 'left:20px;top:410px' }),
+      build(fatty, 0.42, { pos: 'left:250px;top:470px' }),
+      build(glucose, 0.42, { pos: 'left:300px;top:590px' }),
+      build(triglyceride, 0.45, { pos: 'left:120px;top:620px' }),
+      build(fatty, 0.42, { pos: 'left:220px;top:680px' }),
+      build(glucose, 0.42, { pos: 'left:330px;top:760px' })
+    ];
+    const agent = build(dopamine, 0.42);
+    const gems = [[96, 260], [118, 272], [210, 280], [80, 360], [320, 430], [62, 500], [270, 560], [180, 600], [204, 612], [340, 690], [110, 790]]
+      .map(([x, y]) => ({ pos: `left:${x}px;top:${y}px` }));
+    const coins = [[230, 400], [60, 640], [280, 770]].map(([x, y]) => ({ pos: `left:${x}px;top:${y}px` }));
+    const shots = [[150, 330], [120, 260], [240, 520], [282, 380], [86, 432]].map(([x, y]) => ({ pos: `left:${x}px;top:${y}px` }));
+    const electrons = [[186, 420], [236, 486], [146, 486]].map(([x, y]) => ({ pos: `left:${x}px;top:${y}px` }));
+
+    const out = '-2px 0 #07080F, 2px 0 #07080F, 0 -2px #07080F, 0 2px #07080F';
+    const numbers = [
+      { text: '12', style: `left:58px;top:182px;font-size:14px;color:#FFFFFF;text-shadow:${out}` },
+      { text: '14', style: `left:160px;top:286px;font-size:14px;color:#FFFFFF;text-shadow:${out}` },
+      { text: '38!', style: `left:290px;top:300px;font-size:22px;color:#F2C83A;text-shadow:-2px 0 #6E1E0A, 2px 0 #6E1E0A, 0 -2px #6E1E0A, 0 3px #6E1E0A` },
+      { text: '18', style: `left:268px;top:196px;font-size:16px;color:#7EF0FF;text-shadow:-2px 0 #0A2A3A, 2px 0 #0A2A3A, 0 -2px #0A2A3A, 0 2px #0A2A3A` },
+      { text: '4', style: `left:36px;top:396px;font-size:11px;color:#A9ACC2;text-shadow:${out}` },
+      { text: '3', style: `left:72px;top:540px;font-size:11px;color:#FFFFFF;text-shadow:${out}` },
+      { text: '-5', style: `left:224px;top:440px;font-size:18px;color:#FF6A5A;text-shadow:-2px 0 #3A0A0C, 2px 0 #3A0A0C, 0 -2px #3A0A0C, 0 2px #3A0A0C` },
+      { text: '+1', style: `left:150px;top:448px;font-size:13px;color:#8CF06A;text-shadow:-2px 0 #1A4E12, 2px 0 #1A4E12, 0 -2px #1A4E12, 0 2px #1A4E12` }
+    ];
+
+    const PAL = { K: '#1A1424', W: '#FFFFFF', H: '#EDEBDD', R: '#E0433A', r: '#8E1616', C: '#39D3F0', c: '#0A5A7A', L: '#7EF0FF', B: '#3F6FE0', G: '#5BC43A', g: '#1A4E12', Y: '#F2C83A', y: '#8A5A0C', P: '#B072F0', p: '#4A1E7A', O: '#FF9A1F', A: '#8A90A0' };
+    const icon = (rows, c) => {
+      const s = [];
+      rows.forEach((row, y) => [...row].forEach((ch, x) => { if (PAL[ch]) s.push(`${(x + 1) * c}px ${(y + 1) * c}px 0 0 ${PAL[ch]}`); }));
+      return `position:absolute;left:${-c}px;top:${-c}px;width:${c}px;height:${c}px;box-shadow:${s.join(',')}`;
+    };
+    const I = {
+      radical: ['.KKK....', 'KRRRK...', 'KRWRKKK.', 'KRRRKHHK', '.KKK.KKK', '......Y.', '.....YYY', '......Y.'],
+      electron: ['..CCCC..', '.C....C.', 'C..BB..C', 'C.BLLB.C', 'C.BLLB.C', 'C..BB..C', '.C....W.', '..CCCC..'],
+      uv: ['......PP', '.....PWP', '....PWP.', '...PWP..', '..PWP...', '.PWP....', 'PWP.....', 'PP......'],
+      solvent: ['..KKKK..', '...KK...', '...KK...', '..KGGK..', '.KGGGGK.', 'KGGWGGGK', 'KGGGGGGK', '.KKKKKK.'],
+      fenton: ['Y.RRR..Y', '.RRWRR..', 'RRWRRRR.', 'RRRRRRRY', 'RRRRRRR.', '.RRRRR..', 'Y.RRR.Y.', '...Y....'],
+      react: ['...O....', '..OO....', '..OYO...', '.OYYO.O.', '.OYWYOO.', 'OYYWWYO.', 'OYYYYYO.', '.OOOOO..'],
+      meta: ['..KKKK..', '.KHHHHK.', 'KHHKHHHK', 'KHHKHHHK', 'KHHKKKHK', 'KHHHHHHK', '.KHHHHK.', '..KKKK..'],
+      membrane: ['..BBBB..', '.BLLLLB.', 'BLWLLLLB', 'BLLLLLLB', 'BLLLLLLB', '.BLLLLB.', '..BLLB..', '...BB...'],
+      magnet: ['WW....WW', 'RR....RR', 'RR....RR', 'RR....RR', 'RRR..RRR', '.RRRRRR.', '..RRRR..', '........'],
+      speed: ['....CC..', '...CCCC.', 'CCCCCCCC', '...CCCC.', '....CC..', '.L......', 'LLLL....', '.L......'],
+      slow: ['..rrrr..', '.rRRRRr.', 'rRWRRRRr', 'rRRWWRRr', 'rRRRRWRr', 'rRRRRRRr', '.rRRRRr.', '..rrrr..'],
+      special: ['...YY...', '..YWWY..', '.YWOOWY.', 'YWOOOOWY', 'YWOOOOWY', '.YWOOWY.', '..YWWY..', '...YY...']
+    };
+    const F = {
+      weapon: 'border:2px solid #3A0A0C;box-shadow:inset 0 0 0 2px #E0702A;background:#F2D9A8',
+      evolved: 'border:2px solid #6E500C;box-shadow:inset 0 0 0 2px #F2C83A;background:#FFF2A8',
+      passive: 'border:2px solid #07080F;box-shadow:inset 0 0 0 2px #39D3F0;background:#1B1E3A',
+      empty: 'border:2px dashed #474C85;background:rgba(27,30,58,0.6)',
+      locked: 'border:2px solid #07080F;background:#0E1024',
+      buff: 'border:2px solid #07080F;box-shadow:inset 0 0 0 2px #6CD43F;background:#1B1E3A',
+      debuff: 'border:2px solid #07080F;box-shadow:inset 0 0 0 2px #D83A3A;background:#3A0A0C'
+    };
+    const lock = ['........', '..AAAA..', '.A....A.', '.A....A.', 'AAAAAAAA', 'AAAKKAAA', 'AAAKKAAA', 'AAAAAAAA'];
+    const slot = (kind, ic, lvl, lvlColor) => ({ frame: F[kind], icon: ic ? icon(ic, 2) : '', lvl: lvl || '', lvlColor: lvlColor || '#FFFFFF' });
+    const weapons = [
+      slot('evolved', I.fenton, 'EVO', '#F2C83A'),
+      slot('weapon', I.electron, 'MAX', '#F2C83A'),
+      slot('weapon', I.uv, '4'),
+      slot('weapon', I.solvent, '2'),
+      slot('empty'),
+      slot('locked', lock)
+    ];
+    const passives = [
+      slot('passive', I.react, '5'),
+      slot('passive', I.meta, '3'),
+      slot('passive', I.membrane, '2'),
+      slot('passive', I.magnet, '1'),
+      slot('empty'),
+      slot('locked', lock)
+    ];
+    const effects = [
+      { frame: F.buff, icon: icon(I.speed, 2), barColor: '#6CD43F', left: '60%' },
+      { frame: F.debuff, icon: icon(I.slow, 2), barColor: '#D83A3A', left: '30%' }
+    ];
+
+    const n = Math.max(0, Math.min(100, this.props.interacoes ?? 72));
+    const pips = Array.from({ length: 10 }, (_, i) => ({ fill: n >= (i + 1) * 10 ? '#D83A3A' : n > i * 10 ? '#FF8A7A' : '#2A2E55' }));
+    const pico = this.props.pico ?? false;
+    return {
+      enemies, agent, agentLeft: 167, agentTop: 456, gems, coins, shots, electrons, numbers, pips,
+      weapons, passives, effects,
+      boss: this.props.chefe ?? false,
+      timerColor: pico ? '#FF9A1F' : '#FFFFFF',
+      waveLabel: pico ? 'PICO DE ONDA' : 'ONDA 3',
+      waveColor: pico ? '#FF9A1F' : '#C9CCE6',
+      specialIcon: icon(I.special, 3),
+      specialCharging: !(this.props.especialPronto ?? true)
+    };
+  }
+}
+</script>
+</body>
+</html>
