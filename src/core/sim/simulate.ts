@@ -17,6 +17,7 @@ import { DEFAULT_RULES, type RunRules } from '../run/rules';
 import { createRun, type RunState } from '../run/state';
 import { stepRun } from '../run/step';
 import { closeCapsule } from '../run/items';
+import { closeAmpoule } from '../run/supplements';
 import { applyChoice, levelUpOffer } from '../run/upgrades';
 
 /**
@@ -90,7 +91,8 @@ function botMove(run: RunState): { x: number; y: number } {
 
   let best: { x: number; y: number } | undefined;
   let bestD = Infinity;
-  for (const g of [...run.gems, ...run.coins]) {
+  // Gemas, ATP e itens; a ampola e a cápsula precisam ser tocadas, então o robô vai até elas.
+  for (const g of [...run.gems, ...run.coins, ...run.pickups]) {
     const d = (g.x - agent.x) ** 2 + (g.y - agent.y) ** 2;
     if (d < bestD) {
       bestD = d;
@@ -119,6 +121,7 @@ export function botRun(
   let t = 0;
   while (!run.over && run.time < maxSeconds) {
     if (run.capsule) closeCapsule(run);
+    if (run.ampoule) closeAmpoule(run);
     if (run.pendingLevelUps > 0) {
       const offer = levelUpOffer(run);
       const pick =

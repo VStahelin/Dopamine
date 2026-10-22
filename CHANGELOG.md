@@ -4,6 +4,16 @@ O que mudou em cada versão do Dopamina Blaster. O jogo mostra este arquivo em O
 
 ## Em desenvolvimento
 
+### Novidades
+- Ampolas: caem das moléculas (mais das fortes) e sempre do chefe. Encoste para abrir e tomar um suplemento.
+- 24 suplementos em quatro raridades, que acumulam até o fim da run: Creatina, Ferro, Cafeína, Termita, Criopreservação e outros.
+- Os reagentes da evolução agora saem das ampolas, e o reagente da arma no máximo sai muito mais.
+- A pausa mostra os suplementos, e o Compêndio ganhou a seção Suplementos.
+
+### Ajustes
+- Nem toda molécula solta gema de XP, mas a gema que cai vale mais: o XP no fim é o mesmo e a tela fica mais limpa.
+- A Vitamina saiu das vesículas e virou suplemento.
+
 ## v0.7.0 · 22/10/2026
 
 ### Novidades

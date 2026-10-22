@@ -1,13 +1,13 @@
 import { ITEM_IDS, type ItemId, type PassiveId } from '../../config';
 import { damageEnemy, hitEnemy } from './combat';
 import type { SpatialGrid } from './spatialGrid';
+import { openAmpoule, updateSupplements } from './supplements';
 import type { CapsuleItem, Pickup, RunState } from './state';
 import {
   applyUpgrade,
   coinValue,
   passiveAmount,
   readyEvolutions,
-  refreshStats,
   rollRarity,
   type UpgradeChoice,
 } from './upgrades';
@@ -23,6 +23,7 @@ export function updateItems(state: RunState, dt: number, grid: SpatialGrid, firs
   fx.freeze = Math.max(0, fx.freeze - dt);
   fx.flame = Math.max(0, fx.flame - dt);
   fx.fever = Math.max(0, fx.fever - dt);
+  updateSupplements(state, dt);
   spawnVesicles(state, dt);
   breakVesicles(state, firstEvent);
   if (fx.flame > 0) burn(state, dt, grid);
@@ -139,17 +140,17 @@ function movePickups(state: RunState, dt: number): void {
     const dx = agent.x - p.x;
     const dy = agent.y - p.y;
     const dist = Math.hypot(dx, dy);
-    const reach =
-      p.kind === 'capsule' ? rules.drops.capsule.touchRadiusPx : rules.run.gems.collectRadiusPx;
+    const touch = p.kind === 'capsule' || p.kind === 'ampoule';
+    const reach = touch ? rules.drops.capsule.touchRadiusPx : rules.run.gems.collectRadiusPx;
     if (dist <= reach) {
       state.pickups[i] = state.pickups[state.pickups.length - 1]!;
       state.pickups.pop();
       collect(state, p);
-      // A cápsula para a run para mostrar o que deu.
-      if (state.capsule) return;
+      // A cápsula e a ampola param a run para mostrar o que deram.
+      if (state.capsule || state.ampoule) return;
       continue;
     }
-    if (p.kind === 'capsule') continue;
+    if (touch) continue;
     if (dist < pull) p.attracted = true;
     if (p.attracted) {
       const step = Math.min(speed * dt, dist);
@@ -163,6 +164,10 @@ function collect(state: RunState, p: Pickup): void {
   state.events.push({ type: 'item', kind: p.kind, x: p.x, y: p.y });
   if (p.kind === 'capsule') {
     openCapsule(state, p.silver === true);
+    return;
+  }
+  if (p.kind === 'ampoule') {
+    openAmpoule(state, p.minRarity ?? 'common');
     return;
   }
   if (!state.seenItems.includes(p.kind)) state.seenItems.push(p.kind);
@@ -188,10 +193,6 @@ function collect(state: RunState, p: Pickup): void {
       break;
     case 'bunsen':
       fx.flame = def.seconds ?? 0;
-      break;
-    case 'vitamin':
-      state.bonus.luck = (state.bonus.luck ?? 0) + (def.luckBonus ?? 0);
-      refreshStats(state);
       break;
     case 'glucagon':
       for (const c of state.coins) c.attracted = true;

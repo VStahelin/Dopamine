@@ -76,10 +76,10 @@ export function passiveAmount(def: PassiveDef, multiplier: number): number {
  */
 function availablePassives(state: RunState): PassiveId[] {
   const { passives, unlockedReceptors } = state.rules;
+  // Os reagentes saíram das cartas: vêm das ampolas, como suplemento (decisão 0028).
   const ids = (Object.keys(passives) as PassiveId[]).filter(
     (id) =>
-      passives[id].kind === 'reagent' ||
-      (passives[id].kind === 'receptor' && (!unlockedReceptors || unlockedReceptors.includes(id))),
+      passives[id].kind === 'receptor' && (!unlockedReceptors || unlockedReceptors.includes(id)),
   );
   const held = ids.filter((id) => (state.passives[id]?.level ?? 0) > 0 && !passives[id].freeSlot);
   const slotsFull = held.length >= Math.floor(state.stats.modifierSlots);

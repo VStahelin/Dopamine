@@ -1,4 +1,12 @@
-import type { AgentId, EnemyKind, ItemId, MoleculeType, PassiveId, WeaponId } from '../../config';
+import type {
+  AgentId,
+  EnemyKind,
+  ItemId,
+  MoleculeType,
+  PassiveId,
+  SupplementRarity,
+  WeaponId,
+} from '../../config';
 import { Rng } from '../random';
 import { xpToNextLevel } from './progression';
 import { DEFAULT_RULES, type RunRules } from './rules';
@@ -26,6 +34,10 @@ export interface Enemy {
   slow: number;
   /** Dano extra recebido neste passo (Catalisador, Emulsão); volta a 0 a cada passo. */
   vulnerability: number;
+  /** Segundos congelada só ela (Nitrogênio líquido). */
+  frozen: number;
+  /** Nasceu da cascata de outra: solta gema com menos chance. */
+  fragment: boolean;
 }
 
 export interface Projectile {
@@ -109,10 +121,12 @@ export interface Vesicle {
 export interface Pickup {
   x: number;
   y: number;
-  kind: ItemId | 'capsule';
+  kind: ItemId | 'capsule' | 'ampoule';
   attracted: boolean;
   /** Cápsula de prata (chefe depois dos 10 min): pode evoluir uma arma. */
   silver?: boolean;
+  /** Ampola: raridade mínima do suplemento. */
+  minRarity?: SupplementRarity;
 }
 
 /** Segundos que faltam de cada efeito de item com tempo. */
@@ -172,7 +186,8 @@ export type RunEvent =
   | { type: 'boss'; kind: EnemyKind }
   | { type: 'levelUp'; level: number }
   | { type: 'vesicle'; x: number; y: number }
-  | { type: 'item'; kind: ItemId | 'capsule'; x: number; y: number }
+  | { type: 'item'; kind: ItemId | 'capsule' | 'ampoule'; x: number; y: number }
+  | { type: 'spark'; x1: number; y1: number; x2: number; y2: number }
   | { type: 'lysosome' };
 
 export interface SpecialState {
@@ -216,8 +231,21 @@ export interface RunState {
   vesicleTimer: number;
   pickups: Pickup[];
   effects: ItemEffects;
-  /** Atributos somados na run fora dos receptores: Vitaminas, Mutação. */
+  /** Atributos somados na run fora dos receptores: suplementos, Mutação. */
   bonus: Partial<RunStats>;
+  /** Atributos do especial somados pelos suplementos (Ginseng). */
+  specialBonus: Partial<Record<'cooldown' | 'power' | 'duration' | 'charges', number>>;
+  /** Cópias de cada suplemento (fase 5.9). */
+  supplements: Record<string, number>;
+  seenSupplements: string[];
+  /** Ampola aberta esperando o jogador ver; a simulação para enquanto houver uma. */
+  ampoule: { id: string } | null;
+  /** Momento da última ampola de molécula comum (garantia e intervalo mínimo). */
+  lastAmpouleAt: number;
+  cryoCooldown: number;
+  gemPulseTimer: number;
+  /** Golpe de faísca ou explosão em andamento: não dispara outra. */
+  chaining: boolean;
   /** Cápsula aberta esperando o jogador ver; a simulação para enquanto houver uma. */
   capsule: CapsuleResult | null;
   capsulesOpened: number;
@@ -266,6 +294,7 @@ export interface RunResult {
   atp: number;
   seen: EnemyKind[];
   seenItems: ItemId[];
+  seenSupplements: string[];
   capsulesOpened: number;
 }
 
@@ -308,6 +337,14 @@ export function createRun(
     pickups: [],
     effects: { freeze: 0, flame: 0, fever: 0 },
     bonus: {},
+    specialBonus: {},
+    supplements: {},
+    seenSupplements: [],
+    ampoule: null,
+    lastAmpouleAt: 0,
+    cryoCooldown: 0,
+    gemPulseTimer: 0,
+    chaining: false,
     capsule: null,
     capsulesOpened: 0,
     seenItems: [],
@@ -366,6 +403,8 @@ export function addEnemy(
     hitFlash: 0,
     slow: 1,
     vulnerability: 0,
+    frozen: 0,
+    fragment: false,
   };
   state.enemies.push(enemy);
   if (!state.seen.includes(kind)) state.seen.push(kind);
@@ -380,6 +419,7 @@ export function runResult(state: RunState): RunResult {
     atp: Math.floor(state.atp),
     seen: [...state.seen],
     seenItems: [...state.seenItems],
+    seenSupplements: [...state.seenSupplements],
     capsulesOpened: state.capsulesOpened,
   };
 }

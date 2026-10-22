@@ -28,7 +28,7 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | 5.6 | Variedade da run | A run muda de cara a cada pico, e cada agente cresce do seu jeito? | 5, 5.8 | não iniciada |
 | 5.7 | Mapas gerados | Cada run tem um mapa diferente, sem deixar o agente preso? | 2, 5.5 | não iniciada |
 | 5.8 | Receptores no level up | O level up fica mais curto e cada escolha pesa mais? | 2, 3 | implementada, falta validar no celular |
-| 5.9 | Suplementos e ampolas | Os suplementos dão motivo para andar pelo mapa e montam um build diferente a cada run? | 5.5, 5.8 | não iniciada |
+| 5.9 | Suplementos e ampolas | Os suplementos dão motivo para andar pelo mapa e montam um build diferente a cada run? | 5.5, 5.8 | implementada, falta validar no celular |
 | 5.10 | Agregados (mini chefes) | Entre um chefe e outro sempre tem um alvo que vale o risco? | 5.9 | não iniciada |
 | 5.11 | Sinapses e estruturas | O jogador sai do lugar para buscar bônus no mapa? | 5.6, 5.9, 5.10 | não iniciada |
 | 6 | Arte, polimento e lançamento | Dá para mandar o link para os amigos? | 1 a 5.11 | não iniciada |
@@ -338,16 +338,19 @@ O level up passa a oferecer só armas e **receptores**, os tomos do Megabonk: 16
 
 Os atributos que saíram do level up voltam como **suplementos**, passivos que acumulam e saem de **ampolas** no chão. Nem toda molécula solta XP. Regras em [megabonk.md](megabonk.md#2-suplementos) ([decisão 0028](decisoes/0028-suplementos-e-ampolas.md)).
 
-- [ ] `supplements.json` com os 25 suplementos e os 4 reagentes, em quatro raridades; sorteio de raridade pela Sorte e depois do suplemento.
-- [ ] Suplementos que mudam atributo (somam até o teto na run) e os de efeito: Nitrogênio líquido, Aquaporina, Eletrodo, Termita, Criopreservação, Quimiotaxia (esta depende da 5.11).
-- [ ] Reagentes como suplemento, com peso ×10 quando a arma deles está no MAX; tirar os reagentes das cartas do level up.
-- [ ] Vitamina sai da vesícula e vira suplemento.
-- [ ] Gema de XP com chance por tipo de molécula (60% comum, 40% fragmento, 100% forte), valendo o XP dividido pela chance.
-- [ ] Ampola: chance por molécula (0,3% comum, 3% forte), multiplicada pela Sorte e pelo Estresse, com garantia aos 90 s e intervalo mínimo de 20 s; chefe solta uma ampola de mínimo Ultra raro junto da cápsula.
-- [ ] Abrir a ampola: pausa curta, quebra, suplemento com a moldura da raridade, toque para voltar.
-- [ ] Pausa com a grade de suplementos (`×N`), aviso de 2 s ao pegar, e "de onde vem" cada bônus na aba Atributos.
-- [ ] Sprites de 16×16: ampola (fechada e quebrando) e um ícone por suplemento; seção "Suplementos" no Compêndio.
-- [ ] Atualizar [wiki.md](wiki.md) e rodar o `npm run sim` com as ampolas.
+- [x] `supplements.json` com os suplementos e os 4 reagentes, em quatro raridades; sorteio de raridade pela Sorte e depois do suplemento. São 24 por enquanto: a Quimiotaxia entra com as sinapses.
+- [x] Suplementos que mudam atributo (somam até o teto na run) e os de efeito: Nitrogênio líquido, Aquaporina, Eletrodo, Termita e Criopreservação. A faísca e a explosão não disparam outra faísca nem explosão.
+- [ ] Quimiotaxia, junto com as sinapses (fase 5.11).
+- [x] Reagentes como suplemento, com peso ×10 quando a arma deles está no MAX; tirar os reagentes das cartas do level up.
+- [x] Vitamina sai da vesícula e vira suplemento.
+- [x] Gema de XP com chance por tipo de molécula (60% comum, 40% fragmento, 100% forte), valendo o XP dividido pela chance.
+- [x] Ampola: chance por molécula, multiplicada pela Sorte e pelo Estresse, com garantia aos 90 s e intervalo mínimo de 20 s; chefe solta uma ampola de mínimo Ultra raro junto da cápsula. As chances subiram para 0,5% (comum) e 4% (forte) para chegar a cerca de 10 ampolas em 10 minutos.
+- [x] Abrir a ampola: pausa curta, quebra, suplemento com a moldura da raridade, toque para voltar (no PC fecha sozinha em 1,5 s).
+- [x] Pausa com a grade de suplementos (`×N`). O aviso de 2 s ficou dispensável: a tela da ampola já mostra o suplemento.
+- [ ] "De onde vem" cada bônus na aba Atributos (receptor, suplemento, Laboratório).
+- [x] Sprites de 16×16 da ampola (fechada e quebrando) e seção "Suplementos" no Compêndio.
+- [ ] Um ícone próprio por suplemento (hoje usam o ícone do atributo); fica para uma prancheta do canvas.
+- [x] Atualizar [wiki.md](wiki.md) e rodar o `npm run sim` com as ampolas. O nível médio numa run de 10 minutos fica 6% acima (25,7 contra 24,2), e o ATP por run sobe cerca de 20% (parte vem do robô, que agora pega os itens).
 
 **Critério de saída:** numa run de 10 minutos saem de 6 a 10 ampolas, duas runs seguidas terminam com suplementos bem diferentes, e o XP por minuto fica a menos de 10% do de antes.
 

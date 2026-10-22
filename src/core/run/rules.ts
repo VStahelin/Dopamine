@@ -7,6 +7,7 @@ import {
   RARITIES,
   RUN,
   STATS,
+  SUPPLEMENTS,
   WEAPONS,
   type AgentDef,
   type AgentId,
@@ -20,6 +21,7 @@ import {
   type RunConfig,
   type StatGroup,
   type StatsConfig,
+  type SupplementsConfig,
   type WeaponDef,
   type WeaponId,
 } from '../../config';
@@ -38,6 +40,7 @@ export interface RunRules {
   rarities: RarityConfig;
   agents: Record<AgentId, AgentDef>;
   drops: DropsConfig;
+  supplements: SupplementsConfig;
   /** Cápsulas já abertas no save, para a sorte de principiante; sem o número, 0. */
   capsulesOpened?: number;
   /** Receptores liberados na meta-progressão; sem a lista, todos. */
@@ -56,6 +59,7 @@ export const DEFAULT_RULES: RunRules = {
   rarities: RARITIES,
   agents: AGENTS,
   drops: DROPS,
+  supplements: SUPPLEMENTS,
 };
 
 /**

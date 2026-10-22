@@ -540,7 +540,6 @@ export const ITEM_IDS = [
   'glycogen',
   'lysosome',
   'bunsen',
-  'vitamin',
   'glucagon',
 ] as const;
 export type ItemId = (typeof ITEM_IDS)[number];
@@ -562,8 +561,6 @@ export interface ItemDef {
   heal?: number;
   /** Duração do efeito (Gelo seco, Bico de Bunsen, Febre de ATP). */
   seconds?: number;
-  /** Sorte somada até o fim da run (Vitamina). */
-  luckBonus?: number;
 }
 
 /** Itens no mapa da fase 5.5 (drops.json). */
@@ -580,8 +577,26 @@ export interface DropsConfig {
   flame: { damagePerSecond: number; rangePx: number; spreadRadians: number };
   /** Febre de ATP: segundos somados a cada ATP coletado. */
   fever: { secondsPerCoin: number };
-  /** Cor da gema pelo XP: ciano até `smallMaxXp`, verde até `mediumMaxXp`, vermelha acima. */
-  gems: { smallMaxXp: number; mediumMaxXp: number };
+  /**
+   * Cor da gema pelo XP: ciano até `smallMaxXp`, verde até `mediumMaxXp`, vermelha acima.
+   * `chance`: chance de soltar gema por tipo de molécula; a gema vale o XP dividido pela chance.
+   */
+  gems: {
+    smallMaxXp: number;
+    mediumMaxXp: number;
+    chance: { common: number; fragment: number; strong: number };
+  };
+  /** Ampola (o baú do Megabonk, decisão 0028): chance por molécula, garantia e intervalo. */
+  ampoule: {
+    chance: { common: number; strong: number };
+    /** Sem ampola de molécula comum por este tempo, a chance dobra até sair uma. */
+    guaranteeSeconds: number;
+    /** No máximo uma ampola de molécula comum a cada este tempo. */
+    minIntervalSeconds: number;
+    /** Raridade mínima da ampola do chefe. */
+    bossMinRarity: SupplementRarity;
+    touchRadiusPx: number;
+  };
   capsule: {
     /** Chefe a partir deste minuto solta a cápsula de prata, que pode evoluir arma. */
     silverAfterMinutes: number;
@@ -595,4 +610,43 @@ export interface DropsConfig {
   };
   /** ATP, em moedas, quando a cápsula ou o level up não têm mais o que subir. */
   phosphocreatine: { coins: number };
+}
+
+/** Raridades dos suplementos (decisão 0028); `tier` é o id em rarities.json, para a cor. */
+export const SUPPLEMENT_RARITIES = ['common', 'rare', 'ultraRare', 'legendary'] as const;
+export type SupplementRarity = (typeof SUPPLEMENT_RARITIES)[number];
+
+/** O que um suplemento faz; cada cópia soma de novo. */
+export type SupplementEffect =
+  /** Soma ao atributo da run, até o teto (stats.json). */
+  | { kind: 'stat'; stat: RunStatKey; value: number }
+  /** Soma a um atributo do especial (grupo special de stats.json). */
+  | { kind: 'special'; stat: 'cooldown' | 'power' | 'duration' | 'charges'; value: number }
+  /** Nitrogênio líquido: chance de congelar a molécula atingida. */
+  | { kind: 'freezeOnHit'; chance: number; seconds: number }
+  /** Aquaporina: de tempos em tempos todas as gemas correm até o agente. */
+  | { kind: 'gemPulse'; seconds: number }
+  /** Eletrodo: chance de faísca ao decompor, que atinge as moléculas mais perto. */
+  | { kind: 'spark'; chance: number; targets: number; damage: number; rangePx: number }
+  /** Termita: a molécula decomposta explode e queima as vizinhas. */
+  | { kind: 'thermite'; damage: number; radiusPx: number }
+  /** Criopreservação: perder interações congela tudo, com recarga. */
+  | { kind: 'cryo'; seconds: number; cooldownSeconds: number }
+  /** Reagente da evolução: liga o passivo de mesmo nome (uma cópia só). */
+  | { kind: 'reagent'; passive: string };
+
+export interface SupplementDef {
+  name: string;
+  rarity: SupplementRarity;
+  description: string;
+  /** Ícone do grupo `passives` de icons.json, até os suplementos terem ícones próprios. */
+  icon: string;
+  effect: SupplementEffect;
+}
+
+export interface SupplementsConfig {
+  rarities: Record<SupplementRarity, { tier: string; weight: number }>;
+  /** Peso do reagente quando a arma dele está no máximo sem ele. */
+  reagentBoost: number;
+  items: Record<string, SupplementDef>;
 }

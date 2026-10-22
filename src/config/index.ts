@@ -17,6 +17,7 @@ import passivesJson from './passives.json';
 import raritiesJson from './rarities.json';
 import runJson from './run.json';
 import statsJson from './stats.json';
+import supplementsJson from './supplements.json';
 import weaponsJson from './weapons.json';
 import {
   RUN_STAT_KEYS,
@@ -40,6 +41,8 @@ import {
   type RunConfig,
   type SpecialKind,
   type StatsConfig,
+  type SupplementsConfig,
+  SUPPLEMENT_RARITIES,
   type WeaponDef,
   type WeaponKind,
   type WeaponParams,
@@ -47,7 +50,7 @@ import {
 } from './types';
 
 export type * from './types';
-export { ITEM_IDS, RUN_STAT_KEYS, SECTORS } from './types';
+export { ITEM_IDS, RUN_STAT_KEYS, SECTORS, SUPPLEMENT_RARITIES } from './types';
 
 export type EnemyKind = keyof typeof enemiesJson;
 export type WeaponId = keyof typeof weaponsJson;
@@ -202,7 +205,8 @@ export const WEAPONS: Record<WeaponId, WeaponDef> = loadWeapons();
 export const PASSIVES: Record<PassiveId, PassiveDef> = loadPassives();
 export const AGENTS: Record<AgentId, AgentDef> = loadAgents();
 export const RARITIES: RarityConfig = raritiesJson;
-export const DROPS: DropsConfig = dropsJson;
+export const DROPS: DropsConfig = dropsJson as DropsConfig;
+export const SUPPLEMENTS: SupplementsConfig = loadSupplements();
 for (const id of ITEM_IDS) exists(id, dropsJson.items, 'drops.json items');
 if (RARITIES.tiers.length === 0) {
   throw new Error('Configuração inválida: rarities.json sem raridades');
@@ -215,6 +219,25 @@ for (const [id, def] of Object.entries(AGENTS)) {
 }
 
 /** Confere meta.json: ids que existem, atributos do Laboratório e os tetos permanentes. */
+/** Confere supplements.json: raridades, atributos, ícones e reagentes que existem. */
+function loadSupplements(): SupplementsConfig {
+  const cfg = supplementsJson as SupplementsConfig;
+  for (const [id, def] of Object.entries(cfg.items)) {
+    const where = `supplements.json ${id}`;
+    oneOf(def.rarity, SUPPLEMENT_RARITIES, `${where}.rarity`);
+    exists(def.icon, passivesJson, `${where}.icon`);
+    const e = def.effect;
+    if (e.kind === 'stat') oneOf(e.stat, RUN_STAT_KEYS, `${where}.effect.stat`);
+    if (e.kind === 'reagent') exists(e.passive, passivesJson, `${where}.effect.passive`);
+  }
+  for (const r of SUPPLEMENT_RARITIES) {
+    if (!RARITIES.tiers.some((t) => t.id === cfg.rarities[r].tier)) {
+      throw new Error(`Configuração inválida em supplements.json rarities.${r}.tier`);
+    }
+  }
+  return cfg;
+}
+
 function loadMeta(): MetaConfig {
   const meta: MetaConfig = metaJson;
   for (const id of meta.start.agents) exists(id, agentsJson, 'meta.json start.agents');

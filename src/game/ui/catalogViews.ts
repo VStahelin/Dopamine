@@ -5,6 +5,8 @@ import {
   ENEMIES,
   ITEM_IDS,
   PASSIVES,
+  RARITIES,
+  SUPPLEMENTS,
   WEAPONS,
   type AgentId,
   type EnemyKind,
@@ -326,6 +328,7 @@ export function renderCompendium(
   w: number,
   seen: readonly string[],
   seenItems: readonly string[],
+  seenSupplements: readonly string[] = [],
 ): Obj[] {
   const { left, width } = column(x, w);
   const g = scene.add.graphics();
@@ -376,7 +379,65 @@ export function renderCompendium(
     }
     cy += h + 4;
   }
-  out.push(...renderItems(scene, g, left, cy + 12, width, seenItems));
+  const items = renderItems(scene, g, left, cy + 12, width, seenItems);
+  out.push(...items.objects);
+  out.push(...renderSupplements(scene, g, left, items.bottom + 12, width, seenSupplements));
+  return out;
+}
+
+/** Seção "Suplementos" do Compêndio, na ordem de supplements.json (fase 5.9). */
+function renderSupplements(
+  scene: Phaser.Scene,
+  g: Phaser.GameObjects.Graphics,
+  left: number,
+  y: number,
+  width: number,
+  seen: readonly string[],
+): Obj[] {
+  const ids = Object.keys(SUPPLEMENTS.items);
+  const known = ids.filter((id) => seen.includes(id)).length;
+  const out: Obj[] = [header(scene, left, y, `SUPLEMENTOS · ${known}/${ids.length}`)];
+  let cy = y + 16;
+  for (const id of ids) {
+    const def = SUPPLEMENTS.items[id]!;
+    const isSeen = seen.includes(id);
+    const h = 40;
+    drawInkBox(g, left, cy, width, h, PALETTE.panel);
+    const slot = addIconSlot(scene, left + 6, cy + 6, 1, {
+      ...passiveSlot(def.icon as PassiveId, 0),
+      label: undefined,
+      dim: !isSeen,
+    });
+    out.push(...slot.objects);
+    const tx = left + 6 + slot.size + 10;
+    if (!isSeen) {
+      out.push(scene.add.text(tx, cy + 11, '???', impactText(13, PALETTE_CSS.textMuted)));
+    } else {
+      const tier = RARITIES.tiers.find((r) => r.id === SUPPLEMENTS.rarities[def.rarity].tier);
+      out.push(
+        scene.add.text(
+          tx,
+          cy + 4,
+          def.name,
+          withShadow(bodyText(13, PALETTE_CSS.text), PALETTE_CSS.ink, 1),
+        ),
+        scene.add
+          .text(
+            left + width - 10,
+            cy + 6,
+            (tier?.name ?? '').toUpperCase(),
+            labelText(8, tier?.color ?? PALETTE_CSS.cyan),
+          )
+          .setOrigin(1, 0),
+        scene.add.text(tx, cy + 22, def.description, {
+          ...bodyText(9, PALETTE_CSS.textSoft),
+          wordWrap: { width: left + width - 8 - tx },
+          maxLines: 1,
+        }),
+      );
+    }
+    cy += h + 4;
+  }
   return out;
 }
 
@@ -388,7 +449,7 @@ function renderItems(
   y: number,
   width: number,
   seen: readonly string[],
-): Obj[] {
+): { objects: Obj[]; bottom: number } {
   const known = ITEM_IDS.filter((id) => seen.includes(id)).length;
   const out: Obj[] = [header(scene, left, y, `ITENS · ${known}/${ITEM_IDS.length}`)];
   let cy = y + 16;
@@ -419,5 +480,5 @@ function renderItems(
     }
     cy += h + 4;
   }
-  return out;
+  return { objects: out, bottom: cy };
 }

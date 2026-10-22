@@ -3,6 +3,7 @@ import { clampLength, type Vec2 } from '../math/vec2';
 import { damageEnemy, heal } from './combat';
 import { difficultyAt, waveFactorAt, xpToNextLevel } from './progression';
 import { extendFever, updateItems } from './items';
+import { onHurt } from './supplements';
 import { SpatialGrid } from './spatialGrid';
 import { updateSpecial } from './specials';
 import { addEnemy, type Enemy, type RunState } from './state';
@@ -31,7 +32,7 @@ const grid = new SpatialGrid(GRID_CELL);
  * encerrada ou com um level up esperando escolha.
  */
 export function stepRun(state: RunState, input: StepInput, dt: number): void {
-  if (state.over || state.pendingLevelUps > 0 || state.capsule) return;
+  if (state.over || state.pendingLevelUps > 0 || state.capsule || state.ampoule) return;
   state.time += dt;
   state.viewRadius = input.viewRadius;
 
@@ -151,7 +152,8 @@ function moveEnemies(state: RunState, dt: number): void {
     const dx = agent.x - e.x;
     const dy = agent.y - e.y;
     const dist = Math.hypot(dx, dy);
-    if (dist > 0.001 && !frozen) {
+    e.frozen = Math.max(0, e.frozen - dt);
+    if (dist > 0.001 && !frozen && e.frozen <= 0) {
       const step = Math.min(e.speed * e.slow * dt, dist);
       e.x += (dx / dist) * step;
       e.y += (dy / dist) * step;
@@ -220,6 +222,7 @@ function touchAgent(state: RunState, dt: number): void {
   agent.interactions = Math.max(0, agent.interactions - amount);
   state.tally.interactionsLost += amount;
   state.events.push({ type: 'hurt', amount });
+  onHurt(state);
   // Reflexo: devolve parte do dano a quem encostou.
   if (stats.thorns > 0) damageEnemy(state, attacker, hit * stats.thorns);
 

@@ -4,7 +4,7 @@ import { NO_MODS, type WeaponMods } from './weaponParams';
 
 /** Recarga, força e duração base do especial (grupo special de stats.json). */
 function specialStat(state: RunState, key: 'cooldown' | 'power' | 'duration' | 'charges'): number {
-  return state.rules.stats.special[key]?.base ?? 1;
+  return (state.rules.stats.special[key]?.base ?? 1) + (state.specialBonus[key] ?? 0);
 }
 
 /** Fração da recarga do especial que já passou (0 a 1), para o botão na HUD. */

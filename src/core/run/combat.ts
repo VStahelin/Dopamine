@@ -1,6 +1,7 @@
 import type { EnemyKind, WeaponId } from '../../config';
 import { difficultyAt } from './progression';
 import { addEnemy, type Enemy, type RunState } from './state';
+import { onHit, onKill } from './supplements';
 import { coinValue } from './upgrades';
 
 /** Inimigo vivo mais perto de (x, y), ignorando os ids em `skip`. */
@@ -61,6 +62,7 @@ export function hitEnemy(state: RunState, e: Enemy, base: number, opts: HitOptio
     }
   }
   if (crit) state.tally.crits++;
+  if (!opts.continuous) onHit(state, e);
   if (opts.source) {
     const t = state.tally.damageByWeapon;
     t[opts.source] = (t[opts.source] ?? 0) + Math.min(amount, Math.max(0, e.hp));
@@ -85,8 +87,9 @@ export function damageEnemy(
 
   state.kills++;
   state.events.push({ type: 'kill', x: e.x, y: e.y, kind: e.kind });
-  dropGem(state, e.x, e.y, e.xp);
+  dropXp(state, e);
   dropCoin(state, e);
+  dropAmpoule(state, e);
   // O chefe solta a cápsula; a de prata, depois dos 10 minutos, pode evoluir uma arma.
   if (e.boss) {
     const silver = state.time >= state.rules.drops.capsule.silverAfterMinutes * 60;
@@ -99,6 +102,7 @@ export function damageEnemy(
     if (def.growPerKillPx) w.growth = Math.min(def.growMaxPx ?? 0, w.growth + def.growPerKillPx);
   }
   spawnFragments(state, e);
+  onKill(state, e);
 }
 
 /** Cascata: a molécula decomposta se quebra nas mais fracas, em volta de onde estava. */
@@ -117,7 +121,7 @@ function spawnFragments(state: RunState, e: Enemy): void {
         e.x + Math.cos(angle) * d,
         e.y + Math.sin(angle) * d,
         difficulty,
-      );
+      ).fragment = true;
     }
   }
 }
@@ -140,6 +144,45 @@ function dropCoin(state: RunState, e: Enemy): void {
   let value = coinValue(state);
   if (e.boss) value *= c.bossValueMultiplier;
   state.coins.push({ x: e.x, y: e.y, value, attracted: false });
+}
+
+/**
+ * Gema de XP com chance pelo tipo de molécula (decisão 0028): a que cai vale o XP dividido pela
+ * chance, então o XP médio não muda.
+ */
+function dropXp(state: RunState, e: Enemy): void {
+  const c = state.rules.drops.gems.chance;
+  const chance = e.elite || e.boss ? c.strong : e.fragment ? c.fragment : c.common;
+  if (chance <= 0 || state.rng.next() >= chance) return;
+  dropGem(state, e.x, e.y, e.xp / chance);
+}
+
+/**
+ * Ampola: sempre no chefe (raridade mínima alta); chance pequena nas outras, pela Sorte e pelo
+ * Estresse, com garantia contra seca e intervalo mínimo nas comuns.
+ */
+function dropAmpoule(state: RunState, e: Enemy): void {
+  const a = state.rules.drops.ampoule;
+  if (e.boss) {
+    state.pickups.push({
+      x: e.x,
+      y: e.y,
+      kind: 'ampoule',
+      attracted: false,
+      minRarity: a.bossMinRarity,
+    });
+    return;
+  }
+  if (e.fragment) return;
+  const common = !e.elite;
+  const since = state.time - state.lastAmpouleAt;
+  if (common && since < a.minIntervalSeconds) return;
+  let chance = (common ? a.chance.common : a.chance.strong) * Math.max(0.01, state.stats.luck);
+  chance *= 1 + state.stats.curse;
+  if (common && since >= a.guaranteeSeconds) chance *= 2;
+  if (state.rng.next() >= chance) return;
+  if (common) state.lastAmpouleAt = state.time;
+  state.pickups.push({ x: e.x, y: e.y, kind: 'ampoule', attracted: false, minRarity: 'common' });
 }
 
 function dropGem(state: RunState, x: number, y: number, value: number): void {

@@ -50,7 +50,6 @@ No neurônio, a **vesícula sináptica** é a bolsa que guarda a dopamina até e
 | **Glicogênio** | Rich Coin Bag | ATP igual a 25 moedas × Rendimento | 1 | 5 |
 | **Lisossomo** | Rosary | Decompõe todas as moléculas na tela, com cascata e gemas; o chefe não é afetado | 1 | 8 |
 | **Bico de Bunsen** | Nduja Fritta Tanto | Lança-chamas na direção do movimento por 10 s, com Reatividade, Difusão e afinidades do agente | 1 | — |
-| **Vitamina** | Little Clover | +10% de Sorte até o fim da run; acumula sem limite | 1 | — |
 | **Glucagon** | Gilded Clover | Puxa todo o ATP do chão e começa a **Febre de ATP**: por 10 s toda molécula decomposta solta ATP, e cada ATP coletado soma 0,5 s à febre | 1 | 30 |
 
 Com os pesos acima, uma vesícula solta ATP ou Glicose em cerca de 75% das vezes, Soro em 15% e um item especial no resto, como no VS.

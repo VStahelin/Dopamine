@@ -1,12 +1,26 @@
 import * as Phaser from 'phaser';
-import { PASSIVES, STATS, WEAPONS, type PassiveId, type RunStatKey } from '../../config';
+import {
+  PASSIVES,
+  STATS,
+  SUPPLEMENTS,
+  WEAPONS,
+  type PassiveId,
+  type RunStatKey,
+} from '../../config';
 import type { RunState } from '../../core/run/state';
 import { statDef } from '../../core/run/stats';
 import { weaponMaxLevel } from '../../core/run/weaponParams';
 import { paramsOf } from '../../core/run/weapons';
 import { PALETTE, PALETTE_CSS } from '../render/palette';
 import { iconTexture } from '../render/textures';
-import { addIconSlot, passiveSlot, rowSlots, weaponSlot, type SlotContent } from './iconSlot';
+import {
+  addIconSlot,
+  passiveSlot,
+  rowSlots,
+  slotSize,
+  weaponSlot,
+  type SlotContent,
+} from './iconSlot';
 import { statDelta, statTrend, statValue } from './statText';
 import { bodyText, formatTime, labelText, withShadow, impactText } from './theme';
 
@@ -203,7 +217,33 @@ function effectRows(run: RunState): Build[] {
   });
 }
 
-/** Aba Arsenal: armas, reagentes e efeitos, com os espaços livres e bloqueados. */
+/** Suplementos numa grade, com o número de cópias de cada um (fase 5.9). */
+function supplementGrid(run: RunState): Build {
+  return (scene, width) => {
+    const ids = Object.keys(run.supplements);
+    const size = slotSize(1);
+    const gap = 6;
+    const perRow = Math.max(1, Math.floor((width - 12 + gap) / (size + gap)));
+    const rows = Math.ceil(ids.length / perRow);
+    const height = rows * (size + gap) + 10;
+    const children: Phaser.GameObjects.GameObject[] = [box(scene, width, height)];
+    ids.forEach((id, i) => {
+      const def = SUPPLEMENTS.items[id]!;
+      const n = run.supplements[id] ?? 0;
+      const slot = addIconSlot(
+        scene,
+        6 + (i % perRow) * (size + gap),
+        6 + Math.floor(i / perRow) * (size + gap),
+        1,
+        { ...passiveSlot(def.icon as PassiveId, 0), label: n > 1 ? `×${n}` : undefined },
+      );
+      children.push(...slot.objects);
+    });
+    return row(scene, width, height, children);
+  };
+}
+
+/** Aba Arsenal: armas, receptores, suplementos e efeitos, com os espaços livres e bloqueados. */
 export function arsenalRows(run: RunState): Build[] {
   const weaponOpen = Math.floor(run.stats.weaponSlots);
   const held = (Object.keys(run.passives) as PassiveId[]).filter(
@@ -229,6 +269,16 @@ export function arsenalRows(run: RunState): Build[] {
     header('RECEPTORES', PALETTE_CSS.cyan, `${held.length}/${passiveOpen}`),
     ...held.map((id) => passiveRow(run, id)),
     ...passiveFill.map((c) => slotRow(c, 'receptor', 1)),
+    ...(Object.keys(run.supplements).length > 0
+      ? [
+          header(
+            'SUPLEMENTOS',
+            PALETTE_CSS.gold,
+            String(Object.values(run.supplements).reduce((a, b) => a + b, 0)),
+          ),
+          supplementGrid(run),
+        ]
+      : []),
     ...(effects.length > 0
       ? [header('EFEITOS ATIVOS', PALETTE_CSS.textSoft, String(effects.length)), ...effects]
       : []),

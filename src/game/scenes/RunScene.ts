@@ -73,7 +73,8 @@ export class RunScene extends Phaser.Scene {
   private paused = false;
   private accumulator = 0;
   private levelUpOpen = false;
-  private capsuleOpen = false;
+  /** Tela da cápsula ou da ampola aberta por cima da run. */
+  private overlayOpen = false;
   private overHandled = false;
   private gaveUp = false;
   private ground!: Phaser.GameObjects.TileSprite;
@@ -128,7 +129,7 @@ export class RunScene extends Phaser.Scene {
     this.paused = false;
     this.accumulator = 0;
     this.levelUpOpen = false;
-    this.capsuleOpen = false;
+    this.overlayOpen = false;
     this.overHandled = false;
     this.gaveUp = false;
     this.enemySprites = [];
@@ -182,7 +183,7 @@ export class RunScene extends Phaser.Scene {
 
   /** Abre ou fecha a pausa (tecla Esc, P ou o botão da HUD). */
   togglePause(): void {
-    if (this.run.over || this.levelUpOpen || this.capsuleOpen) return;
+    if (this.run.over || this.levelUpOpen || this.overlayOpen) return;
     this.paused = !this.paused;
     this.showNumbers = getSave(this).options.showDamageNumbers;
     if (this.paused) this.scene.launch(SCENES.pause);
@@ -224,6 +225,7 @@ export class RunScene extends Phaser.Scene {
       SCENES.hud,
       SCENES.levelUp,
       SCENES.capsule,
+      SCENES.ampoule,
       SCENES.pause,
       SCENES.options,
       SCENES.gameOver,
@@ -245,7 +247,7 @@ export class RunScene extends Phaser.Scene {
       stepRun(this.run, { ...input, special: this.specialQueued }, step);
       this.specialQueued = false;
       this.accumulator -= step;
-      if (this.run.over || this.run.pendingLevelUps > 0 || this.run.capsule) {
+      if (this.run.over || this.run.pendingLevelUps > 0 || this.run.capsule || this.run.ampoule) {
         this.accumulator = 0;
         break;
       }
@@ -275,8 +277,10 @@ export class RunScene extends Phaser.Scene {
         .setFlipX(e.x > agent.x);
       if (e.hitFlash > 0) s.setTint(0xffffff).setTintMode(Phaser.TintModes.FILL);
       // Gelo seco: moléculas pintadas de azul.
-      else if (frozen) s.setTint(PALETTE.water).setTintMode(Phaser.TintModes.MULTIPLY);
-      else s.clearTint();
+      // Gelo seco ou Nitrogênio líquido: moléculas pintadas de azul.
+      else if (frozen || e.frozen > 0) {
+        s.setTint(PALETTE.water).setTintMode(Phaser.TintModes.MULTIPLY);
+      } else s.clearTint();
     });
     this.drawFields();
     const electrons = this.run.weapons.flatMap((w, i) =>
@@ -320,7 +324,7 @@ export class RunScene extends Phaser.Scene {
     // Itens piscam devagar; a cápsula é maior.
     const glow = 0.75 + 0.25 * Math.sin(this.run.time * 5);
     sync(this, this.pickupSprites, this.run.pickups, 3, (s, p) => {
-      const capsule = p.kind === 'capsule';
+      const capsule = p.kind === 'capsule' || p.kind === 'ampoule';
       const id = capsule ? (p.silver ? 'capsuleSilver' : 'capsuleBronze') : p.kind;
       this.placeIcon(s, id, p.x, p.y, capsule ? CAPSULE_SIZE : ITEM_SIZE);
       s.setAlpha(glow);
@@ -348,6 +352,7 @@ export class RunScene extends Phaser.Scene {
       if (ev.type === 'kill') this.addPopFx(ev);
       if (ev.type === 'cone') this.addConeFx(ev);
       if (ev.type === 'beam') this.addBeamFx(ev);
+      if (ev.type === 'spark') this.addSparkFx(ev);
       if (ev.type === 'strike') this.addStrikeFx(ev);
       if (ev.type === 'boss') {
         this.cameras.main.shake(400, 0.01);
@@ -356,7 +361,12 @@ export class RunScene extends Phaser.Scene {
       if (ev.type === 'special') this.cameras.main.flash(200, 255, 179, 71);
       if (ev.type === 'vesicle') this.addPopFx(ev);
       if (ev.type === 'lysosome') this.cameras.main.flash(300, 255, 255, 255);
-      if (ev.type === 'item' && ev.kind !== 'capsule' && !DROPS.items[ev.kind].coins) {
+      if (
+        ev.type === 'item' &&
+        ev.kind !== 'capsule' &&
+        ev.kind !== 'ampoule' &&
+        !DROPS.items[ev.kind].coins
+      ) {
         this.showFloater(a.x, a.y - 16, DROPS.items[ev.kind].name.toUpperCase(), 'info');
       }
     }
@@ -516,6 +526,15 @@ export class RunScene extends Phaser.Scene {
   }
 
   /** Feixe da prancheta: bordas roxo-escuras, roxo e um miolo branco. */
+  /** Faísca do Eletrodo: linha azul-clara que pisca entre as duas moléculas. */
+  private addSparkFx(ev: { x1: number; y1: number; x2: number; y2: number }) {
+    const px = 1 / this.detail;
+    this.addFx(0.15, (g, a) => {
+      g.fillStyle(PALETTE.cyan, a);
+      pixelBand(g, ev.x1, ev.y1, ev.x2, ev.y2, 2, px);
+    });
+  }
+
   private addBeamFx(ev: { x: number; y: number; angle: number; length: number; width: number }) {
     const x2 = ev.x + Math.cos(ev.angle) * ev.length;
     const y2 = ev.y + Math.sin(ev.angle) * ev.length;
@@ -616,18 +635,19 @@ export class RunScene extends Phaser.Scene {
   }
 
   private checkTransitions(): void {
-    // A cápsula abre antes do level up que o XP do chefe trouxer.
-    if (this.run.capsule && !this.capsuleOpen && !this.levelUpOpen && !this.run.over) {
-      this.capsuleOpen = true;
-      this.scene.launch(SCENES.capsule, {
+    // A cápsula e a ampola abrem antes do level up que o XP do chefe trouxer.
+    const overlay = this.run.capsule ? SCENES.capsule : this.run.ampoule ? SCENES.ampoule : null;
+    if (overlay && !this.overlayOpen && !this.levelUpOpen && !this.run.over) {
+      this.overlayOpen = true;
+      this.scene.launch(overlay, {
         run: this.run,
         onDone: () => {
-          this.capsuleOpen = false;
+          this.overlayOpen = false;
         },
       });
       return;
     }
-    if (this.capsuleOpen) return;
+    if (this.overlayOpen) return;
     if (this.run.pendingLevelUps > 0 && !this.levelUpOpen && !this.run.over) {
       this.levelUpOpen = true;
       this.scene.launch(SCENES.levelUp, {

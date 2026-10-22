@@ -76,14 +76,6 @@ describe('itens', () => {
     expect(common.hp).toBeLessThanOrEqual(0);
     expect(boss.hp).toBeGreaterThan(0);
   });
-
-  it('Vitamina soma Sorte até o fim da run', () => {
-    const r = run();
-    const before = r.stats.luck;
-    r.pickups.push({ x: 0, y: 0, kind: 'vitamin', attracted: false });
-    steps(r, 1);
-    expect(r.stats.luck).toBeCloseTo(before + 0.1);
-  });
 });
 
 describe('cápsula do chefe', () => {

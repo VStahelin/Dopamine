@@ -68,14 +68,6 @@
       "luck": true,
       "seconds": 10
     },
-    "vitamin": {
-      "name": "Vitamina",
-      "description": "+10% de Sorte até o fim da run.",
-      "weight": 1,
-      "minLevel": 0,
-      "luck": true,
-      "luckBonus": 0.1
-    },
     "glucagon": {
       "name": "Glucagon",
       "description": "Puxa o ATP do chão e começa a Febre de ATP.",
@@ -95,7 +87,12 @@
   },
   "gems": {
     "smallMaxXp": 2,
-    "mediumMaxXp": 9
+    "mediumMaxXp": 9,
+    "chance": {
+      "common": 0.6,
+      "fragment": 0.4,
+      "strong": 1
+    }
   },
   "capsule": {
     "silverAfterMinutes": 10,
@@ -111,5 +108,15 @@
   },
   "phosphocreatine": {
     "coins": 10
+  },
+  "ampoule": {
+    "chance": {
+      "common": 0.005,
+      "strong": 0.04
+    },
+    "guaranteeSeconds": 90,
+    "minIntervalSeconds": 20,
+    "bossMinRarity": "ultraRare",
+    "touchRadiusPx": 14
   }
 }

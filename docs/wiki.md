@@ -138,10 +138,10 @@ Quanto mais Sorte, mais aparecem as raridades altas.
 Começam em zero: vêm do Laboratório e do setor Executiva do organismo.
 
 ### Reagentes
-Peróxido, Cloro, Ozônio e Coenzima também aparecem no level up, sem ocupar espaço de receptor: com a arma certa no nível máximo, liberam a evolução.
+Peróxido, Cloro, Ozônio e Coenzima liberam a evolução. Eles vêm das ampolas (veja Suplementos e ampolas).
 
 ### Os outros atributos
-Penetração, Reação em cadeia, Força da catálise, Repulsão, Especificidade, Esquiva, Absorção, Tolerância, Segunda dose e Reflexo não saem mais no level up. Por enquanto vêm do Laboratório e da Mutação; depois vão sair dos suplementos.
+Penetração, Reação em cadeia, Força da catálise, Repulsão, Especificidade, Esquiva, Absorção, Tolerância, Segunda dose e Reflexo não saem mais no level up. Vêm dos suplementos, do Laboratório e da Mutação.
 
 ---
 
@@ -185,9 +185,6 @@ O ATP vale uma moeda; a Glicose, 5; o Glicogênio, 25 (a partir do nível 5). A 
 ### Soro
 Recupera 30 interações.
 
-### Vitamina
-+10% de Sorte até o fim da run. Acumula.
-
 ### Gelo seco
 A partir do nível 4. Congela todas as moléculas por 10 segundos: elas param e não gastam suas interações, e você as empurra ao passar.
 
@@ -204,7 +201,7 @@ Lança-chamas na direção em que você anda, por 10 segundos. Usa a sua Reativi
 A partir do nível 30. Puxa todo o ATP do chão e começa a Febre de ATP: por 10 segundos toda molécula decomposta solta ATP, e cada ATP coletado soma meio segundo à febre.
 
 ### Gemas de XP
-A cor mostra o valor: ciano vale até 2 de XP, verde até 9, vermelha mais que isso. Com gemas demais no chão, o XP novo se junta numa gema só.
+Nem toda molécula solta gema: a comum solta em 60% das vezes, a que nasceu da cascata em 40%, e a forte e o chefe sempre. A gema que cai vale mais para compensar, então o XP no fim é o mesmo. A cor mostra o valor: ciano até 2 de XP, verde até 9, vermelha mais que isso. Com gemas demais no chão, o XP novo se junta numa gema só.
 
 ### Cápsula do chefe
 Todo chefe solta uma cápsula, que você precisa tocar. Ela sobe um nível de 1, 3 ou 5 armas ou receptores que você já tem, com raridade pela Sorte, e dá ATP. A Sorte também aumenta a chance de 3 e 5. As seis primeiras cápsulas do save dão 1, 1, 3, 1, 1 e 5.
@@ -214,6 +211,39 @@ Depois dos 10 minutos a cápsula é de prata: se uma arma estiver no nível máx
 
 ### Fosfocreatina
 Quando a cápsula ou o level up não têm mais o que subir, você ganha Fosfocreatina: ATP igual a 10 moedas.
+
+---
+
+## Suplementos e ampolas
+
+*Números de `supplements.json` e `drops.json`. O Compêndio mostra cada suplemento depois que você o toma.*
+
+### Ampolas
+A ampola é uma ampola de vidro de remédio injetável, parada no chão. Para abrir é preciso encostar nela (o Raio de coleta não puxa). Ela quebra e você toma um suplemento.
+
+### De onde vêm as ampolas
+- Molécula comum: chance pequena; molécula forte: chance maior. A Sorte e o Estresse aumentam as duas.
+- Se passar 90 segundos sem ampola de molécula comum, a chance dobra até sair uma; e sai no máximo uma a cada 20 segundos.
+- O chefe sempre solta uma ampola Ultra rara ou melhor, além da cápsula.
+
+### Suplementos
+Ficam até o fim da run, não ocupam espaço e acumulam: a segunda Creatina soma o mesmo bônus de novo, até o teto do atributo. A pausa mostra todos, com o número de cópias.
+
+### Raridades
+Comum, Raro, Ultra raro e Lendário, pela cor da moldura. A Sorte deixa os raros mais comuns.
+
+### Os que sobem atributos
+Creatina (dano), Vitamina (Sorte), Ferro (interações), Eletrólitos (recuperação), Cafeína (velocidade), Bicarbonato (empurrão), Ácido fórmico (devolve dano), Mucina (tempo sem levar dano), Glutamina (recupera ao decompor), Fluoresceína (alcance), Ginseng (recarga do especial), Surfactante (atravessa moléculas), Cobre (saltos), Anticorpo (dano em fortes e chefes), Mitocôndria (ATP), Enzima digestiva (dano crítico), Platina (chance de efeito), Nootrópico (+1 opção no level up) e Dose de reforço (+1 Segunda dose).
+
+### Os de efeito
+- **Nitrogênio líquido:** chance de congelar a molécula atingida por 1 segundo.
+- **Aquaporina:** a cada 60 segundos todas as gemas correm até você.
+- **Eletrodo:** ao decompor, chance de uma faísca que atinge 3 moléculas perto.
+- **Termita:** a molécula decomposta explode e queima as vizinhas.
+- **Criopreservação:** ao perder interações, congela tudo na tela por 2 segundos (uma vez a cada 30).
+
+### Reagentes
+Peróxido, Cloro, Ozônio e Coenzima saem das ampolas, não mais do level up. Com a arma certa no nível máximo, o reagente dela sai muito mais vezes, e a cápsula de prata faz a evolução.
 
 ---
 

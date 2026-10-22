@@ -84,7 +84,11 @@ describe('stepRun', () => {
 
   it('inimigos nascem fora da tela', () => {
     const run = createRun(7);
-    steps(600, () => stepRun(run, STILL, DT));
+    // Level ups não interessam aqui: sem descartar, a run para e nada mais nasce.
+    steps(600, () => {
+      run.pendingLevelUps = 0;
+      stepRun(run, STILL, DT);
+    });
     expect(run.enemies.length).toBeGreaterThan(0);
     expect(run.kills + run.enemies.length).toBeGreaterThan(5);
   });

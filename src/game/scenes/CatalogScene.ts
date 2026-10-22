@@ -89,7 +89,7 @@ export class CatalogScene extends Phaser.Scene {
               },
             },
           )
-        : renderCompendium(this, 0, 64, w, save.seen, save.seenItems);
+        : renderCompendium(this, 0, 64, w, save.seen, save.seenItems, save.seenSupplements);
     const bw = Math.min(w - 32, 220);
     if (this.view === 'compendium') {
       this.scroll = addScrollArea(this, body, { x: 0, y: 60, width: w, height: h - 132 }, offset);
