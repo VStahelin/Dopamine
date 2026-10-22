@@ -16,6 +16,7 @@ import {
   type PassiveId,
   type RarityConfig,
   type RunConfig,
+  type StatGroup,
   type StatsConfig,
   type WeaponDef,
   type WeaponId,
@@ -48,3 +49,22 @@ export const DEFAULT_RULES: RunRules = {
   rarities: RARITIES,
   agents: AGENTS,
 };
+
+/**
+ * Regras com bônus somados à base dos atributos (Laboratório, setores do organismo). As chaves são
+ * as de stats.json; os atributos do especial vêm como `special.<chave>`.
+ */
+export function withStatBonuses(rules: RunRules, bonuses: Record<string, number>): RunRules {
+  const stats = Object.fromEntries(
+    (Object.entries(rules.stats) as [string, StatGroup][]).map(([group, entries]) => [
+      group,
+      Object.fromEntries(
+        Object.entries(entries).map(([key, stat]) => {
+          const bonus = bonuses[group === 'special' ? `special.${key}` : key] ?? 0;
+          return [key, bonus === 0 ? stat : { ...stat, base: stat.base + bonus }];
+        }),
+      ),
+    ]),
+  ) as unknown as StatsConfig;
+  return { ...rules, stats };
+}

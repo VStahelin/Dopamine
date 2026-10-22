@@ -4,12 +4,10 @@ import {
   type AgentId,
   type EconomyConfig,
   type LabNode,
-  type StatGroup,
   type MetaConfig,
-  type StatsConfig,
   type WeaponId,
 } from '../../config';
-import type { RunRules } from '../run/rules';
+import { withStatBonuses, type RunRules } from '../run/rules';
 
 /**
  * Meta-progressão (fase 3): o que o jogador guarda entre as runs. Laboratório em árvore,
@@ -160,19 +158,10 @@ export function rulesWithProgress(
   progress: MetaProgress,
   meta: MetaConfig = META,
 ): RunRules {
-  const bonuses = labBonuses(progress, meta);
-  const stats = Object.fromEntries(
-    (Object.entries(rules.stats) as [string, StatGroup][]).map(([group, entries]) => [
-      group,
-      Object.fromEntries(
-        Object.entries(entries).map(([key, stat]) => {
-          const bonus = bonuses[group === 'special' ? `special.${key}` : key] ?? 0;
-          return [key, bonus === 0 ? stat : { ...stat, base: stat.base + bonus }];
-        }),
-      ),
-    ]),
-  ) as unknown as StatsConfig;
-  return { ...rules, stats, unlockedWeapons: progress.weapons as WeaponId[] };
+  return {
+    ...withStatBonuses(rules, labBonuses(progress, meta)),
+    unlockedWeapons: progress.weapons as WeaponId[],
+  };
 }
 
 /** Agente liberado para jogar; se o escolhido não estiver, volta para o primeiro liberado. */

@@ -11,6 +11,7 @@ import economyJson from './economy.json';
 import enemiesJson from './enemies.json';
 import idleJson from './idle.json';
 import metaJson from './meta.json';
+import organismJson from './organism.json';
 import passivesJson from './passives.json';
 import raritiesJson from './rarities.json';
 import runJson from './run.json';
@@ -27,6 +28,8 @@ import {
   type IdleAgentKind,
   type IdleConfig,
   type MetaConfig,
+  type OrganismConfig,
+  SECTORS,
   type MoleculeType,
   type PassiveDef,
   type RarityConfig,
@@ -40,7 +43,7 @@ import {
 } from './types';
 
 export type * from './types';
-export { RUN_STAT_KEYS } from './types';
+export { RUN_STAT_KEYS, SECTORS } from './types';
 
 export type EnemyKind = keyof typeof enemiesJson;
 export type WeaponId = keyof typeof weaponsJson;
@@ -276,3 +279,28 @@ function loadIdle(): IdleConfig {
     for (const k of p.kinds) exists(k, enemiesJson, 'idle.json waves.pool');
   return idle;
 }
+
+/** Confere organism.json: setores, famílias de moléculas e as doenças. */
+function loadOrganism(): OrganismConfig {
+  const org = organismJson as unknown as OrganismConfig;
+  for (const sector of SECTORS) {
+    const def = org.sectors[sector];
+    if (!def) throw new Error(`Configuração inválida em organism.json: falta o setor "${sector}"`);
+    for (const f of def.families)
+      oneOf(f, MOLECULE_TYPES, `organism.json sectors.${sector}.families`);
+  }
+  if (org.illnesses.length === 0)
+    throw new Error('Configuração inválida em organism.json: sem doenças');
+  for (const [id, a] of Object.entries(AGENTS)) {
+    for (const k of Object.keys({ ...a.health, ...a.collateral })) {
+      oneOf(k, SECTORS, `agents.json ${id}.health`);
+    }
+  }
+  for (const [id, a] of Object.entries(IDLE.agents)) {
+    for (const k of Object.keys(a.healthPerHour ?? {}))
+      oneOf(k, SECTORS, `idle.json ${id}.healthPerHour`);
+  }
+  return org;
+}
+
+export const ORGANISM: OrganismConfig = loadOrganism();

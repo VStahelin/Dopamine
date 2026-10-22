@@ -1,0 +1,51 @@
+{
+  "sectors": {
+    "physical": {
+      "name": "Física",
+      "families": ["sugar", "lipid"],
+      "effects": [{ "stat": "maxInteractions", "at100": 30, "at0": -40 }]
+    },
+    "mental": {
+      "name": "Mental",
+      "families": ["stress"],
+      "effects": [{ "stat": "special.cooldown", "at100": -0.25, "at0": 0.4 }]
+    },
+    "executive": {
+      "name": "Executiva",
+      "families": ["radical"],
+      "effects": [
+        { "stat": "rerolls", "at100": 3, "at0": 0 },
+        { "stat": "choices", "at100": 1, "at0": -1 }
+      ]
+    },
+    "social": {
+      "name": "Social",
+      "families": ["toxin"],
+      "effects": [{ "stat": "idleProduction", "at100": 0.5, "at0": -0.4 }]
+    }
+  },
+  "familyWeight": { "at0": 2.5, "at100": 0.2 },
+  "healthyThreshold": 70,
+  "run": { "minutesForFullEffect": 10, "maxEffectScale": 2 },
+  "illnesses": [
+    {
+      "name": "Física baixa",
+      "sectors": { "physical": 22, "mental": 50, "executive": 55, "social": 50 }
+    },
+    {
+      "name": "Ansiedade",
+      "sectors": { "physical": 48, "mental": 18, "executive": 45, "social": 40 }
+    },
+    {
+      "name": "Desatenção",
+      "sectors": { "physical": 45, "mental": 40, "executive": 16, "social": 45 }
+    },
+    {
+      "name": "Isolamento",
+      "sectors": { "physical": 42, "mental": 35, "executive": 45, "social": 14 }
+    }
+  ],
+  "sectorDropPerIndividual": 4,
+  "minStartSector": 5,
+  "inheritedAtpBonusPerPoint": 0.1
+}

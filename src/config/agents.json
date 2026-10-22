@@ -15,6 +15,14 @@
       "areaMultiplier": 1.5,
       "crashSeconds": 3,
       "crashCooldownMultiplier": 1.6
+    },
+    "health": {
+      "mental": 6,
+      "executive": 4,
+      "social": 3
+    },
+    "collateral": {
+      "physical": -2
     }
   },
   "lipase": {
@@ -39,6 +47,12 @@
       "radiusPx": 80,
       "type": "lipid",
       "vulnerability": 1
+    },
+    "health": {
+      "physical": 10
+    },
+    "collateral": {
+      "mental": -1
     }
   },
   "insulin": {
@@ -63,6 +77,13 @@
       "type": "sugar",
       "damage": 40,
       "pullPx": 120
+    },
+    "health": {
+      "physical": 8,
+      "mental": 2
+    },
+    "collateral": {
+      "executive": -2
     }
   }
 }

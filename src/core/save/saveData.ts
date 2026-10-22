@@ -1,7 +1,8 @@
 import type { RunResult } from '../run/state';
-import { IDLE } from '../../config';
+import { IDLE, SECTORS } from '../../config';
 import { defaultIdle, maxSlots, type IdleProgress } from '../idle/progress';
 import { defaultProgress, type MetaProgress } from '../meta/progress';
+import { defaultOrganism, type OrganismState } from '../organism/organism';
 
 /**
  * Formato do save (decisão 0005). Na v0.1 guarda só recordes e opções; a fase 3 soma moeda e
@@ -36,6 +37,8 @@ export interface SaveData {
   meta: MetaProgress;
   /** Campo longo: onda, pool, níveis, melhorias e ATP a coletar (fase 4). */
   idle: IdleProgress;
+  /** Indivíduo atual, setores de saúde e pontos herdados (fase 5). */
+  organism: OrganismState;
 }
 
 export type RecordKind = 'time' | 'level' | 'kills';
@@ -50,6 +53,7 @@ export function defaultSave(options: Options): SaveData {
     atp: 0,
     meta: defaultProgress(),
     idle: defaultIdle(),
+    organism: defaultOrganism(),
   };
 }
 
@@ -69,6 +73,7 @@ export function migrateSave(raw: unknown, defaults: Options): SaveData {
     atp: unknown;
     meta: unknown;
     idle: unknown;
+    organism: unknown;
   }>;
   const r = data.records ?? {};
   const o = data.options ?? {};
@@ -92,6 +97,7 @@ export function migrateSave(raw: unknown, defaults: Options): SaveData {
     atp: num(data.atp, 0),
     meta: migrateProgress(data.meta),
     idle: migrateIdle(data.idle),
+    organism: migrateOrganism(data.organism),
   };
 }
 
@@ -177,5 +183,24 @@ function migrateIdle(raw: unknown): IdleProgress {
     },
     pending: num(m.pending, 0),
     lastSeen: num(m.lastSeen, 0),
+  };
+}
+
+/** Organismo lido de um save; setor que faltar volta ao começo do indivíduo 1. */
+function migrateOrganism(raw: unknown): OrganismState {
+  const base = defaultOrganism();
+  if (typeof raw !== 'object' || raw === null) return base;
+  const m = raw as Partial<Record<keyof OrganismState, unknown>>;
+  const sectors = { ...base.sectors };
+  const rawSectors = (m.sectors ?? {}) as Record<string, unknown>;
+  for (const s of SECTORS) {
+    const v = rawSectors[s];
+    if (typeof v === 'number' && Number.isFinite(v)) sectors[s] = Math.max(0, Math.min(100, v));
+  }
+  return {
+    individual: Math.max(1, Math.floor(num(m.individual, 1))),
+    sectors,
+    atpEarned: num(m.atpEarned, 0),
+    inherited: Math.floor(num(m.inherited, 0)),
   };
 }

@@ -149,5 +149,95 @@
         "count": 4
       }
     ]
+  },
+  "adrenaline": {
+    "name": "Adrenalina",
+    "type": "stress",
+    "hp": 5,
+    "speedPxPerSecond": 100,
+    "contactDamage": "common",
+    "xp": 1,
+    "radiusPx": 9,
+    "unlockMinute": 0,
+    "spawnWeight": 3,
+    "groupSize": 3
+  },
+  "cortisol": {
+    "name": "Cortisol",
+    "type": "stress",
+    "hp": 30,
+    "speedPxPerSecond": 45,
+    "contactDamage": "strong",
+    "xp": 5,
+    "radiusPx": 15,
+    "unlockMinute": 4,
+    "spawnWeight": 0.7,
+    "groupSize": 1,
+    "fragments": [
+      {
+        "kind": "adrenaline",
+        "count": 2
+      }
+    ]
+  },
+  "hydroxylRadical": {
+    "name": "Radical hidroxila",
+    "type": "radical",
+    "hp": 3,
+    "speedPxPerSecond": 120,
+    "contactDamage": "common",
+    "xp": 1,
+    "radiusPx": 6,
+    "unlockMinute": 0,
+    "spawnWeight": 3,
+    "groupSize": 5
+  },
+  "peroxynitrite": {
+    "name": "Peroxinitrito",
+    "type": "radical",
+    "hp": 12,
+    "speedPxPerSecond": 75,
+    "contactDamage": "common",
+    "xp": 2,
+    "radiusPx": 10,
+    "unlockMinute": 2,
+    "spawnWeight": 1.5,
+    "groupSize": 2,
+    "fragments": [
+      {
+        "kind": "hydroxylRadical",
+        "count": 2
+      }
+    ]
+  },
+  "ethanol": {
+    "name": "Etanol",
+    "type": "toxin",
+    "hp": 5,
+    "speedPxPerSecond": 80,
+    "contactDamage": "common",
+    "xp": 1,
+    "radiusPx": 8,
+    "unlockMinute": 0,
+    "spawnWeight": 3,
+    "groupSize": 4
+  },
+  "acetaldehyde": {
+    "name": "Acetaldeído",
+    "type": "toxin",
+    "hp": 14,
+    "speedPxPerSecond": 60,
+    "contactDamage": "common",
+    "xp": 2,
+    "radiusPx": 10,
+    "unlockMinute": 3,
+    "spawnWeight": 1.5,
+    "groupSize": 2,
+    "fragments": [
+      {
+        "kind": "ethanol",
+        "count": 2
+      }
+    ]
   }
 }

@@ -195,6 +195,10 @@ export interface AgentDef {
   /** Arma da ação própria (source "agent" em weapons.json). */
   action: string;
   special: SpecialDef;
+  /** Pontos de saúde por setor a cada `minutesForFullEffect` de run (organism.json). */
+  health?: Partial<Record<Sector, number>>;
+  /** Efeito colateral: pontos que tira de outros setores, como um remédio de verdade. */
+  collateral?: Partial<Record<Sector, number>>;
   /** Efetividade por tipo de molécula; o que faltar é neutro. */
   affinity: Partial<Record<MoleculeType, AffinityLevel>>;
 }
@@ -364,6 +368,8 @@ export interface IdleAgentDef {
   growthMax?: number;
   /** Melatonina: produção offline extra enquanto está na base. */
   offlineBonus?: number;
+  /** Pontos de saúde por hora na base, por setor (também offline). */
+  healthPerHour?: Partial<Record<Sector, number>>;
 }
 
 export interface IdleUpgradeDef {
@@ -473,4 +479,36 @@ export interface MetaConfig {
   /** ATP do baú por estrela do caso, na ordem das metas de `caseStarMinutes`. */
   starRewards: number[];
   lab: { columns: string[]; nodes: Record<string, LabNode> };
+}
+
+/** Os quatro setores de saúde do organismo (mecanicas.md). */
+export type Sector = 'physical' | 'mental' | 'executive' | 'social';
+export const SECTORS: readonly Sector[] = ['physical', 'mental', 'executive', 'social'];
+
+/**
+ * Efeito de um setor num atributo: cresce até `at100` com o setor em 100 e até `at0` com o setor
+ * em 0, passando por zero em 50. `special.<chave>` mexe no especial; `idleProduction` no idle.
+ */
+export interface SectorEffect {
+  stat: string;
+  at100: number;
+  at0: number;
+}
+
+/** Organismo (fase 5, decisão 0023): setores, doenças dos indivíduos, alta e herança. */
+export interface OrganismConfig {
+  sectors: Record<Sector, { name: string; families: MoleculeType[]; effects: SectorEffect[] }>;
+  /** Peso das moléculas de cada família no sorteio: at0 com o setor em 0, at100 em 100. */
+  familyWeight: { at0: number; at100: number };
+  /** Todos os setores a partir deste valor abrem a ALTA. */
+  healthyThreshold: number;
+  /** A saúde da run escala com os minutos: efeito cheio em minutesForFullEffect, até maxEffectScale. */
+  run: { minutesForFullEffect: number; maxEffectScale: number };
+  /** Doença de cada indivíduo, em ordem: os setores com que ele começa. */
+  illnesses: { name: string; sectors: Record<Sector, number> }[];
+  /** Cada indivíduo novo começa com os setores mais baixos nesta quantidade. */
+  sectorDropPerIndividual: number;
+  minStartSector: number;
+  /** Bônus de ATP (run e idle) por ponto herdado. */
+  inheritedAtpBonusPerPoint: number;
 }

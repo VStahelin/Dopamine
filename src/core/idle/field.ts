@@ -1,4 +1,4 @@
-import { ENEMIES, IDLE, type EnemyKind, type IdleConfig } from '../../config';
+import { ENEMIES, IDLE, type EnemyKind, type IdleConfig, type MoleculeType } from '../../config';
 import { Rng } from '../random';
 
 /**
@@ -52,8 +52,21 @@ export type IdleEvent =
   | { type: 'wave'; wave: number }
   | { type: 'fallback'; wave: number };
 
+/** O que o organismo muda no campo (fase 5): dificuldade, doença e ATP. */
+export interface IdleMods {
+  /** Vida das moléculas (dificuldade do indivíduo). */
+  hp: number;
+  /** ATP por molécula (saúde, setor Social e pontos herdados). */
+  atp: number;
+  /** Peso de cada tipo de molécula; com ele, as famílias das doenças também descem. */
+  typeWeights?: Partial<Record<MoleculeType, number>>;
+}
+
+export const NO_IDLE_MODS: IdleMods = { hp: 1, atp: 1 };
+
 export interface IdleField {
   readonly config: IdleConfig;
+  readonly mods: IdleMods;
   readonly rng: Rng;
   time: number;
   wave: number;
@@ -90,9 +103,11 @@ export function createField(
   fireRate: number,
   slotCount: number,
   config: IdleConfig = IDLE,
+  mods: IdleMods = NO_IDLE_MODS,
 ): IdleField {
   const field: IdleField = {
     config,
+    mods,
     rng: new Rng(seed),
     time: 0,
     wave: Math.max(1, wave),
@@ -139,10 +154,24 @@ function startWave(field: IdleField): void {
   field.spawnTimer = 0;
 }
 
+/** Famílias que só entram pela doença do indivíduo (fora das listas de `waves.pool`). */
+const DISEASE_TYPES: readonly MoleculeType[] = ['stress', 'radical', 'toxin'];
+
 function pickKind(field: IdleField): EnemyKind {
   const pools = field.config.waves.pool.filter((p) => p.fromWave <= field.wave);
-  const kinds = (pools[pools.length - 1] ?? field.config.waves.pool[0]!).kinds;
-  return kinds[field.rng.int(kinds.length)] as EnemyKind;
+  const kinds = (pools[pools.length - 1] ?? field.config.waves.pool[0]!).kinds as EnemyKind[];
+  const weights = field.mods.typeWeights;
+  if (!weights) return kinds[field.rng.int(kinds.length)]!;
+  // Doença: as famílias dos setores baixos descem junto, com o peso do organismo.
+  const extra = (Object.keys(ENEMIES) as EnemyKind[]).filter((k) => {
+    const def = ENEMIES[k];
+    return DISEASE_TYPES.includes(def.type) && !def.boss && def.unlockMinute * 3 < field.wave;
+  });
+  const all = [...kinds, ...extra];
+  return (
+    field.rng.weighted(all, (k) => ENEMIES[k].spawnWeight * (weights[ENEMIES[k].type] ?? 1)) ??
+    kinds[0]!
+  );
 }
 
 function spawn(field: IdleField): void {
@@ -150,7 +179,7 @@ function spawn(field: IdleField): void {
   const isBoss = field.toSpawn === 1 && field.wave % waves.bossEvery === 0;
   const kind = isBoss ? (waves.boss as EnemyKind) : pickKind(field);
   const grow = waves.hpGrowth ** (field.wave - 1);
-  const hp = ENEMIES[kind].hp * grow * (isBoss ? waves.bossHpMultiplier : 1);
+  const hp = ENEMIES[kind].hp * grow * (isBoss ? waves.bossHpMultiplier : 1) * field.mods.hp;
   const radius = isBoss ? BOSS_RADIUS : ENEMY_RADIUS;
   field.enemies.push({
     id: field.nextId++,
@@ -174,7 +203,11 @@ function damage(field: IdleField, e: IdleEnemy, amount: number): void {
   field.events.push({ type: 'hit', x: e.x, y: e.y, amount });
   if (e.hp > 0) return;
   const { waves } = field.config;
-  const atp = waves.atpPerKill * waves.atpGrowthPerWave ** (field.wave - 1) * ENEMIES[e.kind].xp;
+  const atp =
+    waves.atpPerKill *
+    waves.atpGrowthPerWave ** (field.wave - 1) *
+    ENEMIES[e.kind].xp *
+    field.mods.atp;
   field.atp += atp;
   field.kills++;
   field.events.push({ type: 'kill', x: e.x, y: e.y, atp });

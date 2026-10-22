@@ -1,5 +1,5 @@
 import { ECONOMY, IDLE, type IdleConfig } from '../../config';
-import { createField, stepField } from './field';
+import { createField, NO_IDLE_MODS, stepField, type IdleMods } from './field';
 
 /**
  * O que o campo longo guarda entre as sessões (fase 4, decisão 0022): onda, pool, níveis,
@@ -164,11 +164,20 @@ export function offlineGain(
   elapsedSeconds: number,
   seed: number,
   config: IdleConfig = IDLE,
+  mods: IdleMods = NO_IDLE_MODS,
 ): OfflineGain {
   if (elapsedSeconds < config.offline.minSeconds) return { seconds: 0, atp: 0, ratePerHour: 0 };
   const slots = fieldSlots(p, config);
   if (slots.length === 0) return { seconds: 0, atp: 0, ratePerHour: 0 };
-  const field = createField(seed, p.wave, slots, fireRate(p, config), maxSlots(config), config);
+  const field = createField(
+    seed,
+    p.wave,
+    slots,
+    fireRate(p, config),
+    maxSlots(config),
+    config,
+    mods,
+  );
   const dt = 1 / 30;
   for (let t = 0; t < config.offline.estimateSeconds; t += dt) stepField(field, dt);
   const bonus = slots.reduce((sum, s) => sum + (config.agents[s.agent]?.offlineBonus ?? 0), 0);

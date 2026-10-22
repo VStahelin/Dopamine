@@ -48,7 +48,11 @@
       "description": "O mais estável: disparo médio e constante, mira a molécula mais perto da base.",
       "kind": "shot",
       "damage": 6,
-      "cooldownSeconds": 0.8
+      "cooldownSeconds": 0.8,
+      "healthPerHour": {
+        "physical": 0.8,
+        "mental": 0.6
+      }
     },
     "melatonin": {
       "name": "Melatonina",
@@ -57,7 +61,11 @@
       "damage": 9,
       "cooldownSeconds": 2.4,
       "radius": 34,
-      "offlineBonus": 0.25
+      "offlineBonus": 0.25,
+      "healthPerHour": {
+        "physical": 0.4,
+        "mental": 0.8
+      }
     },
     "magnesium": {
       "name": "Magnésio",
@@ -66,7 +74,10 @@
       "damage": 5,
       "cooldownSeconds": 1,
       "radius": 140,
-      "slow": 0.35
+      "slow": 0.35,
+      "healthPerHour": {
+        "mental": 1.2
+      }
     },
     "vitaminD": {
       "name": "Vitamina D",
@@ -75,7 +86,11 @@
       "damage": 45,
       "cooldownSeconds": 4.5,
       "growthPerMinute": 0.05,
-      "growthMax": 1
+      "growthMax": 1,
+      "healthPerHour": {
+        "physical": 0.6,
+        "mental": 0.6
+      }
     },
     "endorphin": {
       "name": "Endorfina",
@@ -84,7 +99,11 @@
       "damage": 5,
       "cooldownSeconds": 2.6,
       "burst": 4,
-      "burstIntervalSeconds": 0.12
+      "burstIntervalSeconds": 0.12,
+      "healthPerHour": {
+        "mental": 0.6,
+        "social": 1
+      }
     }
   },
   "start": ["omega3"],
