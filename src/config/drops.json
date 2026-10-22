@@ -83,7 +83,9 @@
     "spreadRadians": 0.7
   },
   "fever": {
-    "secondsPerCoin": 0.5
+    "dropChance": 0.25,
+    "secondsPerCoin": 0.25,
+    "maxSeconds": 15
   },
   "gems": {
     "smallMaxXp": 2,

@@ -306,6 +306,12 @@ export interface EconomyConfig {
     /** D(t) = 1 + linear × t + quadratic × t², t em minutos. */
     linear: number;
     quadratic: number;
+    /**
+     * A vida das moléculas cresce mais que a quantidade: vida × D(t) × (1 + hpLinear × t +
+     * hpQuadratic × t²), t em minutos.
+     */
+    hpLinear: number;
+    hpQuadratic: number;
     /** Limiar programável t*: a partir dele soma cubic × (t − t*)³. */
     thresholdMinute: number;
     cubic: number;
@@ -576,7 +582,8 @@ export interface DropsConfig {
   /** Bico de Bunsen: dano por segundo (× Reatividade), alcance e abertura (× Difusão). */
   flame: { damagePerSecond: number; rangePx: number; spreadRadians: number };
   /** Febre de ATP: segundos somados a cada ATP coletado. */
-  fever: { secondsPerCoin: number };
+  /** Febre de ATP: chance de ATP por molécula, segundos por ATP coletado e teto. */
+  fever: { dropChance: number; secondsPerCoin: number; maxSeconds: number };
   /**
    * Cor da gema pelo XP: ciano até `smallMaxXp`, verde até `mediumMaxXp`, vermelha acima.
    * `chance`: chance de soltar gema por tipo de molécula; a gema vale o XP dividido pela chance.

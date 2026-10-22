@@ -1,7 +1,7 @@
 import type { EnemyKind } from '../../config';
 import { clampLength, type Vec2 } from '../math/vec2';
 import { damageEnemy, heal } from './combat';
-import { difficultyAt, waveFactorAt, xpToNextLevel } from './progression';
+import { difficultyAt, enemyHpAt, waveFactorAt, xpToNextLevel } from './progression';
 import { extendFever, updateItems } from './items';
 import { onHurt } from './supplements';
 import { SpatialGrid } from './spatialGrid';
@@ -82,6 +82,7 @@ function spawnAround(state: RunState, distance: number): { x: number; y: number 
 function spawnEnemies(state: RunState, viewRadius: number, dt: number): void {
   const { run, economy, enemies } = state.rules;
   const difficulty = difficultyAt(state.time, economy.difficulty);
+  const hp = enemyHpAt(state.time, economy.difficulty);
   const distance = viewRadius + run.spawn.marginOutsideViewPx;
 
   // Chefes no começo de cada pico do dente de serra.
@@ -90,7 +91,7 @@ function spawnEnemies(state: RunState, viewRadius: number, dt: number): void {
     if (state.time < next) return;
     state.bossesSpawned[i]!++;
     const at = spawnAround(state, distance);
-    addEnemy(state, b.kind as EnemyKind, at.x, at.y, difficulty);
+    addEnemy(state, b.kind as EnemyKind, at.x, at.y, hp);
     state.events.push({ type: 'boss', kind: b.kind as EnemyKind });
   });
 
@@ -118,7 +119,7 @@ function spawnEnemies(state: RunState, viewRadius: number, dt: number): void {
         kind,
         c.x + state.rng.range(-spread, spread),
         c.y + state.rng.range(-spread, spread),
-        difficulty,
+        hp,
       );
     }
     state.spawnBudget -= group;

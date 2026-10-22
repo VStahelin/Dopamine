@@ -1,24 +1,48 @@
 {
   "ticksPerSecond": 60,
-  "agent": { "radiusPx": 7, "moveSpeedPxPerSecond": 80, "pickupRadiusPx": 48 },
-  "contactDamage": { "common": 5, "strong": 15, "boss": 30 },
-  "affinity": { "strong": 1.5, "neutral": 1, "weak": 0.5 },
+  "agent": {
+    "radiusPx": 7,
+    "moveSpeedPxPerSecond": 80,
+    "pickupRadiusPx": 48
+  },
+  "contactDamage": {
+    "common": 5,
+    "strong": 15,
+    "boss": 30
+  },
+  "affinity": {
+    "strong": 1.5,
+    "neutral": 1,
+    "weak": 0.5
+  },
   "minDamageTaken": 1,
   "spawn": {
-    "baseEnemiesPerSecond": 1.2,
-    "maxEnemies": 300,
+    "baseEnemiesPerSecond": 2.6,
+    "maxEnemies": 400,
     "marginOutsideViewPx": 24,
     "groupSpreadPx": 18
   },
-  "separation": { "strength": 40 },
+  "separation": {
+    "strength": 40
+  },
   "combat": {
     "knockbackPx": 6,
     "ricochetRangePx": 90,
     "ricochetDamageFactor": 0.85,
     "reviveInvulnerabilitySeconds": 2
   },
-  "bosses": [{ "kind": "ldl", "everyMinutes": 5 }],
-  "curse": { "hp": 1, "speed": 0.3, "quantity": 1, "xp": 1 },
+  "bosses": [
+    {
+      "kind": "ldl",
+      "everyMinutes": 5
+    }
+  ],
+  "curse": {
+    "hp": 1,
+    "speed": 0.3,
+    "quantity": 1,
+    "xp": 1
+  },
   "gems": {
     "maxOnField": 150,
     "attractSpeedPxPerSecond": 260,

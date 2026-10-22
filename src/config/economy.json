@@ -8,6 +8,8 @@
   "difficulty": {
     "linear": 0.15,
     "quadratic": 0.01,
+    "hpLinear": 0.3,
+    "hpQuadratic": 0.035,
     "thresholdMinute": 20,
     "cubic": 0.002,
     "peakEveryMinutes": 5,
@@ -38,7 +40,7 @@
     "caseStarMinutes": [5, 10, 15]
   },
   "runCurrency": {
-    "dropChance": 0.03,
+    "dropChance": 0.015,
     "eliteDropChance": 1,
     "bossValueMultiplier": 20,
     "baseValue": 1,

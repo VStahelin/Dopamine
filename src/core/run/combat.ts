@@ -1,5 +1,5 @@
 import type { EnemyKind, WeaponId } from '../../config';
-import { difficultyAt } from './progression';
+import { enemyHpAt } from './progression';
 import { addEnemy, type Enemy, type RunState } from './state';
 import { onHit, onKill } from './supplements';
 import { coinValue } from './upgrades';
@@ -108,7 +108,7 @@ export function damageEnemy(
 /** Cascata: a molécula decomposta se quebra nas mais fracas, em volta de onde estava. */
 function spawnFragments(state: RunState, e: Enemy): void {
   const fragments = state.rules.enemies[e.kind].fragments ?? [];
-  const difficulty = difficultyAt(state.time, state.rules.economy.difficulty);
+  const difficulty = enemyHpAt(state.time, state.rules.economy.difficulty);
   const total = fragments.reduce((a, f) => a + f.count, 0);
   let i = 0;
   for (const f of fragments) {
@@ -139,7 +139,12 @@ export function heal(state: RunState, amount: number): void {
  */
 function dropCoin(state: RunState, e: Enemy): void {
   const c = state.rules.economy.runCurrency;
-  const chance = e.elite || e.boss ? c.eliteDropChance : state.effects.fever > 0 ? 1 : c.dropChance;
+  const chance =
+    e.elite || e.boss
+      ? c.eliteDropChance
+      : state.effects.fever > 0
+        ? state.rules.drops.fever.dropChance
+        : c.dropChance;
   if (state.rng.next() >= chance) return;
   let value = coinValue(state);
   if (e.boss) value *= c.bossValueMultiplier;

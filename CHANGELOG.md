@@ -13,6 +13,12 @@ O que mudou em cada versão do Dopamina Blaster. O jogo mostra este arquivo em O
 ### Ajustes
 - Nem toda molécula solta gema de XP, mas a gema que cai vale mais: o XP no fim é o mesmo e a tela fica mais limpa.
 - A Vitamina saiu das vesículas e virou suplemento.
+- Balanceamento: nascem bem mais moléculas (mais que o dobro), elas andam 25% mais devagar e a vida delas cresce bem mais com o tempo de run. Uma run sem melhorias costuma acabar entre 7 e 15 minutos.
+- Menos ATP por molécula comum, para compensar a quantidade.
+- A Febre de ATP tem teto de 15 segundos e solta ATP em uma de cada quatro moléculas.
+
+### Correções
+- A cápsula não sobe mais o nível de um reagente.
 
 ## v0.7.0 · 22/10/2026
 

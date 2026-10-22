@@ -214,7 +214,10 @@ function lysosome(state: RunState): void {
 
 /** Febre de ATP: cada ATP coletado soma tempo. Chamado na coleta das moedas. */
 export function extendFever(state: RunState): void {
-  if (state.effects.fever > 0) state.effects.fever += state.rules.drops.fever.secondsPerCoin;
+  const f = state.rules.drops.fever;
+  if (state.effects.fever <= 0) return;
+  // Teto: com muitas moléculas na tela, a febre se renovava sem fim.
+  state.effects.fever = Math.min(f.maxSeconds, state.effects.fever + f.secondsPerCoin);
 }
 
 /** Quantos itens a cápsula sobe: a sequência de principiante, depois 5, 3 ou 1 com a Sorte. */
@@ -240,7 +243,8 @@ function capsuleCandidates(state: RunState): UpgradeChoice[] {
   }
   for (const [id, p] of Object.entries(state.passives) as [PassiveId, { level: number }][]) {
     const def = state.rules.passives[id];
-    if (def.kind === 'off') continue;
+    // Reagente não sobe de nível: é uma cópia só, vinda da ampola.
+    if (def.kind !== 'receptor') continue;
     if (p.level > 0 && p.level < def.maxLevel) {
       const rarity = rollRarity(state);
       out.push({

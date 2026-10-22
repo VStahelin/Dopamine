@@ -38,7 +38,7 @@ Cada agente quebra melhor alguns tipos de molécula. Contra o tipo forte, o dano
 Branco é dano comum. Amarelo com "!" é catálise (crítico). Ciano é afinidade forte, cinza é fraca. Vermelho sobre o agente é interação perdida; verde é recuperação. Dá para esconder os números de dano nas Opções.
 
 ### ATP na run
-Algumas moléculas decompostas soltam ATP, a moeda do jogo (moeda dourada no chão). Moléculas fortes e o chefe sempre soltam, e quanto mais tempo de run, mais cada uma vale. O ATP fica com você no fim da run.
+Algumas moléculas decompostas soltam ATP, a moeda do jogo (moeda dourada no chão). Com tantas moléculas na tela, é poucas: uma em cada 60, mais ou menos. Moléculas fortes e o chefe sempre soltam, e quanto mais tempo de run, mais cada uma vale. O ATP fica com você no fim da run.
 
 ### Pausa
 A pausa mostra suas armas e receptores (aba Arsenal), todos os atributos com o valor atual e a base (aba Atributos) e os números da run (aba Run). Desistir encerra a run e leva para a tela de fim.
@@ -198,7 +198,7 @@ A partir do nível 8. Decompõe todas as moléculas na tela, com cascata e gemas
 Lança-chamas na direção em que você anda, por 10 segundos. Usa a sua Reatividade e a sua Difusão.
 
 ### Glucagon e Febre de ATP
-A partir do nível 30. Puxa todo o ATP do chão e começa a Febre de ATP: por 10 segundos toda molécula decomposta solta ATP, e cada ATP coletado soma meio segundo à febre.
+A partir do nível 30. Puxa todo o ATP do chão e começa a Febre de ATP: por 10 segundos uma em cada quatro moléculas decompostas solta ATP, e cada ATP coletado soma um quarto de segundo à febre, até 15 segundos.
 
 ### Gemas de XP
 Nem toda molécula solta gema: a comum solta em 60% das vezes, a que nasceu da cascata em 40%, e a forte e o chefe sempre. A gema que cai vale mais para compensar, então o XP no fim é o mesmo. A cor mostra o valor: ciano até 2 de XP, verde até 9, vermelha mais que isso. Com gemas demais no chão, o XP novo se junta numa gema só.

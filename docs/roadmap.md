@@ -43,6 +43,7 @@ Bugs que o Vitor achou jogando. Marque ao corrigir, com o commit da correção.
 - [x] PC: campo longo deitado espreme o campo numa faixa fina entre a HUD e o pool. Corrigido: o campo estica entre as paredes com proporção limitada.
 - [x] Celular: campo longo longe da prancheta "Tela de batalha (mockup)": paredes largas demais, campo estreito, pool com espaços pequenos.
 - [x] Celular: o dedo que movia o agente escolhia uma carta do level up ao soltar. Corrigido: a carta só responde a um toque que começou nela.
+- [x] Balanceamento: a run estava fácil demais. Agora nascem mais moléculas (2,6 por segundo, até 400 na tela), 25% mais lentas, e a vida cresce numa curva própria (hpLinear e hpQuadratic em economy.json). No simulador, sem Laboratório, o robô morre entre 7 e 15 minutos em boa parte das runs. Falta conferir no celular a 60 FPS com 400 moléculas.
 - [x] Pausa: o botão Opções não fazia nada. A tela abria escondida atrás da run e da HUD; agora vem para cima.
 
 **Ordem sugerida das fases 5.x:** 5.5 → 5.8 → 5.9 → 5.10 → 5.6 → 5.11 → 5.7. As fases 5.8 a 5.11 trazem as mecânicas do Megabonk ([megabonk.md](megabonk.md)) e mexem no level up e nos drops. A 5.6 vem depois dos receptores (5.8, de onde saem o receptor nativo e os cartões da Superdosagem) e antes das sinapses (5.11, cujo Foco inflamatório usa o Cerco inflamatório), e a 5.7 vem por último porque os mapas passam a hospedar as estruturas como pontos de interesse. Os números das fases não mudam para não quebrar as decisões que citam cada uma.
