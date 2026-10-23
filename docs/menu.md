@@ -120,7 +120,7 @@ O palco fica no centro, os trilhos nas laterais, a linha de ação embaixo do pa
 | Tela de título | Logo e "toque para começar" | Existe (o menu atual) | 1.5 |
 | Escolha do agente | Agentes da run com ação, especial e efetividade; bloqueados com cadeado e custo | Placeholder (só a Dopamina) | 2 |
 | Campo longo | O idle | Placeholder | 4 |
-| Compêndio | Moléculas inimigas (com a cascata), modificadores e raridades já vistos; o resto em silhueta | Placeholder | 2 em diante |
+| Compêndio | Registro do que já foi visto (moléculas, formações, agentes, armas, receptores, suplementos, itens, estruturas, ambientes), o resto em silhueta, e o Guia com as páginas da [wiki](wiki.md) (detalhes abaixo e nas pranchetas [Compêndio](identidade-visual/Compendio.dc.html)) | Lista única de moléculas, agregados, formações, itens e suplementos | 2 em diante; a wiki na 6 |
 | Recordes | Melhor tempo, nível, decompostas, runs | Existe | — |
 | Conquistas | Metas de longo prazo | Placeholder | a definir |
 | Opções | Abas Som, Tela e Jogo (detalhes abaixo e na prancheta [Opções](identidade-visual/Opcoes.dc.html)) | Existe sem a aba Som | 6 (som) |
@@ -138,6 +138,25 @@ Prancheta: [Opcoes.dc.html](identidade-visual/Opcoes.dc.html), no celular em pé
 Embaixo de tudo, VOLTAR (ou Esc) e a linha de versão e build.
 
 **No PC** ([OpcoesPC.dc.html](identidade-visual/OpcoesPC.dc.html), 1280×800): sem abas, as três seções lado a lado em painéis (Som mais largo, Tela e Jogo), e embaixo a versão à esquerda, VOLTAR no centro e "Esc volta" à direita. A tecla M alterna o mudo e a tela cheia também sai com F11. Aberta pela pausa, o painel Jogo mostra o mesmo aviso "Só nos menus".
+
+### Compêndio
+
+Pranchetas: [Compendio.dc.html](identidade-visual/Compendio.dc.html) no celular em pé e [CompendioPC.dc.html](identidade-visual/CompendioPC.dc.html) no PC (1280×800), as duas interativas. É o conceito da fase 6 ("Wiki dentro do jogo"): junta o Compêndio de hoje, que só lista o que foi visto, com os textos de [wiki.md](wiki.md). Os dados das pranchetas são os JSON de `src/config/`, os sprites de `src/assets/sprites/` e os verbetes da wiki em 23 de outubro de 2026; os números do "Seu histórico" e o que aparece como visto são de exemplo.
+
+O Compêndio tem duas metades:
+
+| Metade | Categorias | Como funciona |
+| --- | --- | --- |
+| Registro | Moléculas (com agregado), Formações (com a crise), Agentes, Armas (sorteio, ação de agente e evoluções), Receptores, Suplementos, Itens do mapa, Estruturas, Ambientes | Cada verbete abre na primeira vez que aparece numa run. Antes disso fica em silhueta, com "???" e uma pista ("Sai da cascata: Peroxinitrito", "Evolua o Raio UV com Ozônio"). Cada categoria mostra vistos/total e uma barra; o total geral é a porcentagem do topo. |
+| Guia do jogo | Como jogar, Level up, Menu e progressão, Campo longo, Organismo, Glossário | As páginas `##` da [wiki.md](wiki.md); cada `###` vira um verbete. Sempre abertas. |
+
+Cada verbete do Registro tem: sprite grande no slot creme (a moldura na cor da raridade ou do tipo), etiqueta (tipo, raridade, CHEFE, EVOLUÇÃO), **Ficha** com os números do JSON (vida, velocidade, XP, minuto em que aparece; dano e recarga da arma), **No jogo** com o texto da wiki, **Ligações** (a cascata nos dois sentidos, arma ↔ reagente ↔ evolução, agente forte contra, verbete do Guia que explica) e **Seu histórico** (decompostas, vezes coletado, runs com a arma). Nos verbetes do Guia, as Ligações são os nomes do Registro citados no texto. Tocar numa ligação abre o outro verbete.
+
+- **Celular:** três telas na mesma prancheta, trocadas pelo Tweak "tela": índice (Registro em grade de 2 colunas com contagem, barra e selo NOVO; Guia em lista), lista da categoria (filtros Todos, Vistos e Novos) e verbete (Anterior e Próximo dentro da categoria). VOLTAR sobe um nível; no índice, volta ao hub.
+- **PC:** as três colunas lado a lado: categorias à esquerda, a grade de verbetes (4 por linha) no meio e o verbete à direita. Embaixo, o total descoberto à esquerda, VOLTAR no centro e os atalhos à direita (Esc volta, setas navegam, / abre a busca).
+- **Busca:** no topo das duas, procura pelo nome em tudo que já foi visto e no texto do Guia; o que ainda está em silhueta não aparece.
+- **Selo NOVO:** no verbete, na categoria e no botão do hub ([Selos e avisos](#selos-e-avisos)); some quando o verbete é aberto.
+- **Ícones novos:** livro (Guia) e lupa (busca), 16×16 com o contorno de 1 px, desenhados na prancheta; ainda não estão em `icons.json`.
 
 ## Placeholder
 

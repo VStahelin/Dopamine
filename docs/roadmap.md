@@ -397,6 +397,8 @@ Deixar o jogo com a cara do canvas de identidade visual e pronto para outras pes
 - [ ] Acabamento visual de HUD, molduras, botões e fontes da aba Design (a HUD e a pausa de [ui-cronico.md](ui-cronico.md) entram na fase 2.6).
 - [ ] Chão, paredes e efeitos (dano com contorno, projéteis); o chão e os objetos dos ambientes vêm da fase 5.7.
 - [ ] Wiki dentro do jogo: o Compêndio ganha as páginas de [wiki.md](wiki.md) (como jogar, agentes, armas, modificadores, moléculas, progressão, campo longo, organismo e glossário).
+  - [x] Conceito no canvas: pranchetas do Compêndio no celular e no PC, com Registro, Guia, busca e verbete ([menu.md](menu.md#compêndio)).
+  - [ ] Implementar na `CatalogScene` seguindo as pranchetas.
 - [ ] Som e música: as faixas chiptune metal e os efeitos de [sonoplastia.md](sonoplastia.md), com troca de música na run, volume de Música e Efeitos nas Opções e `src/config/audio.json`.
   - [x] Música: 9 faixas em loop e 3 jingles, troca na run (tempo, crise, chefe), abafada nas telas por cima, volume de Música nas Opções.
   - [ ] Jingles `bossIn` e `crisisIn` (faltam gerar).
