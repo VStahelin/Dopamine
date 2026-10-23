@@ -655,8 +655,17 @@ export interface DropsConfig {
     despawnViewMultiplier: number;
   };
   items: Record<ItemId, ItemDef>;
-  /** Bico de Bunsen: dano por segundo (× Reatividade), alcance e abertura (× Difusão). */
-  flame: { damagePerSecond: number; rangePx: number; spreadRadians: number };
+  /**
+   * Bico de Bunsen: dano por segundo (× Reatividade), alcance e abertura (× Difusão).
+   * `maxHpPerSecond`: além disso, essa fração da vida máxima por segundo nas moléculas comuns
+   * (5 = some em 0,2 s, quase um golpe só); chefe e agregado só levam o dano fixo.
+   */
+  flame: {
+    damagePerSecond: number;
+    maxHpPerSecond: number;
+    rangePx: number;
+    spreadRadians: number;
+  };
   /** Febre de ATP: segundos somados a cada ATP coletado. */
   /** Febre de ATP: chance de ATP por molécula, segundos por ATP coletado e teto. */
   fever: { dropChance: number; secondsPerCoin: number; maxSeconds: number };

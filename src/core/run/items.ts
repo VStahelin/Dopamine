@@ -120,7 +120,7 @@ export function rollItem(state: RunState): ItemId | undefined {
   );
 }
 
-/** Bico de Bunsen: dano contínuo num cone à frente do movimento. */
+/** Bico de Bunsen: cone grande à frente do movimento que derrete as moléculas comuns. */
 function burn(state: RunState, dt: number, grid: SpatialGrid): void {
   const f = state.rules.drops.flame;
   const { agent, stats } = state;
@@ -134,7 +134,8 @@ function burn(state: RunState, dt: number, grid: SpatialGrid): void {
     const dy = e.y - agent.y;
     if (Math.hypot(dx, dy) > range + e.radius) return;
     if (angleOff(dx, dy, angle) > half) return;
-    hitEnemy(state, e, f.damagePerSecond * stats.damage * dt, { continuous: true });
+    const melt = e.boss || e.aggregate ? 0 : e.maxHp * f.maxHpPerSecond;
+    hitEnemy(state, e, (f.damagePerSecond * stats.damage + melt) * dt, { continuous: true });
   });
 }
 

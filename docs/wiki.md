@@ -221,7 +221,7 @@ A partir do nível 12. Todas as gemas de XP do mapa correm até você.
 A partir do nível 8. Decompõe todas as moléculas na tela, com cascata e gemas. O chefe não é afetado.
 
 ### Bico de Bunsen
-Lança-chamas na direção em que você anda, por 10 segundos. Usa a sua Reatividade e a sua Difusão.
+Lança-chamas enorme na direção em que você anda, por 10 segundos: derrete quase na hora qualquer molécula comum que encostar no leque. Chefes e agregados só levam o dano normal do fogo. Usa a sua Reatividade e a sua Difusão.
 
 ### Glucagon e Febre de ATP
 A partir do nível 30. Puxa todo o ATP do chão e começa a Febre de ATP: por 10 segundos uma em cada quatro moléculas decompostas solta ATP, e cada ATP coletado soma um quarto de segundo à febre, até 15 segundos.

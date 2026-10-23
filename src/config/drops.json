@@ -78,9 +78,10 @@
     }
   },
   "flame": {
-    "damagePerSecond": 30,
-    "rangePx": 70,
-    "spreadRadians": 0.7
+    "damagePerSecond": 120,
+    "maxHpPerSecond": 5,
+    "rangePx": 190,
+    "spreadRadians": 1.3
   },
   "fever": {
     "dropChance": 0.25,

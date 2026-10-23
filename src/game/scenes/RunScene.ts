@@ -803,14 +803,24 @@ export class RunScene extends Phaser.Scene {
       const f = DROPS.flame;
       const angle = Math.atan2(agent.dirY, agent.dirX);
       const flicker = 0.85 + 0.15 * Math.sin(this.run.time * 30);
+      g.fillStyle(PALETTE.interaction, 0.3);
+      pixelSector(
+        g,
+        agent.x,
+        agent.y,
+        f.rangePx * stats.area * (0.95 + 0.05 * flicker),
+        angle,
+        f.spreadRadians * stats.area,
+        2,
+      );
       g.fillStyle(PALETTE.woodHi, 0.45);
       pixelSector(
         g,
         agent.x,
         agent.y,
-        f.rangePx * stats.area * flicker,
+        f.rangePx * stats.area * 0.75 * flicker,
         angle,
-        f.spreadRadians * stats.area,
+        f.spreadRadians * stats.area * 0.85,
         2,
       );
       g.fillStyle(PALETTE.goldHi, 0.5);
