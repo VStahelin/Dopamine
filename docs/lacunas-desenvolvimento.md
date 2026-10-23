@@ -19,7 +19,7 @@ Ordenadas por impacto dividido por esforço, com as dependências respeitadas.
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | Validar no celular as fases 2.6 a 5.11 (10 itens "falta validar") | Balanceamento | Metade | Alto | P–M | 5.13 |
 | 2 | ~~Ícones do PWA em PNG (192, 512, maskable) e `apple-touch-icon`~~ (feito, [logo.md](logo.md)) | Plataforma | Doc | Alto | P | 5.13 |
-| 3 | Efeitos sonoros P1 (armas, combate, coleta, level up, interface) | Áudio | Doc | Alto | M | 5.13 |
+| 3 | Efeitos sonoros P1 (armas, combate, coleta, level up, interface) | Áudio | Doc | Alto | M | 6 (depois, [lista](efeitos-sonoros.md#para-fazer-depois)) |
 | 4 | Comportamento próprio de cada família de molécula (aura do cortisol, poça do acetaldeído, radical errático, spawner) | Inimigos | Metade | Alto | M–G | 5.14 |
 | 5 | Família inflamação: a Citocina e as moléculas do Cerco inflamatório | Inimigos | Doc | Alto | M | 5.14 |
 | 6 | Mais chefes: um por local do corpo e a Placa de fim de indivíduo | Inimigos | Doc / Sem doc | Alto | M–G | 5.14 |
@@ -204,10 +204,10 @@ A proposta completa e o porquê estão na [decisão 0034](decisoes/0034-fases-pa
 
 | Ordem | Fase | O que entra | Por que nessa ordem |
 | --- | --- | --- | --- |
-| 1 | **5.13 Validação e ganhos rápidos** | Validar no celular, ícones do PWA, SFX P1, jingles, "de onde vem", limpar placeholders, estatísticas no save | Barato, e tudo o que vem depois precisa de uma base validada e com som |
+| 1 | **5.13 Validação e ganhos rápidos** | Validar no celular, ícones do PWA, "de onde vem", limpar placeholders, estatísticas no save (os SFX ficaram para a fase 6) | Barato, e tudo o que vem depois precisa de uma base validada e com som |
 | 2 | **5.12 Locais do corpo e sinergias** | Como já está no roadmap | Já desenhada; define onde cada família e cada chefe moram |
 | 3 | **5.14 Famílias e chefes** | Comportamento por família, Citocina e inflamação, poças, mais moléculas por família, um chefe por local e a Placa | Os agentes novos são feitos para enfrentar essas mecânicas (a Calmaria anula auras, a Desintoxicação limpa poças) |
 | 4 | **5.15 Elenco completo** | Os 6 agentes em duas levas, receptores nativos, evolução das 3 armas que faltam | Depende das famílias da 5.14 para ter graça |
 | 5 | **5.16 Conquistas** | Conquistas com as estatísticas, casos anteriores, desbloqueio por progresso, Cápsulas de agente | Precisa de conteúdo para liberar (agentes, locais, chefes) |
-| 6 | **6 Arte, polimento e lançamento** | Primeira run guiada, SFX restantes, tela larga, wiki no Compêndio, teste com amigos | Como já está, com o tutorial somado |
+| 6 | **6 Arte, polimento e lançamento** | Primeira run guiada, todos os SFX que faltam e os jingles, tela larga, wiki no Compêndio, teste com amigos | Como já está, com o tutorial somado |
 | depois | Sem fase | Síntese, Protocolos, Modos, Ribossomo e Farmácia, Sintomas, eixos qualidade/dose/potência | Profundidade que só vale depois do lançamento para os amigos |

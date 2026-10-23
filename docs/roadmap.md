@@ -32,7 +32,7 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | 5.10 | Agregados (mini chefes) | Entre um chefe e outro sempre tem um alvo que vale o risco? | 5.9 | implementada, falta validar no celular |
 | 5.11 | Sinapses e estruturas | O jogador sai do lugar para buscar bônus no mapa? | 5.6, 5.9, 5.10 | implementada, falta validar no celular |
 | 5.12 | Locais do corpo e sinergias | Escolher onde agir muda a run e cura o organismo mais rápido? | 5, 5.7 | não iniciada |
-| 5.13 | Validação e ganhos rápidos | O que já existe funciona no celular, tem som e não mostra placeholder? | 2.6 a 5.11 | em andamento |
+| 5.13 | Validação e ganhos rápidos | O que já existe funciona no celular e não mostra placeholder? | 2.6 a 5.11 | em andamento |
 | 5.14 | Famílias e chefes | Cada família de molécula pede um jeito diferente de jogar? | 5.12, 5.13 | não iniciada |
 | 5.15 | Elenco completo | Cada doença tem um agente feito para ela? | 5.14 | não iniciada |
 | 5.16 | Conquistas | Jogar libera conteúdo, e não só juntar ATP? | 5.15 | não iniciada |
@@ -418,18 +418,17 @@ O jogador escolhe em que parte do corpo vai agir, em vez de o ambiente da fase 5
 
 ## Fase 5.13: Validação e ganhos rápidos
 
-Fechar o que já existe antes de somar conteúdo: validar no celular, dar som ao que acontece em toda run e tirar o que ainda parece placeholder. Itens de [lacunas-desenvolvimento.md](lacunas-desenvolvimento.md#as-12-prioridades) ([decisão 0034](decisoes/0034-fases-para-fechar-lacunas.md)).
+Fechar o que já existe antes de somar conteúdo: validar no celular e tirar o que ainda parece placeholder. Os efeitos sonoros saíram desta fase a pedido do Vitor (23/10/2026) e ficaram na fase 6, com a lista em [efeitos-sonoros.md](efeitos-sonoros.md#para-fazer-depois). Itens de [lacunas-desenvolvimento.md](lacunas-desenvolvimento.md#as-12-prioridades) ([decisão 0034](decisoes/0034-fases-para-fechar-lacunas.md)).
 
 - [ ] Validar no celular, em pé e deitado, as fases 2.6 a 5.11, incluindo 60 FPS com 400 moléculas e com o mapa Denso.
 - [x] Ícones do PWA em PNG (192, 512 e maskable) e `apple-touch-icon` para a tela inicial do iPhone, com a logo nova em pixel, favicon e artes de loja ([logo.md](logo.md)).
-- [ ] Efeitos sonoros P1 de [efeitos-sonoros.md](efeitos-sonoros.md) (armas, combate, coleta, level up e interface) e os jingles `bossIn` e `crisisIn`; tirar o "chegam em breve" das Opções.
 - [x] "De onde vem" cada bônus na aba Atributos (receptor, suplemento, Laboratório e perfil), com a prancheta "Crônico: atributos e de onde vem" do canvas.
 - [x] Pontos de interesse câmara e corredor, com os obstáculos do ambiente (sem arte nova). As estruturas como ponto de interesse dos blocos ficam para a fase 5.12: hoje elas já nascem numa clareira, e trocar o anel por tempo pelos blocos mexe no ritmo da run.
 - [x] Estatísticas acumuladas no save (decompostas por molécula, minutos por agente, chefes vencidos), base das conquistas da 5.16.
 - [x] Limpar o conteúdo de placeholder que sobrou em `src/game/ui/menuContent.ts`.
 - [x] Ensinar o robô do `npm run sim` a buscar sinapses e estruturas: ele vai até a sinapse ou Glândula adrenal mais perto (até 600 px) e fica nela, e evita o Foco inflamatório e o Coágulo. Com isso o ATP médio por run sobe de 28 para 51 (15 runs, perfil casual) e as runs ficam um pouco mais curtas: quase todo o ganho vem da Glândula adrenal (20 moedas por toque, 3 toques), que vale rever. O primeiro desbloqueio sai na run 8 a 10, longe da meta de 2 a 3 da fase 3.
 
-**Critério de saída:** uma run de 15 minutos no celular roda a 60 FPS, toda ação frequente tem som, e nenhuma tela além de Conquistas mostra "EM BREVE".
+**Critério de saída:** uma run de 15 minutos no celular roda a 60 FPS e nenhuma tela além de Conquistas mostra "EM BREVE".
 
 ## Fase 5.14: Famílias e chefes
 
@@ -479,7 +478,7 @@ Deixar o jogo com a cara do canvas de identidade visual e pronto para outras pes
   - [x] Música: 9 faixas em loop e 3 jingles, troca na run (tempo, crise, chefe), abafada nas telas por cima, aba Som nas Opções (mudo, Geral, Música, Efeitos, abafar, segundo plano).
   - [ ] Jingles `bossIn` e `crisisIn` (faltam gerar).
   - [x] Efeitos do agente (9) e o volume de Efeitos valendo ([efeitos-sonoros.md](efeitos-sonoros.md#como-entra-no-jogo)).
-  - [ ] Os outros efeitos da lista de [efeitos-sonoros.md](efeitos-sonoros.md), primeiro os P1.
+  - [ ] Os outros efeitos da lista de [efeitos-sonoros.md](efeitos-sonoros.md#para-fazer-depois), primeiro os P1 (saíram da fase 5.13).
 - [ ] PWA: polimento da instalação na tela inicial (os ícones em PNG já entraram na fase 5.13; o offline vem da fase 2.5).
 - [ ] Primeira run guiada: um tutorial curto para quem nunca jogou ([lacunas-desenvolvimento.md](lacunas-desenvolvimento.md#ui-e-telas)).
 - [ ] Layout em telas largas e altas (painéis laterais, mais pista).

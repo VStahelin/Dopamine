@@ -2,7 +2,7 @@
 
 23 de outubro de 2026 · Vitor
 
-A lista enxuta de efeitos sonoros (SFX) do jogo: **47 efeitos**, dos quais os 9 do agente já foram feitos pelo Vitor e **38 faltam gerar**; os especiais dos seis agentes que ainda não estão no jogo vêm depois, junto com eles. Cada um tem o id do arquivo, quando toca, duração, prioridade e um prompt pronto para colar num app de geração de efeitos. O tema, a música e a entrega dos arquivos estão em [sonoplastia.md](sonoplastia.md). Os arquivos brutos vão para [audio/efeitos/](../audio/efeitos/README.md). Os 9 do agente já tocam no jogo (veja [Como entra no jogo](#como-entra-no-jogo)).
+A lista enxuta de efeitos sonoros (SFX) do jogo: **47 efeitos**, dos quais os 9 do agente já foram feitos pelo Vitor e **38 faltam gerar**; os especiais dos seis agentes que ainda não estão no jogo vêm depois, junto com eles. Cada um tem o id do arquivo, quando toca, duração, prioridade e um prompt pronto para colar num app de geração de efeitos. O tema, a música e a entrega dos arquivos estão em [sonoplastia.md](sonoplastia.md). Os arquivos brutos vão para [audio/efeitos/](../audio/efeitos/README.md). Os 9 do agente já tocam no jogo (veja [Como entra no jogo](#como-entra-no-jogo)); os que faltam estão em [Para fazer depois](#para-fazer-depois).
 
 ## Resumo
 
@@ -167,6 +167,30 @@ Todos em chip puro, sem metal, no mesmo timbre.
 | `uiBuy` | Compra um upgrade com ATP | | 0,4 s | P1 | `retro 16-bit chiptune sound effect, purchase, coin clink followed by a bright rising chip chime, satisfying, no voice, no music` |
 | `uiError` | Ação negada (falta ATP, bloqueado) | | 0,25 s | P1 | `retro 16-bit chiptune sound effect, UI error, short low buzzy double beep, denied, no voice, no music` |
 | `uiUnlock` | Desbloqueia agente, arma ou molécula | Estrela resgatada, entrada nova do Compêndio, aviso de nova versão, "Enquanto você estava fora" | 0,8 s | P2 | `retro 16-bit chiptune sound effect, unlock, padlock click then a bright sparkling chip fanfare, no voice, no music` |
+
+## Para fazer depois
+
+Ficou para depois por decisão do Vitor em 23/10/2026: os efeitos sonoros saíram da fase 5.13 e voltam na [fase 6](roadmap.md#fase-6-arte-polimento-e-lançamento). Faltam 38 efeitos e os 2 jingles. Para cada um: gerar com o prompt da tabela, salvar em [audio/efeitos/](../audio/efeitos/README.md) com o id como nome, rodar `python3 tools/audio/sfx.py` e ligar o id no jogo. Comece pelos P1.
+
+**P1 (28, tocam em toda run):**
+
+- [ ] Especiais: `specialDopamine`, `specialLipase`, `specialInsulin`
+- [ ] Armas: `radicalFire`, `acidFire`, `zap`, `beam`, `pulse`, `strike`, `splash`, `absorb`
+- [ ] Combate e moléculas: `crit`, `enemyHit`, `decompose`, `bossSpawn`, `bigBoom`
+- [ ] Coleta: `gem`, `atp`, `itemPickup`, `vesicleBreak`
+- [ ] Ampolas e level up: `ampouleBreak`, `reveal`, `cardPick`, `reroll`
+- [ ] Sinapses: `synapseCharge`, `synapseFire`
+- [ ] Interface: `uiTap`, `uiConfirm`, `uiBack`, `uiBuy`, `uiError`
+
+**P2 (10, momentos grandes):**
+
+- [ ] `freeze`, `explosion`, `whoosh`, `revealLegendary`, `banish`, `alarm`, `uiUnlock`
+- [ ] Especiais dos agentes novos, junto com cada um na fase 5.15: `specialVitaminC`, `specialVenvanse`, `specialSerotonin`, `specialOxytocin`, `specialAlcoholDehydrogenase`, `specialCaffeine` (não contam nos 38)
+
+**Música:**
+
+- [ ] Jingles `bossIn` e `crisisIn` ([sonoplastia.md](sonoplastia.md))
+- [ ] Tirar o "chegam em breve" do volume de Efeitos nas Opções quando os efeitos entrarem
 
 ## O que saiu da lista
 
