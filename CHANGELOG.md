@@ -4,6 +4,8 @@ O que mudou em cada versão do Farmaco Battle. O jogo mostra este arquivo em Op�
 
 ## Em desenvolvimento
 
+## v0.16.1 · 23/10/2026
+
 ### Novidades
 - Logo nova, toda em pixel: FARMACO na faixa vermelha, BATTLE em verde e uma cápsula acertando uma molécula. Ela aparece na tela de título e no carregamento, e o app instalado ganhou ícone próprio (com versão para Android e iPhone) e um ícone novo na aba do navegador.
 
