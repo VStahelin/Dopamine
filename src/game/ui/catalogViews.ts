@@ -5,6 +5,9 @@ import {
   IDLE,
   ENEMIES,
   ITEM_IDS,
+  MAP,
+  MAP_ENVIRONMENTS,
+  ORGANISM,
   PASSIVES,
   RARITIES,
   RUN,
@@ -34,6 +37,7 @@ import {
 import { addButton } from './button';
 import { addIconSlot, passiveSlot, slotSize, supplementSlot, weaponIcon } from './iconSlot';
 import { nativeGain, receptorGain } from './upgradeText';
+import { familyText, floorColor } from './locals';
 import { drawCreamSlot, drawInkBox, drawLock, drawWoodFrame } from './icons';
 import { RUN_AGENTS, type ExampleItem } from './menuContent';
 import { bodyText, impactText, labelText, withShadow } from './theme';
@@ -199,6 +203,19 @@ export function renderAgents(
     );
     out.push(profile);
     ty = profile.y + profile.height;
+    // Local de sinergia (✚) e a barreira hematoencefálica (⊘), da fase 5.12.
+    if (a.synergy) {
+      const env = MAP.environments[a.synergy.env].name.toUpperCase();
+      const sector = ORGANISM.sectors[a.synergy.sector].name.toUpperCase();
+      const barrier = a.crossesBloodBrainBarrier === false ? ' · ⊘ NÃO ENTRA NO CÉREBRO' : '';
+      const syn = scene.add.text(tx, ty + 2, `✚ ${env}: ${sector}${barrier}`, {
+        ...labelText(8, PALETTE_CSS.numberHeal),
+        wordWrap: { width: textW },
+        lineSpacing: 2,
+      });
+      out.push(syn);
+      ty = syn.y + syn.height;
+    }
     if (locked && shop) {
       // Bloqueado: no lugar de escolher, o botão de desbloquear com o custo, numa linha própria.
       out.push(buyButton(scene, shop, 'agents', id, left + width - 96, ty + 8, 84));
@@ -384,6 +401,7 @@ export function renderCompendium(
   seenSupplements: readonly string[] = [],
   seenAggregates: readonly string[] = [],
   seenFormations: readonly string[] = [],
+  bestByLocal?: Readonly<Record<string, number>>,
 ): Obj[] {
   const { left, width } = column(x, w);
   const g = scene.add.graphics();
@@ -446,7 +464,65 @@ export function renderCompendium(
   out.push(...formations.objects);
   const items = renderItems(scene, g, left, formations.bottom + 12, width, seenItems);
   out.push(...items.objects);
-  out.push(...renderSupplements(scene, g, left, items.bottom + 12, width, seenSupplements));
+  const supplements = renderSupplements(scene, g, left, items.bottom + 12, width, seenSupplements);
+  out.push(...supplements.objects);
+  out.push(...renderLocals(scene, g, left, supplements.bottom + 12, width, bestByLocal ?? {}));
+  return out;
+}
+
+/** Seção "Locais do corpo" do Compêndio (fase 5.12): o que cada local dobra e quem tem ✚ ali. */
+function renderLocals(
+  scene: Phaser.Scene,
+  g: Phaser.GameObjects.Graphics,
+  left: number,
+  y: number,
+  width: number,
+  best: Readonly<Record<string, number>>,
+): Obj[] {
+  const played = MAP_ENVIRONMENTS.filter((env) => (best[env] ?? 0) > 0).length;
+  const out: Obj[] = [
+    header(scene, left, y, `LOCAIS DO CORPO · ${played}/${MAP_ENVIRONMENTS.length}`),
+  ];
+  let cy = y + 16;
+  for (const env of MAP_ENVIRONMENTS) {
+    const def = MAP.environments[env];
+    const owners = Object.values(AGENTS)
+      .filter((a) => a.synergy?.env === env)
+      .map((a) => `✚ ${a.name} (${ORGANISM.sectors[a.synergy!.sector].name})`);
+    const barred = Object.values(AGENTS)
+      .filter((a) => env === 'brain' && a.crossesBloodBrainBarrier === false)
+      .map((a) => `⊘ ${a.name}`);
+    const family = familyText(env);
+    const sector = def.sector
+      ? ` · ${ORGANISM.sectors[def.sector].name} ×${String(MAP.locals.sectorMultiplier).replace('.', ',')}`
+      : '';
+    const tx = left + 30;
+    out.push(
+      scene.add.text(
+        tx,
+        cy + 5,
+        def.name,
+        withShadow(bodyText(13, PALETTE_CSS.text), PALETTE_CSS.ink, 1),
+      ),
+    );
+    const desc = scene.add.text(
+      tx,
+      cy + 23,
+      [`${family}${sector}`, [...owners, ...barred].join(' · ') || 'Sinergia: em breve'].join('\n'),
+      { ...bodyText(9, PALETTE_CSS.textSoft), wordWrap: { width: left + width - 8 - tx } },
+    );
+    out.push(desc);
+    const h = Math.ceil(desc.y + desc.height - cy) + 6;
+    drawInkBox(g, left, cy, width, h, PALETTE.panel);
+    g.fillStyle(PALETTE.ink).fillRect(left + 8, cy + 8, 14, 14);
+    g.fillStyle(env === 'blood' ? PALETTE.interaction : floorColor(env, 3)).fillRect(
+      left + 10,
+      cy + 10,
+      10,
+      10,
+    );
+    cy += h + 4;
+  }
   return out;
 }
 
@@ -458,7 +534,7 @@ function renderSupplements(
   y: number,
   width: number,
   seen: readonly string[],
-): Obj[] {
+): { objects: Obj[]; bottom: number } {
   const ids = Object.keys(SUPPLEMENTS.items);
   const known = ids.filter((id) => seen.includes(id)).length;
   const out: Obj[] = [header(scene, left, y, `SUPLEMENTOS · ${known}/${ids.length}`)];
@@ -500,7 +576,7 @@ function renderSupplements(
     drawInkBox(g, left, cy, width, h, PALETTE.panel);
     cy += h + 4;
   }
-  return out;
+  return { objects: out, bottom: cy };
 }
 
 /** Seção "Agregados": as moléculas fortes que já vieram como mini chefe (fase 5.10). */

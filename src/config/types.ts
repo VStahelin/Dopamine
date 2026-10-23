@@ -270,6 +270,13 @@ export interface AgentDef {
   health?: Partial<Record<Sector, number>>;
   /** Efeito colateral: pontos que tira de outros setores, como um remédio de verdade. */
   collateral?: Partial<Record<Sector, number>>;
+  /**
+   * Local de sinergia (fase 5.12, decisão 0032): no ambiente `env`, o agente melhora o setor
+   * `sector` no fim da run (organism.json, `synergy`).
+   */
+  synergy?: { env: MapEnvironment; sector: Sector };
+  /** Enzimas grandes não atravessam a barreira hematoencefálica: não entram no Cérebro. */
+  crossesBloodBrainBarrier?: boolean;
   /** Efetividade por tipo de molécula; o que faltar é neutro. */
   affinity: Partial<Record<MoleculeType, AffinityLevel>>;
   /**
@@ -616,6 +623,11 @@ export interface OrganismConfig {
   minStartSector: number;
   /** Bônus de ATP (run e idle) por ponto herdado. */
   inheritedAtpBonusPerPoint: number;
+  /**
+   * Sinergia agente × local (fase 5.12): pontos no setor do par (na escala de minutos da run),
+   * colateral multiplicado e nível inicial do receptor nativo.
+   */
+  synergy: { health: number; collateralMultiplier: number; nativeReceptorLevel: number };
 }
 
 /** Itens que as vesículas soltam (docs/itens.md, decisão 0024). */
@@ -798,6 +810,10 @@ export interface MapEnvironmentDef {
   decor: string[];
   /** Grupos com motivo (docs/mapas.md, "Grupos"): o que aparece junto, e por quê. */
   groups: MapGroupDef[];
+  /** Famílias de molécula do local, com peso dobrado (fase 5.12); vazio no local neutro. */
+  families: MoleculeType[];
+  /** Setor de saúde do local, com o ganho do agente multiplicado; null no local neutro. */
+  sector: Sector | null;
 }
 
 /** Como uma parte do grupo se espalha em volta do centro. */
@@ -867,6 +883,16 @@ export interface MapConfig {
   chamber: { chance: number; radiusTiles: number; gapSlots: number };
   /** Corredor (ponto de interesse): duas fileiras de obstáculos com `gapTiles` de passagem. */
   corridor: { chance: number; gapTiles: number; lengthTiles: [number, number] };
+  /**
+   * Locais do corpo (fase 5.12, decisão 0032): peso da família do local, multiplicador do setor,
+   * bônus de ATP do "Qualquer lugar" e estrela do caso que abre os locais.
+   */
+  locals: {
+    familyWeight: number;
+    sectorMultiplier: number;
+    randomAtpBonus: number;
+    unlockStar: number;
+  };
   environments: Record<MapEnvironment, MapEnvironmentDef>;
 }
 

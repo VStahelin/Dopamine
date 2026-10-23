@@ -31,7 +31,7 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | 5.9 | Suplementos e ampolas | Os suplementos dão motivo para andar pelo mapa e montam um build diferente a cada run? | 5.5, 5.8 | implementada, falta validar no celular |
 | 5.10 | Agregados (mini chefes) | Entre um chefe e outro sempre tem um alvo que vale o risco? | 5.9 | implementada, falta validar no celular |
 | 5.11 | Sinapses e estruturas | O jogador sai do lugar para buscar bônus no mapa? | 5.6, 5.9, 5.10 | implementada, falta validar no celular |
-| 5.12 | Locais do corpo e sinergias | Escolher onde agir muda a run e cura o organismo mais rápido? | 5, 5.7 | não iniciada |
+| 5.12 | Locais do corpo e sinergias | Escolher onde agir muda a run e cura o organismo mais rápido? | 5, 5.7 | em andamento |
 | 5.13 | Validação e ganhos rápidos | O que já existe funciona no celular e não mostra placeholder? | 2.6 a 5.11 | em andamento |
 | 5.14 | Famílias e chefes | Cada família de molécula pede um jeito diferente de jogar? | 5.12, 5.13 | não iniciada |
 | 5.15 | Elenco completo | Cada doença tem um agente feito para ela? | 5.14 | não iniciada |
@@ -400,17 +400,18 @@ Estruturas no mapa em que é preciso ficar um tempo ou arriscar algo para ganhar
 
 ## Fase 5.12: Locais do corpo e sinergias
 
-O jogador escolhe em que parte do corpo vai agir, em vez de o ambiente da fase 5.7 sair da semente, e o par agente × local pode ter sinergia que melhora um setor de saúde. Regras em [mapas.md](mapas.md#escolha-do-local), tela em [menu.md](menu.md#escolha-do-local) ([decisão 0032](decisoes/0032-local-escolhido-e-sinergia.md), proposta).
+O jogador escolhe em que parte do corpo vai agir, em vez de o ambiente da fase 5.7 sair da semente, e o par agente × local pode ter sinergia que melhora um setor de saúde. Regras em [mapas.md](mapas.md#escolha-do-local), tela em [menu.md](menu.md#escolha-do-local) ([decisão 0032](decisoes/0032-local-escolhido-e-sinergia.md)).
 
-- [ ] Local escolhido no lugar do sorteio: o gerador recebe o ambiente de fora e a semente decide só densidade e blocos; o nome do mapa e o código levam o local.
-- [ ] Família e setor por local em `map.json`: família do local com peso ×2 (moléculas e formações) e ganho do agente no setor do local ×1,5; Corrente sanguínea neutra.
-- [ ] Sinergia em `agents.json` (`synergy`) e `organism.json`: +4 no setor do par na escala de minutos, colateral pela metade, receptor nativo no nível 1. Com o elenco de hoje: Dopamina no Cérebro, Lipase no Intestino, Insulina no Fígado.
-- [ ] Barreira hematoencefálica (`crossesBloodBrainBarrier`): a Lipase não entra no Cérebro.
-- [ ] Hub: faixa do local acima do JOGAR; tela de escolha com o corpo, o cartão do local, o selo INDICADO e "Qualquer lugar" (+10% de ATP).
-- [ ] Desbloqueio dos quatro locais na primeira estrela do primeiro caso, com aviso no hub.
-- [ ] Sinergia na escolha do agente, na HUD (✚), no fim de run (linha separada na saúde) e na aba Organismo; melhor tempo por local em Recordes.
-- [ ] Wiki ([wiki.md](wiki.md)) e Compêndio com os locais e as sinergias; linha no [CHANGELOG](../CHANGELOG.md).
-- [ ] Rodar o `npm run sim` com cada doença no local indicado e na Corrente sanguínea, e ajustar os números para o segundo indivíduo não chegar na ALTA mais de 5 vezes mais rápido.
+- [x] Local escolhido no lugar do sorteio: o gerador recebe o ambiente de fora e a semente decide só densidade e blocos; o nome do mapa e o código levam o local.
+- [x] Família e setor por local em `map.json` (`families`, `sector` e `locals`): família do local com peso ×2 (moléculas e formações) e ganho do agente no setor do local ×1,5; Corrente sanguínea neutra.
+- [x] Sinergia em `agents.json` (`synergy`) e `organism.json`: +4 no setor do par na escala de minutos, colateral pela metade, receptor nativo no nível 1. Com o elenco de hoje: Dopamina no Cérebro, Lipase no Intestino, Insulina no Fígado.
+- [x] Barreira hematoencefálica (`crossesBloodBrainBarrier`): a Lipase não entra no Cérebro.
+- [x] Hub: faixa do local acima do JOGAR; tela de escolha com o corpo, o cartão do local, o selo INDICADO e "Qualquer lugar" (+10% de ATP). Conceito antes na prancheta [Escolha do local](identidade-visual/EscolhaLocal.dc.html).
+- [x] Desbloqueio dos quatro locais na primeira estrela do primeiro caso, com aviso no hub ("NOVO" na faixa até a primeira visita).
+- [x] Sinergia na escolha do agente, na HUD (✚), no fim de run (linha separada na saúde) e na aba Organismo; melhor tempo por local em Recordes.
+- [x] Wiki ([wiki.md](wiki.md)) e Compêndio com os locais e as sinergias; linha no [CHANGELOG](../CHANGELOG.md).
+- [x] Rodar o `npm run sim` com cada doença no local indicado e na Corrente sanguínea, e ajustar os números para o segundo indivíduo não chegar na ALTA mais de 5 vezes mais rápido. Feito com `npm run sim -- --case` (robô sem o campo longo, teto de 60 runs): sempre na Corrente sanguínea, o primeiro indivíduo não chega na ALTA; no local indicado, chega em 54 runs, e o segundo não chega em 60. A sinergia não deixa ninguém rápido demais; o que chama atenção é a ALTA lenta sem o campo longo, que fica para a validação.
+- [ ] Validar com o Vitor jogando: ele consegue dizer para onde ir com cada doença, e o par com sinergia cura visivelmente mais.
 
 **Depende de:** o organismo (fase 5, setores, famílias e efeito de saúde no fim da run) e os mapas gerados (fase 5.7, os ambientes).
 

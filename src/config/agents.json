@@ -16,6 +16,8 @@
       "crashSeconds": 3,
       "crashCooldownMultiplier": 1.6
     },
+    "synergy": { "env": "brain", "sector": "mental" },
+    "crossesBloodBrainBarrier": true,
     "health": {
       "mental": 6,
       "executive": 4,
@@ -54,6 +56,8 @@
       "type": "lipid",
       "vulnerability": 1
     },
+    "synergy": { "env": "intestine", "sector": "physical" },
+    "crossesBloodBrainBarrier": false,
     "health": {
       "physical": 10
     },
@@ -90,6 +94,8 @@
       "damage": 40,
       "pullPx": 120
     },
+    "synergy": { "env": "liver", "sector": "physical" },
+    "crossesBloodBrainBarrier": true,
     "health": {
       "physical": 8,
       "mental": 2

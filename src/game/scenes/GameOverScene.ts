@@ -22,6 +22,8 @@ export interface GameOverData {
   starReward: number;
   /** Quanto cada setor de saúde mudou com esta run. */
   healthChange: { sector: Sector; delta: number }[];
+  /** Linhas do local (fase 5.12): o que veio do setor do local e da sinergia, antes do retorno. */
+  healthNotes: string[];
 }
 
 const ROW_H = 24;
@@ -59,7 +61,14 @@ export class GameOverScene extends Phaser.Scene {
       ];
       const damage = data.damage.slice(0, DAMAGE_ROWS);
       const icon = slotSize(1);
-      const total = 54 + rows.length * ROW_H + 22 + damage.length * (icon + 4) + 16 + 2 * 50;
+      const total =
+        54 +
+        rows.length * ROW_H +
+        22 +
+        damage.length * (icon + 4) +
+        16 +
+        data.healthNotes.length * 14 +
+        2 * 50;
       const top = Math.max(16, Math.floor((h - total) / 2));
       const width = Math.min(300, w - 32);
       const left = Math.floor((w - width) / 2);
@@ -152,6 +161,10 @@ export class GameOverScene extends Phaser.Scene {
           }),
         );
         y += 40;
+      }
+      for (const note of data.healthNotes) {
+        children.push(this.add.text(left, y, note, bodyText(9, PALETTE_CSS.numberHeal)));
+        y += 14;
       }
       const { buttons } = addButtonColumn(this, w, y + 12, [
         { label: 'JOGAR DE NOVO', onClick: () => run().restartRun() },

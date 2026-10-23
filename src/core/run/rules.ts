@@ -24,6 +24,7 @@ import {
   type PassiveId,
   type RarityConfig,
   type RunConfig,
+  type Sector,
   type StatGroup,
   type StatsConfig,
   type StructuresConfig,
@@ -51,6 +52,10 @@ export interface RunRules {
   map: MapConfig;
   /** Ambiente do mapa; sem ele, sorteado pela semente da run (fase 5.7). */
   mapEnv?: MapEnvironment;
+  /** Local escolhido (fase 5.12): o ambiente, se veio do sorteio e o setor da sinergia. */
+  local?: { env: MapEnvironment; random: boolean; synergy: Sector | null };
+  /** Nível com que o receptor nativo começa (sinergia agente × local); sem ele, 0. */
+  nativeReceptorStart?: number;
   /** Peso de cada família pela doença do indivíduo (organismo); escolhe as formações. */
   familyWeights?: Partial<Record<MoleculeType, number>>;
   /** Cápsulas já abertas no save, para a sorte de principiante; sem o número, 0. */
@@ -64,7 +69,7 @@ export interface RunRules {
 }
 
 /** Origens que mexem na base dos atributos antes da run. */
-export type BaseSource = 'lab' | 'organism';
+export type BaseSource = 'lab' | 'organism' | 'local';
 
 export const DEFAULT_RULES: RunRules = {
   run: RUN,

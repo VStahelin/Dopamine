@@ -2,6 +2,8 @@
 // gastando o ATP entre elas, e mostra a curva de progressão da meta.
 //
 // Uso: npm run sim [-- --runs 15] [-- --seed 1] [-- --max 900]
+// Caso inteiro (fase 5.12): npm run sim -- --case [--individuals 2] [--cap 80], que compara
+// quantas runs cada indivíduo leva até a ALTA jogando na Corrente sanguínea e no local indicado.
 import { createServer } from 'vite';
 
 const args = process.argv.slice(2);
@@ -20,6 +22,32 @@ const server = await createServer({
   server: { middlewareMode: true, hmr: false },
 });
 try {
+  if (args.includes('--case')) {
+    const { simulateCase } = await server.ssrLoadModule('/src/core/sim/simulate.ts');
+    const individuals = option('individuals', 2);
+    const cap = option('cap', 80);
+    for (const strategy of ['blood', 'local']) {
+      const started = Date.now();
+      const rows = simulateCase({
+        seed,
+        maxSeconds,
+        strategy,
+        individuals,
+        maxRunsPerIndividual: cap,
+      });
+      console.log(strategy === 'blood' ? '\nSempre na Corrente sanguínea' : '\nNo local indicado');
+      for (const r of rows) {
+        const locals = Object.entries(r.locals)
+          .map(([k, v]) => `${k} ${v}`)
+          .join(', ');
+        console.log(
+          `  indivíduo ${r.individual} (${r.illness}): ${r.discharged ? '' : 'sem ALTA em '}${r.runs} runs · ${locals}`,
+        );
+      }
+      console.log(`  (${((Date.now() - started) / 1000).toFixed(1)} s)`);
+    }
+    process.exit(0);
+  }
   const { simulate } = await server.ssrLoadModule('/src/core/sim/simulate.ts');
   const started = Date.now();
   const report = simulate({ runs, seed, maxSeconds });

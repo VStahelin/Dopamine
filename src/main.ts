@@ -13,6 +13,7 @@ import { CapsuleScene } from './game/scenes/CapsuleScene';
 import { ChangelogScene } from './game/scenes/ChangelogScene';
 import { LevelUpScene } from './game/scenes/LevelUpScene';
 import { CatalogScene } from './game/scenes/CatalogScene';
+import { LocalScene } from './game/scenes/LocalScene';
 import { HubScene } from './game/scenes/HubScene';
 import { PlaceholderScene } from './game/scenes/PlaceholderScene';
 import { TitleScene } from './game/scenes/TitleScene';
@@ -64,6 +65,7 @@ const game = new Phaser.Game({
     HubScene,
     PlaceholderScene,
     CatalogScene,
+    LocalScene,
     RecordsScene,
     IdleScene,
     OptionsScene,

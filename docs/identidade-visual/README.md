@@ -18,6 +18,7 @@ Ao mudar uma prancheta no canvas, copie o arquivo novo para cá no mesmo commit 
 | Crônico: HUD de batalha | [CronicoBatalha.dc.html](CronicoBatalha.dc.html) | HUD da run em pé | `src/game/ui/` (HUD da run) |
 | Crônico: pausa e status | [CronicoPausa.dc.html](CronicoPausa.dc.html) | Pausa com arsenal e atributos | `src/game/scenes/PauseScene.ts` |
 | Crônico: atributos e de onde vem | [CronicoAtributos.dc.html](CronicoAtributos.dc.html) | Aba Atributos com a legenda das origens e os chips de cada bônus | `src/game/ui/pauseContent.ts` (`statRows`) |
+| Escolha do local | [EscolhaLocal.dc.html](EscolhaLocal.dc.html) | Tela "Onde agir?" com o corpo e os cinco locais, o cartão do local e o par com o agente; faixa do local no hub; ícones ✚ sinergia, ⊘ barreira e local ([menu.md](../menu.md#escolha-do-local)) | `src/assets/sprites/ui.json` (`bodyMap`, ícones `synergy`, `barrier`, `local`), `src/game/scenes/LocalScene.ts` |
 | Crônico: ícones, dano e paisagem | [CronicoGuia.dc.html](CronicoGuia.dc.html) | Molduras de ícone, números de dano, HUD deitada, regras de layout | `src/assets/sprites/frames.json` |
 | Ícones de armas e habilidades | [Icones.dc.html](Icones.dc.html) | Ícones de armas, passivos, especiais e atributos | `src/assets/sprites/icons.json` |
 | Crônico: level up | [CronicoLevelUp.dc.html](CronicoLevelUp.dc.html) | Tela de level up no celular | `src/game/scenes/LevelUpScene.ts` |

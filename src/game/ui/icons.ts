@@ -1,5 +1,6 @@
 import type * as Phaser from 'phaser';
 import { UI_SPRITES, type ColoredGrid } from '../../assets/sprites';
+import type { MapEnvironment } from '../../config';
 import { PALETTE, paletteColor } from '../render/palette';
 
 /**
@@ -57,6 +58,58 @@ export function drawBody(
   pixel: number,
 ): void {
   drawColoredGrid(g, UI_SPRITES.body, x, y, pixel);
+}
+
+/** Corpo com os locais da tela "Onde agir?" (fase 5.12). */
+export const BODY_MAP_SIZE = {
+  cols: UI_SPRITES.bodyMap.rows[0]?.length ?? 0,
+  rows: UI_SPRITES.bodyMap.rows.length,
+};
+
+/** Letra de cada local no `bodyMap` de ui.json. */
+const BODY_MAP_LOCALS: Readonly<Record<string, MapEnvironment>> = {
+  B: 'brain',
+  U: 'lung',
+  L: 'liver',
+  I: 'intestine',
+  V: 'blood',
+};
+
+/** Desenha o corpo dos locais; `colorOf` pinta cada local (aceso, apagado, bloqueado). */
+export function drawBodyMap(
+  g: Phaser.GameObjects.Graphics,
+  x: number,
+  y: number,
+  pixel: number,
+  colorOf: (env: MapEnvironment) => number,
+): void {
+  UI_SPRITES.bodyMap.rows.forEach((row, j) => {
+    [...row].forEach((c, i) => {
+      const env = BODY_MAP_LOCALS[c];
+      const color =
+        c === 'o' ? PALETTE.cyan : c === 'b' ? PALETTE.bodyFill : env ? colorOf(env) : undefined;
+      if (color === undefined) return;
+      g.fillStyle(color).fillRect(x + i * pixel, y + j * pixel, pixel, pixel);
+    });
+  });
+}
+
+/** Pixel (coluna, linha) no meio de cada local do `bodyMap`, para tocar e marcar. */
+export function bodyMapCenters(): Record<MapEnvironment, { col: number; row: number }> {
+  const sum: Partial<Record<MapEnvironment, { c: number; r: number; n: number }>> = {};
+  UI_SPRITES.bodyMap.rows.forEach((row, j) => {
+    [...row].forEach((c, i) => {
+      const env = BODY_MAP_LOCALS[c];
+      if (!env) return;
+      const s = (sum[env] ??= { c: 0, r: 0, n: 0 });
+      s.c += i;
+      s.r += j;
+      s.n++;
+    });
+  });
+  return Object.fromEntries(
+    Object.entries(sum).map(([env, s]) => [env, { col: s.c / s.n, row: s.r / s.n }]),
+  ) as Record<MapEnvironment, { col: number; row: number }>;
 }
 
 /** Formas em coordenadas relativas 0–1: octógono "pixelado" do guia de estilo, estrela, escudo. */

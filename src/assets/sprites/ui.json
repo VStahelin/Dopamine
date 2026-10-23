@@ -109,10 +109,44 @@
       "........",
       "oooooooo",
       "oooooooo"
+    ],
+    "synergy": [
+      "..oooo..",
+      "..oooo..",
+      "oooooooo",
+      "oooooooo",
+      "oooooooo",
+      "oooooooo",
+      "..oooo..",
+      "..oooo.."
+    ],
+    "barrier": [
+      "..oooo..",
+      ".oo...o.",
+      "o.oo...o",
+      "o..oo..o",
+      "o...oo.o",
+      "o....ooo",
+      ".o...oo.",
+      "..oooo.."
+    ],
+    "local": [
+      "..oooo..",
+      ".oooooo.",
+      "ooo..ooo",
+      "ooo..ooo",
+      ".oooooo.",
+      "..oooo..",
+      "...oo...",
+      "........"
     ]
   },
   "body": {
-    "colors": { "o": "cyan", "b": "bodyFill", "r": "interaction" },
+    "colors": {
+      "o": "cyan",
+      "b": "bodyFill",
+      "r": "interaction"
+    },
     "rows": [
       "....oooooo....",
       "...obbbbbbo...",
@@ -139,7 +173,10 @@
     ]
   },
   "lock": {
-    "colors": { "#": "outline", "o": "stone" },
+    "colors": {
+      "#": "outline",
+      "o": "stone"
+    },
     "rows": [".###.", "#...#", "#...#", "#####", "#ooo#", "#o#o#", "#ooo#", "#####"]
   },
   "shapes": {
@@ -220,5 +257,53 @@
     "...KKKKKKKKKK...",
     "................",
     "................"
-  ]
+  ],
+  "bodyMap": {
+    "rows": [
+      ".......oooooooooo.......",
+      "......obBBBBBBBBbo......",
+      ".....obBBBBBBBBBBbo.....",
+      ".....obBBBBBBBBBBbo.....",
+      ".....obbBBBBBBBBbbo.....",
+      ".....obbbbbbbbbbbbo.....",
+      "......obbbbbbbbbbo......",
+      ".......obbbbbbbbo.......",
+      "........obbbbbbo........",
+      ".........obVVbo.........",
+      "..ooooooobbVVbbooooooo..",
+      ".obbbbbbbbbVVbbbbbbbbbo.",
+      "oboobbUUUUbVVbUUUUbboobo",
+      "oVoobUUUUUbVVbUUUUUbooVo",
+      "oVoobUUUUUbVVVVUUUUbooVo",
+      "oVoobUUUUUbVVVVUUUUbooVo",
+      "oVoobUUUUUbbVVVUUUUbooVo",
+      "oVoobUUUUbbbVVbbUUUbooVo",
+      "oVoobbUUUbbbVVbbUUbbooVo",
+      "oVoobbbbbbbbVVbbbbbbooVo",
+      "oVoobLLLLLLLVVbbbbbbooVo",
+      "oVoobLLLLLLLVVbbbbbbooVo",
+      "oVoobbLLLLLbVVbbbbbbooVo",
+      "oVoobbbLLbbbVVbbbbbbooVo",
+      "oVoobbbIIIIIIIIIIbbbooVo",
+      "oVoobbIbbbbbbbbbbIbbooVo",
+      "oVoobbIbIIIIIIIIbIbbooVo",
+      "oVoobbIbIbbbbbbIbIbbooVo",
+      "oVoobbIbIIIIIIIIbIbbooVo",
+      "oVoobbIbbbbbbbbbbIbbooVo",
+      "oVoobbbIIIIIIIIIIbbbooVo",
+      "oooobbbbbbbbbbbbbbbboooo",
+      "...obbbbbbbbbbbbbbbbo...",
+      "....obbbbbbbbbbbbbbo....",
+      ".....obVbbo..obbVbo.....",
+      ".....obVbbo..obbVbo.....",
+      ".....obVbbo..obbVbo.....",
+      ".....obVbbo..obbVbo.....",
+      ".....obVbbo..obbVbo.....",
+      ".....obVbbo..obbVbo.....",
+      ".....obVbbo..obbVbo.....",
+      ".....obVbbo..obbVbo.....",
+      "....obbbbbo..obbbbbo....",
+      "....ooooooo..ooooooo...."
+    ]
+  }
 }

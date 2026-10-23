@@ -4,13 +4,22 @@ import {
   DISPLAY,
   DROPS,
   MAP,
+  ORGANISM,
   RUN,
   SECTORS,
   type MoleculeType,
+  type Sector,
   type StructureKind,
 } from '../../config';
 import { addRunStars, playableAgent, rulesWithProgress } from '../../core/meta/progress';
-import { applyHealth, earn, rulesWithOrganism, runHealth } from '../../core/organism/organism';
+import {
+  localHealth,
+  localsUnlocked,
+  resolveLocal,
+  rulesWithLocal,
+  type LocalChoice,
+} from '../../core/organism/local';
+import { applyHealth, earn, rulesWithOrganism } from '../../core/organism/organism';
 import { DEFAULT_RULES } from '../../core/run/rules';
 import { auraRadius, orbitPositions } from '../../core/run/weapons';
 import { recordRun } from '../../core/save/saveData';
@@ -207,11 +216,23 @@ export class RunScene extends Phaser.Scene {
       save.selectedAgent in AGENTS ? save.selectedAgent : 'dopamine',
     );
     // Organismo: setores mudam atributos, a doença puxa as moléculas e o indivíduo dá a dificuldade.
+    // Local (fase 5.12): a família do local dobra e o par agente × local pode ter sinergia.
+    const seed = Date.now() >>> 0;
+    const local = resolveLocal(
+      save.selectedLocal as LocalChoice,
+      AGENTS[agentId],
+      seed,
+      localsUnlocked(save.meta.stars, save.organism),
+    );
     const rules = {
-      ...rulesWithOrganism(rulesWithProgress(DEFAULT_RULES, save.meta), save.organism),
+      ...rulesWithLocal(
+        rulesWithOrganism(rulesWithProgress(DEFAULT_RULES, save.meta), save.organism),
+        local,
+        AGENTS[agentId],
+      ),
       capsulesOpened: save.capsulesOpened,
     };
-    this.run = createRun(Date.now() >>> 0, rules, agentId);
+    this.run = createRun(seed, rules, agentId);
     this.specialQueued = false;
     this.electronSprites = [];
     this.fx = [];
@@ -1088,9 +1109,14 @@ export class RunScene extends Phaser.Scene {
       // Estrelas novas do caso enchem o baú do menu.
       const stars = addRunStars(recorded.save.meta, result.timeSeconds);
       // Saúde: o agente aplica o efeito dele pelos minutos da run; o ATP conta para a herança.
-      const health = runHealth(this.run.rules.agents[this.run.agentId], result.timeSeconds / 60);
+      // No local, o setor do local multiplica e a sinergia soma; o fim de run mostra separado.
+      const health = localHealth(
+        this.run.rules.agents[this.run.agentId],
+        result.timeSeconds / 60,
+        result.env,
+      );
       const before = recorded.save.organism;
-      const organism = earn(applyHealth(before, health), result.atp + stars.reward);
+      const organism = earn(applyHealth(before, health.total), result.atp + stars.reward);
       setSave(this, { ...recorded.save, meta: stars.progress, organism });
       const healthChange = SECTORS.map((s) => ({
         sector: s,
@@ -1099,7 +1125,29 @@ export class RunScene extends Phaser.Scene {
       const damage = this.run.weapons
         .map((w) => ({ id: w.id, value: this.run.tally.damageByWeapon[w.id] ?? 0 }))
         .sort((a, b) => b.value - a.value);
+      const agentName = this.run.rules.agents[this.run.agentId].name;
+      const envName = MAP.environments[result.env].name;
+      const pts = (part: Partial<Record<Sector, number>>) =>
+        (Object.entries(part) as [Sector, number][])
+          .map(
+            ([s, v]) =>
+              `${v > 0 ? '+' : '−'}${Math.abs(v).toFixed(1).replace('.', ',')} ${ORGANISM.sectors[s].name}`,
+          )
+          .join(', ');
+      const healthNotes: string[] = [];
+      if (Object.keys(health.local).length > 0) {
+        healthNotes.push(`Setor do local (${envName}): ${pts(health.local)}`);
+      }
+      const synergy = this.run.rules.local?.synergy;
+      if (synergy) {
+        const gain = pts({ [synergy]: health.synergy[synergy] ?? 0 });
+        const halved = Object.keys(health.synergy).some((s) => s !== synergy);
+        healthNotes.push(
+          `Sinergia ${agentName} × ${envName}: ${gain}${halved ? ', colateral pela metade' : ''}`,
+        );
+      }
       const data: GameOverData = {
+        healthNotes,
         healthChange,
         result,
         newRecords,

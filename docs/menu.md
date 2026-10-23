@@ -119,7 +119,7 @@ O palco fica no centro, os trilhos nas laterais, a linha de ação embaixo do pa
 | --- | --- | --- | --- |
 | Tela de título | Logo e "toque para começar" | Existe (o menu atual) | 1.5 |
 | Escolha do agente | Agentes da run com ação, especial e efetividade; bloqueados com cadeado e custo | Placeholder (só a Dopamina) | 2 |
-| Escolha do local | Corpo com os cinco locais, o que cada um muda e a sinergia com o agente ([detalhes](#escolha-do-local)) | Não existe (o local é sorteado) | 5.12 |
+| Escolha do local | Corpo com os cinco locais, o que cada um muda e a sinergia com o agente ([detalhes](#escolha-do-local)) | Existe (`LocalScene`) | 5.12 |
 | Campo longo | O idle | Placeholder | 4 |
 | Compêndio | Moléculas inimigas (com a cascata), modificadores e raridades já vistos; o resto em silhueta | Placeholder | 2 em diante |
 | Recordes | Melhor tempo, nível, decompostas, runs | Existe | — |
@@ -128,7 +128,7 @@ O palco fica no centro, os trilhos nas laterais, a linha de ação embaixo do pa
 
 ### Escolha do local
 
-Proposta da [decisão 0032](decisoes/0032-local-escolhido-e-sinergia.md) (fase 5.12): antes da run, o jogador escolhe em que parte do corpo vai agir. As regras (família, setor, sinergia, barreira) estão em [mapas.md](mapas.md#escolha-do-local); aqui fica só a tela.
+[Decisão 0032](decisoes/0032-local-escolhido-e-sinergia.md) (fase 5.12, prancheta [Escolha do local](identidade-visual/EscolhaLocal.dc.html)): antes da run, o jogador escolhe em que parte do corpo vai agir. As regras (família, setor, sinergia, barreira) estão em [mapas.md](mapas.md#escolha-do-local); aqui fica só a tela.
 
 **No hub**, logo acima do JOGAR, entra uma faixa fina com o local escolhido e o que o par rende:
 
@@ -164,7 +164,7 @@ O JOGAR continua com um toque só: usa o último local. A faixa mostra ✚ e o s
 └─────────────────────────────────┘
 ```
 
-- **Corpo:** os cinco pontos (cérebro na cabeça, pulmão no peito, fígado à direita do abdome, intestino no meio do abdome, a corrente sanguínea nas linhas dos vasos e no coração). O ponto do local escolhido pulsa; o do setor mais baixo do caso tem o selo INDICADO. Local bloqueado fica em silhueta com cadeado e "1ª estrela".
+- **Corpo:** os cinco pontos (cérebro na cabeça, pulmão no peito, fígado à direita do abdome, intestino no meio do abdome, a corrente sanguínea nas linhas dos vasos e no coração). O ponto do local escolhido pulsa; o do setor mais baixo do caso tem o selo INDICADO. Como os quatro locais abrem juntos, a tela só aparece depois da primeira estrela; antes, a faixa nem existe. No jogo, o local tocado acende e o INDICADO tem um quadradinho dourado na lista.
 - **Cartão:** o tile base do ambiente, a família que dobra com os ícones das moléculas, o setor do local, a linha do par com o agente atual, os retratos pequenos dos agentes que têm sinergia ali (bloqueados em silhueta, para o jogador saber o que procurar) e o melhor tempo naquele local.
 - **Barreira:** com um agente que não atravessa, o cartão do Cérebro mostra ⊘ "NÃO ATRAVESSA A BARREIRA" e o IR fica apagado; tocar no retrato do agente abre a escolha do agente sem sair da tela.
 - **IR** começa a run direto. **QUALQUER LUGAR** sorteia o local pela semente, com +10% de ATP.
@@ -177,7 +177,7 @@ O JOGAR continua com um toque só: usa o último local. A faixa mostra ✚ e o s
 - **Fim de run:** a linha da saúde separa o que veio do agente, do setor do local e da sinergia ("Sinergia Lipase × Intestino: +4 Física").
 - **Aba Organismo:** em "quem ajuda cada setor", os pares com sinergia aparecem ao lado dos agentes.
 - **Palco do caso:** a ilustração do organismo destaca o local INDICADO junto com o setor doente.
-- **HUD da run:** ícone ✚ pequeno ao lado do retrato do agente quando o par tem sinergia ([ui-cronico.md](ui-cronico.md)).
+- **HUD da run:** ícone ✚ pequeno embaixo dos contadores de ATP e decompostas quando o par tem sinergia (a HUD não tem retrato do agente) ([ui-cronico.md](ui-cronico.md)).
 
 ### Opções
 

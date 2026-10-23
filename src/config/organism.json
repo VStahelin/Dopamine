@@ -47,5 +47,6 @@
   ],
   "sectorDropPerIndividual": 4,
   "minStartSector": 5,
-  "inheritedAtpBonusPerPoint": 0.1
+  "inheritedAtpBonusPerPoint": 0.1,
+  "synergy": { "health": 4, "collateralMultiplier": 0.5, "nativeReceptorLevel": 1 }
 }

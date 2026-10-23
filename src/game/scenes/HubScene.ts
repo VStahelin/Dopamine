@@ -1,5 +1,17 @@
 import * as Phaser from 'phaser';
-import { AGENTS, ECONOMY, ENEMIES, ORGANISM, SECTORS, type AgentId } from '../../config';
+import {
+  AGENTS,
+  ECONOMY,
+  ENEMIES,
+  MAP,
+  MAP_ENVIRONMENTS,
+  ORGANISM,
+  SECTORS,
+  type AgentId,
+  type MapEnvironment,
+} from '../../config';
+import { canEnter, localsUnlocked, synergyOf } from '../../core/organism/local';
+import { LOCAL_SHORT } from '../ui/locals';
 import { dischargeSave } from '../../core/organism/discharge';
 import { averageHealth, illnessName } from '../../core/organism/organism';
 import { renderOrganism, SECTOR_ORDER, SECTOR_STYLE } from '../ui/organismView';
@@ -48,6 +60,8 @@ const TAB_KEY = 'hubTab';
 const TOP_H = 84;
 const ROW2_H = 64;
 const ACTION_H = 136;
+/** Faixa do local acima do JOGAR (fase 5.12). */
+const BAND_H = 34;
 const TAB_H = 84;
 /** Largura máxima da coluna de conteúdo em telas largas. */
 const COLUMN_W = 480;
@@ -240,7 +254,11 @@ export class HubScene extends Phaser.Scene {
     out.push(...this.topBar(g, w, colX, colW));
     out.push(...this.row2(g, colX, colW));
     if (this.tab === 'case') {
-      out.push(...this.caseArea(g, colX, colW, midTop, midBottom - ACTION_H));
+      // Faixa do local (fase 5.12): só depois que os locais abrem.
+      const save = getSave(this);
+      const band = localsUnlocked(save.meta.stars, save.organism) ? BAND_H : 0;
+      out.push(...this.caseArea(g, colX, colW, midTop, midBottom - ACTION_H - band));
+      if (band > 0) out.push(...this.localBand(g, colX, colW, midBottom - ACTION_H - band));
       out.push(...this.actionRow(g, w, colX, colW, midBottom - ACTION_H));
     } else if (
       this.tab === 'agents' ||
@@ -599,6 +617,69 @@ export class HubScene extends Phaser.Scene {
         .text(railX + 30, railY + 121, 'EM BREVE', labelText(8, PALETTE_CSS.textMuted))
         .setOrigin(0.5, 0),
     );
+    return out;
+  }
+
+  /**
+   * Faixa do local acima do JOGAR (fase 5.12, prancheta "Escolha do local"): o local escolhido e
+   * o que o par rende (✚ e o setor, ⊘ quando o agente não entra). O toque abre a escolha.
+   */
+  private localBand(g: Phaser.GameObjects.Graphics, colX: number, colW: number, y: number): Obj[] {
+    const save = getSave(this);
+    const agent = AGENTS[this.selectedAgent()];
+    const choice = save.selectedLocal as MapEnvironment | 'random';
+    const random = choice === 'random' || !MAP_ENVIRONMENTS.includes(choice);
+    const x = colX + 12;
+    const w = colW - 24;
+    const bh = BAND_H - 6;
+    let edge: number = PALETTE.scanEdge;
+    let text = '';
+    let color: string = PALETTE_CSS.textSoft;
+    let icon: 'synergy' | 'barrier' | null = null;
+    if (!random && !canEnter(agent, choice)) {
+      edge = PALETTE.interaction;
+      icon = 'barrier';
+      text = '→ CORRENTE';
+      color = PALETTE_CSS.alert;
+    } else if (!random && synergyOf(agent, choice)) {
+      edge = PALETTE.buff;
+      icon = 'synergy';
+      text = ORGANISM.sectors[synergyOf(agent, choice)!].name.toUpperCase();
+      color = PALETTE_CSS.numberHeal;
+    } else if (random) {
+      text = `+${Math.round(MAP.locals.randomAtpBonus * 100)}% ATP`;
+      color = PALETTE_CSS.gold;
+    }
+    g.fillStyle(PALETTE.ink).fillRect(x, y, w, bh);
+    g.fillStyle(edge).fillRect(x + 3, y + 3, w - 6, bh - 6);
+    g.fillStyle(PALETTE.scanBg).fillRect(x + 5, y + 5, w - 10, bh - 10);
+    drawIcon(g, 'local', x + 10, y + 6, PALETTE.wood, 2);
+    const name = this.add.text(
+      x + 32,
+      y + 8,
+      random ? 'QUALQUER LUGAR' : LOCAL_SHORT[choice],
+      labelText(11, PALETTE_CSS.text),
+    );
+    const out: Obj[] = [name];
+    let tx = x + 32 + name.width + 10;
+    if (icon) {
+      drawIcon(g, icon, tx, y + 6, icon === 'synergy' ? PALETTE.buff : PALETTE.interaction, 2);
+      tx += 22;
+    }
+    if (text) out.push(this.add.text(tx, y + 8, text, labelText(11, color)));
+    out.push(
+      this.add.text(x + w - 18, y + 8, '▸', labelText(11, PALETTE_CSS.textSoft)),
+      this.zone(x, y, w, bh, () => this.scene.start(SCENES.local)),
+    );
+    // Aviso de que os locais abriram, até a primeira visita à tela.
+    if (!save.localsAnnounced) {
+      drawBadge(g, x + w - 14, y - 6, 14);
+      out.push(
+        this.add
+          .text(x + w - 22, y - 6, 'NOVO: ESCOLHA ONDE AGIR', labelText(8, PALETTE_CSS.gold))
+          .setOrigin(1, 0),
+      );
+    }
     return out;
   }
 

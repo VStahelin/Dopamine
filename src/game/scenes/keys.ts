@@ -4,6 +4,7 @@ export const SCENES = {
   hub: 'hub',
   placeholder: 'placeholder',
   catalog: 'catalog',
+  local: 'local',
   records: 'records',
   options: 'options',
   run: 'run',

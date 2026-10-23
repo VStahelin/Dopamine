@@ -8,6 +8,7 @@ import type {
   StructureKind,
   SupplementRarity,
   WeaponId,
+  MapEnvironment,
 } from '../../config';
 import { mapName, mapParams } from '../map/chunk';
 import { createRunMap, type RunMap } from '../map/world';
@@ -395,6 +396,8 @@ export interface RunResult {
   tally: RunStatsTally;
   /** Nome do mapa: ambiente, densidade e semente (CORRENTE SANGUÍNEA · DENSO · #A3F9). */
   mapName: string;
+  /** Local do corpo da run (o ambiente do mapa). */
+  env: MapEnvironment;
 }
 
 export function newWeapon(id: WeaponId): WeaponInstance {
@@ -548,6 +551,7 @@ export function runResult(state: RunState): RunResult {
     seenAggregates: [...state.seenAggregates],
     seenFormations: [...state.formations.seen],
     mapName: mapName(state.rules.map, state.map.params),
+    env: state.map.params.env,
     capsulesOpened: state.capsulesOpened,
     agentId: state.agentId,
     tally: {

@@ -42,9 +42,17 @@
   "nestVesicles": [3, 5],
   "chamber": { "chance": 0.08, "radiusTiles": 3, "gapSlots": 2 },
   "corridor": { "chance": 0.06, "gapTiles": 4, "lengthTiles": [6, 8] },
+  "locals": {
+    "familyWeight": 2,
+    "sectorMultiplier": 1.5,
+    "randomAtpBonus": 0.1,
+    "unlockStar": 1
+  },
   "environments": {
     "blood": {
       "name": "Corrente sanguínea",
+      "families": [],
+      "sector": null,
       "tiles": ["blood_base", "blood_flow", "blood_protein"],
       "obstacles": {
         "redCell": 13,
@@ -141,6 +149,8 @@
     },
     "liver": {
       "name": "Fígado",
+      "families": ["toxin"],
+      "sector": "social",
       "tiles": ["liver_base", "liver_nuclei", "liver_fat"],
       "obstacles": {
         "hepatocyte": 13,
@@ -234,6 +244,8 @@
     },
     "intestine": {
       "name": "Intestino",
+      "families": ["sugar", "lipid"],
+      "sector": "physical",
       "tiles": ["intestine_base", "intestine_crypts", "intestine_mucus"],
       "obstacles": {
         "villus": 12,
@@ -319,6 +331,8 @@
     },
     "lung": {
       "name": "Pulmão",
+      "families": ["radical"],
+      "sector": "executive",
       "tiles": ["lung_base", "lung_air", "lung_dust"],
       "obstacles": {
         "alveolus": 13,
@@ -404,6 +418,8 @@
     },
     "brain": {
       "name": "Cérebro",
+      "families": ["stress"],
+      "sector": "mental",
       "tiles": ["brain_base", "brain_glia", "brain_axon"],
       "obstacles": {
         "neuron": 13,

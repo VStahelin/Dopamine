@@ -15,6 +15,8 @@ export interface Records {
   bestLevel: number;
   mostKills: number;
   runs: number;
+  /** Melhor tempo em cada local do corpo (fase 5.12). */
+  bestTimeByLocal: Record<string, number>;
 }
 
 /**
@@ -65,6 +67,10 @@ export interface SaveData {
   options: Options;
   /** Agente escolhido para a próxima run. */
   selectedAgent: string;
+  /** Local escolhido para a próxima run (fase 5.12): um ambiente de map.json ou 'random'. */
+  selectedLocal: string;
+  /** O aviso de que os locais abriram já apareceu no hub. */
+  localsAnnounced: boolean;
   /** Moléculas já vistas em alguma run, para o Compêndio. */
   seen: string[];
   /** Itens do mapa já coletados, para o Compêndio (fase 5.5). */
@@ -92,10 +98,12 @@ export type RecordKind = 'time' | 'level' | 'kills';
 export function defaultSave(options: Options): SaveData {
   return {
     version: SAVE_VERSION,
-    records: { bestTimeSeconds: 0, bestLevel: 0, mostKills: 0, runs: 0 },
+    records: { bestTimeSeconds: 0, bestLevel: 0, mostKills: 0, runs: 0, bestTimeByLocal: {} },
     stats: defaultStats(),
     options: { ...options },
     selectedAgent: 'dopamine',
+    selectedLocal: 'blood',
+    localsAnnounced: false,
     seen: [],
     seenItems: [],
     seenSupplements: [],
@@ -122,6 +130,8 @@ export function migrateSave(raw: unknown, defaults: Options): SaveData {
     stats: unknown;
     options: Partial<Options>;
     selectedAgent: unknown;
+    selectedLocal: unknown;
+    localsAnnounced: unknown;
     seen: unknown;
     seenItems: unknown;
     seenSupplements: unknown;
@@ -142,6 +152,7 @@ export function migrateSave(raw: unknown, defaults: Options): SaveData {
       bestLevel: num(r.bestLevel, 0),
       mostKills: num(r.mostKills, 0),
       runs: num(r.runs, 0),
+      bestTimeByLocal: counts(r.bestTimeByLocal),
     },
     stats: migrateStats(data.stats),
     options: {
@@ -154,6 +165,8 @@ export function migrateSave(raw: unknown, defaults: Options): SaveData {
       sound: migrateSound(o.sound, base.options.sound),
     },
     selectedAgent: typeof data.selectedAgent === 'string' ? data.selectedAgent : base.selectedAgent,
+    selectedLocal: typeof data.selectedLocal === 'string' ? data.selectedLocal : base.selectedLocal,
+    localsAnnounced: data.localsAnnounced === true,
     seen: Array.isArray(data.seen) ? data.seen.filter((k) => typeof k === 'string') : [],
     seenItems: strings(data.seenItems) ?? [],
     seenSupplements: strings(data.seenSupplements) ?? [],
@@ -185,6 +198,10 @@ export function recordRun(
         bestLevel: Math.max(r.bestLevel, result.level),
         mostKills: Math.max(r.mostKills, result.kills),
         runs: r.runs + 1,
+        bestTimeByLocal: {
+          ...r.bestTimeByLocal,
+          [result.env]: Math.max(r.bestTimeByLocal[result.env] ?? 0, result.timeSeconds),
+        },
       },
       seen: [...new Set([...save.seen, ...result.seen])],
       seenItems: [...new Set([...save.seenItems, ...result.seenItems])],

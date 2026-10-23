@@ -37,6 +37,6 @@ As decisões de design tomadas antes deste registro continuam marcadas como "dec
 | [0029](0029-sinapses-e-estruturas.md) | Sinapses e estruturas no mapa (santuários do Megabonk) | design | proposta |
 | [0030](0030-variedade-da-run-reformulada.md) | Fase 5.6 reformulada: crises pela doença, receptor nativo e Superdosagem de atributos | design | proposta |
 | [0031](0031-lancar-em-todas-as-plataformas.md) | Lançar em todas as plataformas, empacotando a mesma build web | processo | proposta |
-| [0032](0032-local-escolhido-e-sinergia.md) | Local do corpo escolhido pelo jogador, com sinergia agente × local na saúde (fase 5.12) | design | proposta |
+| [0032](0032-local-escolhido-e-sinergia.md) | Local do corpo escolhido pelo jogador, com sinergia agente × local na saúde (fase 5.12) | design | aceita |
 | [0033](0033-grupos-de-objetos-no-mapa.md) | Objetos do mapa em grupos com motivo biológico | design | proposta |
 | [0034](0034-fases-para-fechar-lacunas.md) | Fases 5.13 a 5.16 para fechar as lacunas (agentes, famílias, chefes, conquistas) antes do lançamento | processo | aceita |

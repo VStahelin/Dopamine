@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Escolha do local</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&amp;family=Silkscreen:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+button{cursor:pointer}
+</style>
+</helmet>
+<div style="width: 880px; height: 844px; position: relative; overflow: hidden; background: #0B0C18; font-family: 'Pixelify Sans', monospace; color: #F4EFE0; display: flex">
+
+  <!-- Tela no celular em pé -->
+  <div style="width: 390px; height: 844px; position: relative; flex: none; background-color: #15172E; background-image: linear-gradient(#1B1E3A 2px, transparent 2px), linear-gradient(90deg, #1B1E3A 2px, transparent 2px); background-size: 26px 26px; display: flex; flex-direction: column">
+
+    <div style="height: 64px; flex: none; display: flex; align-items: center; gap: 10px; padding: 0 12px; background: #1B1E3A; border-bottom: 4px solid #07080F; margin-top: 28px">
+      <div style="font-family: 'Silkscreen', monospace; font-size: 11px; letter-spacing: 1px; color: #C9CCE6; padding: 8px 10px; background: #2A2E55; border: 3px solid #07080F; box-shadow: inset 0 -3px 0 #171A36, inset 0 3px 0 #474C85">‹ VOLTAR</div>
+      <div style="flex: 1; text-align: center; font-size: 24px; font-weight: 700; color: #FF9A1F; text-shadow: -3px 0 #3A0A0C, 3px 0 #3A0A0C, 0 -3px #3A0A0C, 0 3px #3A0A0C, 0 5px #3A0A0C; margin-right: 70px">ONDE AGIR?</div>
+    </div>
+
+    <div style="display: flex; gap: 6px; padding: 8px 12px 0; align-items: center">
+      <div style="font-family: 'Silkscreen', monospace; font-size: 9px; color: #8A8EB8; letter-spacing: 1px">AGENTE (TROCAR AQUI NO CONCEITO):</div>
+      <sc-for list="{{agentBtns}}" as="a" hint-placeholder-count="3">
+        <button style="font-family: 'Silkscreen', monospace; font-size: 9px; padding: 4px 6px; {{a.style}}" onClick="{{a.pick}}">{{a.label}}</button>
+      </sc-for>
+    </div>
+
+    <div style="flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; gap: 14px; padding: 8px 12px">
+      <div style="position: relative; padding: 10px; background: #101226; border: 4px solid #07080F; box-shadow: inset 0 0 0 2px #2A3A6E">
+        <div style="display: grid; grid-template-columns: repeat(24, 6px)">
+          <sc-for list="{{body}}" as="c" hint-placeholder-count="1056">
+            <div style="width: 6px; height: 6px; background: {{c.bg}}"></div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px; width: 150px">
+        <sc-for list="{{list}}" as="l" hint-placeholder-count="5">
+          <button style="display: flex; align-items: center; gap: 6px; padding: 6px 6px; text-align: left; font-family: 'Silkscreen', monospace; font-size: 10px; letter-spacing: 1px; {{l.style}}" onClick="{{l.pick}}">
+            <div style="width: 10px; height: 10px; flex: none; background: {{l.dot}}; box-shadow: 0 0 0 2px #07080F"></div>
+            <div style="flex: 1">{{l.name}}</div>
+            <div style="font-size: 9px; color: {{l.markColor}}">{{l.mark}}</div>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="flex: none; margin: 0 12px; padding: 10px; background: #1B1E3A; border: 3px solid #07080F; box-shadow: inset 0 0 0 2px {{card.edge}}; display: flex; flex-direction: column; gap: 6px">
+      <div style="display: flex; align-items: center; gap: 8px">
+        <div style="flex: 1; font-size: 20px; font-weight: 700; color: #FFFFFF; text-shadow: 0 2px #07080F">{{card.name}}</div>
+        <sc-if value="{{card.indicated}}" hint-placeholder-val="{{ true }}">
+          <div style="font-family: 'Silkscreen', monospace; font-size: 9px; letter-spacing: 1px; padding: 3px 6px; color: #07080F; background: #F2C83A; border: 2px solid #07080F">INDICADO</div>
+        </sc-if>
+      </div>
+      <div style="display: flex; gap: 8px; align-items: center">
+        <div style="width: 40px; height: 40px; flex: none; border: 2px solid #07080F; background-color: {{card.tile3}}; background-image: linear-gradient({{card.tile2}} 3px, transparent 3px), linear-gradient(90deg, {{card.tile2}} 3px, transparent 3px); background-size: 13px 13px"></div>
+        <div style="display: flex; flex-direction: column; gap: 3px; font-size: 13px">
+          <div style="color: #F4EFE0">{{card.family}}</div>
+          <div style="color: #C9CCE6">{{card.sector}}</div>
+        </div>
+      </div>
+      <div style="padding: 6px; background: #15172E; border: 2px solid #07080F; font-size: 13px; color: {{card.pairColor}}">{{card.pair}}</div>
+      <div style="display: flex; align-items: center; gap: 6px; font-family: 'Silkscreen', monospace; font-size: 9px; color: #C9CCE6; letter-spacing: 1px">
+        <div>SINERGIA AQUI:</div>
+        <sc-for list="{{card.synergy}}" as="s" hint-placeholder-count="2">
+          <div style="padding: 2px 5px; border: 2px solid #07080F; background: {{s.bg}}; color: {{s.fg}}">{{s.name}}</div>
+        </sc-for>
+        <div style="flex: 1; text-align: right">MELHOR AQUI: {{card.best}}</div>
+      </div>
+    </div>
+
+    <div style="flex: none; display: flex; gap: 8px; padding: 10px 12px 26px">
+      <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 56px; background: #2A2E55; border: 3px solid #07080F; box-shadow: inset 0 -4px 0 #171A36, inset 0 4px 0 #474C85">
+        <div style="font-family: 'Silkscreen', monospace; font-size: 11px; color: #F4EFE0; letter-spacing: 1px">QUALQUER LUGAR</div>
+        <div style="font-family: 'Silkscreen', monospace; font-size: 9px; color: #F2C83A">+10% ATP</div>
+      </div>
+      <div style="width: 130px; display: flex; align-items: center; justify-content: center; height: 56px; font-size: 26px; font-weight: 700; {{go.style}}">IR</div>
+    </div>
+  </div>
+
+  <!-- Guia: faixa do hub, ícones e sprite -->
+  <div style="flex: 1; padding: 28px 28px; display: flex; flex-direction: column; gap: 18px; font-size: 13px; color: #C9CCE6">
+    <div style="font-size: 22px; font-weight: 700; color: #FF9A1F">Faixa do local no hub (acima do JOGAR)</div>
+    <sc-for list="{{bands}}" as="b" hint-placeholder-count="3">
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <div style="width: 366px; height: 30px; display: flex; align-items: center; gap: 8px; padding: 0 10px; box-sizing: border-box; background: #101226; border: 3px solid #07080F; box-shadow: inset 0 0 0 2px {{b.edge}}">
+          <div style="position: relative; width: 16px; height: 16px; flex: none"><div style="{{pin}}"></div></div>
+          <div style="font-family: 'Silkscreen', monospace; font-size: 11px; letter-spacing: 1px; color: #F4EFE0">{{b.local}}</div>
+          <sc-if value="{{b.hasIcon}}" hint-placeholder-val="{{ true }}">
+            <div style="position: relative; width: 16px; height: 16px; flex: none"><div style="{{b.icon}}"></div></div>
+          </sc-if>
+          <div style="flex: 1; font-family: 'Silkscreen', monospace; font-size: 11px; letter-spacing: 1px; color: {{b.color}}">{{b.text}}</div>
+          <div style="font-family: 'Silkscreen', monospace; font-size: 11px; color: #C9CCE6">▸</div>
+        </div>
+        <div style="font-size: 12px; color: #8A8EB8">{{b.note}}</div>
+      </div>
+    </sc-for>
+
+    <div style="font-size: 22px; font-weight: 700; color: #FF9A1F; margin-top: 6px">Ícones 8×8</div>
+    <div style="display: flex; gap: 28px">
+      <sc-for list="{{icons}}" as="i" hint-placeholder-count="3">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px">
+          <div style="position: relative; width: 40px; height: 40px"><div style="{{i.big}}"></div></div>
+          <div style="font-family: 'Silkscreen', monospace; font-size: 10px; color: #F4EFE0">{{i.name}}</div>
+          <div style="font-size: 11px; color: #8A8EB8; width: 110px; text-align: center">{{i.note}}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="font-size: 22px; font-weight: 700; color: #FF9A1F; margin-top: 6px">Corpo com os locais (24×44)</div>
+    <div style="line-height: 1.5">
+      Cada órgão é pintado com a cor do chão do ambiente dele (o tom 3 da prancheta Mapas; o vaso fica no vermelho de interação para ler como sangue). O local tocado acende no tom 4 e pulsa; os outros ficam no tom 1. Local bloqueado fica cinza, com cadeado e "1ª ESTRELA" na lista. O fígado fica do lado direito do corpo (esquerda de quem olha), como na anatomia. O sprite vai para <code>ui.json</code> como <code>bodyMap</code>, com as letras B (cérebro), U (pulmão), L (fígado), I (intestino) e V (vasos).
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":880,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { local: 'intestine', agent: 'lipase' };
+  }
+  renderVals() {
+    const { local, agent } = this.state;
+    const BODY = [".......oooooooooo.......", "......obBBBBBBBBbo......", ".....obBBBBBBBBBBbo.....", ".....obBBBBBBBBBBbo.....", ".....obbBBBBBBBBbbo.....", ".....obbbbbbbbbbbbo.....", "......obbbbbbbbbbo......", ".......obbbbbbbbo.......", "........obbbbbbo........", ".........obVVbo.........", "..ooooooobbVVbbooooooo..", ".obbbbbbbbbVVbbbbbbbbbo.", "oboobbUUUUbVVbUUUUbboobo", "oVoobUUUUUbVVbUUUUUbooVo", "oVoobUUUUUbVVVVUUUUbooVo", "oVoobUUUUUbVVVVUUUUbooVo", "oVoobUUUUUbbVVVUUUUbooVo", "oVoobUUUUbbbVVbbUUUbooVo", "oVoobbUUUbbbVVbbUUbbooVo", "oVoobbbbbbbbVVbbbbbbooVo", "oVoobLLLLLLLVVbbbbbbooVo", "oVoobLLLLLLLVVbbbbbbooVo", "oVoobbLLLLLbVVbbbbbbooVo", "oVoobbbLLbbbVVbbbbbbooVo", "oVoobbbIIIIIIIIIIbbbooVo", "oVoobbIbbbbbbbbbbIbbooVo", "oVoobbIbIIIIIIIIbIbbooVo", "oVoobbIbIbbbbbbIbIbbooVo", "oVoobbIbIIIIIIIIbIbbooVo", "oVoobbIbbbbbbbbbbIbbooVo", "oVoobbbIIIIIIIIIIbbbooVo", "oooobbbbbbbbbbbbbbbboooo", "...obbbbbbbbbbbbbbbbo...", "....obbbbbbbbbbbbbbo....", ".....obVbbo..obbVbo.....", ".....obVbbo..obbVbo.....", ".....obVbbo..obbVbo.....", ".....obVbbo..obbVbo.....", ".....obVbbo..obbVbo.....", ".....obVbbo..obbVbo.....", ".....obVbbo..obbVbo.....", ".....obVbbo..obbVbo.....", "....obbbbbo..obbbbbo....", "....ooooooo..ooooooo...."];
+    const FLOOR = {
+      blood: ['#B8935C', '#CDA56C', '#D8B47A', '#E6C891'],
+      liver: ['#8F5444', '#A86654', '#B87562', '#C98670'],
+      intestine: ['#BF7C5A', '#D4916C', '#E2A27E', '#EDB894'],
+      lung: ['#C9A5A1', '#DDBDB9', '#E9CFCB', '#F5E1DE'],
+      brain: ['#8F7FA3', '#A897B9', '#B7A6C6', '#C8B9D5']
+    };
+    const ORGAN = { B: 'brain', U: 'lung', L: 'liver', I: 'intestine', V: 'blood' };
+    const VESSEL = ['#8E1616', '#E0433A'];
+    const LOCALS = {
+      brain: { name: 'CÉREBRO', family: 'Estresse ×2', sector: 'Setor do local: Mental' },
+      lung: { name: 'PULMÃO', family: 'Radicais livres ×2', sector: 'Setor do local: Executiva' },
+      liver: { name: 'FÍGADO', family: 'Toxinas ×2', sector: 'Setor do local: Social' },
+      intestine: { name: 'INTESTINO', family: 'Açúcares e lipídios ×2', sector: 'Setor do local: Física' },
+      blood: { name: 'CORRENTE', family: 'A mistura da doença', sector: 'Local neutro: nada muda' }
+    };
+    const AGENTS = {
+      dopamine: { name: 'DOPAMINA', syn: ['brain', 'Mental'], bbb: true },
+      lipase: { name: 'LIPASE', syn: ['intestine', 'Física'], bbb: false },
+      insulin: { name: 'INSULINA', syn: ['liver', 'Física'], bbb: true }
+    };
+    const SYN = {
+      brain: [['Dopamina', true], ['Ocitocina', false]],
+      lung: [['Vitamina C', false], ['Cafeína', false]],
+      liver: [['Insulina', true], ['Álc. desidrog.', false]],
+      intestine: [['Lipase', true], ['Serotonina', false]],
+      blood: [['Venvanse', false]]
+    };
+    const BEST = { brain: '04:51', lung: '--:--', liver: '06:20', intestine: '08:12', blood: '11:03' };
+    const a = AGENTS[agent];
+    const blocked = local === 'brain' && !a.bbb;
+    const body = [];
+    BODY.forEach((row) => [...row].forEach((ch) => {
+      let bg = 'transparent';
+      if (ch === 'o') bg = '#7EF0FF';
+      else if (ch === 'b') bg = '#1E4E8C';
+      else if (ORGAN[ch]) {
+        const id = ORGAN[ch];
+        const on = id === local;
+        if (id === 'blood') bg = VESSEL[on ? 1 : 0];
+        else bg = on ? FLOOR[id][3] : FLOOR[id][0];
+        if (on && blocked) bg = '#5B6380';
+      }
+      body.push({ bg });
+    }));
+    const PAL = { K: '#07080F', G: '#5BC43A', l: '#A6F07A', R: '#E0433A', O: '#FF9A1F', W: '#FFFFFF', A: '#8A90A0' };
+    const icon = (rows, c) => {
+      const s = [];
+      rows.forEach((row, y) => [...row].forEach((ch, x) => { if (PAL[ch]) s.push(`${(x + 1) * c}px ${(y + 1) * c}px 0 0 ${PAL[ch]}`); }));
+      return `position:absolute;left:${-c}px;top:${-c}px;width:${c}px;height:${c}px;box-shadow:${s.join(',')}`;
+    };
+    const I = {
+      synergy: ['..KKKK..', '..KGGK..', 'KKKGlKKK', 'KGGGGGGK', 'KGGGGGGK', 'KKKGGKKK', '..KGGK..', '..KKKK..'],
+      barrier: ['..RRRR..', '.RR...R.', 'R.RR...R', 'R..RR..R', 'R...RR.R', 'R....RRR', '.R...RR.', '..RRRR..'],
+      local: ['..KKKK..', '.KOOOOK.', 'KOOWWOOK', 'KOOWWOOK', '.KOOOOK.', '..KOOK..', '...KK...', '........']
+    };
+    const list = ['brain', 'lung', 'liver', 'intestine', 'blood'].map((id) => {
+      const on = id === local;
+      let mark = '', markColor = '#5BC43A';
+      if (a.syn[0] === id) mark = '✚';
+      if (id === 'brain' && !a.bbb) { mark = '⊘'; markColor = '#E0433A'; }
+      if (id === 'intestine') { mark = mark + ' ★'; }
+      return {
+        name: LOCALS[id].name, mark, markColor,
+        dot: id === 'blood' ? VESSEL[1] : FLOOR[id][3],
+        pick: () => this.setState({ local: id }),
+        style: on
+          ? 'color:#FFFFFF;background:#E0702A;border:3px solid #3A0A0C;box-shadow:inset 0 -3px 0 #9C3F12, inset 0 3px 0 #FFB347'
+          : 'color:#C9CCE6;background:#2A2E55;border:3px solid #07080F;box-shadow:inset 0 -3px 0 #171A36, inset 0 3px 0 #474C85'
+      };
+    });
+    const L = LOCALS[local];
+    let pair, pairColor;
+    if (blocked) { pair = `⊘ A ${a.name} NÃO ATRAVESSA A BARREIRA`; pairColor = '#FF8A7A'; }
+    else if (a.syn[0] === local) { pair = `Com a ${a.name}: ✚ +4 ${a.syn[1]}, colateral pela metade, perfil começa no nível 1`; pairColor = '#A6F07A'; }
+    else if (local === 'blood') { pair = `Com a ${a.name}: saúde como hoje`; pairColor = '#C9CCE6'; }
+    else { pair = `Com a ${a.name}: sem sinergia aqui`; pairColor = '#C9CCE6'; }
+    const card = {
+      name: L.name === 'CORRENTE' ? 'CORRENTE SANGUÍNEA' : L.name,
+      indicated: local === 'intestine',
+      family: L.family, sector: L.sector, pair, pairColor,
+      tile3: FLOOR[local][2], tile2: FLOOR[local][1],
+      edge: local === 'blood' ? VESSEL[1] : FLOOR[local][3],
+      best: BEST[local],
+      synergy: SYN[local].map(([name, open]) => ({ name, bg: open ? '#2A2E55' : '#15172E', fg: open ? '#F4EFE0' : '#5B6380' }))
+    };
+    const go = { style: blocked
+      ? 'color:#5B6380;background:#2A2E55;border:3px solid #07080F'
+      : 'color:#FFFFFF;background:#E0702A;border:3px solid #3A0A0C;box-shadow:inset 0 -4px 0 #9C3F12, inset 0 4px 0 #FFB347;text-shadow:0 3px #3A0A0C' };
+    const agentBtns = Object.entries(AGENTS).map(([id, ag]) => ({
+      label: ag.name,
+      pick: () => this.setState({ agent: id }),
+      style: id === agent ? 'color:#FFFFFF;background:#E0702A;border:2px solid #3A0A0C' : 'color:#C9CCE6;background:#2A2E55;border:2px solid #07080F'
+    }));
+    const bands = [
+      { local: 'INTESTINO', hasIcon: true, icon: icon(I.synergy, 2), text: 'FÍSICA', color: '#A6F07A', edge: '#5BC43A', note: 'Par com sinergia: ✚ e o setor que ele melhora.' },
+      { local: 'FÍGADO', hasIcon: false, icon: '', text: '', color: '#C9CCE6', edge: '#2A3A6E', note: 'Par neutro: só o local.' },
+      { local: 'CÉREBRO', hasIcon: true, icon: icon(I.barrier, 2), text: '→ CORRENTE', color: '#FF8A7A', edge: '#E0433A', note: 'Barreira: ⊘ em vermelho; o JOGAR vai para a Corrente sanguínea, com aviso curto.' }
+    ];
+    const icons = [
+      { name: 'SINERGIA', big: icon(I.synergy, 5), note: 'Faixa, HUD ao lado do retrato, escolha do agente' },
+      { name: 'BARREIRA', big: icon(I.barrier, 5), note: 'Agente que não entra no Cérebro' },
+      { name: 'LOCAL', big: icon(I.local, 5), note: 'Começo da faixa do hub' }
+    ];
+    return { body, list, card, go, agentBtns, bands, icons, pin: icon(I.local, 2) };
+  }
+}
+</script>
+</body>
+</html>

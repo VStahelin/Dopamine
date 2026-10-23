@@ -98,6 +98,11 @@ export interface ColoredGrid {
 export const UI_SPRITES: {
   icons: Readonly<Record<string, PixelGrid>>;
   body: ColoredGrid;
+  /**
+   * Corpo com os locais (prancheta "Escolha do local"): 'o' contorno, 'b' corpo e uma letra por
+   * local (B cérebro, U pulmão, L fígado, I intestino, V vasos); as cores vêm de quem desenha.
+   */
+  bodyMap: { rows: PixelGrid };
   lock: ColoredGrid;
   shapes: Readonly<Record<'octagon' | 'star' | 'shield', readonly (readonly number[])[]>>;
   /** Ícone de 16×16 para o que ainda não tem desenho. */

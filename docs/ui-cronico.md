@@ -29,7 +29,7 @@ De cima para baixo:
    - **Barra de XP** de ponta a ponta, moldura de madeira fina, recheio ciano (a cor de "nível do jogador" da aba Design) e `NV 12` dentro da barra, à direita.
    - **Ícones** à esquerda em duas linhas de 6 espaços de 24 px: armas em cima, reagentes embaixo.
    - **Tempo** no centro (Pixelify 24 px). Embaixo dele, a onda (`ONDA 3`), que vira `PICO DE ONDA` em laranja durante o pico do dente de serra (aba Economia), junto com o tempo.
-   - **ATP e decompostas** à direita, número antes do ícone, como no VS.
+   - **ATP e decompostas** à direita, número antes do ícone, como no VS. Embaixo deles, um ✚ verde quando o agente está no local de sinergia ([mapas.md](mapas.md#sinergia-agente--local), fase 5.12).
 3. **Logo abaixo da banda**, sobre o campo:
    - **Efeitos temporários** à esquerda, só enquanto duram.
    - **Barra do chefe** no centro, só quando há chefe: nome da molécula e vida em vermelho.

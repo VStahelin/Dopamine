@@ -91,7 +91,7 @@ O tom 3 da Corrente sanguínea é a areia de hoje (`world.json`), e o tom 2 é o
 
 ## Escolha do local
 
-> **Proposta da [decisão 0032](decisoes/0032-local-escolhido-e-sinergia.md), pedido do Vitor:** o jogador escolhe em que parte do corpo a run acontece, em vez de o ambiente sair da semente. O par agente × local pode ter **sinergia**, que melhora um setor de saúde no fim da run. Entra na [fase 5.12 do roadmap](roadmap.md#fase-512-locais-do-corpo-e-sinergias). A tela está em [menu.md](menu.md#escolha-do-local).
+> **[Decisão 0032](decisoes/0032-local-escolhido-e-sinergia.md), pedido do Vitor, feita na fase 5.12:** o jogador escolhe em que parte do corpo a run acontece, em vez de o ambiente sair da semente. O par agente × local pode ter **sinergia**, que melhora um setor de saúde no fim da run. Entra na [fase 5.12 do roadmap](roadmap.md#fase-512-locais-do-corpo-e-sinergias). A tela está em [menu.md](menu.md#escolha-do-local).
 
 A ideia é a de um remédio de verdade: o mesmo agente age melhor num lugar do que em outro. A Lipase digere gordura no intestino; a Insulina guarda glicose no fígado; a Lipase nem entra no cérebro. Escolher o local vira a segunda decisão antes da run, ao lado do agente, e as duas juntas respondem à doença do caso.
 
@@ -170,7 +170,7 @@ A sinergia deixa a run mais dura (a família dobrada é a que a doença já puxa
 
 ### Parâmetros
 
-Quando virar código, em `src/config/map.json` (por ambiente: `family`, `sector`, e as regras gerais `localFamilyWeight` 2, `localSectorMultiplier` 1,5, `randomLocalAtpBonus` 0,1, `unlockStar` 1) e em `src/config/agents.json` (por agente: `synergy` com o local e o setor, e `crossesBloodBrainBarrier`). A sinergia (`synergyHealth` 4, `synergyCollateralMultiplier` 0,5, `synergyNativeReceptorLevel` 1) fica em `src/config/organism.json`, junto com as outras regras de saúde. As contas ficam em `src/core/organism/`, sem Phaser.
+Em `src/config/map.json`, por ambiente `families` (lista; vazia na Corrente sanguínea) e `sector` (null na Corrente sanguínea), e as regras gerais em `locals`: `familyWeight` 2, `sectorMultiplier` 1,5, `randomAtpBonus` 0,1 e `unlockStar` 1. Em `src/config/agents.json`, por agente: `synergy` (`env` e `sector`) e `crossesBloodBrainBarrier`. A sinergia fica em `src/config/organism.json`, em `synergy`: `health` 4, `collateralMultiplier` 0,5 e `nativeReceptorLevel` 1. As contas ficam em `src/core/organism/local.ts`, sem Phaser. O `npm run sim -- --case` compara quantas runs cada indivíduo leva até a ALTA jogando sempre na Corrente sanguínea e no local indicado.
 
 ## Grupos
 
@@ -237,7 +237,7 @@ Quando virar código, um `src/config/map.json`, com o tipo em `src/config/types.
 
 ## O que falta decidir
 
-- [x] Quem escolhe o ambiente: o jogador, o caso (a doença do organismo) ou o sorteio? → o jogador, com o sorteio como opção e o caso só indicando ([Escolha do local](#escolha-do-local), [decisão 0032](decisoes/0032-local-escolhido-e-sinergia.md), proposta). No código, até a fase 5.12, continua o sorteio pela semente.
+- [x] Quem escolhe o ambiente: o jogador, o caso (a doença do organismo) ou o sorteio? → o jogador, com o sorteio como opção e o caso só indicando ([Escolha do local](#escolha-do-local), [decisão 0032](decisoes/0032-local-escolhido-e-sinergia.md)). Feito na fase 5.12.
 - [x] Entram os cinco ambientes de uma vez, ou a Corrente sanguínea primeiro e os outros um por fase? Os cinco de uma vez: a arte já estava pronta.
 - [ ] Obstáculos bloqueiam as moléculas comuns, ou só o agente? No código, os dois (o chefe e as formações atravessam). Bloquear as duas deixa o mapa tático; bloquear só o agente deixa a run mais difícil.
 - [ ] As zonas de terreno entram junto com os ambientes ou depois? Elas são mecânica nova. Ficaram para depois.

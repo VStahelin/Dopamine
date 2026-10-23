@@ -101,6 +101,7 @@ export class CatalogScene extends Phaser.Scene {
             save.seenSupplements,
             save.seenAggregates,
             save.seenFormations,
+            save.records.bestTimeByLocal,
           );
     const bw = Math.min(w - 32, 220);
     if (this.view === 'compendium') {

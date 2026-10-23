@@ -19,6 +19,7 @@ import {
 import { safeAreaUi, type Insets } from '../ui/safeArea';
 import { formatTime, hudLabelText, impactText, labelText, withShadow } from '../ui/theme';
 import { setupUiLayout } from '../ui/uiLayout';
+import { drawIcon } from '../ui/icons';
 import { SCENES } from './keys';
 import type { RunScene } from './RunScene';
 
@@ -371,6 +372,8 @@ export class HudScene extends Phaser.Scene {
     g.fillStyle(PALETTE.oxygen).fillRect(x + 10, ky + 4, 4, 4);
     this.atpText.setText(Math.floor(run.atp).toLocaleString('pt-BR'));
     this.killsText.setText(run.kills.toLocaleString('pt-BR'));
+    // Sinergia agente × local (fase 5.12): ✚ pequeno embaixo dos contadores.
+    if (run.rules.local?.synergy) drawIcon(g, 'synergy', x, ky + 22, PALETTE.buff, 2);
   }
 
   /**

@@ -1,4 +1,28 @@
-import { META, type AgentId, type MetaConfig } from '../../config';
+import {
+  AGENTS,
+  META,
+  SECTORS,
+  type AgentId,
+  type MapEnvironment,
+  type MetaConfig,
+} from '../../config';
+import {
+  canEnter,
+  indicatedLocal,
+  localHealth,
+  localsUnlocked,
+  rulesWithLocal,
+} from '../organism/local';
+import {
+  applyHealth,
+  canDischarge,
+  defaultOrganism,
+  discharge,
+  earn,
+  illnessName,
+  rulesWithOrganism,
+  type OrganismState,
+} from '../organism/organism';
 import {
   buyLab,
   buyUnlock,
@@ -265,4 +289,107 @@ export function simulate(options: SimOptions): SimReport {
     firstUnlockRun,
     grindWalls: runs.filter((r) => r.runsForNext > 3).map((r) => r.index),
   };
+}
+
+// --- Organismo e locais (fase 5.12) ---
+
+/** Como o robô escolhe onde agir: sempre na Corrente sanguínea ou no local que cura mais. */
+export type LocalStrategy = 'blood' | 'local';
+
+export interface CaseOptions {
+  seed: number;
+  maxSeconds: number;
+  strategy: LocalStrategy;
+  /** Teto de runs por indivíduo, para o robô não rodar para sempre num caso travado. */
+  maxRunsPerIndividual: number;
+  /** Quantas ALTAs seguidas medir. */
+  individuals: number;
+}
+
+export interface CaseIndividual {
+  individual: number;
+  illness: string;
+  /** Runs até a ALTA (ou o teto, se não chegou). */
+  runs: number;
+  discharged: boolean;
+  /** Locais usados nas runs deste indivíduo, com quantas vezes. */
+  locals: Record<string, number>;
+}
+
+/**
+ * Agente e local da próxima run: o agente liberado que mais sobe o setor mais baixo e, na
+ * estratégia 'local', o local de sinergia dele (se for desse setor) ou o INDICADO.
+ */
+function pickCase(
+  progress: MetaProgress,
+  organism: OrganismState,
+  strategy: LocalStrategy,
+): { agent: AgentId; env: MapEnvironment } {
+  const lowest = [...SECTORS].sort((a, b) => organism.sectors[a] - organism.sectors[b])[0]!;
+  const agents = progress.agents.filter((id): id is AgentId => id in AGENTS);
+  const agent =
+    [...agents].sort(
+      (a, b) => (AGENTS[b].health?.[lowest] ?? 0) - (AGENTS[a].health?.[lowest] ?? 0),
+    )[0] ?? 'dopamine';
+  if (strategy === 'blood' || !localsUnlocked(progress.stars, organism)) {
+    return { agent, env: 'blood' };
+  }
+  const def = AGENTS[agent];
+  if (def.synergy?.sector === lowest) return { agent, env: def.synergy.env };
+  const indicated = indicatedLocal(organism);
+  return { agent, env: indicated && canEnter(def, indicated) ? indicated : 'blood' };
+}
+
+/**
+ * Caso inteiro: o robô joga runs com o organismo, aplica a saúde do local no fim de cada uma e
+ * passa pela ALTA. Mede quantas runs cada indivíduo leva (sem o campo longo, que também cura).
+ */
+export function simulateCase(options: CaseOptions): CaseIndividual[] {
+  let save = { progress: defaultProgress(), atp: 0, organism: defaultOrganism() };
+  const out: CaseIndividual[] = [];
+  let seed = options.seed;
+  for (let k = 0; k < options.individuals; k++) {
+    const row: CaseIndividual = {
+      individual: save.organism.individual,
+      illness: illnessName(save.organism.individual),
+      runs: 0,
+      discharged: false,
+      locals: {},
+    };
+    while (row.runs < options.maxRunsPerIndividual) {
+      const { agent, env } = pickCase(save.progress, save.organism, options.strategy);
+      const rules = rulesWithLocal(
+        rulesWithOrganism(rulesWithProgress(DEFAULT_RULES, save.progress), save.organism),
+        { env, random: false },
+        AGENTS[agent],
+      );
+      const run = botRun(rules, (seed += 7919), agent, options.maxSeconds);
+      row.runs++;
+      row.locals[env] = (row.locals[env] ?? 0) + 1;
+      const stars = addRunStars(save.progress, run.time);
+      const opened = openChest(stars.progress, save.atp + Math.floor(run.atp));
+      const income = Math.floor(run.atp) + stars.reward;
+      const spent = shop(opened.progress, opened.atp, income, META);
+      const health = localHealth(AGENTS[agent], run.time / 60, env);
+      save = {
+        progress: spent.progress,
+        atp: spent.atp,
+        organism: earn(applyHealth(save.organism, health.total), income),
+      };
+      if (canDischarge(save.organism)) {
+        row.discharged = true;
+        break;
+      }
+    }
+    out.push(row);
+    if (!row.discharged) break;
+    // ALTA: zera Laboratório, estrelas e ATP; mantém agentes e armas (discharge.ts).
+    const fresh = defaultProgress();
+    save = {
+      progress: { ...fresh, agents: save.progress.agents, weapons: save.progress.weapons },
+      atp: 0,
+      organism: discharge(save.organism),
+    };
+  }
+  return out;
 }

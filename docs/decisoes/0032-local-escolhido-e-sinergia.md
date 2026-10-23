@@ -1,6 +1,6 @@
 # 0032. Local do corpo escolhido pelo jogador, com sinergia agente × local na saúde
 
-- **Status:** proposta
+- **Status:** aceita (o Vitor mandou seguir com a fase 5.12 em 2026-10-23)
 - **Data:** 2026-10-23
 - **Área:** design
 

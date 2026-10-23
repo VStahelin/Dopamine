@@ -1,5 +1,5 @@
 import type * as Phaser from 'phaser';
-import { AGENTS, IDLE, ORGANISM, type MoleculeType, type Sector } from '../../config';
+import { AGENTS, IDLE, MAP, ORGANISM, type MoleculeType, type Sector } from '../../config';
 import {
   averageHealth,
   canDischarge,
@@ -64,6 +64,13 @@ function sources(sector: Sector): { run: string; idle: string; down: string } {
   const run = Object.values(AGENTS)
     .filter((a) => (a.health?.[sector] ?? 0) > 0)
     .map((a) => `${a.name} +${dec(a.health![sector]!)}`);
+  // Pares com sinergia (fase 5.12): o agente no local dele soma mais neste setor.
+  for (const a of Object.values(AGENTS)) {
+    if (a.synergy?.sector !== sector) continue;
+    const where = MAP.environments[a.synergy.env].name;
+    const prep = a.synergy.env === 'blood' ? 'na' : 'no';
+    run.push(`✚ ${a.name} ${prep} ${where} +${dec(ORGANISM.synergy.health)}`);
+  }
   const idle = Object.values(IDLE.agents)
     .filter((a) => (a.healthPerHour?.[sector] ?? 0) > 0)
     .map((a) => `${a.name} +${dec(a.healthPerHour![sector]!)}/h`);

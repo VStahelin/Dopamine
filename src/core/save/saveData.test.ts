@@ -21,7 +21,13 @@ describe('migrateSave', () => {
       defaults,
     );
     expect(save.version).toBe(SAVE_VERSION);
-    expect(save.records).toEqual({ bestTimeSeconds: 90, bestLevel: 0, mostKills: 0, runs: 0 });
+    expect(save.records).toEqual({
+      bestTimeSeconds: 90,
+      bestLevel: 0,
+      mostKills: 0,
+      runs: 0,
+      bestTimeByLocal: {},
+    });
     expect(save.options.showFps).toBe(false);
   });
 });
@@ -39,6 +45,7 @@ describe('recordRun', () => {
       seenAggregates: [],
       seenFormations: [],
       mapName: '',
+      env: 'blood',
       capsulesOpened: 0,
       ...noTally,
     }).save;
@@ -53,11 +60,18 @@ describe('recordRun', () => {
       seenAggregates: [],
       seenFormations: [],
       mapName: '',
+      env: 'blood',
       capsulesOpened: 0,
       ...noTally,
     });
     expect(newRecords).toEqual(['level']);
-    expect(save.records).toEqual({ bestTimeSeconds: 100, bestLevel: 7, mostKills: 50, runs: 2 });
+    expect(save.records).toEqual({
+      bestTimeSeconds: 100,
+      bestLevel: 7,
+      mostKills: 50,
+      runs: 2,
+      bestTimeByLocal: { blood: 100 },
+    });
     expect(save.seen.sort()).toEqual(['glucose', 'ldl']);
     expect(save.atp).toBe(42);
   });
@@ -75,6 +89,7 @@ describe('estatísticas acumuladas', () => {
     seenAggregates: [],
     seenFormations: [],
     mapName: '',
+    env: 'blood' as const,
     capsulesOpened: 0,
     agentId: 'lipase' as const,
     tally: {

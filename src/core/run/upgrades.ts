@@ -284,10 +284,14 @@ export function statsAfter(state: RunState, choice: UpgradeChoice): RunStats | n
   return null;
 }
 
-/** Nível do receptor nativo: 1 a cada tantos níveis de run, até o máximo (fase 5.6). */
+/**
+ * Nível do receptor nativo: 1 a cada tantos níveis de run, até o máximo (fase 5.6), somado ao
+ * nível inicial da sinergia agente × local (fase 5.12).
+ */
 export function nativeLevel(state: RunState): number {
   const n = state.rules.run.nativeReceptor;
-  return Math.min(n.maxLevel, Math.floor(state.level / n.everyLevels));
+  const start = state.rules.nativeReceptorStart ?? 0;
+  return Math.min(n.maxLevel, start + Math.floor(state.level / n.everyLevels));
 }
 
 /**
@@ -395,6 +399,7 @@ export function statSources(
   const base = state.rules.baseSources ?? {};
   push('lab', base.lab?.[key]);
   push('organism', base.organism?.[key]);
+  push('local', base.local?.[key]);
   const native = state.rules.agents[state.agentId].nativeReceptor;
   if (native.stat === key) push('native', native.perLevel * nativeLevel(state));
   let receptors = 0;

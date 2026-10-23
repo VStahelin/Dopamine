@@ -106,6 +106,7 @@ export const PALETTE_CSS = {
   sourceCard: '#5B8CFF',
   sourceMutation: '#E0433A',
   sourceStructure: '#C9CCE6',
+  sourceLocal: '#5BC43A',
 } as const;
 
 /**

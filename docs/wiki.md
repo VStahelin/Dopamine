@@ -58,7 +58,7 @@ Branco é dano comum. Amarelo com "!" é catálise (crítico). Ciano é afinidad
 Algumas moléculas decompostas soltam ATP, a moeda do jogo (moeda dourada no chão). Com tantas moléculas na tela, é poucas: uma em cada 60, mais ou menos. Moléculas fortes e o chefe sempre soltam, e quanto mais tempo de run, mais cada uma vale. O ATP fica com você no fim da run.
 
 ### Pausa
-A pausa mostra suas armas e receptores (aba Arsenal), todos os atributos com o valor atual e a base, e embaixo de cada um de onde vem o bônus: Laboratório, organismo, perfil do agente, receptor, suplemento, sinapse, Mutação ou estrutura (aba Atributos) e os números da run (aba Run). Desistir encerra a run e leva para a tela de fim.
+A pausa mostra suas armas e receptores (aba Arsenal), todos os atributos com o valor atual e a base, e embaixo de cada um de onde vem o bônus: Laboratório, organismo, local (o +10% de ATP do Qualquer lugar), perfil do agente, receptor, suplemento, sinapse, Mutação ou estrutura (aba Atributos) e os números da run (aba Run). Desistir encerra a run e leva para a tela de fim.
 
 ---
 
@@ -71,6 +71,7 @@ Neurotransmissor da recompensa. A generalista: efetividade média contra tudo.
 - **Ação:** Pulso dopaminérgico, anéis que saem do agente e acertam tudo por onde passam.
 - **Especial:** Pico de recompensa. Por alguns segundos, pulsos muito mais rápidos e maiores. Depois vem uma queda, com a ação mais lenta.
 - **No organismo:** sobe Mental, Executiva e Social. Colateral: tira um pouco da Física.
+- **Sinergia:** ✚ no Cérebro (Mental).
 - **Perfil (receptor nativo):** Receptor D2, −8% de recarga por nível.
 
 ### Lipase
@@ -78,6 +79,7 @@ Enzima que quebra gordura. Forte contra lipídios, fraca contra o resto.
 - **Ação:** Hidrólise, golpes curtos e fortes no inimigo mais próximo, com respingo em volta.
 - **Especial:** Emulsão. Uma área no chão que deixa os lipídios dentro dela frágeis.
 - **No organismo:** sobe muito a Física. Colateral: tira um pouco da Mental.
+- **Sinergia:** ✚ no Intestino (Física). Não entra no Cérebro (⊘).
 - **Perfil (receptor nativo):** Sítio ativo, +10% de dano contra lipídios por nível.
 - **Desbloqueio:** 1.200 ATP.
 
@@ -86,6 +88,7 @@ Hormônio que tira o açúcar da circulação. Forte contra açúcares, fraca co
 - **Ação:** Campo de captação, que puxa os açúcares para perto e os absorve.
 - **Especial:** Captação. Puxa todos os açúcares da tela de uma vez e causa dano neles.
 - **No organismo:** sobe a Física e um pouco a Mental. Colateral: tira um pouco da Executiva.
+- **Sinergia:** ✚ no Fígado (Física).
 - **Perfil (receptor nativo):** Receptor de insulina, +25% de Raio de coleta por nível.
 - **Desbloqueio:** 2.000 ATP.
 
@@ -242,19 +245,32 @@ Quando a cápsula ou o level up não têm mais o que subir, você ganha Fosfocre
 
 ## O mapa
 
-*Números de `map.json`.*
+*Números de `map.json` (locais em `locals` e em cada ambiente) e de `organism.json` (`synergy`).*
 
 ### Mapas gerados
 Cada run gera o próprio mapa, e duas runs nunca têm o mesmo chão. No começo aparece o nome do mapa: o ambiente, a densidade e um código (a semente), que também ficam na pausa e no fim da run.
 
 ### Ambientes
-O mapa é um de cinco lugares do corpo, sorteado: Corrente sanguínea (plasma, hemácias e colesterol), Fígado (placas de hepatócitos), Intestino (vilosidades e fibra), Pulmão (alvéolos e brônquios) e Cérebro (neurônios e astrócitos).
+O mapa é um de cinco lugares do corpo, escolhido por você (veja Locais do corpo): Corrente sanguínea (plasma, hemácias e colesterol), Fígado (placas de hepatócitos), Intestino (vilosidades e fibra), Pulmão (alvéolos e brônquios) e Cérebro (neurônios e astrócitos).
 
 ### Obstáculos
 Bloqueiam você e as moléculas: use para despistar e afunilar. Nunca fecham um beco, e o começo da run fica sempre livre. O chefe e as moléculas de formação passam por cima.
 
 ### Destrutíveis
 Quebram com golpes e às vezes soltam algo: a Gota de gordura (Fígado) solta ATP, a Bactéria (Intestino) e a Fuligem (Pulmão) soltam gema, a Placa amiloide (Cérebro) solta uma vesícula. As armas com mira atiram neles quando estão mais perto que a molécula mais perto (até uns 8 tiles). O chefe quebra os que encosta.
+
+### Locais do corpo
+Antes da run, a faixa acima do JOGAR abre a tela **Onde agir?**, com o corpo e os cinco locais. Começa só a Corrente sanguínea; os outros quatro abrem na primeira estrela (5 minutos) do primeiro caso e ficam abertos para sempre. Cada local dobra uma família de molécula e multiplica por 1,5 o que o agente cura no setor do local:
+- **Intestino:** açúcares e lipídios ×2, setor Física.
+- **Cérebro:** estresse ×2, setor Mental.
+- **Pulmão:** radicais livres ×2, setor Executiva.
+- **Fígado:** toxinas ×2, setor Social.
+- **Corrente sanguínea:** não dobra nem multiplica nada. É o local neutro.
+
+O local cujo setor está mais baixo no caso ganha o selo INDICADO. **Qualquer lugar** sorteia o local e dá +10% de ATP na run. O código do mapa leva o local: para jogar o mesmo mapa que um amigo, combine o local e a semente.
+
+### Sinergia
+Cada agente age melhor num local (✚): Dopamina no Cérebro (Mental), Lipase no Intestino (Física), Insulina no Fígado (Física). No par com sinergia, o perfil do agente começa no nível 1, e no fim da run ele soma +4 no setor da sinergia (cheio em 10 minutos, até o dobro) e o colateral cai pela metade. A run fica mais dura, porque a família do local é a que a doença já puxa, mas cura bem mais. A Lipase é uma enzima grande e não atravessa a barreira hematoencefálica (⊘): não entra no Cérebro.
 
 ### Densidade
 Aberto, Padrão ou Denso: quantos obstáculos o mapa tem. Dentro do mesmo mapa há clareiras e trechos fechados.
@@ -397,11 +413,11 @@ Quatro setores, de 0 a 100. Em 50 não fazem nada; acima ajudam, abaixo atrapalh
 O setor baixo traz mais moléculas da família dele: Física baixa traz açúcares e lipídios; Mental baixa, hormônios do estresse; Executiva baixa, radicais livres; Social baixa, toxinas. Escolha agentes fortes contra o que a doença traz.
 
 ### Como a saúde muda
-- **Run:** no fim, o agente aplica o efeito dele no organismo, proporcional a quanto você durou (efeito cheio em 10 minutos, até o dobro). Quase todo agente tem um colateral: tira um pouco de outro setor, como um remédio de verdade.
+- **Run:** no fim, o agente aplica o efeito dele no organismo, proporcional a quanto você durou (efeito cheio em 10 minutos, até o dobro). Quase todo agente tem um colateral: tira um pouco de outro setor, como um remédio de verdade. O local soma: ×1,5 no setor do local e, no par com sinergia, +4 e colateral pela metade (veja O mapa). O fim da run mostra cada parte numa linha.
 - **Campo longo:** os agentes da base empurram os setores deles um pouco por hora, também com o jogo fechado.
 - **Retorno decrescente:** perto de 100 o setor quase não sobe; perto de 0 cai menos.
 
-A aba Organismo mostra, em cada setor, quem sobe ele na run (pontos a cada 10 minutos), quem sobe no campo longo (pontos por hora) e quem derruba como colateral, com os números atuais.
+A aba Organismo mostra, em cada setor, quem sobe ele na run (pontos a cada 10 minutos), quem sobe no campo longo (pontos por hora) e quem derruba como colateral, com os números atuais, e os pares com sinergia (✚).
 
 ### Saúde e produção
 A saúde geral multiplica o ATP do campo longo: com média 50, 1×; com média 90, 1,4×.

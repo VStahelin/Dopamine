@@ -107,7 +107,7 @@ Hoje são 15 moléculas e um chefe. Todas se comportam igual: perseguem o agente
 
 | Lacuna | Estado | Impacto | Esforço | Fonte |
 | --- | --- | --- | --- | --- |
-| **Fase 5.12 inteira**: local escolhido, família e setor por local, sinergia, barreira hematoencefálica, faixa do local no hub | Doc | Alto | M–G | [roadmap 5.12](roadmap.md#fase-512-locais-do-corpo-e-sinergias), [mapas.md](mapas.md#escolha-do-local), [decisão 0032](decisoes/0032-local-escolhido-e-sinergia.md) |
+| ~~**Fase 5.12 inteira**~~ (feita, falta validar jogando): local escolhido, família e setor por local, sinergia, barreira hematoencefálica, faixa do local no hub | Doc | Alto | M–G | [roadmap 5.12](roadmap.md#fase-512-locais-do-corpo-e-sinergias), [mapas.md](mapas.md#escolha-do-local), [decisão 0032](decisoes/0032-local-escolhido-e-sinergia.md) |
 | Pontos de interesse **câmara** e **corredor** | Doc | Médio | P–M | [mapas.md](mapas.md#pontos-de-interesse) linhas 214 e 215 |
 | **Zonas de terreno** (correnteza, bile, muco, bolsa de ar, sinapse ativa) | Doc | Médio | M | [mapas.md](mapas.md#ambientes); [roadmap 5.7](roadmap.md#fase-57-mapas-gerados) |
 | Estruturas da 5.11 como pontos de interesse dos blocos | Metade | Baixo | P | [roadmap 5.11](roadmap.md#fase-511-sinapses-e-estruturas) |

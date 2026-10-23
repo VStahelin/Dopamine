@@ -304,6 +304,7 @@ export const STAT_GROUPS: [(keyof typeof STATS)[], string][] = [
 export const SOURCE_LABELS: Record<StatSource, [string, string]> = {
   lab: ['LAB.', PALETTE_CSS.sourceLab],
   organism: ['ORGANISMO', PALETTE_CSS.sourceOrganism],
+  local: ['LOCAL', PALETTE_CSS.sourceLocal],
   native: ['PERFIL', PALETTE_CSS.sourceNative],
   receptor: ['RECEPTOR', PALETTE_CSS.sourceReceptor],
   supplement: ['SUPLEMENTO', PALETTE_CSS.sourceSupplement],
@@ -392,7 +393,7 @@ export function statRows(run: RunState): Build[] {
       out.push((scene, width) => {
         const value = run.stats[key];
         const before = sources
-          .filter((s) => s.source === 'lab' || s.source === 'organism')
+          .filter((s) => s.source === 'lab' || s.source === 'organism' || s.source === 'local')
           .reduce((sum, s) => sum + s.amount, 0);
         const base = statDef(run.rules, key).base - before;
         const trend = statTrend(key, value, base);
