@@ -372,9 +372,10 @@ export interface EconomyConfig {
     linear: number;
     quadratic: number;
     /**
-     * A vida das moléculas cresce mais que a quantidade: vida × D(t) × (1 + hpLinear × t +
+     * A vida das moléculas cresce mais que a quantidade: vida × hpStart × D(t) × (1 + hpLinear × t +
      * hpQuadratic × t²), t em minutos.
      */
+    hpStart: number;
     hpLinear: number;
     hpQuadratic: number;
     /** Limiar programável t*: a partir dele soma cubic × (t − t*)³. */

@@ -26,7 +26,7 @@ Cada agente tem um especial, disparado pelo botão grande no canto (ou Espaço n
 Moléculas decompostas soltam gemas azuis. Passe perto para coletar. Encheu a barra do topo, você sobe de nível e escolhe uma arma ou um receptor.
 
 ### Ondas e chefes
-A dificuldade sobe com o tempo. A cada 5 minutos vem um pico de onda (o tempo fica laranja), com mais moléculas, seguido de um respiro curto. A cada 5 minutos também aparece um chefe: a Partícula de LDL.
+A dificuldade sobe com o tempo: nascem mais moléculas e cada uma nasce com mais vida. Desde o começo elas aguentam mais de um golpe das armas iniciais, então ficar parado não segura a run. A cada 5 minutos vem um pico de onda (o tempo fica laranja), com mais moléculas, seguido de um respiro curto. A cada 5 minutos também aparece um chefe: a Partícula de LDL.
 
 ### Formações
 A cada 90 segundos vem uma formação, com aviso no topo e uma seta do lado de onde ela vai entrar:

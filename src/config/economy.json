@@ -8,6 +8,7 @@
   "difficulty": {
     "linear": 0.15,
     "quadratic": 0.01,
+    "hpStart": 1.3,
     "hpLinear": 0.3,
     "hpQuadratic": 0.035,
     "thresholdMinute": 20,

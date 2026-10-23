@@ -62,7 +62,7 @@ As telas de interface usam [uiLayout.ts](../src/game/ui/uiLayout.ts): zoom intei
 
 Fora dessas camadas:
 
-- **`tools/sim/`**: `npm run sim` roda o simulador de `src/core/sim/` (um robô joga runs seguidas e compra entre elas) e mostra a curva de progressão da meta.
+- **`tools/sim/`**: `npm run sim` roda o simulador de `src/core/sim/` (um robô joga runs seguidas e compra entre elas) e mostra a curva de progressão da meta. `node tools/sim/still.mjs` roda um robô parado com cada agente, para ver se ficar parado ainda segura a run.
 - **`tests/`** ou arquivos `*.test.ts` ao lado do código: testes do `core`.
 
 ## Estrutura de pastas
@@ -125,6 +125,7 @@ Precisa de Node 20.19 ou mais novo.
 | `npm run build` | Checa os tipos e gera o build em `dist/` |
 | `npm run preview` | Serve o build de `dist/` localmente, para testar a versão final |
 | `npm run release` | Check completo e publicação local atômica em `releases/` ([atualizacoes.md](atualizacoes.md)) |
+| `node tools/sim/still.mjs` | Robô parado: quanto a run dura sem mexer o agente, por agente |
 | `npm run sim` | Simulador de progressão: runs seguidas com um robô, compras entre elas, primeiro desbloqueio e paredes de grind (`-- --runs 30 --max 360`) |
 | `npm run sprites:build` | Gera os PNGs de `public/sprites/` a partir dos dados de `src/assets/sprites/` |
 | `npm run sprites:check` | Confere se os PNGs estão iguais aos dados (faz parte do `npm run check`) |

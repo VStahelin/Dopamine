@@ -8,6 +8,10 @@ O que mudou em cada versão do Dopamina Blaster. O jogo mostra este arquivo em O
 - Tela de level up nova: cada cartão mostra o que muda ("Reatividade 100% → 120%", "NV 3 → NV 4") e avisa quando leva a uma evolução; os espaços de arma e receptor aparecem em cima; Rerrolar, Pular e Banir ficam sempre à vista, com os usos, e os banidos da run aparecem embaixo.
 - No PC, o level up tem os atributos à esquerda e o arsenal à direita; passar o mouse num cartão mostra o efeito nos dois. Teclas 1 a 5 escolhem, R rerrola, S pula e B bane.
 
+### Ajustes
+- Agentes mais fracos no começo: o Pulso dopaminérgico tira 5 de dano (era 7) num círculo menor, a Hidrólise da Lipase 17 (era 22) e o Campo de captação da Insulina 3 (era 4). Os níveis da Dopamina e da Lipase também somam menos dano.
+- As moléculas nascem com 30% mais vida desde o primeiro segundo: as fracas aguentam dois golpes. Ficar parado deixa de matar tudo; no simulador, um agente parado morre em menos de um minuto.
+
 ## v0.12.1 · 23/10/2026
 
 ### Novidades
