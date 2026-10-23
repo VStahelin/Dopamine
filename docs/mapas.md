@@ -60,7 +60,7 @@ Cinco tipos de objeto, todos em pixel art de 16×16 com a paleta dos ícones.
 | Tipo | Colisão | Vida | O que faz |
 | --- | --- | --- | --- |
 | **Obstáculo** | sim | — | Bloqueia agente e moléculas; serve para despistar e afunilar inimigos |
-| **Destrutível** | sim, até quebrar | 1 a 3 golpes | Abre caminho e pode soltar algo |
+| **Destrutível** | sim, até quebrar | 1 a 3 golpes | Abre caminho e pode soltar algo; as armas com mira atiram nele quando está mais perto que a molécula mais perto |
 | **Vesícula** | não | 1 golpe | A fonte de itens de [itens.md](itens.md); igual em todos os ambientes |
 | **Decoração** | não | — | Só dá vida ao chão; nunca esconde gema ou molécula (fica embaixo delas) |
 | **Zona de terreno** | não | — | Mancha no chão com efeito em quem está dentro (proposta, ver abaixo) |

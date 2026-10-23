@@ -126,6 +126,11 @@ export interface RunConfig {
     ricochetDamageFactor: number;
     /** Invulnerabilidade depois de voltar com a Segunda dose. */
     reviveInvulnerabilitySeconds: number;
+    /**
+     * As armas com mira também miram no que quebra (destrutíveis do mapa e vesículas) até esta
+     * distância, quando ele está mais perto que a molécula mais perto.
+     */
+    objectAimRangePx: number;
   };
   /** Chefes: nascem no começo de cada pico do dente de serra que caia no intervalo. */
   bosses: { kind: string; everyMinutes: number }[];

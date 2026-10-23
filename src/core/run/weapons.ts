@@ -1,5 +1,5 @@
 import type { WeaponDef, WeaponParams } from '../../config';
-import { hitEnemy, nearestEnemy } from './combat';
+import { aimPoint, hitEnemy, nearestEnemy } from './combat';
 import type { SpatialGrid } from './spatialGrid';
 import { actionMods } from './specials';
 import type { Enemy, RunState, WeaponInstance } from './state';
@@ -113,7 +113,7 @@ function fireProjectiles(
 ): void {
   if (w.cooldown > 0) return;
   const { agent } = state;
-  const target = nearestEnemy(state, agent.x, agent.y, p.rangePx);
+  const target = aimPoint(state, agent.x, agent.y, p.rangePx);
   if (!target) return;
   const base = Math.atan2(target.y - agent.y, target.x - agent.x);
   const spread = ((def.spreadDegrees ?? 0) * Math.PI) / 180;
@@ -187,7 +187,7 @@ function fireCone(
 ): void {
   if (w.cooldown > 0) return;
   const { agent } = state;
-  const target = nearestEnemy(state, agent.x, agent.y, p.rangePx);
+  const target = aimPoint(state, agent.x, agent.y, p.rangePx);
   if (!target) return;
   const angle = Math.atan2(target.y - agent.y, target.x - agent.x);
   const half = (((def.coneDegrees ?? 60) * Math.PI) / 180 / 2) * state.stats.area;
@@ -275,9 +275,11 @@ function throwZones(state: RunState, w: WeaponInstance, def: WeaponDef, p: Weapo
   const near = state.enemies.filter(
     (e) => e.hp > 0 && (e.x - agent.x) ** 2 + (e.y - agent.y) ** 2 <= p.rangePx ** 2,
   );
-  if (near.length === 0) return;
+  // Sem molécula perto, a poça cai no que quebra (destrutível ou vesícula).
+  const object = near.length === 0 ? aimPoint(state, agent.x, agent.y, p.rangePx) : undefined;
+  if (near.length === 0 && !object) return;
   for (let i = 0; i < p.count; i++) {
-    const target = near[state.rng.int(near.length)]!;
+    const target = object ?? near[state.rng.int(near.length)]!;
     state.zones.push({
       kind: 'solvent',
       x: target.x,
@@ -312,7 +314,7 @@ export function updateZones(state: RunState, dt: number, grid: SpatialGrid): voi
 function fireBeams(state: RunState, w: WeaponInstance, def: WeaponDef, p: WeaponParams): void {
   if (w.cooldown > 0) return;
   const { agent } = state;
-  const target = nearestEnemy(state, agent.x, agent.y, p.rangePx);
+  const target = aimPoint(state, agent.x, agent.y, p.rangePx);
   if (!target) return;
   const base = Math.atan2(target.y - agent.y, target.x - agent.x);
   const spread = ((def.spreadDegrees ?? 20) * Math.PI) / 180;
@@ -392,7 +394,14 @@ function strike(state: RunState, w: WeaponInstance, p: WeaponParams, grid: Spati
     );
     if (t) targets.push(t);
   }
-  if (targets.length === 0) return;
+  if (targets.length === 0) {
+    // Sem molécula: o golpe cai no que quebra mais perto, se houver.
+    const object = aimPoint(state, agent.x, agent.y, p.rangePx);
+    if (!object) return;
+    state.events.push({ type: 'strike', x: object.x, y: object.y, radius: p.areaPx });
+    w.cooldown = p.cooldownSeconds;
+    return;
+  }
   for (const t of targets) {
     const tx = t.x;
     const ty = t.y;

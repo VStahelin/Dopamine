@@ -25,6 +25,35 @@ export function nearestEnemy(
   return best;
 }
 
+/**
+ * Para onde as armas com mira apontam: a molécula mais perto, ou o que quebra (destrutível do
+ * mapa ou vesícula) se ele estiver mais perto que ela e a menos de `objectAimRangePx`. Sem isso,
+ * os disparos só passavam pelos objetos por acaso.
+ */
+export function aimPoint(
+  state: RunState,
+  x: number,
+  y: number,
+  maxDistance: number,
+): { x: number; y: number; enemy?: Enemy } | undefined {
+  const enemy = nearestEnemy(state, x, y, maxDistance);
+  const reach = Math.min(maxDistance, state.rules.run.combat.objectAimRangePx);
+  let bestD2 = enemy ? (enemy.x - x) ** 2 + (enemy.y - y) ** 2 : reach * reach;
+  bestD2 = Math.min(bestD2, reach * reach);
+  let best: { x: number; y: number } | undefined;
+  const consider = (ox: number, oy: number) => {
+    const d2 = (ox - x) ** 2 + (oy - y) ** 2;
+    if (d2 < bestD2) {
+      bestD2 = d2;
+      best = { x: ox, y: oy };
+    }
+  };
+  for (const { object: o } of state.map.solids) if (o.kind === 'destructible') consider(o.x, o.y);
+  for (const v of state.vesicles) consider(v.x, v.y);
+  if (best) return best;
+  return enemy ? { x: enemy.x, y: enemy.y, enemy } : undefined;
+}
+
 /** Multiplicador de efetividade do agente contra o tipo da molécula (aba Personagens). */
 export function affinityMultiplier(state: RunState, e: Enemy): number {
   const level = state.rules.agents[state.agentId].affinity[e.type] ?? 'neutral';

@@ -200,7 +200,7 @@ O Etanol chega em grupos. O Acetaldeído se quebra em Etanol. Vêm muito quando 
 *Números de `drops.json`. O Compêndio mostra cada item depois que você o coleta.*
 
 ### Vesículas
-Bolsas translúcidas paradas no chão, com dopamina dentro. Aparecem fora da tela, uma a cada 15 segundos (no máximo 6). Qualquer golpe rompe a vesícula, que solta um item. Itens raros só começam a sair depois de certo nível da run.
+Bolsas translúcidas paradas no chão, com dopamina dentro. Aparecem fora da tela, uma a cada 15 segundos (no máximo 6). Qualquer golpe rompe a vesícula, que solta um item. As armas com mira atiram nela quando ela está mais perto que a molécula mais perto. Itens raros só começam a sair depois de certo nível da run.
 
 ### Coleta
 O Raio de coleta puxa os itens como puxa as gemas. A Sorte deixa os itens raros mais comuns, menos o ATP e a Glicose.
@@ -254,7 +254,7 @@ O mapa é um de cinco lugares do corpo, sorteado: Corrente sanguínea (plasma, h
 Bloqueiam você e as moléculas: use para despistar e afunilar. Nunca fecham um beco, e o começo da run fica sempre livre. O chefe e as moléculas de formação passam por cima.
 
 ### Destrutíveis
-Quebram com golpes e às vezes soltam algo: a Gota de gordura (Fígado) solta ATP, a Bactéria (Intestino) e a Fuligem (Pulmão) soltam gema, a Placa amiloide (Cérebro) solta uma vesícula. O chefe quebra os que encosta.
+Quebram com golpes e às vezes soltam algo: a Gota de gordura (Fígado) solta ATP, a Bactéria (Intestino) e a Fuligem (Pulmão) soltam gema, a Placa amiloide (Cérebro) solta uma vesícula. As armas com mira atiram neles quando estão mais perto que a molécula mais perto (até uns 8 tiles). O chefe quebra os que encosta.
 
 ### Densidade
 Aberto, Padrão ou Denso: quantos obstáculos o mapa tem. Dentro do mesmo mapa há clareiras e trechos fechados.

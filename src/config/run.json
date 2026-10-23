@@ -29,7 +29,8 @@
     "knockbackPx": 6,
     "ricochetRangePx": 90,
     "ricochetDamageFactor": 0.85,
-    "reviveInvulnerabilitySeconds": 2
+    "reviveInvulnerabilitySeconds": 2,
+    "objectAimRangePx": 260
   },
   "bosses": [
     {

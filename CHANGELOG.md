@@ -9,6 +9,7 @@ O que mudou em cada versão do Dopamina Blaster. O jogo mostra este arquivo em O
 - O agregado (mini chefe) ficou gigante, roxo e com um brilho dourado pulsando, sem o círculo vermelho em volta.
 
 ### Correções
+- As armas com mira agora atiram nos objetos que quebram (gota de gordura, bactéria, fuligem, placa amiloide, coágulo de fibrina) e nas vesículas quando estão mais perto que a molécula mais perto. Antes só quebravam por acaso, quando um disparo passava por eles.
 - As Opções abertas pelo menu depois de uma run apareciam como se fossem da pausa, e VOLTAR travava o jogo.
 
 ## v0.14.0 · 23/10/2026
