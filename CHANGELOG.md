@@ -4,6 +4,8 @@ O que mudou em cada versão do Farmaco Battle. O jogo mostra este arquivo em Op�
 
 ## Em desenvolvimento
 
+## v0.16.0 · 23/10/2026
+
 ### Novidades
 - Primeiros efeitos sonoros: o agente agora soa ao levar dano (mais pesado num golpe forte e diferente quando a Membrana segura), ao se curar, ao esquivar, com a Segunda dose, quando o especial fica pronto, ao ser consumido e num aviso de interações baixas. O volume de Efeitos das Opções passa a valer e toca uma amostra ao mudar.
 
