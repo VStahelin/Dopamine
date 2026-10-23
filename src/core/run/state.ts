@@ -272,8 +272,8 @@ export interface RunState {
   banished: string[];
   /** Tipos de molécula vistos nesta run, para o Compêndio. */
   seen: EnemyKind[];
-  /** Agregados já agendados (nascidos ou pulados por cair num minuto de chefe). */
-  aggregatesSpawned: number;
+  /** Momento sorteado do próximo agregado, em segundos de run. */
+  nextAggregateAt: number;
   /** Moléculas que já vieram como agregado nesta run, para o Compêndio. */
   seenAggregates: EnemyKind[];
   /** Próximos minutos de chefe já agendados, por índice de `bosses`. */
@@ -373,7 +373,7 @@ export function createRun(
     banished: [],
     seen: [],
     bossesSpawned: rules.run.bosses.map(() => 0),
-    aggregatesSpawned: 0,
+    nextAggregateAt: -1,
     seenAggregates: [],
     over: false,
     nextEnemyId: 1,

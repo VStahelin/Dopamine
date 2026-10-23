@@ -37,15 +37,19 @@ export type ContactDamageKind = 'common' | 'strong' | 'boss';
 
 /** Agregados, os mini chefes (fase 5.10, decisão 0028): a molécula forte da onda, maior e mais forte. */
 export interface AggregateConfig {
-  startMinute: number;
-  /** Um a cada tantos minutos, menos nos minutos de chefe. */
-  everyMinutes: number;
+  /**
+   * Intervalo sorteado entre um agregado e o próximo (o primeiro também conta do começo da run).
+   * O máximo de 60 s garante pelo menos um por minuto.
+   */
+  minGapSeconds: number;
+  maxGapSeconds: number;
   hpMultiplier: number;
   sizeMultiplier: number;
   speedMultiplier: number;
   /** XP da molécula base multiplicado: sempre uma gema vermelha. */
   xpMultiplier: number;
-  /** Raridade mínima da ampola que ele sempre solta. */
+  /** Chance de soltar ampola, com raridade mínima `minRarity`: com um por minuto, sempre seria demais. */
+  ampouleChance: number;
   minRarity: SupplementRarity;
 }
 

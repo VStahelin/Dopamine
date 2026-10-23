@@ -4,6 +4,12 @@ O que mudou em cada versão do Dopamina Blaster. O jogo mostra este arquivo em O
 
 ## Em desenvolvimento
 
+## v0.9.2 · 22/10/2026
+
+### Ajustes
+- Agregados vêm mais cedo e em momentos sorteados: pelo menos um por minuto.
+- Com tantos agregados, cada um solta ampola só às vezes (a Sorte ajuda).
+
 ## v0.9.1 · 22/10/2026
 
 ### Ajustes

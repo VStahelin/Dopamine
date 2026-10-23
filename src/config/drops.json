@@ -113,7 +113,7 @@
   },
   "ampoule": {
     "chance": {
-      "common": 0.005,
+      "common": 0.0035,
       "strong": 0.04
     },
     "guaranteeSeconds": 90,

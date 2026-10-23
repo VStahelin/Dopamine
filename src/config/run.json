@@ -49,12 +49,13 @@
     "collectRadiusPx": 10
   },
   "aggregates": {
-    "startMinute": 2,
-    "everyMinutes": 2,
+    "minGapSeconds": 20,
+    "maxGapSeconds": 60,
     "hpMultiplier": 12,
     "sizeMultiplier": 1.5,
     "speedMultiplier": 0.7,
     "xpMultiplier": 12,
-    "minRarity": "rare"
+    "minRarity": "rare",
+    "ampouleChance": 0.15
   }
 }

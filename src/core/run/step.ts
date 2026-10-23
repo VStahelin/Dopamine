@@ -145,18 +145,17 @@ function spawnEnemies(state: RunState, viewRadius: number, dt: number): void {
 }
 
 /**
- * Agregado (mini chefe, fase 5.10): a cada tantos minutos, menos nos minutos de chefe, a molécula
+ * Agregado (mini chefe, fase 5.10): num momento sorteado, pelo menos um por minuto, a molécula
  * forte mais comum agora (o peso já vem puxado pela doença) nasce maior e bem mais forte. Antes
  * de haver molécula forte liberada, vem a que libera primeiro.
  */
 function spawnAggregate(state: RunState, distance: number, hp: number): void {
   const { run, enemies } = state.rules;
   const ag = run.aggregates;
-  const next = (ag.startMinute + state.aggregatesSpawned * ag.everyMinutes) * 60;
-  if (state.time < next) return;
-  state.aggregatesSpawned++;
-  const minute = Math.round(next / 60);
-  if (run.bosses.some((b) => minute % b.everyMinutes === 0)) return;
+  const gap = () => state.rng.range(ag.minGapSeconds, ag.maxGapSeconds);
+  if (state.nextAggregateAt < 0) state.nextAggregateAt = gap();
+  if (state.time < state.nextAggregateAt) return;
+  state.nextAggregateAt = state.time + gap();
   const strong = (Object.keys(enemies) as EnemyKind[]).filter(
     (k) => enemies[k].contactDamage === 'strong' && !enemies[k].boss,
   );

@@ -360,8 +360,8 @@ Os atributos que saíram do level up voltam como **suplementos**, passivos que a
 Um mini chefe a cada 2 minutos, que sempre solta ampola. Regras em [megabonk.md](megabonk.md#3-drops-xp-com-chance-ampolas-e-agregados) ([decisão 0028](decisoes/0028-suplementos-e-ampolas.md)).
 
 - [x] Agregado da molécula forte mais comum na onda (amido, triglicerídeo, cortisol): vida ×12, tamanho ×1,5, mais lento, contorno vermelho; números em `run.json`. "Mais comum" é o maior peso de nascimento, que já vem puxado pela doença; antes de qualquer molécula forte liberar (minuto 2), vem a que libera primeiro.
-- [x] Nasce a cada 2 minutos a partir do minuto 2, menos nos minutos de chefe. Não é reposicionado quando fica longe, como o chefe.
-- [x] Cascata ao decompor, gema vermelha e ampola de mínimo Raro.
+- [x] Nasce num momento sorteado, de 20 a 60 s depois do anterior (pelo menos um por minuto), a pedido do Vitor; antes era a cada 2 minutos. Não é reposicionado quando fica longe, como o chefe.
+- [x] Cascata ao decompor, gema vermelha e ampola de mínimo Raro, com 15% de chance (vezes a Sorte): com um agregado por minuto, sempre soltar daria ampolas demais. No simulador, uma run de 10 minutos tem de 10 a 20 ampolas.
 - [x] Seta na borda da tela enquanto está fora de vista; conta para Especificidade e Anticorpo.
 - [x] Agregados no Compêndio e na wiki.
 
