@@ -35,7 +35,7 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | 5.13 | Validação e ganhos rápidos | O que já existe funciona no celular e não mostra placeholder? | 2.6 a 5.11 | em andamento |
 | 5.14 | Famílias e chefes | Cada família de molécula pede um jeito diferente de jogar? | 5.12, 5.13 | em andamento (falta validar) |
 | 5.15 | Elenco completo | Cada doença tem um agente feito para ela? | 5.14 | em andamento (falta validar) |
-| 5.16 | Conquistas | Jogar libera conteúdo, e não só juntar ATP? | 5.15 | não iniciada |
+| 5.16 | Conquistas | Jogar libera conteúdo, e não só juntar ATP? | 5.15 | em andamento (falta validar) |
 | 6 | Arte, polimento e lançamento | Dá para mandar o link para os amigos? | 1 a 5.16 | não iniciada |
 | 7 | Lojas e plataformas | O mesmo jogo roda e é publicado em Android, iOS, Steam e Microsoft Store? | 6 | não iniciada |
 
@@ -461,12 +461,13 @@ Os seis agentes de [personagens.md](personagens.md#agentes-da-run) que aparecem 
 
 ## Fase 5.16: Conquistas
 
-A seção [Depois: conquistas](#depois-conquistas) vira fase. Precisa da resposta: as conquistas substituem parte do desbloqueio por ATP, ou só somam?
+A seção [Depois: conquistas](#depois-conquistas) vira fase. Resposta proposta na [decisão 0036](decisoes/0036-conquistas-somam-a-loja.md): as conquistas somam, e nada sai da loja.
 
-- [ ] Aba Conquistas no lugar do placeholder, com metas lidas das estatísticas da 5.13.
-- [ ] Conquistas que dão ATP ou liberam conteúdo (agente, receptor, local, modo).
-- [ ] Casos anteriores, já curados, abaixo do palco do hub ([menu.md](menu.md#palco-o-caso-atual)).
-- [ ] Cápsulas no mapa que liberam um agente bloqueado ([lacunas-vs.md](lacunas-vs.md#cápsulas-e-descobertas)).
+- [x] Tela Conquistas no lugar do placeholder (prancheta "Conquistas"), com metas lidas das estatísticas da 5.13, a próxima em destaque e a contagem no trilho do hub.
+- [x] 21 conquistas que dão ATP ou liberam de graça um agente ou uma arma (`meta.json`, `achievements`). Já comprado, devolve metade do preço.
+- [x] Casos anteriores, já curados, no palco do hub, acima das estrelas ([menu.md](menu.md#palco-o-caso-atual)).
+- [x] Cápsula de agente no mapa que liberta um agente bloqueado, com seta na borda ([lacunas-vs.md](lacunas-vs.md#cápsulas-e-descobertas)).
+- [ ] Validar jogando: a primeira conquista que libera algo sai nas primeiras horas de jogo.
 
 **Critério de saída:** pelo menos um desbloqueio importante chega por jogar, e o jogador sabe qual é a próxima conquista.
 
@@ -492,7 +493,7 @@ Deixar o jogo com a cara do canvas de identidade visual e pronto para outras pes
 
 ## Depois: conquistas
 
-Proposta como [fase 5.16](#fase-516-conquistas) pela [decisão 0034](decisoes/0034-fases-para-fechar-lacunas.md). Ideia aprovada para elaborar no futuro: a aba Conquistas ganha metas ("Decompor 1.000 triglicerídeos", "Nível 50 com a Lipase") que dão ATP ou liberam conteúdo, como os desbloqueios do Vampire Survivors ([lacunas-vs.md](lacunas-vs.md#conquistas)). Falta decidir se substituem parte do desbloqueio por ATP ou só somam.
+Virou a [fase 5.16](#fase-516-conquistas) pela [decisão 0034](decisoes/0034-fases-para-fechar-lacunas.md). Conquistas somam à loja ([decisão 0036](decisoes/0036-conquistas-somam-a-loja.md)). Ficam para depois: conquistas por agente ("Nível 50 com a Lipase"), as que liberam locais ou modos e as Descobertas de [lacunas-vs.md](lacunas-vs.md#cápsulas-e-descobertas).
 
 ## Fase 7: Lojas e plataformas
 

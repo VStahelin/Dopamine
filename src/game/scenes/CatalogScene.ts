@@ -3,6 +3,7 @@ import type { AgentId } from '../../config';
 import { getSave, setSave } from '../storage/saveStore';
 import { addButton } from '../ui/button';
 import { buyUnlock } from '../../core/meta/progress';
+import { renderAchievements } from '../ui/achievementsView';
 import { renderAgents, renderCompendium } from '../ui/catalogViews';
 import { drawGrid } from '../ui/icons';
 import { impactText, withShadow } from '../ui/theme';
@@ -12,19 +13,20 @@ import { setupUiLayout } from '../ui/uiLayout';
 import { SCENES } from './keys';
 import { music } from '../audio/music';
 
-export type CatalogView = 'agents' | 'compendium';
+export type CatalogView = 'agents' | 'compendium' | 'achievements';
 
 const TITLES: Record<CatalogView, string> = {
   agents: 'ESCOLHA DO AGENTE',
   compendium: 'COMPÊNDIO',
+  achievements: 'CONQUISTAS',
 };
 
-/** Telas abertas pelo hub com conteúdo de verdade: escolha do agente e Compêndio. */
+/** Telas abertas pelo hub com conteúdo de verdade: escolha do agente, Compêndio e Conquistas. */
 export class CatalogScene extends Phaser.Scene {
   private root?: Phaser.GameObjects.Container;
   private view: CatalogView = 'agents';
   private size = { w: 0, h: 0 };
-  /** Lista do Compêndio, maior que a tela. */
+  /** Lista do Compêndio e das Conquistas, maior que a tela. */
   private scroll?: ScrollArea;
 
   constructor() {
@@ -91,26 +93,29 @@ export class CatalogScene extends Phaser.Scene {
               },
             },
           )
-        : renderCompendium(
-            this,
-            0,
-            64,
-            w,
-            save.seen,
-            save.seenItems,
-            save.seenSupplements,
-            save.seenAggregates,
-            save.seenFormations,
-            save.records.bestTimeByLocal,
-          );
+        : this.view === 'achievements'
+          ? renderAchievements(this, 0, 64, w, save)
+          : renderCompendium(
+              this,
+              0,
+              64,
+              w,
+              save.seen,
+              save.seenItems,
+              save.seenSupplements,
+              save.seenAggregates,
+              save.seenFormations,
+              save.records.bestTimeByLocal,
+            );
     const bw = Math.min(w - 32, 220);
-    if (this.view === 'compendium') {
+    const scrolls = this.view !== 'agents';
+    if (scrolls) {
       this.scroll = addScrollArea(this, body, { x: 0, y: 60, width: w, height: h - 132 }, offset);
     }
     this.root = this.add.container(0, 0, [
       bg,
       title,
-      ...(this.view === 'compendium' ? [] : body),
+      ...(scrolls ? [] : body),
       addButton(this, {
         x: Math.floor((w - bw) / 2),
         y: h - 62,

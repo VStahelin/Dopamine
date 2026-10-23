@@ -155,8 +155,10 @@ export interface Vesicle {
 export interface Pickup {
   x: number;
   y: number;
-  kind: ItemId | 'capsule' | 'ampoule';
+  kind: ItemId | 'capsule' | 'ampoule' | 'agentCapsule';
   attracted: boolean;
+  /** Cápsula de agente: o agente preso dentro dela. */
+  agent?: AgentId;
   /** Cápsula de prata (chefe depois dos 10 min): pode evoluir uma arma. */
   silver?: boolean;
   /** Ampola: raridade mínima do suplemento. */
@@ -255,7 +257,7 @@ export type RunEvent =
   | { type: 'destructible'; x: number; y: number }
   | { type: 'challenge'; won: boolean }
   | { type: 'vesicle'; x: number; y: number }
-  | { type: 'item'; kind: ItemId | 'capsule' | 'ampoule'; x: number; y: number }
+  | { type: 'item'; kind: ItemId | 'capsule' | 'ampoule' | 'agentCapsule'; x: number; y: number }
   | { type: 'spark'; x1: number; y1: number; x2: number; y2: number }
   | { type: 'lysosome' };
 
@@ -328,6 +330,10 @@ export interface RunState {
   /** Cápsula aberta esperando o jogador ver; a simulação para enquanto houver uma. */
   capsule: CapsuleResult | null;
   capsulesOpened: number;
+  /** A cápsula de agente já foi sorteada nesta run (sai uma vez, depois do minuto da config). */
+  agentCapsuleRolled: boolean;
+  /** Agente libertado nesta run; entra no save no fim da run. */
+  freedAgent: AgentId | null;
   /** Itens coletados nesta run, para o Compêndio. */
   seenItems: ItemId[];
   /** Distância do agente até a borda mais longe da tela no último passo. */
@@ -429,6 +435,8 @@ export interface RunResult {
   seenFormations: string[];
   capsulesOpened: number;
   agentId: AgentId;
+  /** Agente libertado pela cápsula de agente nesta run. */
+  freedAgent: AgentId | null;
   tally: RunStatsTally;
   /** Nome do mapa: ambiente, densidade e semente (CORRENTE SANGUÍNEA · DENSO · #A3F9). */
   mapName: string;
@@ -491,6 +499,8 @@ export function createRun(
     overdose: false,
     capsule: null,
     capsulesOpened: 0,
+    agentCapsuleRolled: false,
+    freedAgent: null,
     seenItems: [],
     viewRadius: 300,
     atp: 0,
@@ -601,6 +611,7 @@ export function runResult(state: RunState): RunResult {
     env: state.map.params.env,
     capsulesOpened: state.capsulesOpened,
     agentId: state.agentId,
+    freedAgent: state.freedAgent,
     tally: {
       killsByKind: { ...state.tally.killsByKind },
       bosses: state.tally.bosses,

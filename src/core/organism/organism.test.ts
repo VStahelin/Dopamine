@@ -88,6 +88,7 @@ describe('alta', () => {
     const save = {
       ...base,
       atp: 500,
+      records: { ...base.records, caseRuns: 7, caseBestSeconds: 640 },
       organism: { ...healthy(80), atpEarned: 4000 },
       meta: { ...base.meta, lab: { interactions: 3 }, weapons: [...base.meta.weapons, 'uvRay'] },
       idle: {
@@ -104,6 +105,11 @@ describe('alta', () => {
     expect(next.idle.wave).toBe(1);
     expect(next.idle.agents).toEqual(['omega3', 'melatonin']);
     expect(next.idle.levels).toEqual({ omega3: 1, melatonin: 1 });
+    // O caso curado vai para a lista de casos anteriores e o contador do caso recomeça.
+    expect(next.cases).toEqual([
+      { individual: save.organism.individual, runs: 7, bestTimeSeconds: 640 },
+    ]);
+    expect(next.records.caseRuns).toBe(0);
     expect(dischargeSave(base, 1)).toBeNull();
   });
 });

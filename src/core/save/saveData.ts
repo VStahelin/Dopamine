@@ -17,6 +17,16 @@ export interface Records {
   runs: number;
   /** Melhor tempo em cada local do corpo (fase 5.12). */
   bestTimeByLocal: Record<string, number>;
+  /** Runs e melhor tempo do indivíduo atual (fase 5.16); zeram na ALTA. */
+  caseRuns: number;
+  caseBestSeconds: number;
+}
+
+/** Caso já curado (ALTA), para a lista de casos anteriores do hub (fase 5.16). */
+export interface CaseRecord {
+  individual: number;
+  runs: number;
+  bestTimeSeconds: number;
 }
 
 /**
@@ -91,6 +101,10 @@ export interface SaveData {
   idle: IdleProgress;
   /** Indivíduo atual, setores de saúde e pontos herdados (fase 5). */
   organism: OrganismState;
+  /** Conquistas já ganhas (fase 5.16), pelo id de meta.json. */
+  achievements: string[];
+  /** Casos curados, do mais antigo ao mais recente (fase 5.16). */
+  cases: CaseRecord[];
 }
 
 export type RecordKind = 'time' | 'level' | 'kills';
@@ -98,7 +112,15 @@ export type RecordKind = 'time' | 'level' | 'kills';
 export function defaultSave(options: Options): SaveData {
   return {
     version: SAVE_VERSION,
-    records: { bestTimeSeconds: 0, bestLevel: 0, mostKills: 0, runs: 0, bestTimeByLocal: {} },
+    records: {
+      bestTimeSeconds: 0,
+      bestLevel: 0,
+      mostKills: 0,
+      runs: 0,
+      bestTimeByLocal: {},
+      caseRuns: 0,
+      caseBestSeconds: 0,
+    },
     stats: defaultStats(),
     options: { ...options },
     selectedAgent: 'dopamine',
@@ -114,6 +136,8 @@ export function defaultSave(options: Options): SaveData {
     meta: defaultProgress(),
     idle: defaultIdle(),
     organism: defaultOrganism(),
+    achievements: [],
+    cases: [],
   };
 }
 
@@ -142,6 +166,8 @@ export function migrateSave(raw: unknown, defaults: Options): SaveData {
     meta: unknown;
     idle: unknown;
     organism: unknown;
+    achievements: unknown;
+    cases: unknown;
   }>;
   const r = data.records ?? {};
   const o = data.options ?? {};
@@ -153,6 +179,8 @@ export function migrateSave(raw: unknown, defaults: Options): SaveData {
       mostKills: num(r.mostKills, 0),
       runs: num(r.runs, 0),
       bestTimeByLocal: counts(r.bestTimeByLocal),
+      caseRuns: num(r.caseRuns, 0),
+      caseBestSeconds: num(r.caseBestSeconds, 0),
     },
     stats: migrateStats(data.stats),
     options: {
@@ -177,7 +205,20 @@ export function migrateSave(raw: unknown, defaults: Options): SaveData {
     meta: migrateProgress(data.meta),
     idle: migrateIdle(data.idle),
     organism: migrateOrganism(data.organism),
+    achievements: strings(data.achievements) ?? [],
+    cases: migrateCases(data.cases),
   };
+}
+
+function migrateCases(raw: unknown): CaseRecord[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .filter((c): c is Record<string, unknown> => typeof c === 'object' && c !== null)
+    .map((c) => ({
+      individual: Math.max(1, Math.floor(num(c.individual, 1))),
+      runs: num(c.runs, 0),
+      bestTimeSeconds: num(c.bestTimeSeconds, 0),
+    }));
 }
 
 /** Soma uma run aos recordes e diz quais foram batidos. */
@@ -202,6 +243,8 @@ export function recordRun(
           ...r.bestTimeByLocal,
           [result.env]: Math.max(r.bestTimeByLocal[result.env] ?? 0, result.timeSeconds),
         },
+        caseRuns: r.caseRuns + 1,
+        caseBestSeconds: Math.max(r.caseBestSeconds, result.timeSeconds),
       },
       seen: [...new Set([...save.seen, ...result.seen])],
       seenItems: [...new Set([...save.seenItems, ...result.seenItems])],
@@ -210,6 +253,11 @@ export function recordRun(
       seenFormations: [...new Set([...save.seenFormations, ...result.seenFormations])],
       capsulesOpened: save.capsulesOpened + result.capsulesOpened,
       atp: save.atp + result.atp,
+      // Cápsula de agente: o agente libertado fica liberado de graça.
+      meta:
+        result.freedAgent && !save.meta.agents.includes(result.freedAgent)
+          ? { ...save.meta, agents: [...save.meta.agents, result.freedAgent] }
+          : save.meta,
       stats: addRunStats(save.stats, result),
     },
     newRecords,

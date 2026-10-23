@@ -24,6 +24,10 @@ export interface GameOverData {
   healthChange: { sector: Sector; delta: number }[];
   /** Linhas do local (fase 5.12): o que veio do setor do local e da sinergia, antes do retorno. */
   healthNotes: string[];
+  /** Conquistas ganhas no fim desta run (fase 5.16), com a recompensa já escrita. */
+  achievements: { name: string; reward: string }[];
+  /** Nome do agente libertado pela cápsula de agente nesta run. */
+  freedAgent: string | null;
 }
 
 const ROW_H = 24;
@@ -58,6 +62,13 @@ export class GameOverScene extends Phaser.Scene {
               ],
             ] as [string, string, RecordKind | null][])
           : []),
+        ...(data.freedAgent
+          ? ([['NOVO AGENTE', data.freedAgent.toUpperCase(), null]] as [
+              string,
+              string,
+              RecordKind | null,
+            ][])
+          : []),
       ];
       const damage = data.damage.slice(0, DAMAGE_ROWS);
       const icon = slotSize(1);
@@ -68,6 +79,7 @@ export class GameOverScene extends Phaser.Scene {
         damage.length * (icon + 4) +
         16 +
         data.healthNotes.length * 14 +
+        (data.achievements.length > 0 ? 18 + data.achievements.length * 16 : 0) +
         2 * 50;
       const top = Math.max(16, Math.floor((h - total) / 2));
       const width = Math.min(300, w - 32);
@@ -165,6 +177,18 @@ export class GameOverScene extends Phaser.Scene {
       for (const note of data.healthNotes) {
         children.push(this.add.text(left, y, note, bodyText(9, PALETTE_CSS.numberHeal)));
         y += 14;
+      }
+      // Conquistas: o nome e a recompensa, em dourado.
+      if (data.achievements.length > 0) {
+        children.push(this.add.text(left, y + 4, 'CONQUISTA!', labelText(9, PALETTE_CSS.gold)));
+        y += 20;
+        for (const a of data.achievements) {
+          children.push(
+            this.add.text(left, y, a.name, bodyText(10, PALETTE_CSS.text)),
+            this.add.text(right, y, a.reward, labelText(8, PALETTE_CSS.gold)).setOrigin(1, 0),
+          );
+          y += 16;
+        }
       }
       const { buttons } = addButtonColumn(this, w, y + 12, [
         { label: 'JOGAR DE NOVO', onClick: () => run().restartRun() },

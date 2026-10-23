@@ -77,7 +77,7 @@ No lugar do carrossel de eventos, uma faixa com o **próximo objetivo**: o próx
 ### Trilhos laterais
 
 - **Esquerdo:** só Opções (≡).
-- **Direito:** Recordes, Compêndio e Conquistas (Conquistas é placeholder sem fase definida).
+- **Direito:** Recordes, Compêndio e Conquistas. Desde a fase 5.16, a medalha abre a tela de Conquistas e mostra a contagem (7/21).
 
 ### Palco: o caso atual
 
@@ -87,7 +87,7 @@ O capítulo da referência vira o **caso**: o indivíduo que está sendo tratado
 - Ilustração do organismo em pixel art, com o setor doente destacado.
 - **Melhor tempo** neste caso.
 - **3 estrelas = metas de tempo** (por exemplo 5, 10 e 15 minutos). Cada estrela nova abre o baú logo abaixo, com ATP (fase 3).
-- Rolando para baixo aparecem os casos anteriores, já curados, como os capítulos da referência. Cada reset (fase 5) acrescenta um caso.
+- Acima das estrelas aparecem os dois casos anteriores mais recentes, já curados, com as runs e o melhor tempo de cada um (fase 5.16). Cada ALTA acrescenta um caso.
 
 ### Linha de ação
 
@@ -123,7 +123,7 @@ O palco fica no centro, os trilhos nas laterais, a linha de ação embaixo do pa
 | Campo longo | O idle | Placeholder | 4 |
 | Compêndio | Moléculas inimigas (com a cascata), modificadores e raridades já vistos; o resto em silhueta | Placeholder | 2 em diante |
 | Recordes | Melhor tempo, nível, decompostas, runs | Existe | — |
-| Conquistas | Metas de longo prazo | Placeholder | a definir |
+| Conquistas | Metas de longo prazo, a próxima em destaque | Feito | 5.16 |
 | Opções | Abas Som, Tela e Jogo (detalhes abaixo e na prancheta [Opções](identidade-visual/Opcoes.dc.html)) | Existe | — |
 
 ### Escolha do local
@@ -307,7 +307,7 @@ O hub cresce junto com o roadmap. Cada fase acende uma parte; o que ainda não e
 - [x] As estrelas são metas de tempo (5, 10, 15 min), de decompostas, ou de nível? → tempo, e cada estrela nova enche o baú com ATP ([decisão 0021](decisoes/0021-meta-progressao.md)).
 - Os nomes Caso, Laboratório, Compêndio e Arsenal funcionam, ou prefere nomes diretos (Campanha, Upgrades, Bestiário, Armas)?
 - A tela de título continua existindo, ou o jogo abre direto no hub?
-- Conquistas entram, e em que fase?
+- [x] Conquistas entram, e em que fase? → fase 5.16, somando à loja ([decisão 0036](decisoes/0036-conquistas-somam-a-loja.md)).
 - O palco mostra o organismo inteiro (corpo pixelado, como no artboard) ou uma placa de Petri com as moléculas do caso?
 - Limite de três selos na tela ao mesmo tempo está bom?
 - A escolha do local fica numa faixa acima do JOGAR (um toque continua jogando), ou vira um passo obrigatório depois do JOGAR, como um mapa de fases?

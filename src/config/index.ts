@@ -305,7 +305,21 @@ function loadSupplements(): SupplementsConfig {
 }
 
 function loadMeta(): MetaConfig {
-  const meta: MetaConfig = metaJson;
+  const meta = metaJson as MetaConfig;
+  const ids = new Set<string>();
+  for (const a of meta.achievements) {
+    const where = `meta.json achievements.${a.id}`;
+    if (ids.has(a.id)) throw new Error(`Configuração inválida em ${where}: id repetido`);
+    ids.add(a.id);
+    if (a.goal.kind === 'kills') {
+      if (a.goal.molecule) exists(a.goal.molecule, enemiesJson, `${where}.goal.molecule`);
+      if (a.goal.family) oneOf(a.goal.family, MOLECULE_TYPES, `${where}.goal.family`);
+    }
+    const unlock = a.reward.unlock;
+    if (unlock) {
+      exists(unlock.id, unlock.group === 'agents' ? agentsJson : weaponsJson, `${where}.reward`);
+    }
+  }
   for (const id of meta.start.agents) exists(id, agentsJson, 'meta.json start.agents');
   for (const id of meta.start.weapons) exists(id, weaponsJson, 'meta.json start.weapons');
   for (const id of Object.keys(meta.unlockCost.agents))

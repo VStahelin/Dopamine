@@ -121,5 +121,10 @@
     "minIntervalSeconds": 20,
     "bossMinRarity": "ultraRare",
     "touchRadiusPx": 14
+  },
+  "agentCapsule": {
+    "fromMinute": 3,
+    "chance": 0.35,
+    "distancePx": 650
   }
 }

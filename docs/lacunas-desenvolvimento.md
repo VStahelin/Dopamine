@@ -26,7 +26,7 @@ Ordenadas por impacto dividido por esforço, com as dependências respeitadas.
 | 7 | Locais do corpo e sinergias (fase 5.12 inteira) | Mapas | Doc | Alto | M–G | 5.12 |
 | 8 | ~~Os 6 agentes que faltam: Vitamina C, Serotonina, Álcool desidrogenase, Cafeína, Ocitocina, Venvanse~~ (feito) | Agentes | Doc | Alto | G | 5.15 |
 | 9 | ~~Evolução para Nuvem de Elétrons, Poça de Solvente e Reação em Cadeia~~ (feito) | Armas | Sem doc | Médio | M | 5.15 |
-| 10 | Estatísticas acumuladas no save e Conquistas | Meta | Metade | Alto | M | 5.16 |
+| 10 | ~~Estatísticas acumuladas no save e Conquistas~~ (feito, [0036](decisoes/0036-conquistas-somam-a-loja.md)) | Meta | Metade | Alto | M | 5.16 |
 | 11 | Primeira run guiada (tutorial) | UI | Sem doc | Alto | M | 6 |
 | 12 | UI de tela larga no PC (HUD, idle, menus) | UI | Metade | Médio | G | 6 |
 
@@ -140,9 +140,9 @@ Hoje são 15 moléculas e um chefe. Todas se comportam igual: perseguem o agente
 
 | Lacuna | Estado | Impacto | Esforço | Fonte |
 | --- | --- | --- | --- | --- |
-| **Conquistas**: o botão do hub abre um placeholder "EM BREVE" | Metade | Alto | M | `src/game/scenes/HubScene.ts:585-600`, `src/game/ui/menuContent.ts` (`achievements`); [roadmap, Depois](roadmap.md#depois-conquistas) |
+| ~~**Conquistas**: o botão do hub abre um placeholder "EM BREVE"~~ (feito na 5.16) | Metade | Alto | M | `src/game/scenes/HubScene.ts:585-600`, `src/game/ui/menuContent.ts` (`achievements`); [roadmap, Depois](roadmap.md#depois-conquistas) |
 | **Estatísticas acumuladas** no save (decompostas por molécula, minutos por agente, chefes vencidos): pré-requisito das conquistas | Sem doc | Alto | P | `src/core/save/saveData.ts:13-18` só guarda 4 recordes globais |
-| Cápsulas que liberam agentes e Descobertas no mapa | Doc | Médio | M | [lacunas-vs.md](lacunas-vs.md#cápsulas-e-descobertas) |
+| ~~Cápsulas que liberam agentes~~ (feito na 5.16) e Descobertas no mapa | Doc | Médio | M | [lacunas-vs.md](lacunas-vs.md#cápsulas-e-descobertas) |
 | Recordes por agente e por local | Doc / Sem doc | Baixo | P | Por local na [fase 5.12](roadmap.md#fase-512-locais-do-corpo-e-sinergias); por agente sem doc |
 | **Wiki dentro do jogo** (páginas de [wiki.md](wiki.md) no Compêndio) | Doc | Médio | M | [roadmap fase 6](roadmap.md#fase-6-arte-polimento-e-lançamento) |
 | Compêndio sem seções de chefes, estruturas e locais (tem moléculas, itens, suplementos, agregados e formações) | Sem doc | Baixo | P | `src/game/ui/catalogViews.ts` |
@@ -192,7 +192,7 @@ Nada disso é código, mas trava ou muda as fases acima.
 
 - **Decisões 0020 a 0033 estão como `proposta`**, mesmo as já implementadas (receptores, suplementos, sinapses, mapas). Confirmar as que valem para passar a `aceita` ([índice](decisoes/README.md)).
 - **Alta aos 30 min e Apoptose**: a run ganha vitória? Que nome, já que ALTA é o reset do organismo ([lacunas-vs.md](lacunas-vs.md#perguntas-em-aberto)).
-- **Conquistas** substituem parte do desbloqueio por ATP, ou só somam?
+- ~~**Conquistas** substituem parte do desbloqueio por ATP, ou só somam?~~ Somam ([decisão 0036](decisoes/0036-conquistas-somam-a-loja.md), proposta).
 - **Eixos qualidade, dose e potência**: entram como progressão por agente, ou saem do design?
 - **Elenco**: os 9 agentes ficam? Venvanse com o nome de marca ou o da molécula ([personagens.md](personagens.md#o-que-falta-decidir))?
 - **Evolução** só pela cápsula de prata, ou nos dois lugares ([itens.md](itens.md))?

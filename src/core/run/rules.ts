@@ -64,6 +64,8 @@ export interface RunRules {
   unlockedReceptors?: readonly PassiveId[];
   /** Armas do pool liberadas na meta-progressão; sem a lista, todas. */
   unlockedWeapons?: readonly WeaponId[];
+  /** Agentes ainda presos (fase 5.16): a cápsula de agente liberta um deles; sem a lista, nenhum. */
+  lockedAgents?: readonly AgentId[];
   /** Quanto cada origem somou à base dos atributos (Laboratório, organismo), para a pausa. */
   baseSources?: Partial<Record<BaseSource, Record<string, number>>>;
 }

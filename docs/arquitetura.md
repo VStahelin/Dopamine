@@ -81,7 +81,7 @@ src/
     run/         campo crônico: agente, inimigos, armas, XP, level up
     idle/        campo longo: simulação das ondas e da BASE, pool, níveis, melhorias e offline (fase 4)
     organism/    setores de saúde, efeitos, saúde dos agentes, regras da run e ALTA (fase 5); local.ts: locais do corpo e sinergia (fase 5.12)
-    meta/        Laboratório, desbloqueios, estrelas e baú; regras da run com o progresso (fase 3)
+    meta/        Laboratório, desbloqueios, estrelas e baú; regras da run com o progresso (fase 3); conquistas (fase 5.16)
     sim/         robô e simulador de progressão (npm run sim; --case mede o caso até a ALTA)
     save/        formato do save, migrações e recordes
   game/

@@ -303,6 +303,9 @@ Todo chefe solta uma cápsula, que você precisa tocar. Ela sobe um nível de 1,
 ### Cápsula de prata
 Depois dos 10 minutos a cápsula é de prata: se uma arma estiver no nível máximo com o reagente certo, ela evolui.
 
+### Cápsula de agente
+A partir dos 3 minutos, uma vez por run e com 35% de chance, nasce longe de você uma cápsula de vidro com um agente que você ainda não liberou. Uma seta dourada na borda da tela mostra o caminho. Toque nela para libertar o agente. Ele fica liberado de graça no fim da run, mesmo se a run acabar logo depois.
+
 ### Fosfocreatina
 Quando a cápsula ou o level up não têm mais o que subir, você ganha Fosfocreatina: ATP igual a 10 moedas.
 
@@ -416,7 +419,37 @@ A moeda do jogo, a molécula de energia das células. Vem da run, das estrelas d
 Árvore de melhorias permanentes que valem em todas as runs. Começa pela raiz (Interações) e se abre em seis caminhos: Força, Química, Corpo, Coleta, Controle e Especial. Um nó abre quando os nós ligados a ele têm pelo menos um nível. Cada nível custa 15% mais que o anterior. Tocar num nó mostra o que o atributo faz e quanto cada nível soma.
 
 ### Desbloqueios
-Você começa com a Dopamina e quatro armas. Lipase, Insulina, Poça de Solvente, Reação em Cadeia e Raio UV se desbloqueiam com ATP nas abas Agentes e Arsenal.
+Você começa com a Dopamina e quatro armas. Os outros oito agentes e as armas Poça de Solvente, Reação em Cadeia e Raio UV se desbloqueiam com ATP nas abas Agentes e Arsenal, ou de graça por uma conquista ou pela cápsula de agente.
+
+### Conquistas
+O botão da medalha, no trilho direito do caso, abre as Conquistas: metas de longo prazo lidas de tudo o que você já fez. A tela mostra a próxima, a que está mais perto de sair, e a lista inteira com o progresso. Cada conquista dá ATP ou libera de graça um agente ou uma arma. Se você já tinha comprado o que ela libera, ganha metade do preço em ATP. Elas saem no fim da run e na ALTA, e a ALTA não apaga as que você já tem.
+
+| Conquista | Meta | Recompensa |
+| --- | --- | --- |
+| Primeira reação | Decompor 100 moléculas | +50 ATP |
+| Metabolismo basal | Decompor 1.000 moléculas | +150 ATP |
+| Catabolismo | Decompor 10.000 moléculas | +600 ATP |
+| Lipólise | Decompor 300 triglicerídeos | libera Lipase |
+| Glicólise | Decompor 2.000 açúcares | libera Insulina |
+| Antioxidante | Decompor 1.000 radicais livres | libera Vitamina C |
+| Desintoxicação | Decompor 800 toxinas | libera Álcool desidrogenase |
+| Calma | Decompor 600 moléculas de estresse | libera Serotonina |
+| Anti-inflamatório | Decompor 300 moléculas de inflamação | +300 ATP |
+| Caçador de chefes | Decompor 5 chefes | libera Reação em Cadeia |
+| Fim do caso | Decompor a Placa de ateroma | +500 ATP |
+| Agregados | Decompor 10 agregados | libera Poça de Solvente |
+| Farmácia | Abrir 20 ampolas | +300 ATP |
+| Plasticidade | Disparar 10 sinapses | +300 ATP |
+| Fôlego | Durar 10 minutos numa run | libera Cafeína |
+| Resistência | Durar 20 minutos numa run | libera Raio UV |
+| Hiperfoco | Chegar ao nível 30 numa run | libera Venvanse |
+| Vínculo | Jogar com 4 agentes diferentes | libera Ocitocina |
+| Veterano | Jogar 50 runs | +1.000 ATP |
+| Primeira ALTA | Dar ALTA a um indivíduo | +1.000 ATP |
+| Clínico geral | Dar ALTA a três indivíduos | +2.000 ATP |
+
+### Casos anteriores
+Cada indivíduo que recebe ALTA vira um caso curado, com quantas runs levou e o melhor tempo nele. Os dois mais recentes aparecem acima das estrelas, no palco do caso.
 
 ### Estrelas e baú
 Cada caso tem três estrelas: sobreviver 5, 10 e 15 minutos. Cada estrela nova enche o baú do menu com ATP (40, 80 e 160). Toque no baú para coletar.

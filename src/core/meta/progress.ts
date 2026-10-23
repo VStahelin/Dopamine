@@ -166,6 +166,9 @@ export function rulesWithProgress(
     ...withStatBonuses(rules, labBonuses(progress, meta), 'lab'),
     unlockedWeapons: progress.weapons as WeaponId[],
     unlockedReceptors: progress.receptors as PassiveId[],
+    lockedAgents: (Object.keys(rules.agents) as AgentId[]).filter(
+      (id) => !progress.agents.includes(id),
+    ),
   };
 }
 

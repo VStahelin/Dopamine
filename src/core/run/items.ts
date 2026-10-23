@@ -25,6 +25,7 @@ export function updateItems(state: RunState, dt: number, grid: SpatialGrid, firs
   fx.fever = Math.max(0, fx.fever - dt);
   updateSupplements(state, dt);
   spawnVesicles(state, dt);
+  spawnAgentCapsule(state);
   breakVesicles(state, firstEvent);
   if (fx.flame > 0) burn(state, dt, grid);
   movePickups(state, dt);
@@ -47,6 +48,27 @@ function spawnVesicles(state: RunState, dt: number): void {
   state.vesicles.push({
     x: agent.x + Math.cos(angle) * distance,
     y: agent.y + Math.sin(angle) * distance,
+  });
+}
+
+/**
+ * Cápsula de agente (fase 5.16): uma vez por run, depois do minuto da config, pode nascer longe do
+ * agente com um agente ainda preso. Tocar nela liberta o agente, que entra no save no fim da run.
+ */
+function spawnAgentCapsule(state: RunState): void {
+  const c = state.rules.drops.agentCapsule;
+  if (state.agentCapsuleRolled || state.time < c.fromMinute * 60) return;
+  state.agentCapsuleRolled = true;
+  const locked = state.rules.lockedAgents ?? [];
+  if (locked.length === 0 || state.rng.next() >= c.chance) return;
+  const agent = locked[Math.floor(state.rng.next() * locked.length)]!;
+  const angle = state.rng.range(0, Math.PI * 2);
+  state.pickups.push({
+    x: state.agent.x + Math.cos(angle) * c.distancePx,
+    y: state.agent.y + Math.sin(angle) * c.distancePx,
+    kind: 'agentCapsule',
+    attracted: false,
+    agent,
   });
 }
 
@@ -155,7 +177,7 @@ function movePickups(state: RunState, dt: number): void {
     const dx = agent.x - p.x;
     const dy = agent.y - p.y;
     const dist = Math.hypot(dx, dy);
-    const touch = p.kind === 'capsule' || p.kind === 'ampoule';
+    const touch = p.kind === 'capsule' || p.kind === 'ampoule' || p.kind === 'agentCapsule';
     const reach = touch ? rules.drops.capsule.touchRadiusPx : rules.run.gems.collectRadiusPx;
     if (dist <= reach) {
       state.pickups[i] = state.pickups[state.pickups.length - 1]!;
@@ -183,6 +205,10 @@ function collect(state: RunState, p: Pickup): void {
   }
   if (p.kind === 'ampoule') {
     openAmpoule(state, p.minRarity ?? 'common');
+    return;
+  }
+  if (p.kind === 'agentCapsule') {
+    state.freedAgent = p.agent ?? null;
     return;
   }
   if (!state.seenItems.includes(p.kind)) state.seenItems.push(p.kind);

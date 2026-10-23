@@ -11,6 +11,7 @@ import {
   type Sector,
   type StructureKind,
 } from '../../config';
+import { claimAchievements, rewardLabel } from '../../core/meta/achievements';
 import { addRunStars, playableAgent, rulesWithProgress } from '../../core/meta/progress';
 import {
   localHealth,
@@ -525,8 +526,15 @@ export class RunScene extends Phaser.Scene {
     // Itens piscam devagar; a cápsula é maior.
     const glow = 0.75 + 0.25 * Math.sin(this.run.time * 5);
     sync(this, this.pickupSprites, this.run.pickups, 3, (s, p) => {
-      const capsule = p.kind === 'capsule' || p.kind === 'ampoule';
-      const id = capsule ? (p.silver ? 'capsuleSilver' : 'capsuleBronze') : p.kind;
+      const capsule = p.kind === 'capsule' || p.kind === 'ampoule' || p.kind === 'agentCapsule';
+      const id =
+        p.kind === 'agentCapsule'
+          ? 'agentCapsule'
+          : capsule
+            ? p.silver
+              ? 'capsuleSilver'
+              : 'capsuleBronze'
+            : p.kind;
       this.placeIcon(s, id, p.x, p.y, capsule ? CAPSULE_SIZE : ITEM_SIZE);
       s.setAlpha(glow);
     });
@@ -609,7 +617,19 @@ export class RunScene extends Phaser.Scene {
       if (ev.type === 'special') this.cameras.main.flash(200, 255, 179, 71);
       if (ev.type === 'vesicle') this.addPopFx(ev);
       if (ev.type === 'lysosome') this.cameras.main.flash(300, 255, 255, 255);
-      if (ev.type === 'item' && ev.kind !== 'capsule' && ev.kind !== 'ampoule') {
+      if (ev.type === 'item' && ev.kind === 'agentCapsule' && this.run.freedAgent) {
+        const name = this.run.rules.agents[this.run.freedAgent].name.toUpperCase();
+        (this.scene.get(SCENES.hud) as HudScene).showBanner(
+          `NOVO AGENTE: ${name}`,
+          PALETTE_CSS.gold,
+        );
+        this.cameras.main.flash(300, 255, 214, 102);
+      } else if (
+        ev.type === 'item' &&
+        ev.kind !== 'capsule' &&
+        ev.kind !== 'ampoule' &&
+        ev.kind !== 'agentCapsule'
+      ) {
         // Todo item pego do chão mostra o nome subindo em cima do agente.
         const name = DROPS.items[ev.kind].name.toUpperCase();
         this.showFloater(a.x, a.y - 30, name, 'item', ITEM_FLOATER_SECONDS);
@@ -784,7 +804,8 @@ export class RunScene extends Phaser.Scene {
 
   /**
    * Setas da prancheta "Estruturas" na borda da tela: uma para cada agregado fora de vista, em
-   * vermelho, e uma para a estrutura mais perto fora de vista, na cor dela.
+   * vermelho, uma para a estrutura mais perto fora de vista, na cor dela, e uma para a cápsula de
+   * agente, em dourado.
    */
   private drawEdgeArrows(): void {
     const v = this.cameras.main.worldView;
@@ -802,6 +823,12 @@ export class RunScene extends Phaser.Scene {
     )[0];
     if (nearest)
       targets.push({ x: nearest.x, y: nearest.y, color: STRUCTURE_COLORS[nearest.kind].main });
+    // Cápsula de agente fora de vista: seta dourada.
+    for (const p of this.run.pickups) {
+      if (p.kind === 'agentCapsule' && !v.contains(p.x, p.y)) {
+        targets.push({ x: p.x, y: p.y, color: PALETTE.gold });
+      }
+    }
     const margin = 14;
     sync(this, this.arrowSprites, targets, 12, (s, t) => {
       const angle = Math.atan2(t.y - agent.y, t.x - agent.x);
@@ -1185,7 +1212,9 @@ export class RunScene extends Phaser.Scene {
       );
       const before = recorded.save.organism;
       const organism = earn(applyHealth(before, health.total), result.atp + stars.reward);
-      setSave(this, { ...recorded.save, meta: stars.progress, organism });
+      // Conquistas (fase 5.16): o que a run acabou de cumprir entra no save com a recompensa.
+      const claimed = claimAchievements({ ...recorded.save, meta: stars.progress, organism });
+      setSave(this, claimed.save);
       const healthChange = SECTORS.map((s) => ({
         sector: s,
         delta: organism.sectors[s] - before.sectors[s],
@@ -1223,6 +1252,14 @@ export class RunScene extends Phaser.Scene {
         gaveUp: this.gaveUp,
         newStars: stars.newStars,
         starReward: stars.reward,
+        achievements: claimed.earned.map((a) => ({
+          name: a.name,
+          reward: rewardLabel(a, {
+            agents: this.run.rules.agents,
+            weapons: this.run.rules.weapons,
+          }),
+        })),
+        freedAgent: result.freedAgent ? this.run.rules.agents[result.freedAgent].name : null,
       };
       this.time.delayedCall(700, () => {
         this.gameOverMusic = true;

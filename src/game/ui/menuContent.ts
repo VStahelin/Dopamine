@@ -47,13 +47,3 @@ export const TABS: { id: TabId; label: string }[] = [
   { id: 'lab', label: 'LAB.' },
   { id: 'organism', label: 'ORGANISMO' },
 ];
-
-/** Telas abertas pelo hub que ainda são placeholder. */
-export const SCREENS = {
-  achievements: {
-    title: 'CONQUISTAS',
-    icon: 'medal',
-    text: 'Metas de longo prazo, como curar um indivíduo ou decompor 10 mil moléculas.',
-    phase: 'FASE 5.16',
-  },
-} satisfies Record<string, SectionDef>;

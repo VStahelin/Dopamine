@@ -1628,6 +1628,24 @@
       ".KHAAAAK.....KYK",
       "..KKKKK.......K."
     ],
+    "agentCapsule": [
+      "......KKKK......",
+      ".....KWWHHK.....",
+      "....KWHHHHAK....",
+      "....KWHNNHAK....",
+      "....KHNnnNAK....",
+      "....KHNNWNAK....",
+      "....KHHNNHAK....",
+      "....KKKKKKKK....",
+      "....KNNNNNNK....",
+      "....KNWNNNnK....",
+      "....KNNNNNnK....",
+      "....KNNNNnnK....",
+      "....KNNNNnnK....",
+      "....KnNNnnnK....",
+      ".....KnnnnK.....",
+      "......KKKK......"
+    ],
     "vesicle": [
       "....KKKKKKK.....",
       "...KLLLLLLLK....",

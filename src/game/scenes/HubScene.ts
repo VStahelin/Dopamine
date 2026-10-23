@@ -5,6 +5,7 @@ import {
   ENEMIES,
   MAP,
   MAP_ENVIRONMENTS,
+  META,
   ORGANISM,
   SECTORS,
   type AgentId,
@@ -12,6 +13,7 @@ import {
 } from '../../config';
 import { canEnter, localsUnlocked, synergyOf } from '../../core/organism/local';
 import { LOCAL_SHORT } from '../ui/locals';
+import { claimAchievements } from '../../core/meta/achievements';
 import { dischargeSave } from '../../core/organism/discharge';
 import { averageHealth, illnessName } from '../../core/organism/organism';
 import { renderOrganism, SECTOR_ORDER, SECTOR_STYLE } from '../ui/organismView';
@@ -44,7 +46,7 @@ import {
   drawWoodFrame,
   type IconName,
 } from '../ui/icons';
-import { SCREENS, TABS, type SectionDef, type TabId } from '../ui/menuContent';
+import { TABS, type SectionDef, type TabId } from '../ui/menuContent';
 import { bodyText, formatTime, impactText, labelText, withShadow } from '../ui/theme';
 import { addDim, setupUiLayout } from '../ui/uiLayout';
 import { addButton } from '../ui/button';
@@ -102,6 +104,9 @@ export class HubScene extends Phaser.Scene {
   create(): void {
     music.setMain('hub');
     this.awayReport = idleRunner.takeReport();
+    // Saves de antes das conquistas: o que já estava cumprido sai aqui, sem esperar o fim de uma run.
+    const claimed = claimAchievements(getSave(this));
+    if (claimed.earned.length > 0) setSave(this, claimed.save);
     this.input.keyboard?.on('keydown-ESC', () => this.scene.start(SCENES.title));
     // Aviso de versão nova: só aqui nos menus, uma vez por visita ao hub.
     const unsubscribe = updates.subscribe(() => this.maybePromptUpdate());
@@ -221,7 +226,8 @@ export class HubScene extends Phaser.Scene {
             idleRunner.flush();
             const next = dischargeSave(getSave(this), Date.now());
             if (!next) return;
-            setSave(this, next);
+            // A ALTA conta para as conquistas de casos curados.
+            setSave(this, claimAchievements(next).save);
             music.jingle('alta');
             idleRunner.rebuild();
             this.build();
@@ -497,9 +503,26 @@ export class HubScene extends Phaser.Scene {
     const starsH = 58;
     const starsY = bottom - starsH - 10;
 
+    // Casos anteriores (fase 5.16): os dois últimos curados, logo acima das estrelas.
+    const cases = getSave(this).cases.slice(-2).reverse();
+    const casesH = cases.length * 14;
+    const casesTop = starsY - 6 - casesH;
+    cases.forEach((c, i) => {
+      out.push(
+        this.add
+          .text(
+            cx,
+            casesTop + i * 14,
+            `✓ CASO ${c.individual} · ${illnessName(c.individual).toUpperCase()} · ${c.runs} RUNS · MELHOR ${formatTime(c.bestTimeSeconds)}`,
+            labelText(8, PALETTE_CSS.textMuted),
+          )
+          .setOrigin(0.5, 0),
+      );
+    });
+
     // Scanner do organismo, do tamanho que couber entre o título e as estrelas.
     const scanTop = top + 86;
-    const scanH = Math.max(110, Math.min(198, starsY - 8 - scanTop));
+    const scanH = Math.max(110, Math.min(198, casesTop - 8 - scanTop));
     const pixel = Math.max(3, Math.floor((scanH - 30) / BODY_SIZE.rows));
     const scanW = Math.round((186 * scanH) / 198);
     const scanX = Math.floor(cx - scanW / 2);
@@ -603,18 +626,16 @@ export class HubScene extends Phaser.Scene {
       this.add
         .text(railX + 30, railY + 55, 'COMPÊNDIO', labelText(8, PALETTE_CSS.text))
         .setOrigin(0.5, 0),
-      this.iconButton(
-        g,
-        railX + 8,
-        railY + 74,
-        44,
-        'medal',
-        0x5b6380,
-        () => this.open(SCREENS.achievements),
-        true,
+      this.iconButton(g, railX + 8, railY + 74, 44, 'medal', PALETTE.gold, () =>
+        this.scene.start(SCENES.catalog, { view: 'achievements' }),
       ),
       this.add
-        .text(railX + 30, railY + 121, 'EM BREVE', labelText(8, PALETTE_CSS.textMuted))
+        .text(
+          railX + 30,
+          railY + 121,
+          `${getSave(this).achievements.length}/${META.achievements.length}`,
+          labelText(8, PALETTE_CSS.gold),
+        )
         .setOrigin(0.5, 0),
     );
     return out;

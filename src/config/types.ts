@@ -648,6 +648,28 @@ export interface MetaConfig {
   /** ATP do baú por estrela do caso, na ordem das metas de `caseStarMinutes`. */
   starRewards: number[];
   lab: { columns: string[]; nodes: Record<string, LabNode> };
+  /** Conquistas (fase 5.16): metas lidas das estatísticas do save. */
+  achievements: AchievementDef[];
+}
+
+/** Meta de uma conquista, lida das estatísticas acumuladas e dos recordes. */
+export type AchievementGoal =
+  | { kind: 'kills'; count: number; molecule?: string; family?: MoleculeType }
+  | {
+      kind:
+        'bosses' | 'aggregates' | 'ampoules' | 'synapses' | 'runs' | 'agentsPlayed' | 'discharges';
+      count: number;
+    }
+  | { kind: 'bestTime'; seconds: number }
+  | { kind: 'bestLevel'; level: number };
+
+/** Conquista: dá ATP ou libera de graça algo que também se compra (somam ao ATP). */
+export interface AchievementDef {
+  id: string;
+  name: string;
+  description: string;
+  goal: AchievementGoal;
+  reward: { atp?: number; unlock?: { group: 'agents' | 'weapons'; id: string } };
 }
 
 /** Os quatro setores de saúde do organismo (mecanicas.md). */
@@ -722,6 +744,8 @@ export interface ItemDef {
 
 /** Itens no mapa da fase 5.5 (drops.json). */
 export interface DropsConfig {
+  /** Cápsula de agente (fase 5.16): um agente bloqueado preso no mapa, liberado ao encostar. */
+  agentCapsule: { fromMinute: number; chance: number; distancePx: number };
   vesicles: {
     everySeconds: number;
     maxOnField: number;

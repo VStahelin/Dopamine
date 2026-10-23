@@ -360,5 +360,299 @@
         "requires": ["specialDuration"]
       }
     }
-  }
+  },
+  "achievements": [
+    {
+      "id": "firstReaction",
+      "name": "Primeira reação",
+      "description": "Decompor 100 moléculas",
+      "goal": {
+        "kind": "kills",
+        "count": 100
+      },
+      "reward": {
+        "atp": 50
+      }
+    },
+    {
+      "id": "basalMetabolism",
+      "name": "Metabolismo basal",
+      "description": "Decompor 1.000 moléculas",
+      "goal": {
+        "kind": "kills",
+        "count": 1000
+      },
+      "reward": {
+        "atp": 150
+      }
+    },
+    {
+      "id": "catabolism",
+      "name": "Catabolismo",
+      "description": "Decompor 10.000 moléculas",
+      "goal": {
+        "kind": "kills",
+        "count": 10000
+      },
+      "reward": {
+        "atp": 600
+      }
+    },
+    {
+      "id": "lipolysis",
+      "name": "Lipólise",
+      "description": "Decompor 300 triglicerídeos",
+      "goal": {
+        "kind": "kills",
+        "molecule": "triglyceride",
+        "count": 300
+      },
+      "reward": {
+        "unlock": {
+          "group": "agents",
+          "id": "lipase"
+        }
+      }
+    },
+    {
+      "id": "glycolysis",
+      "name": "Glicólise",
+      "description": "Decompor 2.000 açúcares",
+      "goal": {
+        "kind": "kills",
+        "family": "sugar",
+        "count": 2000
+      },
+      "reward": {
+        "unlock": {
+          "group": "agents",
+          "id": "insulin"
+        }
+      }
+    },
+    {
+      "id": "antioxidant",
+      "name": "Antioxidante",
+      "description": "Decompor 1.000 radicais livres",
+      "goal": {
+        "kind": "kills",
+        "family": "radical",
+        "count": 1000
+      },
+      "reward": {
+        "unlock": {
+          "group": "agents",
+          "id": "vitaminC"
+        }
+      }
+    },
+    {
+      "id": "detoxification",
+      "name": "Desintoxicação",
+      "description": "Decompor 800 toxinas",
+      "goal": {
+        "kind": "kills",
+        "family": "toxin",
+        "count": 800
+      },
+      "reward": {
+        "unlock": {
+          "group": "agents",
+          "id": "alcoholDehydrogenase"
+        }
+      }
+    },
+    {
+      "id": "calm",
+      "name": "Calma",
+      "description": "Decompor 600 moléculas de estresse",
+      "goal": {
+        "kind": "kills",
+        "family": "stress",
+        "count": 600
+      },
+      "reward": {
+        "unlock": {
+          "group": "agents",
+          "id": "serotonin"
+        }
+      }
+    },
+    {
+      "id": "antiInflammatory",
+      "name": "Anti-inflamatório",
+      "description": "Decompor 300 moléculas de inflamação",
+      "goal": {
+        "kind": "kills",
+        "family": "inflammation",
+        "count": 300
+      },
+      "reward": {
+        "atp": 300
+      }
+    },
+    {
+      "id": "bossHunter",
+      "name": "Caçador de chefes",
+      "description": "Decompor 5 chefes",
+      "goal": {
+        "kind": "bosses",
+        "count": 5
+      },
+      "reward": {
+        "unlock": {
+          "group": "weapons",
+          "id": "chainReaction"
+        }
+      }
+    },
+    {
+      "id": "endOfCase",
+      "name": "Fim do caso",
+      "description": "Decompor a Placa de ateroma",
+      "goal": {
+        "kind": "kills",
+        "molecule": "plaque",
+        "count": 1
+      },
+      "reward": {
+        "atp": 500
+      }
+    },
+    {
+      "id": "aggregates",
+      "name": "Agregados",
+      "description": "Decompor 10 agregados",
+      "goal": {
+        "kind": "aggregates",
+        "count": 10
+      },
+      "reward": {
+        "unlock": {
+          "group": "weapons",
+          "id": "solventPool"
+        }
+      }
+    },
+    {
+      "id": "ampoules",
+      "name": "Farmácia",
+      "description": "Abrir 20 ampolas",
+      "goal": {
+        "kind": "ampoules",
+        "count": 20
+      },
+      "reward": {
+        "atp": 300
+      }
+    },
+    {
+      "id": "synapses",
+      "name": "Plasticidade",
+      "description": "Disparar 10 sinapses",
+      "goal": {
+        "kind": "synapses",
+        "count": 10
+      },
+      "reward": {
+        "atp": 300
+      }
+    },
+    {
+      "id": "stamina",
+      "name": "Fôlego",
+      "description": "Durar 10 minutos numa run",
+      "goal": {
+        "kind": "bestTime",
+        "seconds": 600
+      },
+      "reward": {
+        "unlock": {
+          "group": "agents",
+          "id": "caffeine"
+        }
+      }
+    },
+    {
+      "id": "endurance",
+      "name": "Resistência",
+      "description": "Durar 20 minutos numa run",
+      "goal": {
+        "kind": "bestTime",
+        "seconds": 1200
+      },
+      "reward": {
+        "unlock": {
+          "group": "weapons",
+          "id": "uvRay"
+        }
+      }
+    },
+    {
+      "id": "hyperfocus",
+      "name": "Hiperfoco",
+      "description": "Chegar ao nível 30 numa run",
+      "goal": {
+        "kind": "bestLevel",
+        "level": 30
+      },
+      "reward": {
+        "unlock": {
+          "group": "agents",
+          "id": "venvanse"
+        }
+      }
+    },
+    {
+      "id": "bond",
+      "name": "Vínculo",
+      "description": "Jogar com 4 agentes diferentes",
+      "goal": {
+        "kind": "agentsPlayed",
+        "count": 4
+      },
+      "reward": {
+        "unlock": {
+          "group": "agents",
+          "id": "oxytocin"
+        }
+      }
+    },
+    {
+      "id": "veteran",
+      "name": "Veterano",
+      "description": "Jogar 50 runs",
+      "goal": {
+        "kind": "runs",
+        "count": 50
+      },
+      "reward": {
+        "atp": 1000
+      }
+    },
+    {
+      "id": "firstDischarge",
+      "name": "Primeira ALTA",
+      "description": "Dar ALTA a um indivíduo",
+      "goal": {
+        "kind": "discharges",
+        "count": 1
+      },
+      "reward": {
+        "atp": 1000
+      }
+    },
+    {
+      "id": "threeCases",
+      "name": "Clínico geral",
+      "description": "Dar ALTA a três indivíduos",
+      "goal": {
+        "kind": "discharges",
+        "count": 3
+      },
+      "reward": {
+        "atp": 2000
+      }
+    }
+  ]
 }

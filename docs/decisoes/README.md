@@ -41,3 +41,4 @@ As decisões de design tomadas antes deste registro continuam marcadas como "dec
 | [0033](0033-grupos-de-objetos-no-mapa.md) | Objetos do mapa em grupos com motivo biológico | design | proposta |
 | [0034](0034-fases-para-fechar-lacunas.md) | Fases 5.13 a 5.16 para fechar as lacunas (agentes, famílias, chefes, conquistas) antes do lançamento | processo | aceita |
 | [0035](0035-familias-e-chefes-por-local.md) | Comportamento por família de molécula e um chefe por local do corpo | design | proposta |
+| [0036](0036-conquistas-somam-a-loja.md) | Conquistas somam à loja (ATP ou desbloqueio de graça) e a cápsula de agente liberta um agente por jogar (fase 5.16) | design | proposta |
