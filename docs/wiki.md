@@ -58,7 +58,7 @@ Branco é dano comum. Amarelo com "!" é catálise (crítico). Ciano é afinidad
 Algumas moléculas decompostas soltam ATP, a moeda do jogo (moeda dourada no chão). Com tantas moléculas na tela, é poucas: uma em cada 60, mais ou menos. Moléculas fortes e o chefe sempre soltam, e quanto mais tempo de run, mais cada uma vale. O ATP fica com você no fim da run.
 
 ### Pausa
-A pausa mostra suas armas e receptores (aba Arsenal), todos os atributos com o valor atual e a base (aba Atributos) e os números da run (aba Run). Desistir encerra a run e leva para a tela de fim.
+A pausa mostra suas armas e receptores (aba Arsenal), todos os atributos com o valor atual e a base, e embaixo de cada um de onde vem o bônus: Laboratório, organismo, perfil do agente, receptor, suplemento, sinapse, Mutação ou estrutura (aba Atributos) e os números da run (aba Run). Desistir encerra a run e leva para a tela de fim.
 
 ---
 

@@ -163,7 +163,7 @@ export function rulesWithProgress(
   meta: MetaConfig = META,
 ): RunRules {
   return {
-    ...withStatBonuses(rules, labBonuses(progress, meta)),
+    ...withStatBonuses(rules, labBonuses(progress, meta), 'lab'),
     unlockedWeapons: progress.weapons as WeaponId[],
     unlockedReceptors: progress.receptors as PassiveId[],
   };

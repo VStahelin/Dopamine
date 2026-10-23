@@ -192,7 +192,7 @@ export function rulesWithOrganism(
   const effects = sectorEffects(o, org);
   delete effects.idleProduction;
   effects.currencyGain = (effects.currencyGain ?? 0) + o.inherited * org.inheritedAtpBonusPerPoint;
-  const withStats = withStatBonuses(rules, effects);
+  const withStats = withStatBonuses(rules, effects, 'organism');
   const difficulty = individualDifficulty(o);
   const weights = familyWeights(o, org);
   const enemies = Object.fromEntries(

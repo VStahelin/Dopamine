@@ -59,7 +59,12 @@ export interface RunRules {
   unlockedReceptors?: readonly PassiveId[];
   /** Armas do pool liberadas na meta-progressão; sem a lista, todas. */
   unlockedWeapons?: readonly WeaponId[];
+  /** Quanto cada origem somou à base dos atributos (Laboratório, organismo), para a pausa. */
+  baseSources?: Partial<Record<BaseSource, Record<string, number>>>;
 }
+
+/** Origens que mexem na base dos atributos antes da run. */
+export type BaseSource = 'lab' | 'organism';
 
 export const DEFAULT_RULES: RunRules = {
   run: RUN,
@@ -80,7 +85,11 @@ export const DEFAULT_RULES: RunRules = {
  * Regras com bônus somados à base dos atributos (Laboratório, setores do organismo). As chaves são
  * as de stats.json; os atributos do especial vêm como `special.<chave>`.
  */
-export function withStatBonuses(rules: RunRules, bonuses: Record<string, number>): RunRules {
+export function withStatBonuses(
+  rules: RunRules,
+  bonuses: Record<string, number>,
+  source?: BaseSource,
+): RunRules {
   const stats = Object.fromEntries(
     (Object.entries(rules.stats) as [string, StatGroup][]).map(([group, entries]) => [
       group,
@@ -92,5 +101,10 @@ export function withStatBonuses(rules: RunRules, bonuses: Record<string, number>
       ),
     ]),
   ) as unknown as StatsConfig;
-  return { ...rules, stats };
+  if (!source) return { ...rules, stats };
+  const baseSources = { ...rules.baseSources };
+  const merged = { ...baseSources[source] };
+  for (const [key, value] of Object.entries(bonuses)) merged[key] = (merged[key] ?? 0) + value;
+  baseSources[source] = merged;
+  return { ...rules, stats, baseSources };
 }

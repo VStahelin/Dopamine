@@ -89,7 +89,7 @@ O botão de pausa (e Esc ou P no PC) abre um painel sobre o campo escurecido:
 - **Faixa de status:** barra de interações com o número (`72/100`), ATP e decompostas.
 - **Três abas:**
   - **Arsenal:** cada arma com ícone, nome, nível em pips (até 8), números atuais (dano, disparos, recarga) e a dica de evolução (`NV 8 + OZÔNIO → LASER`). Depois os reagentes com pips (até 5) e o efeito somado (`+50% dano`), e por fim os efeitos ativos com o tempo restante. Espaços livres e bloqueados também aparecem, dizendo como liberar.
-  - **Atributos:** todos os atributos da aba Parâmetros em quatro grupos (ofensivos, defensivos, mobilidade e coleta, level up e risco). Valor atual à direita, base em cinza ao lado; verde quando está melhor que a base, vermelho quando está pior.
+  - **Atributos:** todos os atributos da aba Parâmetros em quatro grupos (ofensivos, defensivos, mobilidade e coleta, level up e risco). Valor atual à direita, base do `stats.json` em cinza ao lado; verde quando está melhor que a base, vermelho quando está pior. Embaixo de cada atributo que mudou, uma linha de chips diz de onde vem cada parte (Laboratório, organismo, perfil, receptor, suplemento, sinapse, Mutação, estrutura), com uma legenda no topo; prancheta "Crônico: atributos e de onde vem".
   - **Run:** tempo, nível, decompostas, ATP na run, interações perdidas, críticos, dano por arma em barras e quanto falta para o recorde.
 - **Botões:** `CONTINUAR` (madeira, o maior), `OPÇÕES` e `DESISTIR` (vinho, que leva à tela de fim de run).
 

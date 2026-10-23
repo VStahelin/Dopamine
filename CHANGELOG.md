@@ -4,6 +4,12 @@ O que mudou em cada versão do Farmaco Battle. O jogo mostra este arquivo em Op�
 
 ## Em desenvolvimento
 
+### Novidades
+- Na pausa, a aba Atributos mostra de onde vem cada bônus: Laboratório, organismo, perfil do agente, receptores, suplementos, sinapses, Mutação e estruturas, cada um com a sua cor.
+
+### Ajustes
+- Na aba Agentes, os agentes do campo longo aparecem como estão de verdade: liberados ou com o preço, em vez do aviso antigo de "fase 4".
+
 ### Correções
 - A Poça de Solvente e a Emulsão da Lipase aparecem redondas, do tamanho da área de dano (antes pareciam um quadrado verde).
 

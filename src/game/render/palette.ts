@@ -97,6 +97,15 @@ export const PALETTE_CSS = {
   sectionOrange: '#FFB347',
   muted: '#8A8EB8',
   goldHi: '#FFE08A',
+  /** Origem de cada bônus na aba Atributos (prancheta "Crônico: atributos e de onde vem"). */
+  sourceLab: '#E0702A',
+  sourceOrganism: '#FF8AB4',
+  sourceNative: '#F2C83A',
+  sourceReceptor: '#39D3F0',
+  sourceSupplement: '#B072F0',
+  sourceCard: '#5B8CFF',
+  sourceMutation: '#E0433A',
+  sourceStructure: '#C9CCE6',
 } as const;
 
 /**

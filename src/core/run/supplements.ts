@@ -5,7 +5,7 @@ import {
   type SupplementRarity,
 } from '../../config';
 import { damageEnemy, nearestEnemy } from './combat';
-import type { Enemy, RunState } from './state';
+import { addBonus, type Enemy, type RunState } from './state';
 import { statDef } from './stats';
 import { refreshStats } from './upgrades';
 import { weaponMaxLevel } from './weaponParams';
@@ -95,7 +95,7 @@ export function applySupplement(state: RunState, id: string): void {
   if (!state.seenSupplements.includes(id)) state.seenSupplements.push(id);
   const e = def.effect;
   const before = state.stats.maxInteractions;
-  if (e.kind === 'stat') state.bonus[e.stat] = (state.bonus[e.stat] ?? 0) + e.value;
+  if (e.kind === 'stat') addBonus(state, 'supplement', e.stat, e.value);
   if (e.kind === 'special') {
     state.specialBonus[e.stat] = (state.specialBonus[e.stat] ?? 0) + e.value;
   }

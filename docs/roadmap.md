@@ -300,7 +300,7 @@ A fase reformulada pela [decisão 0030](decisoes/0030-variedade-da-run-reformula
 - [x] Cada agente nasce com um **receptor nativo**, num espaço extra que não se troca nem se tira, que sobe 1 nível a cada 10 níveis de run, até o nível 5 no nível 50. Soma com o receptor de mesmo atributo, se o jogador também o escolher no level up. Valores em `agents.json`.
 - [x] Primeiro chute: Dopamina, **Receptor D2** (−8% de recarga por nível); Lipase, **Sítio ativo** (+10% de Reatividade contra lipídios por nível); Insulina, **Receptor de insulina** (+25% de Raio de coleta por nível).
 - [x] Borda dourada na HUD (na frente da linha dos receptores) e o perfil na ficha do agente.
-- [ ] Pausa e aba Atributos mostrando "perfil" como origem do bônus (junto com o "de onde vem" da fase 5.9).
+- [x] Pausa e aba Atributos mostrando "perfil" como origem do bônus (junto com o "de onde vem" da fase 5.9). Feito na fase 5.13.
 
 **Excesso: Superdosagem de atributos**
 
@@ -360,7 +360,7 @@ Os atributos que saíram do level up voltam como **suplementos**, passivos que a
 - [x] Ampola: chance por molécula, multiplicada pela Sorte e pelo Estresse, com garantia aos 90 s e intervalo mínimo de 20 s; chefe solta uma ampola de mínimo Ultra raro junto da cápsula. As chances subiram para 0,5% (comum) e 4% (forte) para chegar a cerca de 10 ampolas em 10 minutos.
 - [x] Abrir a ampola: pausa curta, quebra, suplemento com a moldura da raridade, toque para voltar (no PC fecha sozinha em 1,5 s).
 - [x] Pausa com a grade de suplementos (`×N`). O aviso de 2 s ficou dispensável: a tela da ampola já mostra o suplemento.
-- [ ] "De onde vem" cada bônus na aba Atributos (receptor, suplemento, Laboratório).
+- [x] "De onde vem" cada bônus na aba Atributos (receptor, suplemento, Laboratório). Feito na fase 5.13.
 - [x] Sprites de 16×16 da ampola (fechada e quebrando) e seção "Suplementos" no Compêndio.
 - [x] Um ícone próprio por suplemento, na prancheta "Suplementos e ampolas" do canvas e no grupo `supplements` de icons.json.
 - [x] Atualizar [wiki.md](wiki.md) e rodar o `npm run sim` com as ampolas. O nível médio numa run de 10 minutos fica 6% acima (25,7 contra 24,2), e o ATP por run sobe cerca de 20% (parte vem do robô, que agora pega os itens).
@@ -423,10 +423,10 @@ Fechar o que já existe antes de somar conteúdo: validar no celular, dar som ao
 - [ ] Validar no celular, em pé e deitado, as fases 2.6 a 5.11, incluindo 60 FPS com 400 moléculas e com o mapa Denso.
 - [x] Ícones do PWA em PNG (192, 512 e maskable) e `apple-touch-icon` para a tela inicial do iPhone, com a logo nova em pixel, favicon e artes de loja ([logo.md](logo.md)).
 - [ ] Efeitos sonoros P1 de [efeitos-sonoros.md](efeitos-sonoros.md) (armas, combate, coleta, level up e interface) e os jingles `bossIn` e `crisisIn`; tirar o "chegam em breve" das Opções.
-- [ ] "De onde vem" cada bônus na aba Atributos (receptor, suplemento, Laboratório e perfil).
+- [x] "De onde vem" cada bônus na aba Atributos (receptor, suplemento, Laboratório e perfil), com a prancheta "Crônico: atributos e de onde vem" do canvas.
 - [ ] Pontos de interesse câmara e corredor; estruturas numa clareira dos blocos.
-- [ ] Estatísticas acumuladas no save (decompostas por molécula, minutos por agente, chefes vencidos), base das conquistas da 5.16.
-- [ ] Limpar o conteúdo de placeholder que sobrou em `src/game/ui/menuContent.ts`.
+- [x] Estatísticas acumuladas no save (decompostas por molécula, minutos por agente, chefes vencidos), base das conquistas da 5.16.
+- [x] Limpar o conteúdo de placeholder que sobrou em `src/game/ui/menuContent.ts`.
 - [ ] Ensinar o robô do `npm run sim` a buscar sinapses e estruturas.
 
 **Critério de saída:** uma run de 15 minutos no celular roda a 60 FPS, toda ação frequente tem som, e nenhuma tela além de Conquistas mostra "EM BREVE".

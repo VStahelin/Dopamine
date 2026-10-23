@@ -1,5 +1,6 @@
 import type { PassiveDef, PassiveId, RunStatKey, WeaponId } from '../../config';
-import { newWeapon, type RunState } from './state';
+import type { BaseSource } from './rules';
+import { addBonus, newWeapon, type BonusSource, type RunState } from './state';
 import { computeStats, statDef, type RunStats } from './stats';
 import { weaponMaxLevel } from './weaponParams';
 
@@ -230,7 +231,7 @@ export function applyUpgrade(state: RunState, choice: UpgradeChoice): void {
     case 'boost': {
       const def = state.rules.passives[choice.id];
       for (const stat of [def.stat, def.alsoStat]) {
-        if (stat) state.bonus[stat] = (state.bonus[stat] ?? 0) + choice.amount;
+        if (stat) addBonus(state, 'card', stat, choice.amount);
       }
       break;
     }
@@ -336,7 +337,7 @@ function mutate(state: RunState, rarity: number): void {
   const def = passives[id];
   const amount = passiveAmount(def, rarityMultiplier(state, rarity));
   for (const stat of [def.stat, def.alsoStat]) {
-    if (stat) state.bonus[stat] = (state.bonus[stat] ?? 0) + amount;
+    if (stat) addBonus(state, 'mutation', stat, amount);
   }
 }
 
@@ -374,4 +375,37 @@ export function banishChoice(state: RunState, choice: UpgradeChoice): boolean {
   state.banished.push(choiceKey(choice));
   state.offer = null;
   return true;
+}
+
+/** Origem de um bônus de atributo, na ordem em que a pausa mostra. */
+export type StatSource = BaseSource | 'native' | 'receptor' | BonusSource;
+
+/**
+ * "De onde vem" um atributo (fase 5.13): quanto cada origem soma por cima da base do stats.json.
+ * Só aparecem as origens que somam algo; o teto da run vale depois, sobre o total.
+ */
+export function statSources(
+  state: RunState,
+  key: RunStatKey,
+): { source: StatSource; amount: number }[] {
+  const out: { source: StatSource; amount: number }[] = [];
+  const push = (source: StatSource, amount: number | undefined) => {
+    if (amount && Math.abs(amount) > 1e-9) out.push({ source, amount });
+  };
+  const base = state.rules.baseSources ?? {};
+  push('lab', base.lab?.[key]);
+  push('organism', base.organism?.[key]);
+  const native = state.rules.agents[state.agentId].nativeReceptor;
+  if (native.stat === key) push('native', native.perLevel * nativeLevel(state));
+  let receptors = 0;
+  for (const [id, p] of Object.entries(state.passives) as [PassiveId, { bonus: number }][]) {
+    const def = state.rules.passives[id];
+    if (def.mutation) continue;
+    if (def.stat === key || def.alsoStat === key) receptors += p.bonus;
+  }
+  push('receptor', receptors);
+  for (const source of ['supplement', 'card', 'mutation', 'structure'] as const) {
+    push(source, state.bonusBy[source]?.[key]);
+  }
+  return out;
 }

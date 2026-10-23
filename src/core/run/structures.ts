@@ -1,7 +1,7 @@
 import type { PassiveId, RunStatKey } from '../../config';
 import { addAggregate } from './aggregates';
 import { spawnFormation } from './formations';
-import type { RunState, Structure } from './state';
+import { addBonus, type RunState, type Structure } from './state';
 import {
   applyUpgrade,
   coinValue,
@@ -140,7 +140,7 @@ export function updateStructures(state: RunState, dt: number, distance: number, 
       case 'adrenal':
         if (!entered) break;
         state.atp += s.adrenal.coins * coinValue(state) * state.stats.currencyGain;
-        state.bonus.curse = (state.bonus.curse ?? 0) + s.adrenal.stress;
+        addBonus(state, 'structure', 'curse', s.adrenal.stress);
         refreshStats(state);
         st.uses--;
         if (st.uses <= 0) done.push(st.id);

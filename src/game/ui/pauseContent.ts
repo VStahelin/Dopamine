@@ -3,6 +3,7 @@ import { MAP, PASSIVES, STATS, WEAPONS, type PassiveId, type RunStatKey } from '
 import { mapName } from '../../core/map/chunk';
 import type { RunState } from '../../core/run/state';
 import { statDef } from '../../core/run/stats';
+import { statSources, type StatSource } from '../../core/run/upgrades';
 import { weaponMaxLevel } from '../../core/run/weaponParams';
 import { paramsOf } from '../../core/run/weapons';
 import { PALETTE, PALETTE_CSS } from '../render/palette';
@@ -299,9 +300,84 @@ export const STAT_GROUPS: [(keyof typeof STATS)[], string][] = [
   [['levelUp', 'risk'], 'LEVEL UP E RISCO'],
 ];
 
-/** Aba Atributos: valor atual, base em cinza; verde se melhor, vermelho se pior. */
+/** Nome curto e cor de cada origem de bônus, na ordem da legenda. */
+export const SOURCE_LABELS: Record<StatSource, [string, string]> = {
+  lab: ['LAB.', PALETTE_CSS.sourceLab],
+  organism: ['ORGANISMO', PALETTE_CSS.sourceOrganism],
+  native: ['PERFIL', PALETTE_CSS.sourceNative],
+  receptor: ['RECEPTOR', PALETTE_CSS.sourceReceptor],
+  supplement: ['SUPLEMENTO', PALETTE_CSS.sourceSupplement],
+  card: ['SINAPSE', PALETTE_CSS.sourceCard],
+  mutation: ['MUTAÇÃO', PALETTE_CSS.sourceMutation],
+  structure: ['ESTRUTURA', PALETTE_CSS.sourceStructure],
+};
+
+/** Quadradinho da cor da origem e o texto, lado a lado; devolve a largura usada. */
+function sourceChip(
+  scene: Phaser.Scene,
+  g: Phaser.GameObjects.Graphics,
+  x: number,
+  y: number,
+  size: number,
+  color: string,
+  text: string,
+  textColor: string,
+  out: Phaser.GameObjects.GameObject[],
+): number {
+  g.fillStyle(PALETTE.ink).fillRect(x, y + 1, size + 2, size + 2);
+  g.fillStyle(Phaser.Display.Color.HexStringToColor(color).color).fillRect(
+    x + 1,
+    y + 2,
+    size,
+    size,
+  );
+  const label = scene.add.text(x + size + 5, y, text, labelText(8, textColor));
+  out.push(label);
+  return size + 5 + label.width;
+}
+
+/** Linhas de chips que quebram na largura: a legenda e o "de onde vem" de cada atributo. */
+function chipRows(
+  items: { color: string; text: string; textColor: string }[],
+  indent: number,
+  size: number,
+): Build {
+  return (scene, width) => {
+    const g = scene.add.graphics();
+    const texts: Phaser.GameObjects.GameObject[] = [];
+    let x = indent;
+    let y = 0;
+    for (const item of items) {
+      const probe = scene.add.text(0, 0, item.text, labelText(8, item.textColor));
+      const w = size + 5 + probe.width;
+      probe.destroy();
+      if (x > indent && x + w > width) {
+        x = indent;
+        y += 12;
+      }
+      x += sourceChip(scene, g, x, y, size, item.color, item.text, item.textColor, texts) + 10;
+    }
+    return row(scene, width, y + 11, [g, ...texts]);
+  };
+}
+
+/**
+ * Aba Atributos: valor atual, base do stats.json em cinza; verde se melhor, vermelho se pior.
+ * Embaixo de cada atributo que mudou, de onde vem cada parte (fase 5.13).
+ */
 export function statRows(run: RunState): Build[] {
-  const out: Build[] = [];
+  const out: Build[] = [
+    chipRows(
+      Object.values(SOURCE_LABELS).map(([text, color]) => ({
+        color,
+        text,
+        textColor: PALETTE_CSS.textSoft,
+      })),
+      0,
+      7,
+    ),
+    (scene) => ({ container: scene.add.container(0, 0), height: 4 }),
+  ];
   for (const [groups, title] of STAT_GROUPS) {
     out.push((scene, width) => {
       const g = scene.add.graphics();
@@ -312,9 +388,13 @@ export function statRows(run: RunState): Build[] {
       ]);
     });
     for (const key of groups.flatMap((g) => Object.keys(STATS[g])) as RunStatKey[]) {
+      const sources = statSources(run, key);
       out.push((scene, width) => {
         const value = run.stats[key];
-        const base = statDef(run.rules, key).base;
+        const before = sources
+          .filter((s) => s.source === 'lab' || s.source === 'organism')
+          .reduce((sum, s) => sum + s.amount, 0);
+        const base = statDef(run.rules, key).base - before;
         const trend = statTrend(key, value, base);
         const color =
           trend === 'better'
@@ -339,6 +419,23 @@ export function statRows(run: RunState): Build[] {
         }
         return { container: scene.add.container(0, 0, children), height: 18 };
       });
+      if (sources.length > 0) {
+        out.push(
+          chipRows(
+            sources.map(({ source, amount }) => {
+              const [label, color] = SOURCE_LABELS[source];
+              const worse = statTrend(key, amount, 0) === 'worse';
+              return {
+                color,
+                text: `${label} ${statDelta(key, amount)}`,
+                textColor: worse ? PALETTE_CSS.numberHurt : PALETTE_CSS.textSoft,
+              };
+            }),
+            6,
+            5,
+          ),
+        );
+      }
     }
     out.push((scene) => ({ container: scene.add.container(0, 0), height: 6 }));
   }

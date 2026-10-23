@@ -17,6 +17,7 @@ Ao mudar uma prancheta no canvas, copie o arquivo novo para cá no mesmo commit 
 | Sprites de moléculas | [Moleculas.dc.html](Moleculas.dc.html) | Átomos por elemento e moléculas montadas | `src/assets/sprites/molecules.json` |
 | Crônico: HUD de batalha | [CronicoBatalha.dc.html](CronicoBatalha.dc.html) | HUD da run em pé | `src/game/ui/` (HUD da run) |
 | Crônico: pausa e status | [CronicoPausa.dc.html](CronicoPausa.dc.html) | Pausa com arsenal e atributos | `src/game/scenes/PauseScene.ts` |
+| Crônico: atributos e de onde vem | [CronicoAtributos.dc.html](CronicoAtributos.dc.html) | Aba Atributos com a legenda das origens e os chips de cada bônus | `src/game/ui/pauseContent.ts` (`statRows`) |
 | Crônico: ícones, dano e paisagem | [CronicoGuia.dc.html](CronicoGuia.dc.html) | Molduras de ícone, números de dano, HUD deitada, regras de layout | `src/assets/sprites/frames.json` |
 | Ícones de armas e habilidades | [Icones.dc.html](Icones.dc.html) | Ícones de armas, passivos, especiais e atributos | `src/assets/sprites/icons.json` |
 | Crônico: level up | [CronicoLevelUp.dc.html](CronicoLevelUp.dc.html) | Tela de level up no celular | `src/game/scenes/LevelUpScene.ts` |

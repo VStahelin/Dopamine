@@ -4,6 +4,7 @@ import type {
   ItemId,
   MoleculeType,
   PassiveId,
+  RunStatKey,
   StructureKind,
   SupplementRarity,
   WeaponId,
@@ -270,6 +271,8 @@ export interface RunState {
   effects: ItemEffects;
   /** Atributos somados na run fora dos receptores: suplementos, Mutação. */
   bonus: Partial<RunStats>;
+  /** O mesmo `bonus`, separado por origem, para o "de onde vem" da pausa (fase 5.13). */
+  bonusBy: Partial<Record<BonusSource, Partial<RunStats>>>;
   /** Atributos do especial somados pelos suplementos (Ginseng). */
   specialBonus: Partial<Record<'cooldown' | 'power' | 'duration' | 'charges', number>>;
   /** Cópias de cada suplemento (fase 5.9). */
@@ -341,6 +344,21 @@ export interface RunState {
   /** Números da run para a pausa e o fim de run. */
   tally: RunTally;
   events: RunEvent[];
+}
+
+/** De onde vem um bônus de atributo da run, fora dos receptores. */
+export type BonusSource = 'supplement' | 'card' | 'mutation' | 'structure';
+
+/** Soma um bônus de atributo da run, guardando a origem. */
+export function addBonus(
+  state: RunState,
+  source: BonusSource,
+  stat: RunStatKey,
+  amount: number,
+): void {
+  state.bonus[stat] = (state.bonus[stat] ?? 0) + amount;
+  const by = (state.bonusBy[source] ??= {});
+  by[stat] = (by[stat] ?? 0) + amount;
 }
 
 export interface RunTally {
@@ -418,6 +436,7 @@ export function createRun(
     pickups: [],
     effects: { freeze: 0, flame: 0, fever: 0 },
     bonus: {},
+    bonusBy: {},
     specialBonus: {},
     supplements: {},
     seenSupplements: [],
