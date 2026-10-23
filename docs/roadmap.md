@@ -397,7 +397,7 @@ Deixar o jogo com a cara do canvas de identidade visual e pronto para outras pes
 - [ ] Acabamento visual de HUD, molduras, botões e fontes da aba Design (a HUD e a pausa de [ui-cronico.md](ui-cronico.md) entram na fase 2.6).
 - [ ] Chão, paredes e efeitos (dano com contorno, projéteis); o chão e os objetos dos ambientes vêm da fase 5.7.
 - [ ] Wiki dentro do jogo: o Compêndio ganha as páginas de [wiki.md](wiki.md) (como jogar, agentes, armas, modificadores, moléculas, progressão, campo longo, organismo e glossário).
-- [ ] Som e música.
+- [ ] Som e música: as faixas chiptune metal e os efeitos de [sonoplastia.md](sonoplastia.md), com troca de música na run, volume de Música e Efeitos nas Opções e `src/config/audio.json`.
 - [ ] PWA: ícones e polimento da instalação na tela inicial (o offline vem da fase 2.5).
 - [ ] Layout em telas largas e altas (painéis laterais, mais pista).
 - [ ] Rodada de testes com 2 ou 3 amigos e ajuste dos números.
