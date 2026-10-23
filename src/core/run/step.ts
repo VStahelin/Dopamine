@@ -144,11 +144,25 @@ function spawnEnemies(state: RunState, viewRadius: number, dt: number): void {
 
   // Inimigos que ficaram muito para trás voltam para perto, como no Vampire Survivors;
   // sem isso, fugir em linha reta deixa o limite de inimigos ocupado por quem não alcança.
-  // Chefes nunca são reposicionados.
+  // Chefes nunca são reposicionados; agregados voltam pela frente (abaixo).
   const far = distance * 2;
+  const ag = run.aggregates;
+  const farAggregate = distance * ag.relocateDistanceFactor;
   for (const e of state.enemies) {
-    if (e.boss || e.aggregate) continue;
-    if ((e.x - state.agent.x) ** 2 + (e.y - state.agent.y) ** 2 < far * far) continue;
+    if (e.boss) continue;
+    const d2 = (e.x - state.agent.x) ** 2 + (e.y - state.agent.y) ** 2;
+    // Agregado (mini chefe) que ficou para trás reaparece na frente do agente, logo fora da
+    // tela na direção do movimento, com a vida que tinha.
+    if (e.aggregate) {
+      if (d2 < farAggregate * farAggregate) continue;
+      const angle =
+        Math.atan2(state.agent.dirY, state.agent.dirX) +
+        state.rng.range(-ag.relocateSpreadRadians, ag.relocateSpreadRadians);
+      e.x = state.agent.x + Math.cos(angle) * distance;
+      e.y = state.agent.y + Math.sin(angle) * distance;
+      continue;
+    }
+    if (d2 < far * far) continue;
     // Quem atravessa a tela em linha reta só some: voltar para perto desfaria a formação.
     if (e.straight) {
       e.hp = 0;

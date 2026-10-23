@@ -197,7 +197,7 @@ function dropXp(state: RunState, e: Enemy): void {
 }
 
 /**
- * Ampola: sempre no chefe (raridade mínima alta); chance pequena nas outras, pela Sorte e pelo
+ * Ampola: sempre no chefe (raridade mínima alta) e no agregado (mínimo Raro); chance pequena nas outras, pela Sorte e pelo
  * Estresse, com garantia contra seca e intervalo mínimo nas comuns.
  */
 function dropAmpoule(state: RunState, e: Enemy): void {
@@ -215,14 +215,12 @@ function dropAmpoule(state: RunState, e: Enemy): void {
   }
   if (e.extraAmpoules > 0) return;
   if (e.aggregate) {
-    const ag = state.rules.run.aggregates;
-    if (state.rng.next() >= ag.ampouleChance * Math.max(0.01, state.stats.luck)) return;
     state.pickups.push({
       x: e.x,
       y: e.y,
       kind: 'ampoule',
       attracted: false,
-      minRarity: ag.minRarity,
+      minRarity: state.rules.run.aggregates.minRarity,
     });
     return;
   }

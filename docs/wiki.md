@@ -43,7 +43,7 @@ A doença do indivíduo escolhe qual vem: com a Física baixa, quase só açúca
 Em cada pico de onda (a cada 5 minutos) vem uma crise: a formação da doença em dobro, dos dois lados, com o nome no topo (Crise glicêmica, Crise de estresse...) e o mapa tingido enquanto dura.
 
 ### Agregados
-Num momento sorteado, pelo menos um por minuto (de 20 a 60 segundos depois do anterior), nasce um agregado: a molécula forte mais comum no momento, grudada numa massa só. É gigante (2,2 vezes o tamanho), roxa, com um brilho dourado pulsando em volta, mais lenta e tem 12 vezes a vida, com uma seta na borda da tela quando está longe. Decompor um agregado solta uma gema vermelha e às vezes uma ampola Rara ou melhor (a Sorte ajuda), e ele se quebra em cascata como a molécula normal. A doença do indivíduo decide qual molécula vira agregado.
+Num momento sorteado, pelo menos um por minuto (de 20 a 60 segundos depois do anterior), nasce um agregado: a molécula forte mais comum no momento, grudada numa massa só. É gigante (2,2 vezes o tamanho), roxa, com um brilho dourado pulsando em volta, mais lenta e tem 12 vezes a vida, com uma seta na borda da tela quando está longe. Se você deixar o agregado muito para trás, ele reaparece na sua frente, logo fora da tela na direção em que você anda, com a vida que tinha. Decompor um agregado sempre solta uma ampola Rara ou melhor e uma gema vermelha, e ele se quebra em cascata como a molécula normal. A doença do indivíduo decide qual molécula vira agregado.
 
 ### Decomposição em cascata
 Moléculas fortes não somem de uma vez: elas se quebram em moléculas menores, que continuam vindo. O Amido vira Maltose, que vira Glicose. Vale planejar a área de ataque para as cascatas.

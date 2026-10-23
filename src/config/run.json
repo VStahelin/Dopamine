@@ -57,7 +57,8 @@
     "speedMultiplier": 0.7,
     "xpMultiplier": 12,
     "minRarity": "rare",
-    "ampouleChance": 0.15,
+    "relocateDistanceFactor": 1.5,
+    "relocateSpreadRadians": 0.5,
     "tint": "#D9A0FF",
     "glowColor": "#FFE08A",
     "glowPulsesPerSecond": 1.5

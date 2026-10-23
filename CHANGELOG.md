@@ -7,6 +7,13 @@ O que mudou em cada versão do Farmaco Battle. O jogo mostra este arquivo em Op�
 ### Novidades
 - Primeiros efeitos sonoros: o agente agora soa ao levar dano (mais pesado num golpe forte e diferente quando a Membrana segura), ao se curar, ao esquivar, com a Segunda dose, quando o especial fica pronto, ao ser consumido e num aviso de interações baixas. O volume de Efeitos das Opções passa a valer e toca uma amostra ao mudar.
 
+### Ajustes
+- O agregado (mini chefe) volta a soltar sempre uma ampola Rara ou melhor.
+- Se você deixar um agregado muito para trás, ele reaparece na sua frente, na direção em que você anda, com a vida que tinha, como no Vampire Survivors.
+
+### Correções
+- Textos vazando no celular: na aba Agentes, o perfil do agente passava por baixo do preço e saía do cartão. Agora o cartão cresce com o texto e o preço fica numa linha própria. No Arsenal e no Compêndio as descrições quebram linha em vez de serem cortadas, e o tipo das moléculas aparece certo (AÇÚCAR e RADICAL, não AÇÚCARE e RADICAI).
+
 ## v0.15.1 · 23/10/2026
 
 ### Novidades

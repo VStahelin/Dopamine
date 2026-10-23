@@ -48,9 +48,15 @@ export interface AggregateConfig {
   speedMultiplier: number;
   /** XP da molécula base multiplicado: sempre uma gema vermelha. */
   xpMultiplier: number;
-  /** Chance de soltar ampola, com raridade mínima `minRarity`: com um por minuto, sempre seria demais. */
-  ampouleChance: number;
+  /** Raridade mínima da ampola que ele sempre solta. */
   minRarity: SupplementRarity;
+  /**
+   * Distância (vezes a de nascimento, logo fora da tela) a partir da qual o agregado que ficou
+   * para trás reaparece na frente do agente, como no Vampire Survivors.
+   */
+  relocateDistanceFactor: number;
+  /** Desvio máximo, em radianos, da direção do movimento ao reaparecer. */
+  relocateSpreadRadians: number;
   /** Cor da molécula (multiplica o sprite), em #RRGGBB: o agregado tem cor própria. */
   tint: string;
   /** Brilho pulsante em volta, em #RRGGBB, e quantas pulsadas por segundo. */

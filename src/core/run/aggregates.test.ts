@@ -6,14 +6,12 @@ import { stepRun } from './step';
 import { DT, STILL } from './testRules';
 
 /** Regras sem moléculas comuns: só chefes e agregados nascem. */
-function rules(ampouleChance?: number): RunRules {
-  const ag = DEFAULT_RULES.run.aggregates;
+function rules(): RunRules {
   return {
     ...DEFAULT_RULES,
     run: {
       ...DEFAULT_RULES.run,
       spawn: { ...DEFAULT_RULES.run.spawn, baseEnemiesPerSecond: 0 },
-      aggregates: { ...ag, ampouleChance: ampouleChance ?? ag.ampouleChance },
     },
   };
 }
@@ -60,13 +58,32 @@ describe('agregados (fase 5.10)', () => {
     expect(r.seenAggregates).toContain(e.kind);
   });
 
-  it('soltam ampola de raridade mínima Rara (com chance) e uma gema vermelha', () => {
-    const r = createRun(1, rules(1));
+  it('sempre soltam ampola de raridade mínima Rara e uma gema vermelha', () => {
+    for (const seed of [1, 2, 3, 4, 5]) {
+      const r = createRun(seed, rules());
+      advance(r, 61);
+      const e = r.enemies.find((x) => x.aggregate)!;
+      damageEnemy(r, e, e.hp + 1);
+      const amp = r.pickups.filter((p) => p.kind === 'ampoule');
+      expect(amp).toHaveLength(1);
+      expect(amp[0]!.minRarity).toBe(r.rules.run.aggregates.minRarity);
+      expect(r.gems.some((g) => g.value > r.rules.drops.gems.mediumMaxXp)).toBe(true);
+    }
+  });
+
+  it('que ficou para trás reaparece na frente do agente, com a mesma vida', () => {
+    const r = createRun(1, rules());
     advance(r, 61);
     const e = r.enemies.find((x) => x.aggregate)!;
-    damageEnemy(r, e, e.hp + 1);
-    const amp = r.pickups.find((p) => p.kind === 'ampoule');
-    expect(amp?.minRarity).toBe(r.rules.run.aggregates.minRarity);
-    expect(r.gems.some((g) => g.value > r.rules.drops.gems.mediumMaxXp)).toBe(true);
+    e.hp = e.maxHp / 2;
+    r.agent.dirX = 1;
+    r.agent.dirY = 0;
+    e.x = r.agent.x - 5000;
+    e.y = r.agent.y;
+    advance(r, r.time + DT);
+    expect(e.hp).toBe(e.maxHp / 2);
+    expect(e.x).toBeGreaterThan(r.agent.x);
+    const d = Math.hypot(e.x - r.agent.x, e.y - r.agent.y);
+    expect(d).toBeLessThan(r.viewRadius * 2);
   });
 });
