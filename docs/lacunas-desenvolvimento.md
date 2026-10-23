@@ -2,7 +2,7 @@
 
 23 de outubro de 2026 · Vitor
 
-Mapa do que ainda falta desenvolver no Farmaco Battle, feito comparando o código da `main` (v0.16.0) com os docs, o roadmap e as decisões. As fases 0 a 5.11 estão implementadas, mas o jogo ainda mostra que está pela metade: **3 dos 9 agentes da run existem**, a família **inflamação não tem nenhuma molécula**, **só há um chefe** (a Partícula de LDL), **todas as moléculas só perseguem o agente** (os comportamentos por família não existem), a aba **Conquistas é um "EM BREVE"**, **38 dos 47 efeitos sonoros faltam** e **nenhuma fase desde a 2.6 foi validada no celular**. Tudo aqui é **proposta**; a ordem de fases sugerida está na [decisão 0034](decisoes/0034-fases-para-fechar-lacunas.md).
+Mapa do que ainda falta desenvolver no Farmaco Battle, feito comparando o código da `main` (v0.16.0) com os docs, o roadmap e as decisões. As fases 0 a 5.11 estão implementadas, mas o jogo ainda mostra que está pela metade: **3 dos 9 agentes da run existem**, a família **inflamação não tem nenhuma molécula**, **só há um chefe** (a Partícula de LDL), **todas as moléculas só perseguem o agente** (os comportamentos por família não existem), a aba **Conquistas é um "EM BREVE"**, **38 dos 47 efeitos sonoros faltam** e **nenhuma fase desde a 2.6 foi validada no celular**. A ordem de fases foi aceita pelo Vitor em 23/10/2026 ([decisão 0034](decisoes/0034-fases-para-fechar-lacunas.md)); a fase 5.13 está em andamento.
 
 ## Como ler
 

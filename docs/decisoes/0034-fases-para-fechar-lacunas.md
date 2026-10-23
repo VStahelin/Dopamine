@@ -1,6 +1,6 @@
 # 0034. Fases 5.13 a 5.16 para fechar as lacunas antes do lançamento
 
-- **Status:** proposta
+- **Status:** aceita
 - **Data:** 2026-10-23
 - **Área:** processo
 

@@ -32,10 +32,10 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | 5.10 | Agregados (mini chefes) | Entre um chefe e outro sempre tem um alvo que vale o risco? | 5.9 | implementada, falta validar no celular |
 | 5.11 | Sinapses e estruturas | O jogador sai do lugar para buscar bônus no mapa? | 5.6, 5.9, 5.10 | implementada, falta validar no celular |
 | 5.12 | Locais do corpo e sinergias | Escolher onde agir muda a run e cura o organismo mais rápido? | 5, 5.7 | não iniciada |
-| 5.13 | Validação e ganhos rápidos (proposta) | O que já existe funciona no celular, tem som e não mostra placeholder? | 2.6 a 5.11 | não iniciada |
-| 5.14 | Famílias e chefes (proposta) | Cada família de molécula pede um jeito diferente de jogar? | 5.12, 5.13 | não iniciada |
-| 5.15 | Elenco completo (proposta) | Cada doença tem um agente feito para ela? | 5.14 | não iniciada |
-| 5.16 | Conquistas (proposta) | Jogar libera conteúdo, e não só juntar ATP? | 5.15 | não iniciada |
+| 5.13 | Validação e ganhos rápidos | O que já existe funciona no celular, tem som e não mostra placeholder? | 2.6 a 5.11 | em andamento |
+| 5.14 | Famílias e chefes | Cada família de molécula pede um jeito diferente de jogar? | 5.12, 5.13 | não iniciada |
+| 5.15 | Elenco completo | Cada doença tem um agente feito para ela? | 5.14 | não iniciada |
+| 5.16 | Conquistas | Jogar libera conteúdo, e não só juntar ATP? | 5.15 | não iniciada |
 | 6 | Arte, polimento e lançamento | Dá para mandar o link para os amigos? | 1 a 5.16 | não iniciada |
 | 7 | Lojas e plataformas | O mesmo jogo roda e é publicado em Android, iOS, Steam e Microsoft Store? | 6 | não iniciada |
 
@@ -55,7 +55,7 @@ Bugs que o Vitor achou jogando. Marque ao corrigir, com o commit da correção.
 
 **Ordem sugerida das fases 5.x:** 5.5 → 5.8 → 5.9 → 5.10 → 5.6 → 5.11 → 5.7. As fases 5.8 a 5.11 trazem as mecânicas do Megabonk ([megabonk.md](megabonk.md)) e mexem no level up e nos drops. A 5.6 vem depois dos receptores (5.8, de onde saem o receptor nativo e os cartões da Superdosagem) e antes das sinapses (5.11, cujo Foco inflamatório usa o Cerco inflamatório), e a 5.7 vem por último porque os mapas passam a hospedar as estruturas como pontos de interesse. Os números das fases não mudam para não quebrar as decisões que citam cada uma.
 
-**Ordem sugerida depois da 5.11** ([decisão 0034](decisoes/0034-fases-para-fechar-lacunas.md), proposta): 5.13 → 5.12 → 5.14 → 5.15 → 5.16 → 6. O mapa completo do que falta, com fonte, impacto e esforço de cada item, está em [lacunas-desenvolvimento.md](lacunas-desenvolvimento.md). As famílias (5.14) vêm antes dos agentes (5.15) porque três dos agentes novos têm o especial feito contra mecânicas de molécula que ainda não existem.
+**Ordem sugerida depois da 5.11** ([decisão 0034](decisoes/0034-fases-para-fechar-lacunas.md)): 5.13 → 5.12 → 5.14 → 5.15 → 5.16 → 6. O mapa completo do que falta, com fonte, impacto e esforço de cada item, está em [lacunas-desenvolvimento.md](lacunas-desenvolvimento.md). As famílias (5.14) vêm antes dos agentes (5.15) porque três dos agentes novos têm o especial feito contra mecânicas de molécula que ainda não existem.
 
 A arte não espera a fase 6: os sprites de molécula são montados por código a partir dos átomos (aba Design), então entram já na fase 1. A fase 6 cuida do resto: HUD final, som, telas e acabamento.
 
@@ -416,9 +416,9 @@ O jogador escolhe em que parte do corpo vai agir, em vez de o ambiente da fase 5
 
 **Critério de saída:** com uma doença de cada setor, o jogador consegue dizer para onde ir e com quem; o par com sinergia cura visivelmente mais que o mesmo agente na Corrente sanguínea; e ninguém prefere sempre o "Qualquer lugar" ou sempre o mesmo local.
 
-## Fase 5.13: Validação e ganhos rápidos (proposta)
+## Fase 5.13: Validação e ganhos rápidos
 
-Fechar o que já existe antes de somar conteúdo: validar no celular, dar som ao que acontece em toda run e tirar o que ainda parece placeholder. Itens de [lacunas-desenvolvimento.md](lacunas-desenvolvimento.md#as-12-prioridades) ([decisão 0034](decisoes/0034-fases-para-fechar-lacunas.md), proposta).
+Fechar o que já existe antes de somar conteúdo: validar no celular, dar som ao que acontece em toda run e tirar o que ainda parece placeholder. Itens de [lacunas-desenvolvimento.md](lacunas-desenvolvimento.md#as-12-prioridades) ([decisão 0034](decisoes/0034-fases-para-fechar-lacunas.md)).
 
 - [ ] Validar no celular, em pé e deitado, as fases 2.6 a 5.11, incluindo 60 FPS com 400 moléculas e com o mapa Denso.
 - [x] Ícones do PWA em PNG (192, 512 e maskable) e `apple-touch-icon` para a tela inicial do iPhone, com a logo nova em pixel, favicon e artes de loja ([logo.md](logo.md)).
@@ -431,7 +431,7 @@ Fechar o que já existe antes de somar conteúdo: validar no celular, dar som ao
 
 **Critério de saída:** uma run de 15 minutos no celular roda a 60 FPS, toda ação frequente tem som, e nenhuma tela além de Conquistas mostra "EM BREVE".
 
-## Fase 5.14: Famílias e chefes (proposta)
+## Fase 5.14: Famílias e chefes
 
 Cada família de molécula ganha o comportamento de [personagens.md](personagens.md#tipos-de-molécula-ofensora), e cada local do corpo ganha um chefe. Hoje todas as moléculas só perseguem o agente e o único chefe é a Partícula de LDL.
 
@@ -444,7 +444,7 @@ Cada família de molécula ganha o comportamento de [personagens.md](personagens
 
 **Critério de saída:** dá para reconhecer a família de uma molécula pelo jeito que ela anda, e duas runs em locais diferentes terminam com chefes diferentes.
 
-## Fase 5.15: Elenco completo (proposta)
+## Fase 5.15: Elenco completo
 
 Os seis agentes de [personagens.md](personagens.md#agentes-da-run) que aparecem como "EM BREVE" na escolha do agente.
 
@@ -457,7 +457,7 @@ Os seis agentes de [personagens.md](personagens.md#agentes-da-run) que aparecem 
 
 **Critério de saída:** para cada doença existe um agente que o jogador escolhe de propósito, e os nove agentes aparecem nas runs dos amigos.
 
-## Fase 5.16: Conquistas (proposta)
+## Fase 5.16: Conquistas
 
 A seção [Depois: conquistas](#depois-conquistas) vira fase. Precisa da resposta: as conquistas substituem parte do desbloqueio por ATP, ou só somam?
 
@@ -490,7 +490,7 @@ Deixar o jogo com a cara do canvas de identidade visual e pronto para outras pes
 
 ## Depois: conquistas
 
-Proposta como [fase 5.16](#fase-516-conquistas-proposta) pela [decisão 0034](decisoes/0034-fases-para-fechar-lacunas.md). Ideia aprovada para elaborar no futuro: a aba Conquistas ganha metas ("Decompor 1.000 triglicerídeos", "Nível 50 com a Lipase") que dão ATP ou liberam conteúdo, como os desbloqueios do Vampire Survivors ([lacunas-vs.md](lacunas-vs.md#conquistas)). Falta decidir se substituem parte do desbloqueio por ATP ou só somam.
+Proposta como [fase 5.16](#fase-516-conquistas) pela [decisão 0034](decisoes/0034-fases-para-fechar-lacunas.md). Ideia aprovada para elaborar no futuro: a aba Conquistas ganha metas ("Decompor 1.000 triglicerídeos", "Nível 50 com a Lipase") que dão ATP ou liberam conteúdo, como os desbloqueios do Vampire Survivors ([lacunas-vs.md](lacunas-vs.md#conquistas)). Falta decidir se substituem parte do desbloqueio por ATP ou só somam.
 
 ## Fase 7: Lojas e plataformas
 
