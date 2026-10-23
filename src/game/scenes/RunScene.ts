@@ -19,7 +19,7 @@ import { difficultyAt, enemyHpAt, waveFactorAt } from '../../core/run/progressio
 import { stepRun } from '../../core/run/step';
 import { KeyboardMove } from '../input/keyboardMove';
 import { PALETTE, PALETTE_CSS } from '../render/palette';
-import { pixelBand, pixelDisc, pixelOctagonAt, pixelRing, pixelSector } from '../render/fxArt';
+import { pixelBand, pixelDisc, pixelRing, pixelSector } from '../render/fxArt';
 import { worldScale } from '../render/pixelScale';
 import {
   AGENT_TEXTURES,
@@ -695,19 +695,13 @@ export class RunScene extends Phaser.Scene {
     for (const z of this.run.zones) {
       const emulsion = z.kind === 'emulsion';
       const a = Math.min(1, z.life * 2);
-      const w = z.radius * 2;
-      const h = z.radius * 1.6;
+      // Redonda, do tamanho da área de dano; disco em linhas que não se sobrepõem, para o
+      // alfa não escurecer um quadrado no meio.
       g.fillStyle(emulsion ? PALETTE.cream : PALETTE.chlorine, 0.5 * a);
-      pixelOctagonAt(g, z.x, z.y, w, h, px);
-      // Filete escuro por dentro, como a poça da prancheta.
+      pixelDisc(g, z.x, z.y, z.radius, px);
+      // Filete escuro na borda, como a poça da prancheta.
       g.fillStyle(emulsion ? PALETTE.creamShade : PALETTE.chlorineDark, 0.55 * a);
-      const iw = w * 0.7;
-      const ih = h * 0.6;
-      const t = Math.max(px, 1);
-      g.fillRect(z.x - iw / 2, z.y - ih / 2, iw, t)
-        .fillRect(z.x - iw / 2, z.y + ih / 2 - t, iw, t)
-        .fillRect(z.x - iw / 2, z.y - ih / 2, t, ih)
-        .fillRect(z.x + iw / 2 - t, z.y - ih / 2, t, ih);
+      pixelRing(g, z.x, z.y, z.radius, 1, px);
     }
     for (const p of this.run.pulses) {
       const a = 1 - p.radius / p.maxRadius;

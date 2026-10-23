@@ -49,26 +49,6 @@ export function pixelRing(
   });
 }
 
-/** Octógono em degraus centrado em (cx, cy), com largura e altura próprias (poça). */
-export function pixelOctagonAt(
-  p: Painter,
-  cx: number,
-  cy: number,
-  w: number,
-  h: number,
-  px: number,
-): void {
-  const x = snap(cx - w / 2, px);
-  const y = snap(cy - h / 2, px);
-  const sw = snap(w, px);
-  const sh = snap(h, px);
-  const sx = snap(sw * 0.14, px);
-  const sy = snap(sh * 0.16, px);
-  p.fillRect(x + sx, y, sw - sx * 2, sh);
-  p.fillRect(x + sx / 2, y + sy / 2, sw - sx, sh - sy);
-  p.fillRect(x, y + sy, sw, sh - sy * 2);
-}
-
 /** Linha grossa em quadrados de pixel de arte (feixe). */
 export function pixelBand(
   p: Painter,

@@ -4,6 +4,9 @@ O que mudou em cada versão do Farmaco Battle. O jogo mostra este arquivo em Op�
 
 ## Em desenvolvimento
 
+### Correções
+- A Poça de Solvente e a Emulsão da Lipase aparecem redondas, do tamanho da área de dano (antes pareciam um quadrado verde).
+
 ## v0.16.1 · 23/10/2026
 
 ### Novidades
