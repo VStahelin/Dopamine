@@ -4,6 +4,8 @@ O que mudou em cada versão do Dopamina Blaster. O jogo mostra este arquivo em O
 
 ## Em desenvolvimento
 
+## v0.12.0 · 23/10/2026
+
 ### Novidades
 - Mapas gerados: cada run tem o próprio mapa, num de cinco lugares do corpo (Corrente sanguínea, Fígado, Intestino, Pulmão e Cérebro), com chão, obstáculos, destrutíveis e decoração próprios.
 - Obstáculos bloqueiam você e as moléculas; destrutíveis quebram com golpes e podem soltar ATP, gema ou vesícula.
