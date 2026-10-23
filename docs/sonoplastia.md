@@ -62,7 +62,7 @@ O jogo não mistura camadas da mesma faixa: troca de faixa com crossfade, o que 
 
 ## Efeitos sonoros
 
-A lista completa está em [efeitos-sonoros.md](efeitos-sonoros.md): 131 efeitos em 15 categorias (agente, especiais, armas, evoluções, moléculas, chefes, coleta, ampolas, level up, sinapses, mapa, run, campo longo e interface), cada um com id, quando toca, duração, variações, prioridade e um prompt pronto para o app, além das regras de mixagem.
+A lista está em [efeitos-sonoros.md](efeitos-sonoros.md): 48 efeitos (os 13 do agente já feitos, 35 a gerar), cada um com id, quando toca, onde mais é reaproveitado, duração, prioridade e um prompt pronto para o app, além das regras de mixagem. Os arquivos brutos vão para [audio/efeitos/](../audio/efeitos/README.md).
 
 Em resumo: os efeitos seguem o mesmo tema, chip na frente e um golpe de metal (power chord abafado, prato, caixa) só nos eventos grandes. Os frequentes são curtos, variam de altura a cada vez e têm limite de cópias ao mesmo tempo; gemas, saltos da Reação em Cadeia e quebras em cascata sobem de tom em sequência, como um combo. A interface é chip puro, sem metal.
 
