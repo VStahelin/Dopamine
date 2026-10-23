@@ -401,7 +401,7 @@ export class HubScene extends Phaser.Scene {
     const y = TOP_H + 10;
     const out: Obj[] = [
       this.iconButton(g, colX + 12, y, 44, 'menu', PALETTE.textLight, () =>
-        this.scene.start(SCENES.options),
+        this.scene.start(SCENES.options, { fromRun: false }),
       ),
       this.iconButton(g, colX + colW - 56, y, 44, 'trophy', PALETTE.gold, () =>
         this.scene.start(SCENES.records),

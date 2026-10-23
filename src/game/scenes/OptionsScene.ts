@@ -73,8 +73,14 @@ export class OptionsScene extends Phaser.Scene {
     super(SCENES.options);
   }
 
+  /**
+   * Quem abre passa `fromRun` sempre: sem dados, o Phaser repete os da última vez, e as Opções
+   * abertas pelo hub depois de uma run achavam que vinham da pausa.
+   */
   create(data?: { fromRun?: boolean }): void {
-    this.fromRun = data?.fromRun ?? false;
+    // Só vem da pausa se a pausa ainda existir (ela dorme logo depois de abrir as Opções).
+    const pauseAlive = this.scene.isActive(SCENES.pause) || this.scene.isSleeping(SCENES.pause);
+    this.fromRun = (data?.fromRun ?? false) && pauseAlive;
     this.tab = 'sound';
     this.note = '';
     if (!this.fromRun) music.setMain('hub');

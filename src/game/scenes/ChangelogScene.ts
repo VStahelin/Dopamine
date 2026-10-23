@@ -43,7 +43,7 @@ export class ChangelogScene extends Phaser.Scene {
   }
 
   private back(): void {
-    this.scene.start(SCENES.options);
+    this.scene.start(SCENES.options, { fromRun: false });
   }
 
   private build(): void {

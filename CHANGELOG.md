@@ -4,6 +4,9 @@ O que mudou em cada versão do Dopamina Blaster. O jogo mostra este arquivo em O
 
 ## Em desenvolvimento
 
+### Correções
+- As Opções abertas pelo menu depois de uma run apareciam como se fossem da pausa, e VOLTAR travava o jogo.
+
 ## v0.14.0 · 23/10/2026
 
 ### Novidades
