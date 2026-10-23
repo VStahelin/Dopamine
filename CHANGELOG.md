@@ -4,6 +4,8 @@ O que mudou em cada versão do Dopamina Blaster. O jogo mostra este arquivo em O
 
 ## Em desenvolvimento
 
+## v0.12.1 · 23/10/2026
+
 ### Novidades
 - Modo debug nas Opções: mostra os hitboxes (agente, moléculas, disparos, obstáculos, raio de coleta) e um painel com os números da run.
 
