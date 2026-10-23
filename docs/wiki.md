@@ -2,7 +2,7 @@
 
 Textos da wiki que o jogador lê dentro do jogo, no Compêndio. Cada seção `##` é uma página e cada `###` é um verbete. Escreva para quem joga: frases curtas, sem termos de programação, explicando o que acontece e como usar a seu favor.
 
-> **Para quem mexe no jogo:** os números aqui vêm dos JSON de `src/config/` (indicados em cada página). Mudou uma mecânica ou um número que aparece no texto, atualize este arquivo no mesmo commit. A wiki dentro do jogo vai ler estes textos (fase 6).
+> **Para quem mexe no jogo:** os números aqui vêm dos JSON de `src/config/` (indicados em cada página). Mudou uma mecânica ou um número que aparece no texto, atualize este arquivo no mesmo commit. O jogo lê este arquivo direto (Compêndio › Como jogar · Wiki): `##` vira página, `###` verbete, listas e tabelas viram linhas, e a frase "Números de ..." do começo de cada página não aparece para o jogador.
 
 ---
 

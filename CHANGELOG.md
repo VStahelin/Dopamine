@@ -9,6 +9,7 @@ O que mudou em cada versão do Farmaco Battle. O jogo mostra este arquivo em Op�
 - Cápsula de agente: às vezes, depois dos 3 minutos, aparece longe de você uma cápsula com um agente que você ainda não tem. Siga a seta dourada e toque nela para libertá-lo.
 - Os casos já curados aparecem no palco do caso, com quantas runs levaram e o melhor tempo.
 - Primeira run guiada: quem nunca jogou vê cartões curtos que ensinam a mover, pegar gemas e soltar o especial, sem pausar o jogo. Dá para pular.
+- Wiki no Compêndio: "Como jogar · Wiki", no topo do Compêndio, abre 13 páginas com tudo o que o jogo faz, de agentes e armas ao organismo e ao glossário.
 
 ## v0.18.0 · 23/10/2026
 

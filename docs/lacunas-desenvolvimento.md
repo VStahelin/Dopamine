@@ -144,7 +144,7 @@ Hoje são 15 moléculas e um chefe. Todas se comportam igual: perseguem o agente
 | **Estatísticas acumuladas** no save (decompostas por molécula, minutos por agente, chefes vencidos): pré-requisito das conquistas | Sem doc | Alto | P | `src/core/save/saveData.ts:13-18` só guarda 4 recordes globais |
 | ~~Cápsulas que liberam agentes~~ (feito na 5.16) e Descobertas no mapa | Doc | Médio | M | [lacunas-vs.md](lacunas-vs.md#cápsulas-e-descobertas) |
 | Recordes por agente e por local | Doc / Sem doc | Baixo | P | Por local na [fase 5.12](roadmap.md#fase-512-locais-do-corpo-e-sinergias); por agente sem doc |
-| **Wiki dentro do jogo** (páginas de [wiki.md](wiki.md) no Compêndio) | Doc | Médio | M | [roadmap fase 6](roadmap.md#fase-6-arte-polimento-e-lançamento) |
+| ~~**Wiki dentro do jogo** (páginas de [wiki.md](wiki.md) no Compêndio)~~ (feito na fase 6) | Doc | Médio | M | [roadmap fase 6](roadmap.md#fase-6-arte-polimento-e-lançamento) |
 | Compêndio sem seções de chefes, estruturas e locais (tem moléculas, itens, suplementos, agregados e formações) | Sem doc | Baixo | P | `src/game/ui/catalogViews.ts` |
 
 ## Áudio

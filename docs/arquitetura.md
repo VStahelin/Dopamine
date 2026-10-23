@@ -59,6 +59,7 @@ As telas de interface usam [uiLayout.ts](../src/game/ui/uiLayout.ts): zoom intei
 - [items.ts](../src/core/run/items.ts): itens no mapa (fase 5.5): vesículas, os itens que elas soltam, efeitos com tempo (Gelo seco, Bico de Bunsen, Febre de ATP) e a cápsula do chefe. Números em `drops.json`; a cápsula aberta para a run até a tela da cápsula fechar.
 - [stats.ts](../src/core/run/stats.ts) e [progression.ts](../src/core/run/progression.ts): atributos com modificadores, arma por nível, XP e dificuldade.
 - [mapStep.ts](../src/core/run/mapStep.ts) e [src/core/map/](../src/core/map/): mapa gerado (fase 5.7). `chunk.ts` gera um bloco de 16×16 tiles pela semente e pela posição (chão, obstáculos, destrutíveis, decoração e ninho), `world.ts` guarda os blocos em volta do agente, os destrutíveis quebrados e a grade dos sólidos, e `noise.ts` tem o hash e o ruído. Números em `map.json`, arte em `src/assets/sprites/map.json`.
+- [tutorial.ts](../src/core/run/tutorial.ts): passos da primeira run guiada (fase 6), com os textos em `tutorial.json`.
 - [rules.ts](../src/core/run/rules.ts): as regras chegam como parâmetro (`RunRules`), com os JSON como padrão.
 - O `core` registra acontecimentos (`events`) que a cena lê para efeitos, sem o `core` saber de desenho.
 
