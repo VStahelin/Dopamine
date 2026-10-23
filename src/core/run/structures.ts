@@ -120,6 +120,7 @@ export function updateStructures(state: RunState, dt: number, distance: number, 
           : Math.max(0, st.progress - (dt / fill) * s.synapse.drainFactor);
         if (st.progress >= 1) {
           state.synapseOffer = synapseOffer(state, ltp);
+          state.tally.synapses++;
           done.push(st.id);
         }
         break;

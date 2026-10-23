@@ -347,7 +347,19 @@ export interface RunTally {
   damageByWeapon: Partial<Record<WeaponId, number>>;
   crits: number;
   interactionsLost: number;
+  /** Decompostas de cada molécula, para as estatísticas do save (fase 5.13). */
+  killsByKind: Partial<Record<EnemyKind, number>>;
+  bosses: number;
+  aggregates: number;
+  ampoules: number;
+  synapses: number;
 }
+
+/** O que a run soma às estatísticas acumuladas do save (base das conquistas). */
+export type RunStatsTally = Pick<
+  RunTally,
+  'killsByKind' | 'bosses' | 'aggregates' | 'ampoules' | 'synapses'
+>;
 
 export interface RunResult {
   timeSeconds: number;
@@ -361,6 +373,8 @@ export interface RunResult {
   seenAggregates: EnemyKind[];
   seenFormations: string[];
   capsulesOpened: number;
+  agentId: AgentId;
+  tally: RunStatsTally;
   /** Nome do mapa: ambiente, densidade e semente (CORRENTE SANGUÍNEA · DENSO · #A3F9). */
   mapName: string;
 }
@@ -445,7 +459,16 @@ export function createRun(
     over: false,
     nextEnemyId: 1,
     spawnBudget: 0,
-    tally: { damageByWeapon: {}, crits: 0, interactionsLost: 0 },
+    tally: {
+      damageByWeapon: {},
+      crits: 0,
+      interactionsLost: 0,
+      killsByKind: {},
+      bosses: 0,
+      aggregates: 0,
+      ampoules: 0,
+      synapses: 0,
+    },
     events: [],
   };
 }
@@ -507,6 +530,14 @@ export function runResult(state: RunState): RunResult {
     seenFormations: [...state.formations.seen],
     mapName: mapName(state.rules.map, state.map.params),
     capsulesOpened: state.capsulesOpened,
+    agentId: state.agentId,
+    tally: {
+      killsByKind: { ...state.tally.killsByKind },
+      bosses: state.tally.bosses,
+      aggregates: state.tally.aggregates,
+      ampoules: state.tally.ampoules,
+      synapses: state.tally.synapses,
+    },
   };
 }
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { heal, hitEnemy } from './combat';
-import { addEnemy, createRun, drainEvents, newWeapon } from './state';
+import { addEnemy, createRun, drainEvents, newWeapon, runResult } from './state';
 import { stepRun } from './step';
 import { DT, rulesWithoutSpawn, STILL } from './testRules';
 
@@ -72,5 +72,20 @@ describe('cargas do especial', () => {
     stepRun(run, STILL, DT);
     expect(run.special.charges).toBe(1);
     expect(run.special.cooldown).toBeGreaterThan(0);
+  });
+});
+
+describe('estatísticas da run para o save', () => {
+  it('conta decompostas por molécula, chefes e agregados', () => {
+    const run = createRun(1, rulesWithoutSpawn());
+    const a = addEnemy(run, 'glucose', 50, 0);
+    hitEnemy(run, a, 1e6, {});
+    const boss = addEnemy(run, 'ldl', 80, 0);
+    hitEnemy(run, boss, 1e9, {});
+    expect(run.tally.killsByKind.glucose).toBe(1);
+    expect(run.tally.killsByKind.ldl).toBe(1);
+    expect(run.tally.bosses).toBe(1);
+    expect(runResult(run).tally.bosses).toBe(1);
+    expect(runResult(run).agentId).toBe('dopamine');
   });
 });

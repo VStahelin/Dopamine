@@ -113,6 +113,7 @@ export function openAmpoule(state: RunState, min: SupplementRarity): void {
   if (!id) return;
   applySupplement(state, id);
   state.ampoule = { id };
+  state.tally.ampoules++;
 }
 
 export function closeAmpoule(state: RunState): void {

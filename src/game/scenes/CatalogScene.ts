@@ -78,7 +78,7 @@ export class CatalogScene extends Phaser.Scene {
               setSave(this, { ...getSave(this), selectedAgent: id });
               this.back();
             },
-            false,
+            undefined,
             {
               progress: save.meta,
               atp: save.atp,

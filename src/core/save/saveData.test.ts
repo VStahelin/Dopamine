@@ -3,6 +3,8 @@ import { defaultSave, migrateSave, recordRun, SAVE_VERSION } from './saveData';
 import { AUDIO } from '../../config';
 
 const defaults = { showFps: true, showDamageNumbers: true, sound: AUDIO.sound };
+const tally = { killsByKind: {}, bosses: 0, aggregates: 0, ampoules: 0, synapses: 0 };
+const noTally = { agentId: 'dopamine' as const, tally };
 
 describe('migrateSave', () => {
   it('devolve o padrão para save vazio ou inválido', () => {
@@ -38,6 +40,7 @@ describe('recordRun', () => {
       seenFormations: [],
       mapName: '',
       capsulesOpened: 0,
+      ...noTally,
     }).save;
     const { save, newRecords } = recordRun(start, {
       timeSeconds: 80,
@@ -51,10 +54,59 @@ describe('recordRun', () => {
       seenFormations: [],
       mapName: '',
       capsulesOpened: 0,
+      ...noTally,
     });
     expect(newRecords).toEqual(['level']);
     expect(save.records).toEqual({ bestTimeSeconds: 100, bestLevel: 7, mostKills: 50, runs: 2 });
     expect(save.seen.sort()).toEqual(['glucose', 'ldl']);
     expect(save.atp).toBe(42);
+  });
+});
+
+describe('estatísticas acumuladas', () => {
+  const run = {
+    timeSeconds: 300,
+    level: 10,
+    kills: 7,
+    atp: 20,
+    seen: [],
+    seenItems: [],
+    seenSupplements: [],
+    seenAggregates: [],
+    seenFormations: [],
+    mapName: '',
+    capsulesOpened: 0,
+    agentId: 'lipase' as const,
+    tally: {
+      killsByKind: { glucose: 5, ldl: 2 },
+      bosses: 2,
+      aggregates: 1,
+      ampoules: 3,
+      synapses: 1,
+    },
+  };
+
+  it('somam as runs por molécula, por agente e no total', () => {
+    const once = recordRun(defaultSave(defaults), run).save;
+    const twice = recordRun(once, run).save;
+    expect(twice.stats.kills).toEqual({ glucose: 10, ldl: 4 });
+    expect(twice.stats.agentSeconds).toEqual({ lipase: 600 });
+    expect(twice.stats.agentRuns).toEqual({ lipase: 2 });
+    expect(twice.stats).toMatchObject({
+      bosses: 4,
+      aggregates: 2,
+      ampoules: 6,
+      synapses: 2,
+      runAtp: 40,
+    });
+  });
+
+  it('sobrevivem ao save e descartam valores inválidos', () => {
+    const saved = recordRun(defaultSave(defaults), run).save;
+    const loaded = migrateSave(JSON.parse(JSON.stringify(saved)), defaults);
+    expect(loaded.stats).toEqual(saved.stats);
+    const bad = migrateSave({ stats: { kills: { glucose: 'x', ldl: 3 }, bosses: -1 } }, defaults);
+    expect(bad.stats.kills).toEqual({ ldl: 3 });
+    expect(bad.stats.bosses).toBe(0);
   });
 });

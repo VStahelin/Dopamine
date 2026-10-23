@@ -152,7 +152,7 @@ export class HubScene extends Phaser.Scene {
     this.build();
   }
 
-  /** Conteúdo das abas: Agentes e Arsenal já têm conteúdo; Laboratório e Organismo são placeholder. */
+  /** Conteúdo das abas; a aba Caso é o próprio hub. */
   private tabContent(w: number, top: number): Phaser.GameObjects.GameObject[] {
     switch (this.tab) {
       case 'agents':
@@ -166,7 +166,7 @@ export class HubScene extends Phaser.Scene {
             setSave(this, { ...getSave(this), selectedAgent: id });
             this.build();
           },
-          true,
+          getSave(this).idle.agents,
           this.shop(),
         );
       case 'arsenal':

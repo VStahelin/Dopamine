@@ -117,6 +117,10 @@ export function damageEnemy(
   if (e.hp > 0) return;
 
   state.kills++;
+  const t = state.tally;
+  t.killsByKind[e.kind] = (t.killsByKind[e.kind] ?? 0) + 1;
+  if (e.boss) t.bosses++;
+  if (e.aggregate) t.aggregates++;
   state.events.push({ type: 'kill', x: e.x, y: e.y, kind: e.kind });
   dropXp(state, e);
   dropCoin(state, e);

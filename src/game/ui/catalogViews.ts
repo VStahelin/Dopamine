@@ -2,6 +2,7 @@ import * as Phaser from 'phaser';
 import {
   AGENTS,
   DROPS,
+  IDLE,
   ENEMIES,
   ITEM_IDS,
   PASSIVES,
@@ -34,7 +35,7 @@ import { addButton } from './button';
 import { addIconSlot, passiveSlot, slotSize, supplementSlot, weaponIcon } from './iconSlot';
 import { nativeGain, receptorGain } from './upgradeText';
 import { drawCreamSlot, drawInkBox, drawLock, drawWoodFrame } from './icons';
-import { IDLE_AGENTS, RUN_AGENTS } from './menuContent';
+import { RUN_AGENTS, type ExampleItem } from './menuContent';
 import { bodyText, impactText, labelText, withShadow } from './theme';
 
 type Obj = Phaser.GameObjects.GameObject;
@@ -121,7 +122,7 @@ function column(x: number, w: number, max = 420) {
 
 /**
  * Agentes jogáveis com a ficha (ação, especial, efetividade); tocar escolhe. Embaixo, os agentes
- * que chegam depois, com cadeado.
+ * que chegam depois, com cadeado, e os do campo longo (liberados lá), quando `idleUnlocked` vem.
  */
 export function renderAgents(
   scene: Phaser.Scene,
@@ -130,7 +131,7 @@ export function renderAgents(
   w: number,
   selected: string,
   onSelect: (id: AgentId) => void,
-  showIdle = true,
+  idleUnlocked?: string[],
   shop?: Shop,
 ): Obj[] {
   const { left, width } = column(x, w);
@@ -220,9 +221,18 @@ export function renderAgents(
 
   // Agentes que ainda não existem no jogo.
   const playable = new Set(Object.values(AGENTS).map((a) => a.name));
+  const idleItems: ExampleItem[] = Object.entries(IDLE.agents).map(([id, a]) => {
+    const unlocked = idleUnlocked?.includes(id) ?? false;
+    const cost = IDLE.unlockCost[id];
+    return {
+      name: a.name,
+      unlocked,
+      note: unlocked ? 'LIBERADO' : cost ? `${cost} ATP` : undefined,
+    };
+  });
   const locked = [
     { label: 'EM BREVE', items: RUN_AGENTS.filter((i) => !playable.has(i.name)) },
-    ...(showIdle ? [{ label: 'AGENTES DO IDLE · FASE 4', items: IDLE_AGENTS }] : []),
+    ...(idleUnlocked ? [{ label: 'AGENTES DO IDLE · NO CAMPO LONGO', items: idleItems }] : []),
   ];
   for (const group of locked) {
     out.push(header(scene, left, cy + 4, group.label));
@@ -231,8 +241,9 @@ export function renderAgents(
     drawInkBox(g, left, cy, width, h);
     group.items.forEach((item, i) => {
       const ry = cy + 6 + i * 18;
-      drawLock(g, left + 12, ry + 3);
-      out.push(scene.add.text(left + 24, ry, item.name, bodyText(11, PALETTE_CSS.textMuted)));
+      if (!item.unlocked) drawLock(g, left + 12, ry + 3);
+      const color = item.unlocked ? PALETTE_CSS.text : PALETTE_CSS.textMuted;
+      out.push(scene.add.text(left + 24, ry, item.name, bodyText(11, color)));
       if (item.note) {
         out.push(
           scene.add

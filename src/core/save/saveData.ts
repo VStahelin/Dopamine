@@ -17,6 +17,37 @@ export interface Records {
   runs: number;
 }
 
+/**
+ * Estatísticas acumuladas de todas as runs (fase 5.13): a base das conquistas da fase 5.16.
+ * Nunca zeram, nem na ALTA.
+ */
+export interface LifetimeStats {
+  /** Decompostas por molécula. */
+  kills: Record<string, number>;
+  /** Segundos de run e runs jogadas por agente. */
+  agentSeconds: Record<string, number>;
+  agentRuns: Record<string, number>;
+  bosses: number;
+  aggregates: number;
+  ampoules: number;
+  synapses: number;
+  /** ATP ganho nas runs (não conta o idle). */
+  runAtp: number;
+}
+
+export function defaultStats(): LifetimeStats {
+  return {
+    kills: {},
+    agentSeconds: {},
+    agentRuns: {},
+    bosses: 0,
+    aggregates: 0,
+    ampoules: 0,
+    synapses: 0,
+    runAtp: 0,
+  };
+}
+
 export interface Options {
   showFps: boolean;
   /** Números de dano no campo (docs/ui-cronico.md). */
@@ -30,6 +61,7 @@ export interface Options {
 export interface SaveData {
   version: number;
   records: Records;
+  stats: LifetimeStats;
   options: Options;
   /** Agente escolhido para a próxima run. */
   selectedAgent: string;
@@ -61,6 +93,7 @@ export function defaultSave(options: Options): SaveData {
   return {
     version: SAVE_VERSION,
     records: { bestTimeSeconds: 0, bestLevel: 0, mostKills: 0, runs: 0 },
+    stats: defaultStats(),
     options: { ...options },
     selectedAgent: 'dopamine',
     seen: [],
@@ -86,6 +119,7 @@ export function migrateSave(raw: unknown, defaults: Options): SaveData {
   if (typeof raw !== 'object' || raw === null) return base;
   const data = raw as Partial<{
     records: Partial<Records>;
+    stats: unknown;
     options: Partial<Options>;
     selectedAgent: unknown;
     seen: unknown;
@@ -109,6 +143,7 @@ export function migrateSave(raw: unknown, defaults: Options): SaveData {
       mostKills: num(r.mostKills, 0),
       runs: num(r.runs, 0),
     },
+    stats: migrateStats(data.stats),
     options: {
       showFps: typeof o.showFps === 'boolean' ? o.showFps : base.options.showFps,
       showDamageNumbers:
@@ -158,8 +193,52 @@ export function recordRun(
       seenFormations: [...new Set([...save.seenFormations, ...result.seenFormations])],
       capsulesOpened: save.capsulesOpened + result.capsulesOpened,
       atp: save.atp + result.atp,
+      stats: addRunStats(save.stats, result),
     },
     newRecords,
+  };
+}
+
+/** Soma uma run às estatísticas acumuladas. */
+export function addRunStats(stats: LifetimeStats, result: RunResult): LifetimeStats {
+  const kills = { ...stats.kills };
+  for (const [kind, n] of Object.entries(result.tally.killsByKind))
+    kills[kind] = (kills[kind] ?? 0) + (n ?? 0);
+  const a = result.agentId;
+  return {
+    kills,
+    agentSeconds: { ...stats.agentSeconds, [a]: (stats.agentSeconds[a] ?? 0) + result.timeSeconds },
+    agentRuns: { ...stats.agentRuns, [a]: (stats.agentRuns[a] ?? 0) + 1 },
+    bosses: stats.bosses + result.tally.bosses,
+    aggregates: stats.aggregates + result.tally.aggregates,
+    ampoules: stats.ampoules + result.tally.ampoules,
+    synapses: stats.synapses + result.tally.synapses,
+    runAtp: stats.runAtp + result.atp,
+  };
+}
+
+/** Mapa de contagens lido de um save; o que não for número fica de fora. */
+function counts(raw: unknown): Record<string, number> {
+  const out: Record<string, number> = {};
+  if (typeof raw !== 'object' || raw === null) return out;
+  for (const [k, v] of Object.entries(raw)) {
+    if (typeof v === 'number' && Number.isFinite(v) && v > 0) out[k] = v;
+  }
+  return out;
+}
+
+function migrateStats(raw: unknown): LifetimeStats {
+  if (typeof raw !== 'object' || raw === null) return defaultStats();
+  const m = raw as Partial<Record<keyof LifetimeStats, unknown>>;
+  return {
+    kills: counts(m.kills),
+    agentSeconds: counts(m.agentSeconds),
+    agentRuns: counts(m.agentRuns),
+    bosses: num(m.bosses, 0),
+    aggregates: num(m.aggregates, 0),
+    ampoules: num(m.ampoules, 0),
+    synapses: num(m.synapses, 0),
+    runAtp: num(m.runAtp, 0),
   };
 }
 
