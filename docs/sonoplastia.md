@@ -33,7 +33,7 @@ Energia vai de 1 (calmo) a 5 (máximo). Loop = a faixa recomeça sem emenda aud�
 | `run2` | Run, do minuto 10 ao 20 | loop | 2:00 | 160 | 4 | Mesma ideia mais pesada: bumbo duplo, guitarras dobradas |
 | `run3` | Run, depois do minuto 20 | loop | 2:00 | 180 | 5 | Thrash: blast beats, arpejos em velocidade máxima, sensação de sobrecarga |
 | `crisis` | Pico de onda (crise da doença) | loop | 0:30 | 170 | 5 | Sirene de chip, riff em escala menor harmônica, entra por cima da run |
-| `boss` | Chefe vivo (Partícula de LDL) | loop | 1:30 | 165 | 5 | Órgão em FM, riff lento e esmagador que vira rápido no meio; o motivo em tom grave |
+| `boss` | Chefe vivo (Partícula de LDL), **opcional, fica para depois** | loop | 1:30 | 165 | 5 | Órgão em FM, riff lento e esmagador que vira rápido no meio; o motivo em tom grave |
 | `gameover` | Fim de run | jingle + loop | 0:06 + 1:00 | 90 | 1 | Jingle curto descendente e depois um loop calmo, só chip e baixo, para a tela de resultado |
 | `alta` | ALTA do organismo (troca de indivíduo) | jingle | 0:10 a 0:15 | 150 | 4 | Fanfarra de vitória em chip com acorde final de guitarra |
 
@@ -54,7 +54,7 @@ O jogo não mistura camadas da mesma faixa: troca de faixa com crossfade, o que 
 
 - **Troca na run:** `run1` → `run2` aos 10 min e `run2` → `run3` aos 20 min, com crossfade de 2 s.
 - **Pico de onda:** `crisisIn` toca, a run cai para 30% do volume e `crisis` entra por cima enquanto o pico durar; no respiro, `crisis` sai em 1,5 s.
-- **Chefe:** `bossIn` e depois `boss` no lugar da run, enquanto o chefe estiver vivo. Se um pico acontecer junto, o chefe ganha.
+- **Chefe:** só `bossIn` toca por cima, e a música da run continua. O chefe aparece a cada 5 minutos, então uma faixa própria trocando a música toda hora seria demais. A faixa `boss` fica para depois, se o chefe precisar de mais peso.
 - **Pausa, level up, cápsula:** a música continua, a 50% do volume e com um filtro que corta os agudos (soa "abafada"). O jingle toca por cima, em volume cheio.
 - **Fim de run:** a música da run para na hora, toca `gameover` e depois o loop de resultado.
 - **Fundo:** com o app em segundo plano (o campo longo continua rodando), o som para; volta onde estava ao retornar.
@@ -140,7 +140,7 @@ chiptune metal, 16-bit Sega Genesis FM synth, NES pulse lead, distorted drop D g
 chiptune metal, 16-bit Sega Genesis FM synth, NES pulse lead, distorted drop D guitars, instrumental, no vocals, no choir, alarm siren chip lead, 170 bpm, E harmonic minor, urgent frantic riff, pounding drums, short 30 second loop, no intro, no fade out
 ```
 
-### 8. Chefe (`boss`)
+### 8. Chefe (`boss`, opcional, para depois)
 
 ```text
 chiptune metal, 16-bit Sega Genesis FM synth, NES pulse lead, distorted drop D guitars, instrumental, no vocals, no choir, boss battle, 165 bpm, E phrygian, FM church organ, crushing slow riff then fast breakdown, dark dramatic, double kick drums, seamless loop, no intro
@@ -198,7 +198,7 @@ Nas **Opções**, entram dois controles: Música e Efeitos, de 0 a 100%, guardad
 - [ ] Qual app de geração de música, e o plano permite uso comercial?
 - [ ] Mi menor ou Ré menor como tom do jogo inteiro?
 - [ ] Três faixas de run por tempo (como proposto), ou uma por ambiente do mapa?
-- [ ] O chefe ganha música própria a cada chefe, ou só a Partícula de LDL por enquanto?
+- [x] O chefe ganha música própria? → por enquanto não: só o jingle `bossIn` por cima da run (Vitor, 23/10/2026).
 - [ ] Os efeitos saem de jsfxr ou ChipTone, ou o app de música também faz efeitos bons o bastante?
 - [ ] O campo longo toca `idle` também no Hub (já que ele roda o tempo todo), ou cada tela com a sua?
 - [ ] Música e efeitos ligados por padrão no celular, ou o jogo começa mudo até o primeiro toque em Opções?
