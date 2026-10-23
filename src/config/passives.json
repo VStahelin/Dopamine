@@ -267,5 +267,29 @@
     "maxLevel": 3,
     "kind": "reagent",
     "freeSlot": true
+  },
+  "argon": {
+    "name": "Argônio",
+    "stat": "projectileSpeed",
+    "perLevel": 0.05,
+    "maxLevel": 3,
+    "kind": "reagent",
+    "freeSlot": true
+  },
+  "ether": {
+    "name": "Éter",
+    "stat": "cooldown",
+    "perLevel": -0.03,
+    "maxLevel": 3,
+    "kind": "reagent",
+    "freeSlot": true
+  },
+  "uranium": {
+    "name": "Urânio",
+    "stat": "critChance",
+    "perLevel": 0.03,
+    "maxLevel": 3,
+    "kind": "reagent",
+    "freeSlot": true
   }
 }

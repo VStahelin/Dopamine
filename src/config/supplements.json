@@ -305,6 +305,33 @@
         "kind": "reagent",
         "passive": "coenzyme"
       }
+    },
+    "argon": {
+      "name": "Argônio",
+      "rarity": "rare",
+      "description": "Reagente: com a Nuvem de Elétrons no máximo, libera a evolução.",
+      "effect": {
+        "kind": "reagent",
+        "passive": "argon"
+      }
+    },
+    "ether": {
+      "name": "Éter",
+      "rarity": "rare",
+      "description": "Reagente: com a Poça de Solvente no máximo, libera a evolução.",
+      "effect": {
+        "kind": "reagent",
+        "passive": "ether"
+      }
+    },
+    "uranium": {
+      "name": "Urânio",
+      "rarity": "rare",
+      "description": "Reagente: com a Reação em Cadeia no máximo, libera a evolução.",
+      "effect": {
+        "kind": "reagent",
+        "passive": "uranium"
+      }
     }
   }
 }

@@ -164,16 +164,16 @@ Dispara radicais OH• no inimigo mais próximo. **Evolui com Peróxido em Reaç
 Cone curto e forte na direção do inimigo mais próximo. **Evolui com Cloro em Água Régia**, um cone largo que corrói até inimigos fortes (a água régia dissolve até ouro).
 
 ### Nuvem de Elétrons
-Elétrons giram em volta do agente e acertam o que passa.
+Elétrons giram em volta do agente e acertam o que passa. **Evolui com Argônio em Plasma**, seis cargas violetas que giram rápido e batem a cada 0,3 s (o argônio vira plasma numa descarga elétrica).
 
 ### Catalisador
 Campo em volta do agente: dano baixo e contínuo, e quem está dentro recebe mais dano. **Evolui com Coenzima em Enzima**, uma aura que cresce a cada molécula decomposta.
 
 ### Poça de Solvente
-Arremessa um frasco que vira uma poça: dano por segundo e lentidão. **Desbloqueio:** 200 ATP.
+Arremessa um frasco que vira uma poça: dano por segundo e lentidão. **Evolui com Éter em Solvente universal**, duas poças grandes que duram mais e prendem quem entra. **Desbloqueio:** 200 ATP.
 
 ### Reação em Cadeia
-O disparo acerta um inimigo e salta para o próximo. **Desbloqueio:** 500 ATP.
+O disparo acerta um inimigo e salta para o próximo. **Evolui com Urânio em Fissão**, dois núcleos que se partem de molécula em molécula por até 8 saltos. **Desbloqueio:** 500 ATP.
 
 ### Raio UV
 Feixe em linha reta que atravessa todos os inimigos no caminho. **Evolui com Ozônio em Laser**, um feixe quase contínuo que varre a tela. **Desbloqueio:** 800 ATP.
@@ -223,7 +223,7 @@ Quando todas as armas e todos os receptores estão no máximo, o level up passa 
 Começam em zero: vêm do Laboratório e do setor Executiva do organismo.
 
 ### Reagentes
-Peróxido, Cloro, Ozônio e Coenzima liberam a evolução. Eles vêm das ampolas (veja Suplementos e ampolas).
+Peróxido, Cloro, Ozônio, Coenzima, Argônio, Éter e Urânio liberam a evolução. Eles vêm das ampolas (veja Suplementos e ampolas).
 
 ### Os outros atributos
 Penetração, Reação em cadeia, Força da catálise, Repulsão, Especificidade, Esquiva, Absorção, Tolerância, Segunda dose e Reflexo não saem mais no level up. Vêm dos suplementos, do Laboratório e da Mutação.
@@ -401,7 +401,7 @@ Creatina (dano), Vitamina (Sorte), Ferro (interações), Quimiotaxia (sinapses),
 - **Criopreservação:** ao perder interações, congela tudo na tela por 2 segundos (uma vez a cada 30).
 
 ### Reagentes
-Peróxido, Cloro, Ozônio e Coenzima saem das ampolas, não mais do level up. Com a arma certa no nível máximo, o reagente dela sai muito mais vezes, e a cápsula de prata faz a evolução.
+Peróxido, Cloro, Ozônio, Coenzima, Argônio, Éter e Urânio saem das ampolas, não mais do level up. Com a arma certa no nível máximo, o reagente dela sai muito mais vezes, e a cápsula de prata faz a evolução.
 
 ---
 

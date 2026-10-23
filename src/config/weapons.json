@@ -128,7 +128,11 @@
         "count": 1
       }
     ],
-    "hitIntervalSeconds": 0.6
+    "hitIntervalSeconds": 0.6,
+    "evolution": {
+      "reagent": "argon",
+      "into": "plasma"
+    }
   },
   "catalyst": {
     "name": "Catalisador",
@@ -216,7 +220,11 @@
       }
     ],
     "hitIntervalSeconds": 0.5,
-    "slow": 0.4
+    "slow": 0.4,
+    "evolution": {
+      "reagent": "ether",
+      "into": "universalSolvent"
+    }
   },
   "chainReaction": {
     "name": "Reação em Cadeia",
@@ -257,7 +265,11 @@
         "damage": 5
       }
     ],
-    "spreadDegrees": 20
+    "spreadDegrees": 20,
+    "evolution": {
+      "reagent": "uranium",
+      "into": "fission"
+    }
   },
   "uvRay": {
     "name": "Raio UV",
@@ -752,5 +764,63 @@
     "vulnerability": 0.4,
     "growPerKillPx": 0.2,
     "growMaxPx": 60
+  },
+  "plasma": {
+    "name": "Plasma",
+    "kind": "orbit",
+    "source": "evolution",
+    "description": "Seis cargas de plasma que giram rápido e batem com frequência.",
+    "base": {
+      "damage": 14,
+      "cooldownSeconds": 0,
+      "count": 6,
+      "areaPx": 9,
+      "rangePx": 50,
+      "speedPxPerSecond": 200,
+      "pierce": 0,
+      "ricochet": 0,
+      "durationSeconds": 0
+    },
+    "levels": [],
+    "hitIntervalSeconds": 0.3
+  },
+  "universalSolvent": {
+    "name": "Solvente universal",
+    "kind": "zone",
+    "source": "evolution",
+    "description": "Duas poças grandes e duradouras que dissolvem e prendem o que entra.",
+    "base": {
+      "damage": 9,
+      "cooldownSeconds": 2,
+      "count": 2,
+      "areaPx": 44,
+      "rangePx": 180,
+      "speedPxPerSecond": 0,
+      "pierce": 0,
+      "ricochet": 0,
+      "durationSeconds": 5
+    },
+    "levels": [],
+    "hitIntervalSeconds": 0.4,
+    "slow": 0.6
+  },
+  "fission": {
+    "name": "Fissão",
+    "kind": "projectile",
+    "source": "evolution",
+    "description": "Dois núcleos que se partem de molécula em molécula, por até 8 saltos.",
+    "base": {
+      "damage": 20,
+      "cooldownSeconds": 1,
+      "count": 2,
+      "areaPx": 5,
+      "rangePx": 200,
+      "speedPxPerSecond": 300,
+      "pierce": 0,
+      "ricochet": 8,
+      "durationSeconds": 0
+    },
+    "levels": [],
+    "spreadDegrees": 30
   }
 }

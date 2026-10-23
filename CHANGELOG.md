@@ -13,6 +13,7 @@ O que mudou em cada versão do Farmaco Battle. O jogo mostra este arquivo em Op�
 - Um chefe por local: LDL na Corrente sanguínea, NAPQI no Fígado, Amilopectina no Intestino, Benzopireno no Pulmão e CRH no Cérebro. Aos 15 minutos chega a Placa de ateroma.
 - Efeitos de inimigo na fila de efeitos: Lentidão dentro da poça e Adrenalina ao decompor Adrenalina ou Noradrenalina.
 - Seis agentes novos, cada um com ação, especial e local de sinergia: Vitamina C (escudo que bloqueia um golpe), Cafeína (anda mais rápido e dispara em todas as direções), Venvanse (pró-fármaco que começa fraco, feixe forte e Hiperfoco que desacelera tudo), Serotonina (aura calmante e Calmaria que desliga as auras do estresse), Ocitocina (aliados que orbitam) e Álcool desidrogenase (termina a cascata das toxinas e limpa as poças).
+- Três evoluções novas: Nuvem de Elétrons + Argônio vira Plasma, Poça de Solvente + Éter vira Solvente universal e Reação em Cadeia + Urânio vira Fissão. Os reagentes saem das ampolas.
 
 ### Correções
 - Com sinergia no local, o perfil do agente no nível 1 já vale desde o começo da run (antes só entrava no primeiro level up).

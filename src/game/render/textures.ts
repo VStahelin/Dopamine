@@ -46,6 +46,7 @@ export const PROJECTILE_TEXTURES: Partial<Record<WeaponId, string>> = {
   radical: WORLD_NAMES.shot,
   fenton: WORLD_NAMES.shot,
   chainReaction: moleculeName('superoxide'),
+  fission: moleculeName('superoxide'),
   ascorbicShot: WORLD_NAMES.shotVitamin,
   caffeineBurst: WORLD_NAMES.shotCaffeine,
 };

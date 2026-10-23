@@ -166,6 +166,31 @@ describe('level up com armas', () => {
     expect(run.weapons.map((w) => w.id)).toContain('fenton');
     expect(run.weapons.map((w) => w.id)).not.toContain('radical');
   });
+
+  it('as evoluções da fase 5.15: Plasma, Solvente universal e Fissão', () => {
+    const pairs = [
+      ['electronCloud', 'argon', 'plasma'],
+      ['solventPool', 'ether', 'universalSolvent'],
+      ['chainReaction', 'uranium', 'fission'],
+    ] as const;
+    for (const [weapon, reagent, into] of pairs) {
+      const run = createRun(3, quietRules());
+      const w = newWeapon(weapon);
+      w.level = weaponMaxLevel(DEFAULT_RULES.weapons[weapon]);
+      run.weapons.push(w);
+      run.passives[reagent] = { level: 1, bonus: 0 };
+      run.pendingLevelUps = 1;
+      const evo = levelUpOffer(run).find((c) => c.kind === 'evolve');
+      expect(evo).toEqual({ kind: 'evolve', id: weapon, into });
+      applyChoice(run, evo!);
+      expect(run.weapons.map((x) => x.id)).toContain(into);
+      for (let i = 0; i < 120; i++) {
+        addEnemy(run, 'glucose', run.agent.x + 40 + i, run.agent.y);
+        stepRun(run, STILL, DT);
+      }
+      expect(run.kills).toBeGreaterThan(0);
+    }
+  });
 });
 
 describe('especiais', () => {

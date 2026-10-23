@@ -48,7 +48,10 @@ Ideias de evolução, no modelo do VS (arma no máximo + item passivo):
 - **Radical Livre + Peróxido → Reação de Fenton:** uma rajada de radicais. Na reação de Fenton real, o peróxido com ferro gera radicais OH em massa.
 - **Jato Ácido + Cloro → Água Régia:** cone maior que corrói até inimigos de elite. A água régia real dissolve até ouro.
 - **Raio UV + Ozônio → Laser:** feixe contínuo que varre a tela.
-- **Catalisador + \[passivo a definir\] → Enzima:** aura que cresce a cada molécula decomposta, como a Soul Eater do VS.
+- **Catalisador + Coenzima → Enzima:** aura que cresce a cada molécula decomposta, como a Soul Eater do VS.
+- **Nuvem de Elétrons + Argônio → Plasma:** cargas rápidas que giram em volta do agente; o argônio vira plasma numa descarga.
+- **Poça de Solvente + Éter → Solvente universal:** poças grandes e duradouras que prendem quem entra.
+- **Reação em Cadeia + Urânio → Fissão:** núcleos que se partem de molécula em molécula, a limpeza de tela.
 
 Outros arquétipos que podem virar armas depois: explosão (Combustão), controle (Nitrogênio Líquido, que congela) e limpeza de tela (Fissão).
 

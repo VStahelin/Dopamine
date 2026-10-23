@@ -34,7 +34,7 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | 5.12 | Locais do corpo e sinergias | Escolher onde agir muda a run e cura o organismo mais rápido? | 5, 5.7 | em andamento |
 | 5.13 | Validação e ganhos rápidos | O que já existe funciona no celular e não mostra placeholder? | 2.6 a 5.11 | em andamento |
 | 5.14 | Famílias e chefes | Cada família de molécula pede um jeito diferente de jogar? | 5.12, 5.13 | em andamento (falta validar) |
-| 5.15 | Elenco completo | Cada doença tem um agente feito para ela? | 5.14 | em andamento |
+| 5.15 | Elenco completo | Cada doença tem um agente feito para ela? | 5.14 | em andamento (falta validar) |
 | 5.16 | Conquistas | Jogar libera conteúdo, e não só juntar ATP? | 5.15 | não iniciada |
 | 6 | Arte, polimento e lançamento | Dá para mandar o link para os amigos? | 1 a 5.16 | não iniciada |
 | 7 | Lojas e plataformas | O mesmo jogo roda e é publicado em Android, iOS, Steam e Microsoft Store? | 6 | não iniciada |
@@ -453,8 +453,9 @@ Os seis agentes de [personagens.md](personagens.md#agentes-da-run) que aparecem 
 - [x] Primeira leva (a pedido do Vitor, os que não dependiam de mecânica de molécula nova): Vitamina C, Cafeína e Venvanse.
 - [x] Segunda leva: Serotonina (Calmaria contra as auras), Ocitocina (aliados) e Álcool desidrogenase (fim da cascata e Desintoxicação contra as poças).
 - [x] Ação, especial, ícones (prancheta "Elenco completo") e sinergia de local de cada um. Os sons dos especiais ficaram para a fase 6 ([efeitos-sonoros.md](efeitos-sonoros.md#para-fazer-depois)).
-- [ ] Evolução para Nuvem de Elétrons, Poça de Solvente e Reação em Cadeia.
-- [ ] Wiki, Compêndio, `npm run sim` e ajuste da matriz de efetividade.
+- [x] Evolução para Nuvem de Elétrons (Argônio → Plasma), Poça de Solvente (Éter → Solvente universal) e Reação em Cadeia (Urânio → Fissão).
+- [x] Wiki, Compêndio e matriz de efetividade.
+- [ ] Validar jogando e no `npm run sim`: cada agente novo tem uma run em que vale escolhê-lo.
 
 **Critério de saída:** para cada doença existe um agente que o jogador escolhe de propósito, e os nove agentes aparecem nas runs dos amigos.
 
