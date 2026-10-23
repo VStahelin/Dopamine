@@ -111,6 +111,9 @@ export const WORLD_NAMES = {
   electron: 'electron',
   shot: 'shot',
   coin: 'coin',
+  shotVitamin: 'shotVitamin',
+  shotCaffeine: 'shotCaffeine',
+  ally: 'ally',
 } as const;
 
 function grid(ref: IconRef): readonly string[] | undefined {
@@ -186,7 +189,14 @@ export function spriteFiles(): SpriteFile[] {
         paint: (p) => paintGrid(p, rows, 2 * detail),
       });
     }
-    for (const orb of ['electron', 'shot', 'coin'] as const) {
+    for (const orb of [
+      'electron',
+      'shot',
+      'coin',
+      'shotVitamin',
+      'shotCaffeine',
+      'ally',
+    ] as const) {
       out.push({
         path: `${dir}/${orb}.png`,
         key: textureKey(WORLD_NAMES[orb], detail),

@@ -1,3 +1,4 @@
+import type { MoleculeType, SpecialKind } from '../../config';
 import { hitEnemy } from './combat';
 import type { RunState } from './state';
 import { NO_MODS, type WeaponMods } from './weaponParams';
@@ -23,15 +24,48 @@ function specialCooldown(state: RunState): number {
   return state.rules.agents[state.agentId].special.cooldownSeconds * specialStat(state, 'cooldown');
 }
 
-/** Ajustes do especial na ação do agente: Pico de recompensa e a queda depois dele. */
+/**
+ * Ajustes na ação do agente: Pico de recompensa e a queda depois dele, Vínculo (mais aliados) e
+ * o pró-fármaco do Venvanse, que começa fraco e chega ao dano cheio em alguns minutos.
+ */
 export function actionMods(state: RunState): WeaponMods {
-  const def = state.rules.agents[state.agentId].special;
-  if (def.kind !== 'frenzy') return NO_MODS;
+  const agent = state.rules.agents[state.agentId];
+  const def = agent.special;
+  const mods = { ...NO_MODS };
+  if (agent.prodrug) mods.damage = prodrugMultiplier(state);
   if (state.special.active > 0) {
-    return { cooldown: def.cooldownMultiplier ?? 1, area: def.areaMultiplier ?? 1 };
+    if (def.kind === 'frenzy') {
+      mods.cooldown = def.cooldownMultiplier ?? 1;
+      mods.area = def.areaMultiplier ?? 1;
+    }
+    if (def.kind === 'bond') mods.count = def.countMultiplier ?? 1;
+  } else if (state.special.crash > 0 && def.kind === 'frenzy') {
+    mods.cooldown = def.crashCooldownMultiplier ?? 1;
   }
-  if (state.special.crash > 0) return { cooldown: def.crashCooldownMultiplier ?? 1, area: 1 };
-  return NO_MODS;
+  return mods;
+}
+
+/** Fração do dano da ação do pró-fármaco (Venvanse) no tempo atual da run; 1 sem pró-fármaco. */
+export function prodrugMultiplier(state: RunState): number {
+  const p = state.rules.agents[state.agentId].prodrug;
+  if (!p) return 1;
+  const t = Math.min(1, state.time / (p.fullMinutes * 60));
+  return p.startMultiplier + (1 - p.startMultiplier) * t;
+}
+
+/** Especial com efeito agora (Hiperfoco, Calmaria...), para os sistemas que dependem dele. */
+export function specialActive(state: RunState, kind: SpecialKind): boolean {
+  return state.special.active > 0 && state.rules.agents[state.agentId].special.kind === kind;
+}
+
+/**
+ * Efeitos do especial nos inimigos a cada passo, depois de `applyFields` (que zera a lentidão):
+ * o Hiperfoco desacelera todos.
+ */
+export function applySpecialFields(state: RunState): void {
+  if (!specialActive(state, 'hyperfocus')) return;
+  const slow = 1 - (state.rules.agents[state.agentId].special.slow ?? 0);
+  for (const e of state.enemies) e.slow *= slow;
 }
 
 /** Atualiza tempos e, se o jogador pediu e está pronto, dispara o especial do agente. */
@@ -50,6 +84,7 @@ export function updateSpecial(state: RunState, pressed: boolean, dt: number): vo
   }
   if (sp.active > 0) {
     sp.active = Math.max(0, sp.active - dt);
+    if (sp.active === 0) sp.blocks = 0;
     if (sp.active === 0 && def.crashSeconds) sp.crash = def.crashSeconds;
   } else {
     sp.crash = Math.max(0, sp.crash - dt);
@@ -95,6 +130,58 @@ export function updateSpecial(state: RunState, pressed: boolean, dt: number): vo
         hitEnemy(state, e, (def.damage ?? 0) * power, { continuous: true });
       }
       break;
+    case 'shield':
+      sp.active = duration;
+      sp.blocks = Math.max(1, Math.round((def.blocks ?? 1) * power));
+      break;
+    case 'alert':
+      alertBurst(state, (def.damage ?? 0) * power, def.count ?? 12);
+      // Devolve parte da recarga: o próximo uso vem antes.
+      sp.cooldown *= 1 - (def.refund ?? 0);
+      break;
+    case 'hyperfocus':
+    case 'bond':
+      sp.active = duration;
+      break;
+    case 'calm':
+      sp.active = duration;
+      hitType(state, def.type, (def.damage ?? 0) * power);
+      break;
+    case 'detox':
+      state.hazards = [];
+      hitType(state, def.type, (def.damage ?? 0) * power);
+      break;
   }
   state.events.push({ type: 'special', kind: def.kind });
+}
+
+/** Fere todas as moléculas do tipo (Calmaria, Desintoxicação). */
+function hitType(state: RunState, type: MoleculeType | undefined, damage: number): void {
+  for (const e of state.enemies) {
+    if (e.hp > 0 && (!type || e.type === type)) hitEnemy(state, e, damage, { continuous: true });
+  }
+}
+
+/** Alerta (Cafeína): um anel de disparos em volta do agente, com o desenho da ação. */
+function alertBurst(state: RunState, damage: number, count: number): void {
+  const { agent } = state;
+  const action = state.weapons[0];
+  const speed = 300;
+  const range = 180;
+  for (let i = 0; i < count; i++) {
+    const angle = (i / count) * Math.PI * 2;
+    state.projectiles.push({
+      weapon: action?.id ?? 'radical',
+      x: agent.x,
+      y: agent.y,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      life: range / speed,
+      damage,
+      pierceLeft: 1,
+      radius: 4,
+      hits: [],
+      ricochetLeft: 0,
+    });
+  }
 }

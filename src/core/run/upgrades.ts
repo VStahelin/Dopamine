@@ -1,7 +1,7 @@
 import type { PassiveDef, PassiveId, RunStatKey, WeaponId } from '../../config';
 import type { BaseSource } from './rules';
 import { addBonus, newWeapon, type BonusSource, type RunState } from './state';
-import { computeStats, statDef, type RunStats } from './stats';
+import { agentBonus, computeStats, statDef, type RunStats } from './stats';
 import { weaponMaxLevel } from './weaponParams';
 
 export type UpgradeChoice =
@@ -251,11 +251,10 @@ function statsWith(
   passives: RunState['passives'],
   extra: RunState['bonus'],
 ): RunStats {
-  const native = state.rules.agents[state.agentId].nativeReceptor;
   const bonus = { ...extra };
-  if (native.stat) {
-    bonus[native.stat] = (bonus[native.stat] ?? 0) + native.perLevel * nativeLevel(state);
-  }
+  const own = agentBonus(state.rules, state.agentId, nativeLevel(state));
+  for (const [k, v] of Object.entries(own) as [RunStatKey, number][])
+    bonus[k] = (bonus[k] ?? 0) + v;
   return computeStats(state.rules, passives, bonus);
 }
 
@@ -400,8 +399,7 @@ export function statSources(
   push('lab', base.lab?.[key]);
   push('organism', base.organism?.[key]);
   push('local', base.local?.[key]);
-  const native = state.rules.agents[state.agentId].nativeReceptor;
-  if (native.stat === key) push('native', native.perLevel * nativeLevel(state));
+  push('native', agentBonus(state.rules, state.agentId, nativeLevel(state))[key]);
   let receptors = 0;
   for (const [id, p] of Object.entries(state.passives) as [PassiveId, { bonus: number }][]) {
     const def = state.rules.passives[id];

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { DEFAULT_RULES } from './rules';
 import { computeStats } from './stats';
-import { weaponParams } from './weaponParams';
+import { NO_MODS, weaponParams } from './weaponParams';
 
 describe('computeStats', () => {
   it('começa nos valores base da aba Parâmetros', () => {
@@ -49,7 +49,7 @@ describe('weaponParams', () => {
   it('o especial ajusta a recarga e a área da ação', () => {
     const stats = computeStats(DEFAULT_RULES, {});
     const pulse = DEFAULT_RULES.weapons.dopaminePulse;
-    const p = weaponParams(pulse, 1, stats, { cooldown: 0.5, area: 2 });
+    const p = weaponParams(pulse, 1, stats, { ...NO_MODS, cooldown: 0.5, area: 2 });
     expect(p.cooldownSeconds).toBeCloseTo(pulse.base.cooldownSeconds * 0.5);
     expect(p.areaPx).toBeCloseTo(pulse.base.areaPx * 2);
   });

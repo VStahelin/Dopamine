@@ -2,7 +2,7 @@
 
 23 de outubro de 2026 · Vitor
 
-A lista enxuta de efeitos sonoros (SFX) do jogo: **47 efeitos**, dos quais os 9 do agente já foram feitos pelo Vitor e **38 faltam gerar**; os especiais dos seis agentes que ainda não estão no jogo vêm depois, junto com eles. Cada um tem o id do arquivo, quando toca, duração, prioridade e um prompt pronto para colar num app de geração de efeitos. O tema, a música e a entrega dos arquivos estão em [sonoplastia.md](sonoplastia.md). Os arquivos brutos vão para [audio/efeitos/](../audio/efeitos/README.md). Os 9 do agente já tocam no jogo (veja [Como entra no jogo](#como-entra-no-jogo)); os que faltam estão em [Para fazer depois](#para-fazer-depois).
+A lista enxuta de efeitos sonoros (SFX) do jogo: **47 efeitos**, dos quais os 9 do agente já foram feitos pelo Vitor e **38 faltam gerar**; os especiais dos seis agentes da fase 5.15 ainda não têm som. Cada um tem o id do arquivo, quando toca, duração, prioridade e um prompt pronto para colar num app de geração de efeitos. O tema, a música e a entrega dos arquivos estão em [sonoplastia.md](sonoplastia.md). Os arquivos brutos vão para [audio/efeitos/](../audio/efeitos/README.md). Os 9 do agente já tocam no jogo (veja [Como entra no jogo](#como-entra-no-jogo)); os que faltam estão em [Para fazer depois](#para-fazer-depois).
 
 ## Resumo
 
@@ -185,7 +185,7 @@ Ficou para depois por decisão do Vitor em 23/10/2026: os efeitos sonoros saíra
 **P2 (10, momentos grandes):**
 
 - [ ] `freeze`, `explosion`, `whoosh`, `revealLegendary`, `banish`, `alarm`, `uiUnlock`
-- [ ] Especiais dos agentes novos, junto com cada um na fase 5.15: `specialVitaminC`, `specialVenvanse`, `specialSerotonin`, `specialOxytocin`, `specialAlcoholDehydrogenase`, `specialCaffeine` (não contam nos 38)
+- [ ] Especiais dos agentes novos (os agentes entraram na fase 5.15 sem som de especial): `specialVitaminC`, `specialVenvanse`, `specialSerotonin`, `specialOxytocin`, `specialAlcoholDehydrogenase`, `specialCaffeine` (não contam nos 38)
 
 **Música:**
 

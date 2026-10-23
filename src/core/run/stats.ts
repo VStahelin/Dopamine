@@ -1,4 +1,10 @@
-import { RUN_STAT_KEYS, type PassiveId, type RunStatKey, type Stat } from '../../config';
+import {
+  RUN_STAT_KEYS,
+  type AgentId,
+  type PassiveId,
+  type RunStatKey,
+  type Stat,
+} from '../../config';
 import type { RunRules } from './rules';
 
 /** Atributos do agente durante a run (aba Parâmetros), já com os modificadores aplicados. */
@@ -27,6 +33,22 @@ export function statDef(rules: RunRules, key: RunStatKey): Stat {
 function capped(value: number, def: Stat): number {
   if (def.runCap === null) return value;
   return def.runCap < def.base ? Math.max(value, def.runCap) : Math.min(value, def.runCap);
+}
+
+/**
+ * O que o agente soma aos atributos por ser quem é: o perfil próprio (a Cafeína anda mais rápido)
+ * e o receptor nativo no nível `nativeLevel`. Aparece como PERFIL na pausa.
+ */
+export function agentBonus(
+  rules: RunRules,
+  agentId: AgentId,
+  nativeLevel: number,
+): Partial<Record<RunStatKey, number>> {
+  const agent = rules.agents[agentId];
+  const out: Partial<Record<RunStatKey, number>> = { ...agent.profile };
+  const native = agent.nativeReceptor;
+  if (native.stat) out[native.stat] = (out[native.stat] ?? 0) + native.perLevel * nativeLevel;
+  return out;
 }
 
 /** Atributos com os receptores e, em `bonus`, o que a run somou fora deles (Vitamina, Mutação). */

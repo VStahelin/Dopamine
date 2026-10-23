@@ -136,11 +136,13 @@ export function damageEnemy(
     const def = state.rules.weapons[w.id];
     if (def.growPerKillPx) w.growth = Math.min(def.growMaxPx ?? 0, w.growth + def.growPerKillPx);
   }
-  spawnFragments(state, e);
+  // Álcool desidrogenase: termina a cascata, sem fragmentos nem poça.
+  const finished = state.rules.agents[state.agentId].finishesCascade === e.type;
+  if (!finished) spawnFragments(state, e);
   onKill(state, e);
   // Comportamentos ao decompor (fase 5.14): poça do Acetaldeído e Adrenalina no agente.
   for (const b of state.rules.enemies[e.kind].behaviors ?? []) {
-    if (b.kind === 'poolOnDeath') {
+    if (b.kind === 'poolOnDeath' && !finished) {
       state.hazards.push({
         x: e.x,
         y: e.y,

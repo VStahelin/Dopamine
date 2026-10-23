@@ -21,6 +21,7 @@ import {
 } from '../../core/organism/local';
 import { applyHealth, earn, rulesWithOrganism } from '../../core/organism/organism';
 import { DEFAULT_RULES } from '../../core/run/rules';
+import { specialActive } from '../../core/run/specials';
 import { auraRadius, orbitPositions } from '../../core/run/weapons';
 import { recordRun } from '../../core/save/saveData';
 import { createRun, drainEvents, runResult, type RunState } from '../../core/run/state';
@@ -89,6 +90,15 @@ const AURA_COLORS: Record<string, number> = {
   catalyst: 0xa335ee,
   insulinField: PALETTE.gold,
   enzyme: PALETTE.chlorine,
+  serotoninAura: PALETTE.uv,
+};
+
+/** Cores dos feixes e golpes por arma (miolo, borda); o resto usa as do Raio UV e da Lipase. */
+const BEAM_COLORS: Partial<Record<string, { main: number; dark: number }>> = {
+  focusBeam: { main: PALETTE.cyan, dark: PALETTE.progressShade },
+};
+const STRIKE_COLORS: Partial<Record<string, { main: number; dark: number }>> = {
+  adhStrike: { main: PALETTE.toxicPool, dark: PALETTE.toxicPoolDark },
 };
 
 /**
@@ -467,11 +477,14 @@ export class RunScene extends Phaser.Scene {
         .setAlpha(0.35 + 0.35 * pulse);
     });
     this.drawFields();
+    // Elétrons da Nuvem e os aliados da Ocitocina.
     const electrons = this.run.weapons.flatMap((w, i) =>
-      this.run.rules.weapons[w.id].kind === 'orbit' ? orbitPositions(this.run, w, i) : [],
+      this.run.rules.weapons[w.id].kind === 'orbit'
+        ? orbitPositions(this.run, w, i).map((o) => ({ ...o, ally: w.id === 'allyOrbit' }))
+        : [],
     );
     sync(this, this.electronSprites, electrons, 8, (s, e) => {
-      s.setTexture(this.tex(TEXTURES.electron))
+      s.setTexture(this.tex(e.ally ? TEXTURES.ally : TEXTURES.electron))
         .setScale(1 / this.detail)
         .setPosition(e.x, e.y);
     });
@@ -531,6 +544,10 @@ export class RunScene extends Phaser.Scene {
       }
       if (ev.type === 'dodge') {
         this.showFloater(a.x, a.y - 12, 'ESQUIVA', 'info');
+        sfx.play('dodge');
+      }
+      if (ev.type === 'shielded') {
+        this.showFloater(a.x, a.y - 12, 'BLOQUEADO', 'info');
         sfx.play('dodge');
       }
       if (ev.type === 'specialReady') sfx.play('specialReady');
@@ -752,6 +769,8 @@ export class RunScene extends Phaser.Scene {
       pixelRing(g, h.x, h.y, h.radius, 2, px);
     }
     const { enemies } = this.run.rules;
+    // Calmaria (Serotonina): as auras do estresse ficam desligadas.
+    if (specialActive(this.run, 'calm')) return;
     for (const e of this.run.enemies) {
       if (e.hp <= 0) continue;
       const aura = enemies[e.kind].behaviors?.find((b) => b.kind === 'aura');
@@ -903,6 +922,18 @@ export class RunScene extends Phaser.Scene {
       g.fillStyle(PALETTE.water, 0.8);
       pixelRing(g, agent.x, agent.y, 14, 1, px);
     }
+    // Hiperfoco (Venvanse): o mundo fica violeta enquanto os inimigos andam devagar.
+    if (specialActive(this.run, 'hyperfocus')) {
+      const v = this.cameras.main.worldView;
+      g.fillStyle(PALETTE.uv, 0.12).fillRect(v.x, v.y, v.width, v.height);
+    }
+    // Escudo antioxidante (Vitamina C): anel laranja duplo em volta do agente.
+    if (specialActive(this.run, 'shield')) {
+      g.fillStyle(PALETTE.stress, 0.9);
+      pixelRing(g, agent.x, agent.y, 18, 2, px);
+      g.fillStyle(PALETTE.goldHi, 0.6);
+      pixelRing(g, agent.x, agent.y, 15, 1, px);
+    }
     if (effects.fever > 0) {
       // Borda de 8 pixels CSS: ouro escuro por fora e claro por dentro, para aparecer na areia.
       const v = this.cameras.main.worldView;
@@ -942,26 +973,35 @@ export class RunScene extends Phaser.Scene {
     });
   }
 
-  private addBeamFx(ev: { x: number; y: number; angle: number; length: number; width: number }) {
+  private addBeamFx(ev: {
+    x: number;
+    y: number;
+    angle: number;
+    length: number;
+    width: number;
+    weapon: string;
+  }) {
     const x2 = ev.x + Math.cos(ev.angle) * ev.length;
     const y2 = ev.y + Math.sin(ev.angle) * ev.length;
     const px = 1 / this.detail;
+    const c = BEAM_COLORS[ev.weapon] ?? { main: PALETTE.uv, dark: PALETTE.uvDark };
     this.addFx(0.15, (g, a) => {
-      g.fillStyle(PALETTE.uvDark, 0.8 * a);
+      g.fillStyle(c.dark, 0.8 * a);
       pixelBand(g, ev.x, ev.y, x2, y2, ev.width + 2, px);
-      g.fillStyle(PALETTE.uv, 0.9 * a);
+      g.fillStyle(c.main, 0.9 * a);
       pixelBand(g, ev.x, ev.y, x2, y2, ev.width, px);
       g.fillStyle(0xffffff, a);
       pixelBand(g, ev.x, ev.y, x2, y2, Math.max(1, ev.width / 3), px);
     });
   }
 
-  private addStrikeFx(ev: { x: number; y: number; radius: number }) {
+  private addStrikeFx(ev: { x: number; y: number; radius: number; weapon?: string }) {
     const px = 1 / this.detail;
+    const c = STRIKE_COLORS[ev.weapon ?? ''] ?? { main: PALETTE.woodHi, dark: PALETTE.wood };
     this.addFx(0.18, (g, a) => {
-      g.fillStyle(PALETTE.wood, 0.35 * a);
+      g.fillStyle(c.dark, 0.35 * a);
       pixelDisc(g, ev.x, ev.y, ev.radius * 0.6, px);
-      g.fillStyle(PALETTE.woodHi, a);
+      g.fillStyle(c.main, a);
       pixelRing(g, ev.x, ev.y, ev.radius * (1.2 - a * 0.4), 1.5, px);
     });
   }

@@ -1,7 +1,49 @@
 {
-  "ground": { "fill": "#D8B47A", "line": "#CDA56C", "lineWidth": 3 },
-  "gem": { "size": 11, "border": "#0A5A7A", "fill": "#39D3F0", "light": "#7EF0FF" },
-  "electron": { "size": 12, "border": "#2D7FD6", "fill": "#FFFFFF", "light": "#FFFFFF" },
-  "shot": { "size": 10, "border": "#0A5A7A", "fill": "#7EF0FF", "light": "#FFFFFF" },
-  "coin": { "size": 11, "border": "#8A5A0C", "fill": "#F2B233", "light": "#FFE08A" }
+  "ground": {
+    "fill": "#D8B47A",
+    "line": "#CDA56C",
+    "lineWidth": 3
+  },
+  "gem": {
+    "size": 11,
+    "border": "#0A5A7A",
+    "fill": "#39D3F0",
+    "light": "#7EF0FF"
+  },
+  "electron": {
+    "size": 12,
+    "border": "#2D7FD6",
+    "fill": "#FFFFFF",
+    "light": "#FFFFFF"
+  },
+  "shot": {
+    "size": 10,
+    "border": "#0A5A7A",
+    "fill": "#7EF0FF",
+    "light": "#FFFFFF"
+  },
+  "coin": {
+    "size": 11,
+    "border": "#8A5A0C",
+    "fill": "#F2B233",
+    "light": "#FFE08A"
+  },
+  "shotVitamin": {
+    "size": 10,
+    "border": "#B5541C",
+    "fill": "#FF9A1F",
+    "light": "#FFE08A"
+  },
+  "shotCaffeine": {
+    "size": 8,
+    "border": "#4E2C18",
+    "fill": "#7A4A2A",
+    "light": "#F2D9A8"
+  },
+  "ally": {
+    "size": 12,
+    "border": "#B03A70",
+    "fill": "#FF6FA8",
+    "light": "#FFFFFF"
+  }
 }

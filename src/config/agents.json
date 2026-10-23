@@ -16,7 +16,10 @@
       "crashSeconds": 3,
       "crashCooldownMultiplier": 1.6
     },
-    "synergy": { "env": "brain", "sector": "mental" },
+    "synergy": {
+      "env": "brain",
+      "sector": "mental"
+    },
     "crossesBloodBrainBarrier": true,
     "health": {
       "mental": 6,
@@ -56,7 +59,10 @@
       "type": "lipid",
       "vulnerability": 1
     },
-    "synergy": { "env": "intestine", "sector": "physical" },
+    "synergy": {
+      "env": "intestine",
+      "sector": "physical"
+    },
     "crossesBloodBrainBarrier": false,
     "health": {
       "physical": 10
@@ -94,7 +100,10 @@
       "damage": 40,
       "pullPx": 120
     },
-    "synergy": { "env": "liver", "sector": "physical" },
+    "synergy": {
+      "env": "liver",
+      "sector": "physical"
+    },
     "crossesBloodBrainBarrier": true,
     "health": {
       "physical": 8,
@@ -108,6 +117,242 @@
       "icon": "magnet",
       "stat": "magnet",
       "perLevel": 0.25
+    }
+  },
+  "vitaminC": {
+    "name": "Vitamina C",
+    "description": "Antioxidante. Forte contra radicais livres, média contra inflamação.",
+    "action": "ascorbicShot",
+    "special": {
+      "name": "Escudo antioxidante",
+      "shortName": "ESCUDO",
+      "kind": "shield",
+      "description": "Por alguns segundos, o próximo golpe que você levaria é bloqueado.",
+      "cooldownSeconds": 22,
+      "durationSeconds": 6,
+      "blocks": 1
+    },
+    "health": {
+      "physical": 8,
+      "executive": 2
+    },
+    "synergy": {
+      "env": "lung",
+      "sector": "physical"
+    },
+    "crossesBloodBrainBarrier": true,
+    "affinity": {
+      "lipid": "weak",
+      "sugar": "weak",
+      "radical": "strong",
+      "stress": "weak",
+      "toxin": "weak",
+      "inflammation": "neutral"
+    },
+    "nativeReceptor": {
+      "name": "Transportador SVCT",
+      "icon": "membrane",
+      "stat": "armor",
+      "perLevel": 1
+    }
+  },
+  "caffeine": {
+    "name": "Cafeína",
+    "description": "Estimulante leve. Anda bem mais rápido; média contra açúcares e radicais.",
+    "action": "caffeineBurst",
+    "special": {
+      "name": "Alerta",
+      "shortName": "ALERTA",
+      "kind": "alert",
+      "description": "Dispara em todas as direções e devolve metade da recarga.",
+      "cooldownSeconds": 18,
+      "durationSeconds": 0,
+      "count": 16,
+      "damage": 12,
+      "refund": 0.5
+    },
+    "health": {
+      "executive": 8
+    },
+    "collateral": {
+      "mental": -2,
+      "physical": -1
+    },
+    "synergy": {
+      "env": "lung",
+      "sector": "executive"
+    },
+    "crossesBloodBrainBarrier": true,
+    "affinity": {
+      "lipid": "weak",
+      "sugar": "neutral",
+      "radical": "neutral",
+      "stress": "weak",
+      "toxin": "weak",
+      "inflammation": "weak"
+    },
+    "profile": {
+      "moveSpeed": 0.3
+    },
+    "nativeReceptor": {
+      "name": "Receptor de adenosina",
+      "icon": "mobility",
+      "stat": "moveSpeed",
+      "perLevel": 0.05
+    }
+  },
+  "venvanse": {
+    "name": "Venvanse",
+    "description": "Estimulante de foco e pró-fármaco: começa fraco e fica forte. Bom contra chefes e alvos isolados.",
+    "action": "focusBeam",
+    "special": {
+      "name": "Hiperfoco",
+      "shortName": "FOCO",
+      "kind": "hyperfocus",
+      "description": "Desacelera o tempo para os inimigos por alguns segundos.",
+      "cooldownSeconds": 30,
+      "durationSeconds": 5,
+      "slow": 0.65
+    },
+    "health": {
+      "executive": 10
+    },
+    "collateral": {
+      "physical": -3,
+      "mental": -1
+    },
+    "synergy": {
+      "env": "blood",
+      "sector": "executive"
+    },
+    "crossesBloodBrainBarrier": true,
+    "affinity": {},
+    "prodrug": {
+      "startMultiplier": 0.4,
+      "fullMinutes": 3
+    },
+    "nativeReceptor": {
+      "name": "Transportador de dopamina",
+      "icon": "specificity",
+      "stat": "eliteDamage",
+      "perLevel": 0.1
+    }
+  },
+  "serotonin": {
+    "name": "Serotonina",
+    "description": "Neurotransmissor do bem-estar. Forte contra hormônios do estresse, média contra inflamação.",
+    "action": "serotoninAura",
+    "special": {
+      "name": "Calmaria",
+      "shortName": "CALMA",
+      "kind": "calm",
+      "description": "Desliga as auras do estresse por alguns segundos e fere as moléculas de estresse.",
+      "cooldownSeconds": 25,
+      "durationSeconds": 8,
+      "damage": 25,
+      "type": "stress"
+    },
+    "health": {
+      "mental": 8,
+      "social": 2
+    },
+    "collateral": {
+      "executive": -2
+    },
+    "synergy": {
+      "env": "intestine",
+      "sector": "mental"
+    },
+    "crossesBloodBrainBarrier": true,
+    "affinity": {
+      "lipid": "weak",
+      "sugar": "weak",
+      "radical": "weak",
+      "stress": "strong",
+      "toxin": "weak",
+      "inflammation": "neutral"
+    },
+    "nativeReceptor": {
+      "name": "Receptor 5-HT1A",
+      "icon": "diffusion",
+      "stat": "area",
+      "perLevel": 0.08
+    }
+  },
+  "oxytocin": {
+    "name": "Ocitocina",
+    "description": "Hormônio do vínculo. Cria moléculas aliadas; forte contra hormônios do estresse.",
+    "action": "allyOrbit",
+    "special": {
+      "name": "Vínculo",
+      "shortName": "VÍNCULO",
+      "kind": "bond",
+      "description": "Dobra os aliados por alguns segundos.",
+      "cooldownSeconds": 25,
+      "durationSeconds": 6,
+      "countMultiplier": 2
+    },
+    "health": {
+      "social": 8,
+      "mental": 2
+    },
+    "synergy": {
+      "env": "brain",
+      "sector": "social"
+    },
+    "crossesBloodBrainBarrier": true,
+    "affinity": {
+      "lipid": "weak",
+      "sugar": "weak",
+      "radical": "weak",
+      "stress": "strong",
+      "toxin": "weak",
+      "inflammation": "weak"
+    },
+    "nativeReceptor": {
+      "name": "Receptor de ocitocina",
+      "icon": "luck",
+      "stat": "luck",
+      "perLevel": 0.1
+    }
+  },
+  "alcoholDehydrogenase": {
+    "name": "Álcool desidrogenase",
+    "description": "Enzima que quebra o álcool. Forte contra toxinas e termina a cascata de uma vez.",
+    "action": "adhStrike",
+    "special": {
+      "name": "Desintoxicação",
+      "shortName": "DETOX",
+      "kind": "detox",
+      "description": "Limpa todas as poças tóxicas e fere todas as toxinas da tela.",
+      "cooldownSeconds": 22,
+      "durationSeconds": 0,
+      "damage": 40,
+      "type": "toxin"
+    },
+    "health": {
+      "social": 6,
+      "executive": 3
+    },
+    "synergy": {
+      "env": "liver",
+      "sector": "social"
+    },
+    "crossesBloodBrainBarrier": false,
+    "affinity": {
+      "lipid": "weak",
+      "sugar": "weak",
+      "radical": "weak",
+      "stress": "weak",
+      "toxin": "strong",
+      "inflammation": "weak"
+    },
+    "finishesCascade": "toxin",
+    "nativeReceptor": {
+      "name": "Sítio do zinco",
+      "icon": "reactivity",
+      "type": "toxin",
+      "perLevel": 0.1
     }
   }
 }

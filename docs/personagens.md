@@ -71,7 +71,9 @@ Um chefe a cada 5 minutos, que depende do local do corpo ([decisão 0035](deciso
 
 O jogador escolhe um antes da run e joga com ele. O ataque é automático; o jogador só se move e dispara o especial.
 
-Cada agente tem um **receptor nativo** (o perfil farmacológico, [decisão 0030](decisoes/0030-variedade-da-run-reformulada.md)): Dopamina, Receptor D2 (−8% de recarga por nível); Lipase, Sítio ativo (+10% de dano contra lipídios por nível); Insulina, Receptor de insulina (+25% de Raio de coleta por nível). Sobe 1 nível a cada 10 níveis da run, até o 5. Valores em `agents.json`.
+Cada agente tem um **receptor nativo** (o perfil farmacológico, [decisão 0030](decisoes/0030-variedade-da-run-reformulada.md)): Dopamina, Receptor D2 (−8% de recarga por nível); Lipase, Sítio ativo (+10% de dano contra lipídios por nível); Insulina, Receptor de insulina (+25% de Raio de coleta por nível); Vitamina C, Transportador SVCT (+1 de Membrana por nível); Cafeína, Receptor de adenosina (+5% de Mobilidade por nível); Venvanse, Transportador de dopamina (+10% contra chefes e fortes por nível); Serotonina, Receptor 5-HT1A (+8% de Difusão por nível); Ocitocina, Receptor de ocitocina (+10% de Sorte por nível); Álcool desidrogenase, Sítio do zinco (+10% de dano contra toxinas por nível). Sobe 1 nível a cada 10 níveis da run, até o 5. Valores em `agents.json`.
+
+**Custo de desbloqueio** (ATP, `meta.json`): Lipase e Vitamina C 1.200; Serotonina e Álcool desidrogenase 1.500; Cafeína 1.800; Insulina 2.000; Ocitocina 2.200; Venvanse 2.500. A Dopamina já vem liberada.
 
 ### Dopamina
 
@@ -109,7 +111,7 @@ Antioxidante.
 
 - **Ação:** disparos que neutralizam o que tocam.
 - **Efetividade:** forte contra radicais livres, média contra inflamação.
-- **Especial, Escudo antioxidante:** bloqueia o próximo dano por alguns segundos.
+- **Especial, Escudo antioxidante:** por 6 segundos, bloqueia o próximo golpe.
 - **Saúde:** sobe física.
 - **Colateral:** nenhum relevante.
 
@@ -120,7 +122,8 @@ Estimulante de foco. Na vida real é um pró-fármaco: chega inativo e é ativad
 - **Ação:** um raio fino e muito forte num alvo só.
 - **Efetividade:** média contra todos, forte contra chefes e alvos isolados.
 - **Mecânica própria:** começa a run fraco e vai ficando mais forte nos primeiros minutos, como o pró-fármaco sendo ativado.
-- **Especial, Hiperfoco:** desacelera o tempo para os inimigos.
+- **Especial, Hiperfoco:** por 5 segundos, os inimigos ficam 65% mais lentos.
+- **Ação, detalhe:** o feixe para no primeiro inimigo da linha. O pró-fármaco começa com 40% do dano e chega a 100% aos 3 minutos.
 - **Saúde:** sobe executiva.
 - **Colateral:** baixa física; com dose alta, baixa mental também.
 
@@ -130,7 +133,7 @@ Neurotransmissor do bem-estar.
 
 - **Ação:** uma aura que desacelera e enfraquece os inimigos ao redor.
 - **Efetividade:** forte contra hormônios do estresse, média contra inflamação.
-- **Especial, Calmaria:** anula todas as auras de cortisol e adrenalina da tela.
+- **Especial, Calmaria:** por 8 segundos, desliga todas as auras do estresse da tela e fere as moléculas de estresse.
 - **Saúde:** sobe mental.
 - **Colateral:** com potência alta, baixa executiva.
 
@@ -140,7 +143,7 @@ Hormônio do vínculo.
 
 - **Ação:** cria pequenas moléculas aliadas que orbitam e atacam junto.
 - **Efetividade:** forte contra hormônios do estresse, fraca contra o resto.
-- **Especial, Vínculo:** dobra o número de aliados por alguns segundos.
+- **Especial, Vínculo:** dobra o número de aliados por 6 segundos.
 - **Saúde:** sobe social.
 - **Colateral:** nenhum relevante.
 
@@ -150,8 +153,8 @@ Enzima que quebra o álcool.
 
 - **Ação:** golpes em sequência no mesmo alvo.
 - **Efetividade:** forte contra toxinas, fraca contra o resto.
-- **Mecânica própria:** termina a cascata de uma vez, levando o etanol direto até acetato sem deixar o acetaldeído escapar.
-- **Especial, Desintoxicação:** limpa todas as poças de acetaldeído do mapa.
+- **Mecânica própria:** termina a cascata de uma vez: toxina que ela decompõe não se quebra em outra nem deixa poça.
+- **Especial, Desintoxicação:** limpa todas as poças tóxicas do mapa e fere todas as toxinas.
 - **Saúde:** sobe executiva e social.
 - **Colateral:** nenhum relevante.
 
@@ -161,8 +164,8 @@ Estimulante leve.
 
 - **Ação:** disparos rápidos e fracos em várias direções.
 - **Efetividade:** média contra açúcares e radicais, fraca contra o resto.
-- **Mecânica própria:** o agente se move bem mais rápido.
-- **Especial, Alerta:** dispara em todas as direções e recupera parte do especial dos próximos usos.
+- **Mecânica própria:** o agente se move 30% mais rápido (perfil).
+- **Especial, Alerta:** um anel de 16 disparos em todas as direções, e metade da recarga volta na hora.
 - **Saúde:** sobe executiva.
 - **Colateral:** baixa mental (ansiedade); com dose alta, baixa física (sono).
 

@@ -25,6 +25,7 @@ export function applyFields(state: RunState, dt: number, grid: SpatialGrid): voi
     const radius = p.areaPx + w.growth;
     eachInRadius(state, grid, agent.x, agent.y, radius, (e) => {
       if (def.vulnerability) e.vulnerability = Math.max(e.vulnerability, def.vulnerability);
+      if (def.slow) e.slow = Math.min(e.slow, 1 - def.slow);
       if (def.pullType === e.type && def.pullPxPerSecond)
         pullTowards(e, agent.x, agent.y, def.pullPxPerSecond * dt);
     });
@@ -118,7 +119,10 @@ function fireProjectiles(
   const base = Math.atan2(target.y - agent.y, target.x - agent.x);
   const spread = ((def.spreadDegrees ?? 0) * Math.PI) / 180;
   for (let i = 0; i < p.count; i++) {
-    const angle = base + (i - (p.count - 1) / 2) * spread;
+    // Em anel (Cafeína), os disparos se dividem em volta do agente a partir do alvo.
+    const angle = def.ring
+      ? base + (i / p.count) * Math.PI * 2
+      : base + (i - (p.count - 1) / 2) * spread;
     state.projectiles.push({
       weapon: w.id,
       x: agent.x,
@@ -322,6 +326,7 @@ function fireBeams(state: RunState, w: WeaponInstance, def: WeaponDef, p: Weapon
     const angle = base + (i - (p.count - 1) / 2) * spread;
     const ux = Math.cos(angle);
     const uy = Math.sin(angle);
+    const inLine: { e: Enemy; along: number }[] = [];
     for (const e of state.enemies) {
       if (e.hp <= 0) continue;
       const rx = e.x - agent.x;
@@ -329,17 +334,25 @@ function fireBeams(state: RunState, w: WeaponInstance, def: WeaponDef, p: Weapon
       const along = rx * ux + ry * uy;
       if (along < 0 || along > p.rangePx) continue;
       const across = Math.abs(rx * uy - ry * ux);
-      if (across <= p.areaPx / 2 + e.radius) {
-        hitEnemy(state, e, p.damage, { dirX: ux, dirY: uy, source: w.id });
-      }
+      if (across <= p.areaPx / 2 + e.radius) inLine.push({ e, along });
     }
+    // Feixe de alvo único (Venvanse): só o primeiro da linha, e o raio para nele.
+    let length = p.rangePx;
+    if (def.singleTarget && inLine.length > 0) {
+      const first = inLine.reduce((a, b) => (b.along < a.along ? b : a));
+      inLine.length = 0;
+      inLine.push(first);
+      length = first.along;
+    }
+    for (const { e } of inLine) hitEnemy(state, e, p.damage, { dirX: ux, dirY: uy, source: w.id });
     state.events.push({
       type: 'beam',
       x: agent.x,
       y: agent.y,
       angle,
-      length: p.rangePx,
+      length,
       width: p.areaPx,
+      weapon: w.id,
     });
   }
   w.cooldown = p.cooldownSeconds;
@@ -412,7 +425,7 @@ function strike(state: RunState, w: WeaponInstance, p: WeaponParams, grid: Spati
         hitEnemy(state, e, p.damage * 0.5, { dirX: e.x - tx, dirY: e.y - ty, source: w.id });
       }
     });
-    state.events.push({ type: 'strike', x: tx, y: ty, radius: p.areaPx });
+    state.events.push({ type: 'strike', x: tx, y: ty, radius: p.areaPx, weapon: w.id });
   }
   w.cooldown = p.cooldownSeconds;
 }

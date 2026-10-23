@@ -251,11 +251,15 @@ export interface WeaponDef {
   levels: Partial<WeaponParams>[];
   /** Disparo: ângulo entre projéteis do mesmo disparo. */
   spreadDegrees?: number;
+  /** Disparo em anel: os projéteis saem divididos igualmente em volta do agente (Cafeína). */
+  ring?: boolean;
+  /** Feixe: acerta só o primeiro inimigo da linha (Venvanse). */
+  singleTarget?: boolean;
   /** Cone: abertura total. */
   coneDegrees?: number;
   /** Aura, poça e órbita: intervalo entre golpes no mesmo inimigo. */
   hitIntervalSeconds?: number;
-  /** Poça: fração da velocidade que o inimigo perde dentro dela. */
+  /** Poça e aura: fração da velocidade que o inimigo perde dentro dela. */
   slow?: number;
   /** Aura: dano extra que os inimigos dentro dela recebem de todas as fontes. */
   vulnerability?: number;
@@ -271,7 +275,8 @@ export interface WeaponDef {
 
 export type AffinityLevel = 'strong' | 'neutral' | 'weak';
 
-export type SpecialKind = 'frenzy' | 'emulsion' | 'uptake';
+export type SpecialKind =
+  'frenzy' | 'emulsion' | 'uptake' | 'shield' | 'alert' | 'hyperfocus' | 'calm' | 'bond' | 'detox';
 
 /** Especial do agente, disparado pelo jogador. */
 export interface SpecialDef {
@@ -294,6 +299,15 @@ export interface SpecialDef {
   vulnerability?: number;
   damage?: number;
   pullPx?: number;
+  /** Escudo antioxidante: golpes bloqueados enquanto dura. */
+  blocks?: number;
+  /** Alerta: disparos em anel e fração da recarga devolvida. */
+  count?: number;
+  refund?: number;
+  /** Hiperfoco: fração da velocidade que os inimigos perdem. */
+  slow?: number;
+  /** Vínculo: multiplica os projéteis da ação enquanto dura. */
+  countMultiplier?: number;
 }
 
 export interface AgentDef {
@@ -314,6 +328,12 @@ export interface AgentDef {
   synergy?: { env: MapEnvironment; sector: Sector };
   /** Enzimas grandes não atravessam a barreira hematoencefálica: não entram no Cérebro. */
   crossesBloodBrainBarrier?: boolean;
+  /** Atributos próprios do agente, somados à base (a Cafeína anda mais rápido); PERFIL na pausa. */
+  profile?: Partial<Record<RunStatKey, number>>;
+  /** Pró-fármaco (Venvanse): o dano da ação começa em `startMultiplier` e chega a 1 em `fullMinutes`. */
+  prodrug?: { startMultiplier: number; fullMinutes: number };
+  /** Termina a cascata: moléculas deste tipo decompostas não se quebram em outras nem deixam poça. */
+  finishesCascade?: MoleculeType;
   /** Efetividade por tipo de molécula; o que faltar é neutro. */
   affinity: Partial<Record<MoleculeType, AffinityLevel>>;
   /**

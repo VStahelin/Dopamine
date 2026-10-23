@@ -18,7 +18,13 @@
   "unlockCost": {
     "agents": {
       "lipase": 1200,
-      "insulin": 2000
+      "insulin": 2000,
+      "vitaminC": 1200,
+      "serotonin": 1500,
+      "alcoholDehydrogenase": 1500,
+      "caffeine": 1800,
+      "oxytocin": 2200,
+      "venvanse": 2500
     },
     "weapons": {
       "solventPool": 200,

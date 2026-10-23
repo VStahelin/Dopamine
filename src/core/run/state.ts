@@ -15,7 +15,7 @@ import { createRunMap, type RunMap } from '../map/world';
 import { Rng } from '../random';
 import { xpToNextLevel } from './progression';
 import { DEFAULT_RULES, type RunRules } from './rules';
-import { computeStats, type PassiveLevels, type RunStats } from './stats';
+import { agentBonus, computeStats, type PassiveLevels, type RunStats } from './stats';
 import type { UpgradeChoice } from './upgrades';
 
 export interface Enemy {
@@ -223,14 +223,23 @@ export type RunEvent =
     }
   | { type: 'heal'; amount: number }
   | { type: 'dodge' }
+  | { type: 'shielded' }
   | { type: 'revive' }
   | { type: 'kill'; x: number; y: number; kind: EnemyKind }
   /** `blocked`: o que a Membrana segurou do golpe. */
   | { type: 'hurt'; amount: number; blocked: number }
   | { type: 'shoot'; weapon: WeaponId }
   | { type: 'cone'; x: number; y: number; angle: number; range: number; spread: number }
-  | { type: 'beam'; x: number; y: number; angle: number; length: number; width: number }
-  | { type: 'strike'; x: number; y: number; radius: number }
+  | {
+      type: 'beam';
+      x: number;
+      y: number;
+      angle: number;
+      length: number;
+      width: number;
+      weapon: WeaponId;
+    }
+  | { type: 'strike'; x: number; y: number; radius: number; weapon?: WeaponId }
   | { type: 'special'; kind: string }
   /** O especial ganhou a primeira carga: o botão ficou pronto. */
   | { type: 'specialReady' }
@@ -259,6 +268,8 @@ export interface SpecialState {
   active: number;
   /** Segundos de queda depois do Pico. */
   crash: number;
+  /** Golpes que o Escudo antioxidante ainda bloqueia. */
+  blocks: number;
 }
 
 export interface RunState {
@@ -434,7 +445,9 @@ export function createRun(
   rules: RunRules = DEFAULT_RULES,
   agentId: AgentId = 'dopamine',
 ): RunState {
-  const stats = computeStats(rules, {});
+  // O perfil do agente e o receptor nativo inicial (sinergia com o local) já valem no começo.
+  const startNative = Math.min(rules.run.nativeReceptor.maxLevel, rules.nativeReceptorStart ?? 0);
+  const stats = computeStats(rules, {}, agentBonus(rules, agentId, startNative));
   return {
     rules,
     rng: new Rng(seed),
@@ -486,6 +499,7 @@ export function createRun(
       cooldown: 0,
       active: 0,
       crash: 0,
+      blocks: 0,
       charges: Math.max(1, Math.floor(rules.stats.special.charges?.base ?? 1)),
     },
     passives: {},

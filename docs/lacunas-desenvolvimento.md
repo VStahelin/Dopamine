@@ -24,7 +24,7 @@ Ordenadas por impacto dividido por esforço, com as dependências respeitadas.
 | 5 | ~~Família inflamação: a Citocina e as moléculas do Cerco inflamatório~~ (feito) | Inimigos | Doc | Alto | M | 5.14 |
 | 6 | ~~Mais chefes: um por local do corpo e a Placa de fim de indivíduo~~ (feito) | Inimigos | Doc / Sem doc | Alto | M–G | 5.14 |
 | 7 | Locais do corpo e sinergias (fase 5.12 inteira) | Mapas | Doc | Alto | M–G | 5.12 |
-| 8 | Os 6 agentes que faltam: Vitamina C, Serotonina, Álcool desidrogenase, Cafeína, Ocitocina, Venvanse | Agentes | Doc | Alto | G | 5.15 |
+| 8 | ~~Os 6 agentes que faltam: Vitamina C, Serotonina, Álcool desidrogenase, Cafeína, Ocitocina, Venvanse~~ (feito) | Agentes | Doc | Alto | G | 5.15 |
 | 9 | Evolução para Nuvem de Elétrons, Poça de Solvente e Reação em Cadeia | Armas | Sem doc | Médio | M | 5.15 |
 | 10 | Estatísticas acumuladas no save e Conquistas | Meta | Metade | Alto | M | 5.16 |
 | 11 | Primeira run guiada (tutorial) | UI | Sem doc | Alto | M | 6 |

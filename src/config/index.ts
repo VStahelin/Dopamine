@@ -93,7 +93,17 @@ const WEAPON_KINDS: readonly WeaponKind[] = [
   'strike',
 ];
 const WEAPON_SOURCES: readonly WeaponSource[] = ['pool', 'agent', 'evolution'];
-const SPECIAL_KINDS: readonly SpecialKind[] = ['frenzy', 'emulsion', 'uptake'];
+const SPECIAL_KINDS: readonly SpecialKind[] = [
+  'frenzy',
+  'emulsion',
+  'uptake',
+  'shield',
+  'alert',
+  'hyperfocus',
+  'calm',
+  'bond',
+  'detox',
+];
 const AFFINITY_LEVELS: readonly AffinityLevel[] = ['strong', 'neutral', 'weak'];
 const PARAM_KEYS: readonly (keyof WeaponParams)[] = [
   'damage',
@@ -182,9 +192,11 @@ function loadWeapons(): Record<WeaponId, WeaponDef> {
 }
 
 function loadAgents(): Record<AgentId, AgentDef> {
-  type Raw = Omit<AgentDef, 'special' | 'affinity'> & {
+  type Raw = Omit<AgentDef, 'special' | 'affinity' | 'finishesCascade' | 'profile'> & {
     special: Omit<AgentDef['special'], 'kind' | 'type'> & { kind: string; type?: string };
     affinity: Record<string, string>;
+    finishesCascade?: string;
+    profile?: Record<string, number>;
   };
   const out = {} as Record<AgentId, AgentDef>;
   for (const [id, def] of Object.entries(agentsJson as unknown as Record<string, Raw>)) {
@@ -198,9 +210,17 @@ function loadAgents(): Record<AgentId, AgentDef> {
         `${where}.affinity.${type}`,
       );
     }
+    const profile: AgentDef['profile'] = {};
+    for (const [stat, v] of Object.entries(def.profile ?? {})) {
+      profile[oneOf(stat, RUN_STAT_KEYS, `${where}.profile`)] = v;
+    }
     out[id as AgentId] = {
       ...def,
       affinity,
+      profile,
+      finishesCascade: def.finishesCascade
+        ? oneOf(def.finishesCascade, MOLECULE_TYPES, `${where}.finishesCascade`)
+        : undefined,
       special: {
         ...def.special,
         kind: oneOf(def.special.kind, SPECIAL_KINDS, `${where}.special.kind`),

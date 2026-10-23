@@ -251,7 +251,7 @@ export function renderAgents(
     { label: 'EM BREVE', items: RUN_AGENTS.filter((i) => !playable.has(i.name)) },
     ...(idleUnlocked ? [{ label: 'AGENTES DO IDLE · NO CAMPO LONGO', items: idleItems }] : []),
   ];
-  for (const group of locked) {
+  for (const group of locked.filter((l) => l.items.length > 0)) {
     out.push(header(scene, left, cy + 4, group.label));
     cy += 20;
     const h = 8 + group.items.length * 18;

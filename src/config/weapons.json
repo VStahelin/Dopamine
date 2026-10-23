@@ -427,6 +427,254 @@
     "pullType": "sugar",
     "pullPxPerSecond": 45
   },
+  "ascorbicShot": {
+    "name": "Disparo antioxidante",
+    "kind": "projectile",
+    "source": "agent",
+    "description": "Dois disparos que neutralizam o que tocam e atravessam um inimigo.",
+    "base": {
+      "damage": 8,
+      "cooldownSeconds": 0.75,
+      "count": 2,
+      "areaPx": 4,
+      "rangePx": 200,
+      "speedPxPerSecond": 240,
+      "pierce": 1,
+      "ricochet": 0,
+      "durationSeconds": 0
+    },
+    "levels": [
+      {
+        "damage": 3
+      },
+      {
+        "count": 1
+      },
+      {
+        "cooldownSeconds": -0.1
+      },
+      {
+        "pierce": 1
+      },
+      {
+        "damage": 4
+      },
+      {
+        "cooldownSeconds": -0.1
+      },
+      {
+        "damage": 6
+      }
+    ],
+    "spreadDegrees": 14
+  },
+  "caffeineBurst": {
+    "name": "Rajada",
+    "kind": "projectile",
+    "source": "agent",
+    "description": "Disparos rápidos e fracos em todas as direções.",
+    "base": {
+      "damage": 5,
+      "cooldownSeconds": 0.5,
+      "count": 4,
+      "areaPx": 3,
+      "rangePx": 150,
+      "speedPxPerSecond": 280,
+      "pierce": 0,
+      "ricochet": 0,
+      "durationSeconds": 0
+    },
+    "levels": [
+      {
+        "damage": 2
+      },
+      {
+        "count": 1
+      },
+      {
+        "cooldownSeconds": -0.05
+      },
+      {
+        "damage": 2
+      },
+      {
+        "count": 1
+      },
+      {
+        "cooldownSeconds": -0.05
+      },
+      {
+        "damage": 3
+      }
+    ],
+    "ring": true
+  },
+  "focusBeam": {
+    "name": "Feixe de foco",
+    "kind": "beam",
+    "source": "agent",
+    "description": "Raio fino e muito forte no primeiro inimigo da linha.",
+    "base": {
+      "damage": 30,
+      "cooldownSeconds": 1.3,
+      "count": 1,
+      "areaPx": 4,
+      "rangePx": 240,
+      "speedPxPerSecond": 0,
+      "pierce": 0,
+      "ricochet": 0,
+      "durationSeconds": 0
+    },
+    "levels": [
+      {
+        "damage": 8
+      },
+      {
+        "cooldownSeconds": -0.15
+      },
+      {
+        "damage": 10
+      },
+      {
+        "count": 1
+      },
+      {
+        "cooldownSeconds": -0.15
+      },
+      {
+        "damage": 12
+      },
+      {
+        "damage": 15
+      }
+    ],
+    "spreadDegrees": 20,
+    "singleTarget": true
+  },
+  "serotoninAura": {
+    "name": "Aura calmante",
+    "kind": "aura",
+    "source": "agent",
+    "description": "Aura que desacelera e deixa frágeis os inimigos em volta.",
+    "base": {
+      "damage": 2,
+      "cooldownSeconds": 0,
+      "count": 1,
+      "areaPx": 62,
+      "rangePx": 0,
+      "speedPxPerSecond": 0,
+      "pierce": 0,
+      "ricochet": 0,
+      "durationSeconds": 0
+    },
+    "levels": [
+      {
+        "areaPx": 8
+      },
+      {
+        "damage": 1
+      },
+      {
+        "areaPx": 8
+      },
+      {
+        "damage": 1
+      },
+      {
+        "areaPx": 10
+      },
+      {
+        "damage": 2
+      },
+      {
+        "areaPx": 10
+      }
+    ],
+    "hitIntervalSeconds": 0.5,
+    "slow": 0.3,
+    "vulnerability": 0.15
+  },
+  "allyOrbit": {
+    "name": "Aliados",
+    "kind": "orbit",
+    "source": "agent",
+    "description": "Moléculas aliadas que orbitam o agente e batem em quem encostam.",
+    "base": {
+      "damage": 6,
+      "cooldownSeconds": 0,
+      "count": 3,
+      "areaPx": 6,
+      "rangePx": 42,
+      "speedPxPerSecond": 120,
+      "pierce": 0,
+      "ricochet": 0,
+      "durationSeconds": 0
+    },
+    "levels": [
+      {
+        "damage": 2
+      },
+      {
+        "count": 1
+      },
+      {
+        "rangePx": 6
+      },
+      {
+        "damage": 3
+      },
+      {
+        "count": 1
+      },
+      {
+        "areaPx": 2
+      },
+      {
+        "damage": 4
+      }
+    ],
+    "hitIntervalSeconds": 0.5
+  },
+  "adhStrike": {
+    "name": "Golpes em sequência",
+    "kind": "strike",
+    "source": "agent",
+    "description": "Golpes rápidos e seguidos no inimigo mais próximo.",
+    "base": {
+      "damage": 7,
+      "cooldownSeconds": 0.3,
+      "count": 1,
+      "areaPx": 10,
+      "rangePx": 50,
+      "speedPxPerSecond": 0,
+      "pierce": 0,
+      "ricochet": 0,
+      "durationSeconds": 0
+    },
+    "levels": [
+      {
+        "damage": 2
+      },
+      {
+        "cooldownSeconds": -0.04
+      },
+      {
+        "damage": 2
+      },
+      {
+        "areaPx": 4
+      },
+      {
+        "cooldownSeconds": -0.04
+      },
+      {
+        "count": 1
+      },
+      {
+        "damage": 4
+      }
+    ]
+  },
   "fenton": {
     "name": "Reação de Fenton",
     "kind": "projectile",

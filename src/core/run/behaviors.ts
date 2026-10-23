@@ -1,6 +1,7 @@
 import type { EnemyBehavior, EnemyKind } from '../../config';
 import { enemyHpAt } from './progression';
 import { hurtAgent } from './hurt';
+import { specialActive } from './specials';
 import type { SpatialGrid } from './spatialGrid';
 import { addEnemy, type Enemy, type RunState } from './state';
 import { GRID_CELL } from './weapons';
@@ -54,6 +55,8 @@ export function updateBehaviors(state: RunState, dt: number, grid: SpatialGrid):
           }
           break;
         case 'aura':
+          // Calmaria (Serotonina): as auras do estresse ficam desligadas.
+          if (specialActive(state, 'calm')) break;
           grid.query(e.x, e.y, b.radiusPx + GRID_CELL, (j) => {
             const o = state.enemies[j];
             if (!o || o === e || o.hp <= 0) return;

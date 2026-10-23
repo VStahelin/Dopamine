@@ -92,6 +92,62 @@ Hormônio que tira o açúcar da circulação. Forte contra açúcares, fraca co
 - **Perfil (receptor nativo):** Receptor de insulina, +25% de Raio de coleta por nível.
 - **Desbloqueio:** 2.000 ATP.
 
+### Vitamina C
+Antioxidante. Forte contra radicais livres, média contra inflamação, fraca contra o resto.
+- **Ação:** Disparo antioxidante, dois disparos que atravessam um inimigo.
+- **Especial:** Escudo antioxidante. Por 6 segundos, o próximo golpe que você levaria é bloqueado (aparece BLOQUEADO).
+- **No organismo:** sobe a Física e um pouco a Executiva. Sem colateral.
+- **Sinergia:** ✚ no Pulmão (Física).
+- **Perfil (receptor nativo):** Transportador SVCT, +1 de Membrana por nível.
+- **Desbloqueio:** 1.200 ATP.
+
+### Cafeína
+Estimulante leve. Média contra açúcares e radicais, fraca contra o resto, e anda 30% mais rápido.
+- **Ação:** Rajada, disparos rápidos e fracos divididos em volta do agente.
+- **Especial:** Alerta. Um anel de 16 disparos e metade da recarga devolvida na hora.
+- **No organismo:** sobe a Executiva. Colateral: tira Mental (ansiedade) e um pouco da Física (sono).
+- **Sinergia:** ✚ no Pulmão (Executiva).
+- **Perfil:** +30% de Mobilidade desde o começo. Receptor nativo: Receptor de adenosina, +5% de Mobilidade por nível.
+- **Desbloqueio:** 1.800 ATP.
+
+### Venvanse
+Estimulante de foco. Média contra tudo; forte contra chefes e alvos isolados.
+- **Ação:** Feixe de foco, um raio fino e muito forte que para no primeiro inimigo da linha.
+- **Pró-fármaco:** começa a run com 40% do dano e chega ao dano cheio aos 3 minutos.
+- **Especial:** Hiperfoco. Por 5 segundos, os inimigos ficam 65% mais lentos (a tela fica violeta).
+- **No organismo:** sobe muito a Executiva. Colateral: tira Física e um pouco da Mental.
+- **Sinergia:** ✚ na Corrente sanguínea (Executiva).
+- **Perfil (receptor nativo):** Transportador de dopamina, +10% de dano contra chefes e moléculas fortes por nível.
+- **Desbloqueio:** 2.500 ATP.
+
+### Serotonina
+Neurotransmissor do bem-estar. Forte contra hormônios do estresse, média contra inflamação, fraca contra o resto.
+- **Ação:** Aura calmante, que desacelera os inimigos em volta e os deixa frágeis.
+- **Especial:** Calmaria. Por 8 segundos, as auras do estresse ficam desligadas, e as moléculas de estresse levam dano.
+- **No organismo:** sobe a Mental e um pouco a Social. Colateral: tira um pouco da Executiva.
+- **Sinergia:** ✚ no Intestino (Mental), onde mora quase toda a serotonina do corpo.
+- **Perfil (receptor nativo):** Receptor 5-HT1A, +8% de Difusão por nível.
+- **Desbloqueio:** 1.500 ATP.
+
+### Ocitocina
+Hormônio do vínculo. Forte contra hormônios do estresse, fraca contra o resto.
+- **Ação:** Aliados, três moléculas rosa que orbitam o agente e batem em quem encostam.
+- **Especial:** Vínculo. Dobra os aliados por 6 segundos.
+- **No organismo:** sobe a Social e um pouco a Mental. Sem colateral.
+- **Sinergia:** ✚ no Cérebro (Social).
+- **Perfil (receptor nativo):** Receptor de ocitocina, +10% de Sorte por nível.
+- **Desbloqueio:** 2.200 ATP.
+
+### Álcool desidrogenase
+Enzima que quebra o álcool. Forte contra toxinas, fraca contra o resto.
+- **Ação:** Golpes em sequência, rápidos, no inimigo mais próximo.
+- **Termina a cascata:** toxina que ela decompõe não se quebra em outra nem deixa poça.
+- **Especial:** Desintoxicação. Limpa todas as poças tóxicas e fere todas as toxinas da tela.
+- **No organismo:** sobe a Social e um pouco a Executiva. Sem colateral.
+- **Sinergia:** ✚ no Fígado (Social). Não entra no Cérebro (⊘).
+- **Perfil (receptor nativo):** Sítio do zinco, +10% de dano contra toxinas por nível.
+- **Desbloqueio:** 1.500 ATP.
+
 ---
 
 ## Armas e evoluções

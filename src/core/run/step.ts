@@ -11,7 +11,7 @@ import { hurtAgent } from './hurt';
 import { agentFxSpeed, updateBehaviors } from './behaviors';
 import { refreshStats } from './upgrades';
 import { SpatialGrid } from './spatialGrid';
-import { updateSpecial } from './specials';
+import { applySpecialFields, updateSpecial } from './specials';
 import { addEnemy, type Enemy, type RunState } from './state';
 import {
   applyFields,
@@ -55,6 +55,7 @@ export function stepRun(state: RunState, input: StepInput, dt: number): void {
   const firstEvent = state.events.length;
   applyFields(state, dt, grid);
   updateBehaviors(state, dt, grid);
+  applySpecialFields(state);
   moveEnemies(state, dt);
   collideWithMap(state);
   updateWeapons(state, dt, grid);

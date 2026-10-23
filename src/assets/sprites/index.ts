@@ -136,6 +136,10 @@ export const WORLD_SPRITES: {
   electron: OrbStyle;
   shot: OrbStyle;
   coin: OrbStyle;
+  /** Disparos da Vitamina C e da Cafeína e os aliados da Ocitocina (prancheta "Elenco completo"). */
+  shotVitamin: OrbStyle;
+  shotCaffeine: OrbStyle;
+  ally: OrbStyle;
 } = worldJson;
 
 /** Cores de uma linha do nome: letras da paleta da logo para brilho, miolo, sombra e contorno. */
