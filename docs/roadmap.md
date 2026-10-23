@@ -26,7 +26,7 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | 5 | Organismo | Cuidar do corpo muda o jeito de jogar? | 3, 4 | implementada, falta validar no celular |
 | 5.5 | Itens no mapa | Os itens do chão deixam a run mais variada sem quebrar a economia? | 2, 3 | implementada, falta validar no celular |
 | 5.6 | Variedade da run | A run muda de cara a cada pico, e cada agente cresce do seu jeito? | 5, 5.8 | implementada, falta validar no celular |
-| 5.7 | Mapas gerados | Cada run tem um mapa diferente, sem deixar o agente preso? | 2, 5.5 | não iniciada |
+| 5.7 | Mapas gerados | Cada run tem um mapa diferente, sem deixar o agente preso? | 2, 5.5 | implementada, falta validar no celular |
 | 5.8 | Receptores no level up | O level up fica mais curto e cada escolha pesa mais? | 2, 3 | implementada, falta validar no celular |
 | 5.9 | Suplementos e ampolas | Os suplementos dão motivo para andar pelo mapa e montam um build diferente a cada run? | 5.5, 5.8 | implementada, falta validar no celular |
 | 5.10 | Agregados (mini chefes) | Entre um chefe e outro sempre tem um alvo que vale o risco? | 5.9 | implementada, falta validar no celular |
@@ -310,13 +310,15 @@ A fase reformulada pela [decisão 0030](decisoes/0030-variedade-da-run-reformula
 
 O mapa do campo crônico passa a ser gerado por semente, em blocos de 16×16 tiles, com chão variado, obstáculos, decoração, destrutíveis e pontos de interesse, num de cinco ambientes do corpo. Regras em [mapas.md](mapas.md) ([decisão 0026](decisoes/0026-mapas-gerados.md)); números em `src/config/map.json` e arte em `src/assets/sprites/map.json` (prancheta "Mapas: objetos e chão" do canvas).
 
-- [ ] Gerador de blocos em `src/core/map/`, com semente por bloco e teste de "mesma semente, mesmo bloco".
-- [ ] Chão em tiles de 16×16 com manchas de variação por ruído, no ambiente Corrente sanguínea.
-- [ ] Obstáculos com colisão circular para o agente e as moléculas, com distância mínima e começo livre; chefe e formações atravessam.
-- [ ] Decoração sem colisão e destrutíveis com vida e drop.
-- [ ] Densidade sorteada por run (Aberto, Padrão, Denso) e o nome do mapa com a semente no início, na pausa e no fim da run.
-- [ ] Pontos de interesse: ninho de vesículas (junto com a fase 5.5), câmara, corredor.
-- [ ] Os outros quatro ambientes (fígado, intestino, pulmão, cérebro), conforme a escolha do local da run.
+- [x] Gerador de blocos em `src/core/map/`, com semente por bloco e teste de "mesma semente, mesmo bloco".
+- [x] Chão em tiles de 16×16 (32 unidades) com manchas de variação por ruído. O tile base repete na tela toda e só os de variação viram imagens.
+- [x] Obstáculos com colisão circular para o agente e as moléculas, com distância mínima e começo livre; chefe e formações atravessam. A grade dos sólidos só é refeita quando o agente troca de bloco ou um destrutível quebra.
+- [x] Decoração sem colisão e destrutíveis com vida (golpes) e drop pelo ambiente; o chefe quebra os que encosta.
+- [x] Densidade sorteada por run (Aberto, Padrão, Denso) e o nome do mapa com a semente no início, na pausa e no fim da run.
+- [x] Ninho de vesículas (12% dos blocos). As estruturas da fase 5.11 nascem numa clareira, sem obstáculo dentro do círculo.
+- [ ] Pontos de interesse câmara e corredor.
+- [ ] Zonas de terreno (correnteza, bile, muco, bolsa de ar, sinapse ativa): mecânica nova, ficou para depois.
+- [x] Os cinco ambientes de uma vez, sorteados pela semente da run (a escolha do local fica para depois).
 - [ ] Validar no celular a 60 FPS com o mapa Denso.
 
 **Critério de saída:** duas runs seguidas dão mapas que dá para distinguir num print, nenhuma run prende o agente num beco, e o mapa Denso roda a 60 FPS no celular.

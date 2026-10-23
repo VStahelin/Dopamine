@@ -1,5 +1,6 @@
 import * as Phaser from 'phaser';
-import { PASSIVES, STATS, WEAPONS, type PassiveId, type RunStatKey } from '../../config';
+import { MAP, PASSIVES, STATS, WEAPONS, type PassiveId, type RunStatKey } from '../../config';
+import { mapName } from '../../core/map/chunk';
 import type { RunState } from '../../core/run/state';
 import { statDef } from '../../core/run/stats';
 import { weaponMaxLevel } from '../../core/run/weaponParams';
@@ -342,7 +343,8 @@ export function runRows(run: RunState, bestTimeSeconds: number): Build[] {
     ['INTERAÇÕES PERDIDAS', num(run.tally.interactionsLost), PALETTE_CSS.numberHurt],
     ['ATP NA RUN', num(run.atp), PALETTE_CSS.gold],
   ];
-  const out: Build[] = [];
+  // Nome do mapa no topo: ambiente, densidade e semente (fase 5.7).
+  const out: Build[] = [header(mapName(MAP, run.map.params).toUpperCase(), PALETTE_CSS.cream)];
   for (let i = 0; i < tiles.length; i += 2) {
     const pair = tiles.slice(i, i + 2);
     out.push((scene, width) => {

@@ -34,8 +34,26 @@ function chemotaxis(state: RunState): { fill: number; extra: number } {
   return { fill, extra };
 }
 
-function add(state: RunState, kind: Structure['kind'], x: number, y: number): void {
+function add(state: RunState, kind: Structure['kind'], x0: number, y0: number): void {
   const uses = kind === 'adrenal' ? state.rules.structures.adrenal.uses : 1;
+  // Numa clareira (fase 5.7): se o círculo cai em cima de um obstáculo, gira em volta do agente
+  // até achar lugar livre.
+  const { agent, map } = state;
+  const clear = state.rules.structures.radiusPx * 0.8;
+  let x = x0;
+  let y = y0;
+  for (let k = 0; k < 12; k++) {
+    let blocked = false;
+    map.grid.query(x, y, clear + 32, (i) => {
+      const o = map.solids[i]!.object;
+      if ((o.x - x) ** 2 + (o.y - y) ** 2 < (clear + o.radius) ** 2) blocked = true;
+    });
+    if (!blocked) break;
+    const a = Math.atan2(y0 - agent.y, x0 - agent.x) + (k + 1) * 0.5;
+    const d = Math.hypot(x0 - agent.x, y0 - agent.y);
+    x = agent.x + Math.cos(a) * d;
+    y = agent.y + Math.sin(a) * d;
+  }
   state.structures.push({
     id: state.nextStructureId++,
     kind,

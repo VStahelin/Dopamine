@@ -1,0 +1,57 @@
+{
+  "tileSizePx": 32,
+  "chunkTiles": 16,
+  "activeRadius": 1,
+  "discardRadius": 2,
+  "floorNoise": { "scaleTiles": 6, "threshold": 0.62, "variant2Chance": 0.04 },
+  "densityNoise": { "scaleTiles": 32 },
+  "densities": {
+    "open": { "name": "Aberto", "chance": 0.25, "obstacles": [2, 4], "destructibles": [0, 1] },
+    "standard": { "name": "Padrão", "chance": 0.5, "obstacles": [5, 8], "destructibles": [1, 2] },
+    "dense": { "name": "Denso", "chance": 0.25, "obstacles": [9, 12], "destructibles": [1, 2] }
+  },
+  "obstacleMinDistanceTiles": 3,
+  "edgeMarginTiles": 1.5,
+  "clusterChance": 0.3,
+  "startFreeTiles": 4,
+  "decorPerChunk": [6, 12],
+  "nestChance": 0.12,
+  "nestVesicles": [3, 5],
+  "environments": {
+    "blood": {
+      "name": "Corrente sanguínea",
+      "tiles": ["blood_base", "blood_flow", "blood_protein"],
+      "obstacles": { "redCell": 13, "cholesterol": 11 },
+      "destructible": { "id": "fibrinClot", "radius": 12, "hits": 3, "drop": "none" },
+      "decor": ["platelet", "albumin"]
+    },
+    "liver": {
+      "name": "Fígado",
+      "tiles": ["liver_base", "liver_nuclei", "liver_fat"],
+      "obstacles": { "hepatocyte": 13, "centralVein": 12 },
+      "destructible": { "id": "fatDroplet", "radius": 11, "hits": 1, "drop": "atp" },
+      "decor": ["bile", "kupffer"]
+    },
+    "intestine": {
+      "name": "Intestino",
+      "tiles": ["intestine_base", "intestine_crypts", "intestine_mucus"],
+      "obstacles": { "villus": 12, "fiber": 13 },
+      "destructible": { "id": "bacterium", "radius": 11, "hits": 1, "drop": "gem" },
+      "decor": ["mucus", "enzyme"]
+    },
+    "lung": {
+      "name": "Pulmão",
+      "tiles": ["lung_base", "lung_air", "lung_dust"],
+      "obstacles": { "alveolus": 13, "bronchus": 12 },
+      "destructible": { "id": "soot", "radius": 11, "hits": 2, "drop": "gem" },
+      "decor": ["airBubble", "macrophage"]
+    },
+    "brain": {
+      "name": "Cérebro",
+      "tiles": ["brain_base", "brain_glia", "brain_axon"],
+      "obstacles": { "neuron": 13, "astrocyte": 12 },
+      "destructible": { "id": "amyloid", "radius": 12, "hits": 2, "drop": "vesicle" },
+      "decor": ["synapse", "myelin"]
+    }
+  }
+}

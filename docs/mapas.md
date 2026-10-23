@@ -121,10 +121,10 @@ Quando virar código, um `src/config/map.json`, com o tipo em `src/config/types.
 
 ## O que falta decidir
 
-- [ ] Quem escolhe o ambiente: o jogador, o caso (a doença do organismo) ou o sorteio? (Mesma pergunta dos Locais do corpo em [lacunas-vs.md](lacunas-vs.md#perguntas-em-aberto).)
-- [ ] Entram os cinco ambientes de uma vez, ou a Corrente sanguínea primeiro e os outros um por fase?
-- [ ] Obstáculos bloqueiam as moléculas comuns, ou só o agente? Bloquear as duas deixa o mapa tático; bloquear só o agente deixa a run mais difícil.
-- [ ] As zonas de terreno entram junto com os ambientes ou depois? Elas são mecânica nova.
+- [ ] Quem escolhe o ambiente: o jogador, o caso (a doença do organismo) ou o sorteio? No código, por enquanto, o sorteio pela semente da run. (Mesma pergunta dos Locais do corpo em [lacunas-vs.md](lacunas-vs.md#perguntas-em-aberto).)
+- [x] Entram os cinco ambientes de uma vez, ou a Corrente sanguínea primeiro e os outros um por fase? Os cinco de uma vez: a arte já estava pronta.
+- [ ] Obstáculos bloqueiam as moléculas comuns, ou só o agente? No código, os dois (o chefe e as formações atravessam). Bloquear as duas deixa o mapa tático; bloquear só o agente deixa a run mais difícil.
+- [ ] As zonas de terreno entram junto com os ambientes ou depois? Elas são mecânica nova. Ficaram para depois.
 - [ ] Destrutível que solta ATP ou vesícula (Gota de gordura, Placa amiloide) mexe na economia: limitar por run ou deixar o `npm run sim` medir?
 - [ ] Dá para digitar uma semente nas Opções e jogar o mesmo mapa que um amigo?
-- [ ] O tile do chão passa de 40 para 32 unidades (16 px em 2×). Isso muda o tamanho do rejunte de hoje; vale, ou o chão novo fica em 40 com arte de 20×20?
+- [x] O tile do chão passa de 40 para 32 unidades (16 px em 2×). Passou, no `map.json`; o campo longo continua com o chão antigo. Isso muda o tamanho do rejunte de hoje; vale, ou o chão novo fica em 40 com arte de 20×20?

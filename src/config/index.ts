@@ -11,6 +11,7 @@ import dropsJson from './drops.json';
 import economyJson from './economy.json';
 import enemiesJson from './enemies.json';
 import idleJson from './idle.json';
+import mapJson from './map.json';
 import metaJson from './meta.json';
 import organismJson from './organism.json';
 import passivesJson from './passives.json';
@@ -42,6 +43,7 @@ import {
   type RunConfig,
   type SpecialKind,
   type StatsConfig,
+  type MapConfig,
   type StructuresConfig,
   type SupplementsConfig,
   SUPPLEMENT_RARITIES,
@@ -52,7 +54,7 @@ import {
 } from './types';
 
 export type * from './types';
-export { ITEM_IDS, RUN_STAT_KEYS, SECTORS, SUPPLEMENT_RARITIES } from './types';
+export { ITEM_IDS, MAP_ENVIRONMENTS, RUN_STAT_KEYS, SECTORS, SUPPLEMENT_RARITIES } from './types';
 
 export type EnemyKind = keyof typeof enemiesJson;
 export type WeaponId = keyof typeof weaponsJson;
@@ -210,6 +212,7 @@ export const RARITIES: RarityConfig = raritiesJson;
 export const DROPS: DropsConfig = dropsJson as DropsConfig;
 export const SUPPLEMENTS: SupplementsConfig = loadSupplements();
 export const STRUCTURES: StructuresConfig = structuresJson as StructuresConfig;
+export const MAP: MapConfig = mapJson as unknown as MapConfig;
 if (!(STRUCTURES.focus.formation in RUN.formations.list)) {
   throw new Error('Configuração inválida em structures.json focus.formation');
 }

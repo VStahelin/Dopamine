@@ -240,6 +240,30 @@ Quando a cápsula ou o level up não têm mais o que subir, você ganha Fosfocre
 
 ---
 
+## O mapa
+
+*Números de `map.json`.*
+
+### Mapas gerados
+Cada run gera o próprio mapa, e duas runs nunca têm o mesmo chão. No começo aparece o nome do mapa: o ambiente, a densidade e um código (a semente), que também ficam na pausa e no fim da run.
+
+### Ambientes
+O mapa é um de cinco lugares do corpo, sorteado: Corrente sanguínea (plasma, hemácias e colesterol), Fígado (placas de hepatócitos), Intestino (vilosidades e fibra), Pulmão (alvéolos e brônquios) e Cérebro (neurônios e astrócitos).
+
+### Obstáculos
+Bloqueiam você e as moléculas: use para despistar e afunilar. Nunca fecham um beco, e o começo da run fica sempre livre. O chefe e as moléculas de formação passam por cima.
+
+### Destrutíveis
+Quebram com golpes e às vezes soltam algo: a Gota de gordura (Fígado) solta ATP, a Bactéria (Intestino) e a Fuligem (Pulmão) soltam gema, a Placa amiloide (Cérebro) solta uma vesícula. O chefe quebra os que encosta.
+
+### Densidade
+Aberto, Padrão ou Denso: quantos obstáculos o mapa tem. Dentro do mesmo mapa há clareiras e trechos fechados.
+
+### Ninhos de vesículas
+Às vezes um grupo de 3 a 5 vesículas espera numa clareira: vale o desvio.
+
+---
+
 ## Sinapses e estruturas
 
 *Números de `structures.json`. Uma seta na borda da tela aponta a estrutura mais perto, na cor dela.*

@@ -46,6 +46,7 @@ export class GameOverScene extends Phaser.Scene {
         ['NÍVEL', String(data.result.level), 'level'],
         ['DECOMPOSTAS', data.result.kills.toLocaleString('pt-BR'), 'kills'],
         ['ATP GANHO', data.result.atp.toLocaleString('pt-BR'), null],
+        ['MAPA', data.result.mapName.split(' · ')[0]!.toUpperCase(), null],
         ...(data.newStars > 0
           ? ([
               [

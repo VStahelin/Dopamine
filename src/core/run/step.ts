@@ -4,6 +4,7 @@ import { damageEnemy, heal } from './combat';
 import { difficultyAt, enemyHpAt, waveFactorAt, xpToNextLevel } from './progression';
 import { addAggregate } from './aggregates';
 import { updateFormations } from './formations';
+import { collideWithMap, updateDestructibles, updateRunMap } from './mapStep';
 import { updateStructures } from './structures';
 import { extendFever, updateItems } from './items';
 import { onHurt } from './supplements';
@@ -42,6 +43,7 @@ export function stepRun(state: RunState, input: StepInput, dt: number): void {
   state.viewRadius = input.viewRadius;
 
   moveAgent(state, input.move, dt);
+  updateRunMap(state);
   updateSpecial(state, input.special === true, dt);
   spawnEnemies(state, input.viewRadius, dt);
 
@@ -52,11 +54,13 @@ export function stepRun(state: RunState, input: StepInput, dt: number): void {
   const firstEvent = state.events.length;
   applyFields(state, dt, grid);
   moveEnemies(state, dt);
+  collideWithMap(state);
   updateWeapons(state, dt, grid);
   moveProjectiles(state, dt, grid);
   updatePulses(state, dt, grid);
   updateZones(state, dt, grid);
   updateItems(state, dt, grid, firstEvent);
+  updateDestructibles(state, firstEvent);
   touchAgent(state, dt);
   updateGems(state, dt);
   updateCoins(state, dt);

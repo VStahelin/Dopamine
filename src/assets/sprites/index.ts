@@ -13,11 +13,12 @@
  * - `world.json`: chão, gema, elétron, disparo e moeda, que o gerador desenha a partir destes
  *   números.
  * - `map.json`: tiles de chão e objetos de 16×16 dos ambientes da fase 5.7 (prancheta "Mapas:
- *   objetos e chão", docs/mapas.md), ainda sem uso no jogo. Os tiles usam as letras 1 a 4 com as
+ *   objetos e chão", docs/mapas.md). Os tiles usam as letras 1 a 4 com as
  *   cores de `floor` de cada ambiente; os objetos usam `palette.json`.
  */
 import framesJson from './frames.json';
 import iconsJson from './icons.json';
+import mapJson from './map.json';
 import moleculesJson from './molecules.json';
 import paletteJson from './palette.json';
 import uiJson from './ui.json';
@@ -110,6 +111,16 @@ export interface OrbStyle {
   fill: string;
   light: string;
 }
+
+/**
+ * Mapas (fase 5.7): `floor` dá as cores 1 a 4 de cada ambiente; `tiles` são grades de 16×16 com
+ * essas letras; `objects` são grades de 16×16 com a paleta dos ícones.
+ */
+export const MAP_SPRITES: {
+  floor: Readonly<Record<string, Readonly<Record<string, string>>>>;
+  tiles: Readonly<Record<string, PixelGrid>>;
+  objects: Readonly<Record<string, PixelGrid>>;
+} = mapJson;
 
 export const WORLD_SPRITES: {
   ground: { fill: string; line: string; lineWidth: number };

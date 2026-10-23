@@ -2,6 +2,7 @@ import {
   FRAMES,
   ICON_SIZE,
   ICONS,
+  MAP_SPRITES,
   MOLECULES,
   UI_SPRITES,
   WORLD_SPRITES,
@@ -16,6 +17,7 @@ import {
   paintGround,
   paintMolecule,
   paintOrb,
+  paintTile,
   slotSize,
   type Painter,
   type Size,
@@ -28,7 +30,8 @@ import {
  *
  * - `icons/<px>/<grupo>/<id>.png`: ícones de 16×16 em cada tamanho de `iconSizesPx`.
  * - `frames/<px>/<tipo>.png`: molduras dos espaços de ícone, uma por escala.
- * - `world/<detail>x/...`: moléculas, chão, gema, elétron, disparo e moeda, um por detail.
+ * - `world/<detail>x/...`: moléculas, chão, gema, elétron, disparo e moeda, um por detail, e o
+ *   mapa (`map/tiles` e `map/objects`, fase 5.7).
  */
 export interface SpriteFile {
   /** Caminho dentro de public/sprites. */
@@ -62,6 +65,16 @@ export function frameFileKey(kind: FrameKind, scale: number): string {
 /** Chave da textura de um sprite do mundo com `detail` pixels de arte por unidade. */
 export function textureKey(name: string, detail: number): string {
   return `${name}@${detail}`;
+}
+
+/** Tile de chão do mapa (fase 5.7) pelo id de map.json, como `blood_base`. */
+export function mapTileName(id: string): string {
+  return `tile-${id}`;
+}
+
+/** Objeto do mapa (obstáculo, destrutível, decoração) pelo id de map.json. */
+export function mapObjectName(id: string): string {
+  return `obj-${id}`;
 }
 
 /** Sprite de molécula (agente, inimigo ou projétil) pelo id de molecules.json. */
@@ -134,6 +147,22 @@ export function spriteFiles(): SpriteFile[] {
         paint: (p) => paintGem(p, detail),
       },
     );
+    // Mapa (fase 5.7): tiles e objetos de 16×16 em 2×, ou seja, 32 unidades do mundo.
+    for (const [id, rows] of Object.entries(MAP_SPRITES.tiles)) {
+      const colors = MAP_SPRITES.floor[id.split('_')[0]!]!;
+      out.push({
+        path: `${dir}/map/tiles/${id}.png`,
+        key: textureKey(mapTileName(id), detail),
+        paint: (p) => paintTile(p, rows, colors, 2 * detail),
+      });
+    }
+    for (const [id, rows] of Object.entries(MAP_SPRITES.objects)) {
+      out.push({
+        path: `${dir}/map/objects/${id}.png`,
+        key: textureKey(mapObjectName(id), detail),
+        paint: (p) => paintGrid(p, rows, 2 * detail),
+      });
+    }
     for (const orb of ['electron', 'shot', 'coin'] as const) {
       out.push({
         path: `${dir}/${orb}.png`,

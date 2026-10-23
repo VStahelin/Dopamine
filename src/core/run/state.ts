@@ -8,6 +8,8 @@ import type {
   SupplementRarity,
   WeaponId,
 } from '../../config';
+import { mapName, mapParams } from '../map/chunk';
+import { createRunMap, type RunMap } from '../map/world';
 import { Rng } from '../random';
 import { xpToNextLevel } from './progression';
 import { DEFAULT_RULES, type RunRules } from './rules';
@@ -215,6 +217,7 @@ export type RunEvent =
   | { type: 'levelUp'; level: number }
   | { type: 'overdose' }
   | { type: 'structure'; kind: StructureKind; x: number; y: number }
+  | { type: 'destructible'; x: number; y: number }
   | { type: 'challenge'; won: boolean }
   | { type: 'vesicle'; x: number; y: number }
   | { type: 'item'; kind: ItemId | 'capsule' | 'ampoule'; x: number; y: number }
@@ -312,6 +315,8 @@ export interface RunState {
     crisis: { family: MoleculeType; until: number } | null;
     seen: string[];
   };
+  /** Mapa gerado da run: blocos, destrutíveis quebrados e os sólidos perto (fase 5.7). */
+  map: RunMap;
   /** Estruturas no mapa e o momento da próxima; -1 antes da sinapse do começo (fase 5.11). */
   structures: Structure[];
   nextStructureAt: number;
@@ -353,6 +358,8 @@ export interface RunResult {
   seenAggregates: EnemyKind[];
   seenFormations: string[];
   capsulesOpened: number;
+  /** Nome do mapa: ambiente, densidade e semente (CORRENTE SANGUÍNEA · DENSO · #A3F9). */
+  mapName: string;
 }
 
 export function newWeapon(id: WeaponId): WeaponInstance {
@@ -424,6 +431,7 @@ export function createRun(
     seen: [],
     bossesSpawned: rules.run.bosses.map(() => 0),
     nextAggregateAt: -1,
+    map: createRunMap(mapParams(rules.map, seed, rules.mapEnv)),
     structures: [],
     nextStructureAt: -1,
     nextStructureId: 1,
@@ -494,6 +502,7 @@ export function runResult(state: RunState): RunResult {
     seenSupplements: [...state.seenSupplements],
     seenAggregates: [...state.seenAggregates],
     seenFormations: [...state.formations.seen],
+    mapName: mapName(state.rules.map, state.map.params),
     capsulesOpened: state.capsulesOpened,
   };
 }

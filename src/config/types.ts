@@ -754,3 +754,49 @@ export interface StructuresConfig {
   /** Glândula adrenal: ATP na hora por Estresse até o fim da run, algumas vezes. */
   adrenal: { coins: number; stress: number; uses: number };
 }
+
+/** Ambientes do corpo (fase 5.7, decisão 0026): chão, objetos e nome de cada um. */
+export const MAP_ENVIRONMENTS = ['blood', 'liver', 'intestine', 'lung', 'brain'] as const;
+export type MapEnvironment = (typeof MAP_ENVIRONMENTS)[number];
+export type MapDensity = 'open' | 'standard' | 'dense';
+/** O que o destrutível solta ao quebrar. */
+export type DestructibleDrop = 'none' | 'atp' | 'gem' | 'vesicle';
+
+export interface MapEnvironmentDef {
+  name: string;
+  /** Tile base, variação 1 (manchas) e variação 2 (salpicada), de src/assets/sprites/map.json. */
+  tiles: [string, string, string];
+  /** Obstáculos: id do sprite e raio de colisão. */
+  obstacles: Record<string, number>;
+  destructible: { id: string; radius: number; hits: number; drop: DestructibleDrop };
+  decor: string[];
+}
+
+/** Mapas gerados por semente, em blocos (docs/mapas.md). Distâncias em unidades do mundo. */
+export interface MapConfig {
+  tileSizePx: number;
+  chunkTiles: number;
+  /** Blocos em volta do agente que ficam gerados; os mais longe que `discardRadius` saem. */
+  activeRadius: number;
+  discardRadius: number;
+  /** Manchas do chão: ruído de `scaleTiles`, variação 1 acima do limiar, variação 2 salpicada. */
+  floorNoise: { scaleTiles: number; threshold: number; variant2Chance: number };
+  /** Ruído largo que abre clareiras e fecha trechos dentro da mesma run. */
+  densityNoise: { scaleTiles: number };
+  densities: Record<
+    MapDensity,
+    { name: string; chance: number; obstacles: [number, number]; destructibles: [number, number] }
+  >;
+  /** Distância mínima entre obstáculos: nenhum beco fecha. */
+  obstacleMinDistanceTiles: number;
+  /** Obstáculos longe da borda do bloco, para a distância mínima valer entre blocos. */
+  edgeMarginTiles: number;
+  clusterChance: number;
+  /** Nada com colisão neste raio do começo da run. */
+  startFreeTiles: number;
+  decorPerChunk: [number, number];
+  /** Ninho de vesículas: chance por bloco e quantas. */
+  nestChance: number;
+  nestVesicles: [number, number];
+  environments: Record<MapEnvironment, MapEnvironmentDef>;
+}

@@ -3,6 +3,7 @@ import {
   AGENTS,
   DISPLAY,
   DROPS,
+  MAP,
   RUN,
   SECTORS,
   type MoleculeType,
@@ -29,6 +30,9 @@ import {
   loadIconsForZoom,
   textureKey,
 } from '../render/textures';
+import { mapObjectName, mapTileName } from '../render/spriteFiles';
+import { chunkKey } from '../../core/map/world';
+import { mapName, type MapObject } from '../../core/map/chunk';
 import { getSave, setSave } from '../storage/saveStore';
 import { updates } from '../update/updateManager';
 import { HIT_KINDS, hitKind, hitLabel, NUMBER_STYLES, type NumberKind } from '../ui/damageNumbers';
@@ -146,6 +150,8 @@ export class RunScene extends Phaser.Scene {
   private vesicleSprites: Phaser.GameObjects.Image[] = [];
   private pickupSprites: Phaser.GameObjects.Image[] = [];
   private structureSprites: Phaser.GameObjects.Image[] = [];
+  private tileSprites: Phaser.GameObjects.Image[] = [];
+  private objectSprites: Phaser.GameObjects.Image[] = [];
   private arrowSprites: Phaser.GameObjects.Image[] = [];
   /** Opção "números de dano", relida ao voltar da pausa. */
   private showNumbers = true;
@@ -202,6 +208,8 @@ export class RunScene extends Phaser.Scene {
     this.vesicleSprites = [];
     this.pickupSprites = [];
     this.structureSprites = [];
+    this.tileSprites = [];
+    this.objectSprites = [];
     this.arrowSprites = [];
     this.showNumbers = getSave(this).options.showDamageNumbers;
     this.floaters = [];
@@ -218,6 +226,14 @@ export class RunScene extends Phaser.Scene {
 
     this.cameras.main.startFollow(this.agentSprite, true);
     this.applyZoom();
+    // Nome do mapa por 2 s no começo (docs/mapas.md): ambiente, densidade e semente.
+    this.time.delayedCall(300, () =>
+      (this.scene.get(SCENES.hud) as HudScene).showBanner(
+        mapName(MAP, this.run.map.params).toUpperCase(),
+        PALETTE_CSS.cream,
+        2,
+      ),
+    );
     this.scale.on(Phaser.Scale.Events.RESIZE, this.applyZoom, this);
 
     this.keyboard = new KeyboardMove(this);
@@ -447,6 +463,7 @@ export class RunScene extends Phaser.Scene {
         });
         if (ev.crisis) this.cameras.main.shake(300, 0.006);
       }
+      if (ev.type === 'destructible') this.addPopFx(ev);
       if (ev.type === 'structure') {
         this.addPopFx(ev);
         const hud = this.scene.get(SCENES.hud) as HudScene;
@@ -809,12 +826,59 @@ export class RunScene extends Phaser.Scene {
   /** O chão cobre só a área visível, alinhado à grade, e acompanha a câmera. */
   private drawGround(): void {
     const cam = this.cameras.main;
-    const tile = DISPLAY.tileSizePx;
+    const tile = MAP.tileSizePx;
     const w = cam.width / cam.zoom;
     const h = cam.height / cam.zoom;
     const x0 = Math.floor((this.run.agent.x - w / 2) / tile) * tile - tile;
     const y0 = Math.floor((this.run.agent.y - h / 2) / tile) * tile - tile;
     this.ground.setPosition(x0, y0).setSize(w + tile * 3, h + tile * 3);
+    this.drawMapTiles(x0, y0, w + tile * 3, h + tile * 3);
+  }
+
+  /**
+   * Mapa gerado (fase 5.7): o chão base vem do tileSprite; aqui só os tiles de variação, os
+   * objetos dos blocos (obstáculos, destrutíveis e decoração) e os sólidos já quebrados somem.
+   */
+  private drawMapTiles(x0: number, y0: number, w: number, h: number): void {
+    const map = this.run.map;
+    const env = MAP.environments[map.params.env];
+    const tile = MAP.tileSizePx;
+    const n = MAP.chunkTiles;
+    const variants: { x: number; y: number; t: number }[] = [];
+    for (let ty = Math.floor(y0 / tile); ty * tile < y0 + h; ty++) {
+      for (let tx = Math.floor(x0 / tile); tx * tile < x0 + w; tx++) {
+        const bx = Math.floor(tx / n);
+        const by = Math.floor(ty / n);
+        const chunk = map.chunks.get(chunkKey(bx, by));
+        if (!chunk) continue;
+        const t = chunk.tiles[(ty - by * n) * n + (tx - bx * n)]!;
+        if (t > 0) variants.push({ x: tx * tile, y: ty * tile, t });
+      }
+    }
+    sync(this, this.tileSprites, variants, -9, (s, v) => {
+      s.setTexture(this.tex(mapTileName(env.tiles[v.t]!)))
+        .setOrigin(0)
+        .setScale(1 / this.detail)
+        .setPosition(v.x, v.y);
+    });
+    const objects: MapObject[] = [];
+    const x1 = x0 + w;
+    const y1 = y0 + h;
+    for (const [key, chunk] of map.chunks) {
+      const broken = map.broken.get(key);
+      for (const o of chunk.objects) {
+        if (o.x < x0 - tile || o.x > x1 + tile || o.y < y0 - tile || o.y > y1 + tile) continue;
+        if (broken?.has(o.index)) continue;
+        objects.push(o);
+      }
+    }
+    sync(this, this.objectSprites, objects, 1, (s, o) => {
+      s.setTexture(this.tex(mapObjectName(o.sprite)))
+        .setScale(1 / this.detail)
+        .setPosition(o.x, o.y)
+        // Decoração fica embaixo de tudo; obstáculos e destrutíveis acima do chão.
+        .setDepth(o.kind === 'decor' ? -8 : 1);
+    });
   }
 
   /** Número que sobe e some, com a cor e o tamanho do tipo (docs/ui-cronico.md). */
@@ -969,7 +1033,9 @@ export class RunScene extends Phaser.Scene {
     for (const f of this.floaters) f.text.setResolution(scale.zoom);
     if (scale.detail === this.detail) return;
     this.detail = scale.detail;
-    this.ground.setTexture(this.tex(TEXTURES.ground)).setTileScale(1 / this.detail);
+    // Chão do ambiente do mapa (fase 5.7): o tile base repetido.
+    const base = MAP.environments[this.run.map.params.env].tiles[0];
+    this.ground.setTexture(this.tex(mapTileName(base))).setTileScale(1 / this.detail);
     this.agentSprite
       .setTexture(this.tex(AGENT_TEXTURES[this.run.agentId]))
       .setScale(1 / this.detail);

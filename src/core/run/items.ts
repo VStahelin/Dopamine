@@ -50,12 +50,14 @@ function spawnVesicles(state: RunState, dt: number): void {
   });
 }
 
-/** Qualquer golpe deste passo rompe a vesícula: disparos, áreas, anéis, órbitas, cones, raios. */
-function breakVesicles(state: RunState, firstEvent: number): void {
-  if (state.vesicles.length === 0) return;
-  const r = state.rules.drops.vesicles.radiusPx;
-  const near = (x: number, y: number, vx: number, vy: number, reach: number) =>
-    (x - vx) ** 2 + (y - vy) ** 2 <= (reach + r) ** 2;
+/**
+ * Teste "algum golpe deste passo acertou o círculo (x, y, r)?": disparos, poças, anéis, auras,
+ * órbitas, cones, raios e golpes de área. Rompe vesículas e quebra destrutíveis do mapa.
+ */
+export function weaponHitTest(
+  state: RunState,
+  firstEvent: number,
+): (x: number, y: number, r: number) => boolean {
   const { agent } = state;
   const auras: number[] = [];
   const orbs: { x: number; y: number; radius: number }[] = [];
@@ -64,31 +66,43 @@ function breakVesicles(state: RunState, firstEvent: number): void {
     if (kind === 'aura') auras.push(auraRadius(state, i));
     if (kind === 'orbit') orbs.push(...orbitPositions(state, w, i));
   });
-
-  state.vesicles = state.vesicles.filter((v) => {
-    const hit =
-      state.projectiles.some((p) => p.life > 0 && near(p.x, p.y, v.x, v.y, p.radius)) ||
-      state.zones.some((z) => z.kind === 'solvent' && near(z.x, z.y, v.x, v.y, z.radius)) ||
-      state.pulses.some((p) => near(p.x, p.y, v.x, v.y, p.radius)) ||
-      auras.some((a) => near(agent.x, agent.y, v.x, v.y, a)) ||
-      orbs.some((o) => near(o.x, o.y, v.x, v.y, o.radius)) ||
-      state.events.slice(firstEvent).some((e) => {
-        if (e.type === 'strike') return near(e.x, e.y, v.x, v.y, e.radius);
+  const events = state.events.slice(firstEvent);
+  return (vx, vy, r) => {
+    const near = (x: number, y: number, reach: number) =>
+      (x - vx) ** 2 + (y - vy) ** 2 <= (reach + r) ** 2;
+    return (
+      state.projectiles.some((p) => p.life > 0 && near(p.x, p.y, p.radius)) ||
+      state.zones.some((z) => z.kind === 'solvent' && near(z.x, z.y, z.radius)) ||
+      state.pulses.some((p) => near(p.x, p.y, p.radius)) ||
+      auras.some((a) => near(agent.x, agent.y, a)) ||
+      orbs.some((o) => near(o.x, o.y, o.radius)) ||
+      events.some((e) => {
+        if (e.type === 'strike') return near(e.x, e.y, e.radius);
         if (e.type === 'cone') {
-          const dx = v.x - e.x;
-          const dy = v.y - e.y;
+          const dx = vx - e.x;
+          const dy = vy - e.y;
           return Math.hypot(dx, dy) <= e.range + r && angleOff(dx, dy, e.angle) <= e.spread / 2;
         }
         if (e.type === 'beam') {
-          const dx = v.x - e.x;
-          const dy = v.y - e.y;
+          const dx = vx - e.x;
+          const dy = vy - e.y;
           const along = dx * Math.cos(e.angle) + dy * Math.sin(e.angle);
           const across = Math.abs(dx * Math.sin(e.angle) - dy * Math.cos(e.angle));
           return along >= 0 && along <= e.length && across <= e.width / 2 + r;
         }
         return false;
-      });
-    if (!hit) return true;
+      })
+    );
+  };
+}
+
+/** Qualquer golpe deste passo rompe a vesícula: disparos, áreas, anéis, órbitas, cones, raios. */
+function breakVesicles(state: RunState, firstEvent: number): void {
+  if (state.vesicles.length === 0) return;
+  const r = state.rules.drops.vesicles.radiusPx;
+  const hit = weaponHitTest(state, firstEvent);
+  state.vesicles = state.vesicles.filter((v) => {
+    if (!hit(v.x, v.y, r)) return true;
     state.events.push({ type: 'vesicle', x: v.x, y: v.y });
     const item = rollItem(state);
     if (item) state.pickups.push({ x: v.x, y: v.y, kind: item, attracted: false });

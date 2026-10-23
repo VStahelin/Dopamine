@@ -2,6 +2,7 @@ import {
   AGENTS,
   DROPS,
   ECONOMY,
+  MAP,
   ENEMIES,
   PASSIVES,
   RARITIES,
@@ -13,6 +14,8 @@ import {
   type AgentDef,
   type AgentId,
   type DropsConfig,
+  type MapConfig,
+  type MapEnvironment,
   type EconomyConfig,
   type EnemyDef,
   type EnemyKind,
@@ -45,6 +48,9 @@ export interface RunRules {
   drops: DropsConfig;
   supplements: SupplementsConfig;
   structures: StructuresConfig;
+  map: MapConfig;
+  /** Ambiente do mapa; sem ele, sorteado pela semente da run (fase 5.7). */
+  mapEnv?: MapEnvironment;
   /** Peso de cada família pela doença do indivíduo (organismo); escolhe as formações. */
   familyWeights?: Partial<Record<MoleculeType, number>>;
   /** Cápsulas já abertas no save, para a sorte de principiante; sem o número, 0. */
@@ -67,6 +73,7 @@ export const DEFAULT_RULES: RunRules = {
   drops: DROPS,
   supplements: SUPPLEMENTS,
   structures: STRUCTURES,
+  map: MAP,
 };
 
 /**

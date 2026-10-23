@@ -193,6 +193,26 @@ export function paintGrid(p: Painter, grid: PixelGrid, scale = 1): Size {
   return { width: (grid[0]?.length ?? 0) * scale, height: grid.length * scale };
 }
 
+/**
+ * Tile do chão de um ambiente (fase 5.7): grade de 16×16 com as letras 1 a 4, pintadas com as cores
+ * `floor` do ambiente, `scale` pixels por pixel de arte.
+ */
+export function paintTile(
+  p: Painter,
+  grid: PixelGrid,
+  colors: Readonly<Record<string, string>>,
+  scale: number,
+): Size {
+  grid.forEach((row, y) => {
+    [...row].forEach((c, x) => {
+      const color = colors[c];
+      if (!color) return;
+      p.fillStyle(paletteColor(color)).fillRect(x * scale, y * scale, scale, scale);
+    });
+  });
+  return { width: (grid[0]?.length ?? 0) * scale, height: grid.length * scale };
+}
+
 /** Bolinha do campo a partir do estilo de `world.json`. */
 export function paintOrb(p: Painter, style: OrbStyle, detail: number): Size {
   const size = style.size * detail;
