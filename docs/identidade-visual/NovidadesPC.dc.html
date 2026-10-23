@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Novidades no PC</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&amp;family=Silkscreen:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#FFB347;text-decoration:none}a:hover{color:#FFD08A}
+button{font:inherit}
+</style>
+</helmet>
+<div style="width:1280px;height:800px;position:relative;overflow:hidden;font-family:'Pixelify Sans',monospace;color:#F4EFE0;background-color:#15172E;background-image:linear-gradient(#1B1E3A 2px, transparent 2px), linear-gradient(90deg, #1B1E3A 2px, transparent 2px);background-size:26px 26px">
+  <div style="position:absolute;left:48px;right:48px;top:32px;bottom:32px;display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+      <span style="font-size:44px;font-weight:700;color:#FF9A1F;text-shadow:-3px 0 #3A0A0C, 3px 0 #3A0A0C, 0 -3px #3A0A0C, 0 3px #3A0A0C, 0 5px #3A0A0C">NOVIDADES</span>
+      <span style="font-family:'Silkscreen',monospace;font-size:11px;letter-spacing:1px;color:#C9CCE6">O QUE MUDOU EM CADA VERSÃO · ABERTA PELAS OPÇÕES</span>
+    </div>
+    <div style="flex:1;min-height:0;display:grid;grid-template-columns:300px minmax(0, 1fr);gap:24px">
+      <nav aria-label="Versões" style="background:#1B1E3A;border:3px solid #07080F;padding:10px;display:flex;flex-direction:column;gap:6px;overflow:hidden">
+        <span style="font-family:'Silkscreen',monospace;font-size:10px;letter-spacing:1px;color:#7EF0FF;margin:2px 0 4px 4px">VERSÕES</span>
+        <sc-for list="{{versions}}" as="v" hint-placeholder-count="9">
+          <button onClick="{{v.pick}}" aria-label="{{v.name}}" style="box-sizing:border-box;padding:7px 10px;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:3px;{{v.st}}">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
+              <span style="font-size:16px;font-weight:700;{{v.nameSt}}">{{v.name}}</span>
+              <span style="font-family:'Silkscreen',monospace;font-size:8px;letter-spacing:1px;{{v.dateSt}}">{{v.date}}</span>
+            </div>
+            <span style="font-size:11px;{{v.countSt}}">{{v.counts}}</span>
+          </button>
+        </sc-for>
+      </nav>
+      <article style="background:#15172E;border:3px solid #3A0A0C;box-shadow:inset 0 0 0 3px #E0702A, inset 0 0 0 5px #07080F;padding:22px 28px;display:flex;flex-direction:column;gap:12px;min-height:0;overflow:auto">
+        <div style="display:flex;align-items:baseline;gap:14px">
+          <span style="font-size:28px;font-weight:700;color:#FFFFFF;text-shadow:-3px 0 #3A0A0C, 3px 0 #3A0A0C, 0 -3px #3A0A0C, 0 3px #3A0A0C, 0 5px #3A0A0C">{{cur.name}}</span>
+          <span style="font-family:'Silkscreen',monospace;font-size:11px;letter-spacing:1px;color:#F2B233">{{cur.date}}</span>
+        </div>
+        <sc-if value="{{cur.hasIntro}}" hint-placeholder-val="{{ false }}">
+          <span style="font-size:14px;line-height:1.45;color:#C9CCE6;max-width:760px">{{cur.intro}}</span>
+        </sc-if>
+        <sc-for list="{{cur.sections}}" as="s" hint-placeholder-count="2">
+          <div style="display:flex;flex-direction:column;gap:7px;max-width:760px">
+            <span style="font-family:'Silkscreen',monospace;font-size:11px;letter-spacing:1px;padding-bottom:3px;border-bottom:2px solid #2A2E55;{{s.st}}">{{s.name}}</span>
+            <sc-for list="{{s.items}}" as="it" hint-placeholder-count="3">
+              <div style="display:flex;gap:10px">
+                <span style="width:6px;height:6px;flex:none;margin-top:7px;background:#E0702A"></span>
+                <span style="font-size:15px;line-height:1.45;color:#F4EFE0">{{it.t}}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </article>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:16px">
+      <span style="width:300px;font-family:'Silkscreen',monospace;font-size:9px;letter-spacing:1px;color:#A9AED0">VERSÃO 0.18.0 · BUILD 2026-10-23</span>
+      <a href="OpcoesPC.dc.html" style="width:280px;height:52px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;background:#2A2E55;border:3px solid #07080F;box-shadow:inset 0 -3px 0 #171A36, inset 0 3px 0 #474C85;color:#F4EFE0;border-width:4px">VOLTAR</a>
+      <span style="width:300px;text-align:right;font-family:'Silkscreen',monospace;font-size:9px;letter-spacing:1px;color:#A9AED0">↑ ↓ TROCAM A VERSÃO · ESC VOLTA</span>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { sel: 0 };
+  }
+  renderVals() {
+    const D = {"versions":[{"i":0,"name":"Em desenvolvimento","date":"PRÓXIMA","counts":"5 novidades","intro":"","sections":[{"name":"NOVIDADES","st":"color:#7EF0FF","items":[{"t":"Conquistas: a medalha do caso abre 21 metas, como decompor 1.000 radicais livres ou durar 10 minutos. Cada uma dá ATP ou libera de graça um agente ou uma arma, e a tela mostra qual é a próxima."},{"t":"Cápsula de agente: às vezes, depois dos 3 minutos, aparece longe de você uma cápsula com um agente que você ainda não tem. Siga a seta dourada e toque nela para libertá-lo."},{"t":"Os casos já curados aparecem no palco do caso, com quantas runs levaram e o melhor tempo."},{"t":"Primeira run guiada: quem nunca jogou vê cartões curtos que ensinam a mover, pegar gemas e soltar o especial, sem pausar o jogo. Dá para pular."},{"t":"Wiki no Compêndio: \"Como jogar · Wiki\", no topo do Compêndio, abre 13 páginas com tudo o que o jogo faz, de agentes e armas ao organismo e ao glossário."}]}]},{"i":1,"name":"v0.18.0","date":"23/10/2026","counts":"9 novidades · 1 correção","intro":"","sections":[{"name":"NOVIDADES","st":"color:#7EF0FF","items":[{"t":"Escolha onde agir: depois da primeira estrela do caso, a faixa acima do JOGAR abre a tela \"Onde agir?\" com o corpo e os cinco locais. Cada local dobra uma família de molécula e cura mais o setor dele; \"Qualquer lugar\" sorteia e dá +10% de ATP."},{"t":"Sinergia agente × local: Dopamina no Cérebro, Lipase no Intestino e Insulina no Fígado começam com o perfil no nível 1 e, no fim da run, curam +4 no setor do par com o colateral pela metade. A Lipase não atravessa a barreira e não entra no Cérebro."},{"t":"Recordes e Compêndio mostram os locais, com o melhor tempo em cada um."},{"t":"Cada família de molécula se mexe do seu jeito: radicais erráticos, estresse com aura que acelera e protege os vizinhos, Acetaldeído que deixa poça tóxica e Peróxido que estoura ao encostar."},{"t":"Família nova, a inflamação: a Citocina fica parada soltando Bradicininas. Moléculas novas: Superóxido, Peróxido de hidrogênio, Noradrenalina e Amônia."},{"t":"Um chefe por local: LDL na Corrente sanguínea, NAPQI no Fígado, Amilopectina no Intestino, Benzopireno no Pulmão e CRH no Cérebro. Aos 15 minutos chega a Placa de ateroma."},{"t":"Efeitos de inimigo na fila de efeitos: Lentidão dentro da poça e Adrenalina ao decompor Adrenalina ou Noradrenalina."},{"t":"Seis agentes novos, cada um com ação, especial e local de sinergia: Vitamina C (escudo que bloqueia um golpe), Cafeína (anda mais rápido e dispara em todas as direções), Venvanse (pró-fármaco que começa fraco, feixe forte e Hiperfoco que desacelera tudo), Serotonina (aura calmante e Calmaria que desliga as auras do estresse), Ocitocina (aliados que orbitam) e Álcool desidrogenase (termina a cascata das toxinas e limpa as poças)."},{"t":"Três evoluções novas: Nuvem de Elétrons + Argônio vira Plasma, Poça de Solvente + Éter vira Solvente universal e Reação em Cadeia + Urânio vira Fissão. Os reagentes saem das ampolas."}]},{"name":"CORREÇÕES","st":"color:#FF8A7A","items":[{"t":"Com sinergia no local, o perfil do agente no nível 1 já vale desde o começo da run (antes só entrava no primeiro level up)."}]}]},{"i":2,"name":"v0.17.0","date":"23/10/2026","counts":"2 novidades · 1 ajuste · 1 correção","intro":"","sections":[{"name":"NOVIDADES","st":"color:#7EF0FF","items":[{"t":"Na pausa, a aba Atributos mostra de onde vem cada bônus: Laboratório, organismo, perfil do agente, receptores, suplementos, sinapses, Mutação e estruturas, cada um com a sua cor."},{"t":"Mapas com câmaras (um anel de obstáculos com uma entrada só e um destrutível no meio) e corredores (duas fileiras com uma passagem larga, que afunilam as moléculas)."}]},{"name":"AJUSTES","st":"color:#F2B233","items":[{"t":"Na aba Agentes, os agentes do campo longo aparecem como estão de verdade: liberados ou com o preço, em vez do aviso antigo de \"fase 4\"."}]},{"name":"CORREÇÕES","st":"color:#FF8A7A","items":[{"t":"A Poça de Solvente e a Emulsão da Lipase aparecem redondas, do tamanho da área de dano (antes pareciam um quadrado verde)."}]}]},{"i":3,"name":"v0.16.1","date":"23/10/2026","counts":"1 novidade","intro":"","sections":[{"name":"NOVIDADES","st":"color:#7EF0FF","items":[{"t":"Logo nova, toda em pixel: FARMACO na faixa vermelha, BATTLE em verde e uma cápsula acertando uma molécula. Ela aparece na tela de título e no carregamento, e o app instalado ganhou ícone próprio (com versão para Android e iPhone) e um ícone novo na aba do navegador."}]}]},{"i":4,"name":"v0.16.0","date":"23/10/2026","counts":"1 novidade · 2 ajustes · 1 correção","intro":"","sections":[{"name":"NOVIDADES","st":"color:#7EF0FF","items":[{"t":"Primeiros efeitos sonoros: o agente agora soa ao levar dano (mais pesado num golpe forte e diferente quando a Membrana segura), ao se curar, ao esquivar, com a Segunda dose, quando o especial fica pronto, ao ser consumido e num aviso de interações baixas. O volume de Efeitos das Opções passa a valer e toca uma amostra ao mudar."}]},{"name":"AJUSTES","st":"color:#F2B233","items":[{"t":"O agregado (mini chefe) volta a soltar sempre uma ampola Rara ou melhor."},{"t":"Se você deixar um agregado muito para trás, ele reaparece na sua frente, na direção em que você anda, com a vida que tinha, como no Vampire Survivors."}]},{"name":"CORREÇÕES","st":"color:#FF8A7A","items":[{"t":"Textos vazando no celular: na aba Agentes, o perfil do agente passava por baixo do preço e saía do cartão. Agora o cartão cresce com o texto e o preço fica numa linha própria. No Arsenal e no Compêndio as descrições quebram linha em vez de serem cortadas, e o tipo das moléculas aparece certo (AÇÚCAR e RADICAL, não AÇÚCARE e RADICAI)."}]}]},{"i":5,"name":"v0.15.1","date":"23/10/2026","counts":"1 novidade","intro":"","sections":[{"name":"NOVIDADES","st":"color:#7EF0FF","items":[{"t":"O jogo agora se chama Farmaco Battle! O nome novo aparece no título, na tela de carregamento e no app instalado. Seu save continua o mesmo, e os backups feitos antes da troca de nome continuam podendo ser importados."}]}]},{"i":6,"name":"v0.15.0","date":"23/10/2026","counts":"4 ajustes · 2 correções","intro":"","sections":[{"name":"AJUSTES","st":"color:#F2B233","items":[{"t":"Os objetos do mapa agora aparecem em grupos que fazem sentido no corpo: lóbulos do fígado (hepatócitos em volta da veia central), placas amiloides cercadas de astrócitos, colônias de bactérias no muco, cachos de alvéolos, hemácias empilhadas e outros. Sempre sobra uma passagem entre os grupos."},{"t":"Pegar um item do chão mostra o nome dele subindo em cima do agente, maior e em dourado (antes era pequeno, sumia rápido e não aparecia no ATP)."},{"t":"O Bico de Bunsen ficou muito mais forte: o leque de fogo tem quase o triplo do alcance, é mais aberto e derrete quase na hora qualquer molécula comum. Chefes e agregados levam só o dano normal do fogo."},{"t":"O agregado (mini chefe) ficou gigante, roxo e com um brilho dourado pulsando, sem o círculo vermelho em volta."}]},{"name":"CORREÇÕES","st":"color:#FF8A7A","items":[{"t":"As armas com mira agora atiram nos objetos que quebram (gota de gordura, bactéria, fuligem, placa amiloide, coágulo de fibrina) e nas vesículas quando estão mais perto que a molécula mais perto. Antes só quebravam por acaso, quando um disparo passava por eles."},{"t":"As Opções abertas pelo menu depois de uma run apareciam como se fossem da pausa, e VOLTAR travava o jogo."}]}]},{"i":7,"name":"v0.14.0","date":"23/10/2026","counts":"2 novidades","intro":"","sections":[{"name":"NOVIDADES","st":"color:#7EF0FF","items":[{"t":"O jogo tem música! Chiptune metal em todas as telas: tema de título, menus, campo longo e três faixas de run que esquentam aos 10 e aos 20 minutos. A crise entra por cima da run, o chefe tem música própria enquanto estiver vivo, e o level up, a cápsula, a ampola, a ALTA e o fim de run têm jingle."},{"t":"Opções novas, com as abas Som, Tela e Jogo. Na aba Som: mudo, volumes Geral, Música e Efeitos em barras de 10 passos, abafar a música na pausa e tocar com o app em segundo plano. No PC as três abas ficam lado a lado, e a tecla M liga e desliga o mudo."}]}]}]};
+    const sel = this.state.sel;
+    const versions = D.versions.map((v) => {
+      const on = v.i === sel;
+      return Object.assign({}, v, {
+        pick: () => this.setState({ sel: v.i }),
+        st: on ? 'background:#E0702A;border:3px solid #3A0A0C;box-shadow:inset 0 -4px 0 #9C3F12, inset 0 3px 0 #FFB347' : 'background:#2A2E55;border:3px solid #07080F;box-shadow:inset 0 -3px 0 #171A36',
+        nameSt: on ? 'color:#FFFFFF;text-shadow:0 2px #6E1E0A' : 'color:#F4EFE0',
+        dateSt: on ? 'color:#FFF2DC' : 'color:#8A8EB8',
+        countSt: on ? 'color:#FFF2DC' : 'color:#A9AED0'
+      });
+    });
+    const c = D.versions[sel];
+    const cur = Object.assign({}, c, { hasIntro: !!c.intro });
+    return { versions, cur };
+  }
+}
+</script>
+</body>
+</html>

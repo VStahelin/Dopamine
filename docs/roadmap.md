@@ -478,8 +478,8 @@ Deixar o jogo com a cara do canvas de identidade visual e pronto para outras pes
 **Ordem do que falta (Vitor, 23/10/2026):** primeiro os menus no desktop, depois os efeitos sonoros.
 
 1. **Menus no desktop.** A thread "Conceito desktop do menu" desenha as pranchetas no canvas. Depois que o Vitor aprovar, o código segue as pranchetas.
-   - [ ] Conceito no canvas aprovado: menu principal (aba Caso), Agentes, Arsenal, Laboratório, Organismo e Novidades.
-   - [ ] Menu principal em tela larga: laterais com o painel do agente e o do organismo.
+   - [ ] Conceito no canvas aprovado: menu principal (aba Caso), Agentes, Arsenal, Laboratório, Organismo e Novidades. Pranchetas prontas no canvas (linha "Menu no PC", [menu.md](menu.md#tela-larga-pc-celular-deitado)), esperando o Vitor.
+   - [ ] Menu principal em tela larga: barra de status no topo, abas num trilho à esquerda, laterais com o painel do agente e o do organismo.
    - [ ] Abas Agentes, Arsenal, Laboratório e Organismo em colunas.
    - [ ] Novidades em duas colunas: as versões e a versão escolhida.
    - [ ] Validar em 1280×800 e 1920×1080, e conferir que no celular nada mudou.
