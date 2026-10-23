@@ -3,55 +3,493 @@
   "chunkTiles": 16,
   "activeRadius": 1,
   "discardRadius": 2,
-  "floorNoise": { "scaleTiles": 6, "threshold": 0.62, "variant2Chance": 0.04 },
-  "densityNoise": { "scaleTiles": 32 },
-  "densities": {
-    "open": { "name": "Aberto", "chance": 0.25, "obstacles": [2, 4], "destructibles": [0, 1] },
-    "standard": { "name": "Padrão", "chance": 0.5, "obstacles": [5, 8], "destructibles": [1, 2] },
-    "dense": { "name": "Denso", "chance": 0.25, "obstacles": [9, 12], "destructibles": [1, 2] }
+  "floorNoise": {
+    "scaleTiles": 6,
+    "threshold": 0.62,
+    "variant2Chance": 0.04
   },
-  "obstacleMinDistanceTiles": 3,
+  "densityNoise": {
+    "scaleTiles": 32
+  },
+  "densities": {
+    "open": {
+      "name": "Aberto",
+      "chance": 0.25,
+      "groups": [0, 1],
+      "obstacles": [1, 2],
+      "destructibles": [0, 1]
+    },
+    "standard": {
+      "name": "Padrão",
+      "chance": 0.5,
+      "groups": [1, 2],
+      "obstacles": [2, 3],
+      "destructibles": [0, 1]
+    },
+    "dense": {
+      "name": "Denso",
+      "chance": 0.25,
+      "groups": [2, 3],
+      "obstacles": [3, 5],
+      "destructibles": [0, 1]
+    }
+  },
+  "passageTiles": 2,
   "edgeMarginTiles": 1.5,
-  "clusterChance": 0.3,
   "startFreeTiles": 4,
-  "decorPerChunk": [6, 12],
+  "decorPerChunk": [2, 4],
   "nestChance": 0.12,
   "nestVesicles": [3, 5],
   "environments": {
     "blood": {
       "name": "Corrente sanguínea",
       "tiles": ["blood_base", "blood_flow", "blood_protein"],
-      "obstacles": { "redCell": 13, "cholesterol": 11 },
-      "destructible": { "id": "fibrinClot", "radius": 12, "hits": 3, "drop": "none" },
-      "decor": ["platelet", "albumin"]
+      "obstacles": {
+        "redCell": 13,
+        "cholesterol": 11
+      },
+      "destructible": {
+        "id": "fibrinClot",
+        "radius": 12,
+        "hits": 3,
+        "drop": "none"
+      },
+      "decor": ["platelet", "albumin"],
+      "groups": [
+        {
+          "name": "Placa de ateroma",
+          "why": "O colesterol gruda na parede do vaso e se acumula; em cima da placa, as plaquetas começam um coágulo.",
+          "weight": 3,
+          "parts": [
+            {
+              "kind": "obstacle",
+              "shape": "center",
+              "sprite": "cholesterol"
+            },
+            {
+              "kind": "obstacle",
+              "shape": "cluster",
+              "sprite": "cholesterol",
+              "count": [2, 3],
+              "radiusTiles": 1.3
+            },
+            {
+              "kind": "destructible",
+              "shape": "cluster",
+              "count": [0, 1],
+              "radiusTiles": 1.7
+            },
+            {
+              "kind": "decor",
+              "shape": "scatter",
+              "sprite": "platelet",
+              "count": [2, 4],
+              "radiusTiles": 2.2
+            }
+          ]
+        },
+        {
+          "name": "Hemácias empilhadas",
+          "why": "Em fluxo lento, as hemácias se empilham como moedas (rouleaux) na direção da corrente.",
+          "weight": 3,
+          "parts": [
+            {
+              "kind": "obstacle",
+              "shape": "line",
+              "sprite": "redCell",
+              "count": [3, 4],
+              "spacingTiles": 0.9
+            },
+            {
+              "kind": "decor",
+              "shape": "scatter",
+              "sprite": "albumin",
+              "count": [2, 3],
+              "radiusTiles": 2.4
+            }
+          ]
+        },
+        {
+          "name": "Coágulo em formação",
+          "why": "A fibrina prende as hemácias em volta; as plaquetas chegam para fechar o buraco.",
+          "weight": 2,
+          "parts": [
+            {
+              "kind": "destructible",
+              "shape": "center"
+            },
+            {
+              "kind": "obstacle",
+              "shape": "ring",
+              "sprite": "redCell",
+              "count": [5, 6],
+              "radiusTiles": 1.8,
+              "gap": true
+            },
+            {
+              "kind": "decor",
+              "shape": "scatter",
+              "sprite": "platelet",
+              "count": [3, 5],
+              "radiusTiles": 1.3
+            }
+          ]
+        }
+      ]
     },
     "liver": {
       "name": "Fígado",
       "tiles": ["liver_base", "liver_nuclei", "liver_fat"],
-      "obstacles": { "hepatocyte": 13, "centralVein": 12 },
-      "destructible": { "id": "fatDroplet", "radius": 11, "hits": 1, "drop": "atp" },
-      "decor": ["bile", "kupffer"]
+      "obstacles": {
+        "hepatocyte": 13,
+        "centralVein": 12
+      },
+      "destructible": {
+        "id": "fatDroplet",
+        "radius": 11,
+        "hits": 1,
+        "drop": "atp"
+      },
+      "decor": ["bile", "kupffer"],
+      "groups": [
+        {
+          "name": "Lóbulo hepático",
+          "why": "O fígado é feito de lóbulos: hepatócitos em volta de uma veia central, com bile correndo por fora.",
+          "weight": 4,
+          "parts": [
+            {
+              "kind": "obstacle",
+              "shape": "center",
+              "sprite": "centralVein"
+            },
+            {
+              "kind": "obstacle",
+              "shape": "ring",
+              "sprite": "hepatocyte",
+              "count": [6, 7],
+              "radiusTiles": 2.4,
+              "gap": true
+            },
+            {
+              "kind": "decor",
+              "shape": "scatter",
+              "sprite": "kupffer",
+              "count": [1, 2],
+              "radiusTiles": 1.2
+            },
+            {
+              "kind": "decor",
+              "shape": "ring",
+              "sprite": "bile",
+              "count": [4, 5],
+              "radiusTiles": 3.3
+            }
+          ]
+        },
+        {
+          "name": "Esteatose",
+          "why": "Gordura acumulada dentro de um grupo de hepatócitos: as gotas ficam no meio e soltam ATP.",
+          "weight": 2,
+          "parts": [
+            {
+              "kind": "destructible",
+              "shape": "cluster",
+              "count": [2, 3],
+              "radiusTiles": 1.0
+            },
+            {
+              "kind": "obstacle",
+              "shape": "ring",
+              "sprite": "hepatocyte",
+              "count": [4, 5],
+              "radiusTiles": 2.2,
+              "gap": true
+            }
+          ]
+        },
+        {
+          "name": "Cordão de hepatócitos",
+          "why": "Entre os lóbulos, os hepatócitos formam fileiras, com os canais de bile ao lado.",
+          "weight": 2,
+          "parts": [
+            {
+              "kind": "obstacle",
+              "shape": "line",
+              "sprite": "hepatocyte",
+              "count": [3, 5],
+              "spacingTiles": 0.95
+            },
+            {
+              "kind": "decor",
+              "shape": "scatter",
+              "sprite": "bile",
+              "count": [2, 3],
+              "radiusTiles": 2.0
+            }
+          ]
+        }
+      ]
     },
     "intestine": {
       "name": "Intestino",
       "tiles": ["intestine_base", "intestine_crypts", "intestine_mucus"],
-      "obstacles": { "villus": 12, "fiber": 13 },
-      "destructible": { "id": "bacterium", "radius": 11, "hits": 1, "drop": "gem" },
-      "decor": ["mucus", "enzyme"]
+      "obstacles": {
+        "villus": 12,
+        "fiber": 13
+      },
+      "destructible": {
+        "id": "bacterium",
+        "radius": 11,
+        "hits": 1,
+        "drop": "gem"
+      },
+      "decor": ["mucus", "enzyme"],
+      "groups": [
+        {
+          "name": "Fileira de vilosidades",
+          "why": "As vilosidades crescem lado a lado na parede, e as enzimas trabalham entre elas.",
+          "weight": 3,
+          "parts": [
+            {
+              "kind": "obstacle",
+              "shape": "line",
+              "sprite": "villus",
+              "count": [4, 5],
+              "spacingTiles": 1.0
+            },
+            {
+              "kind": "decor",
+              "shape": "scatter",
+              "sprite": "enzyme",
+              "count": [2, 3],
+              "radiusTiles": 1.8
+            }
+          ]
+        },
+        {
+          "name": "Colônia bacteriana",
+          "why": "As bactérias da flora crescem juntas no muco, presas às fibras.",
+          "weight": 3,
+          "parts": [
+            {
+              "kind": "destructible",
+              "shape": "cluster",
+              "count": [2, 4],
+              "radiusTiles": 1.3
+            },
+            {
+              "kind": "obstacle",
+              "shape": "cluster",
+              "sprite": "fiber",
+              "count": [0, 1],
+              "radiusTiles": 2.3
+            },
+            {
+              "kind": "decor",
+              "shape": "scatter",
+              "sprite": "mucus",
+              "count": [2, 4],
+              "radiusTiles": 1.8
+            }
+          ]
+        },
+        {
+          "name": "Bolo de fibras",
+          "why": "Fibra que o corpo não digere se embola; às vezes uma bactéria se instala nela.",
+          "weight": 2,
+          "parts": [
+            {
+              "kind": "obstacle",
+              "shape": "cluster",
+              "sprite": "fiber",
+              "count": [2, 3],
+              "radiusTiles": 1.1
+            },
+            {
+              "kind": "destructible",
+              "shape": "cluster",
+              "count": [0, 1],
+              "radiusTiles": 2.0
+            }
+          ]
+        }
+      ]
     },
     "lung": {
       "name": "Pulmão",
       "tiles": ["lung_base", "lung_air", "lung_dust"],
-      "obstacles": { "alveolus": 13, "bronchus": 12 },
-      "destructible": { "id": "soot", "radius": 11, "hits": 2, "drop": "gem" },
-      "decor": ["airBubble", "macrophage"]
+      "obstacles": {
+        "alveolus": 13,
+        "bronchus": 12
+      },
+      "destructible": {
+        "id": "soot",
+        "radius": 11,
+        "hits": 2,
+        "drop": "gem"
+      },
+      "decor": ["airBubble", "macrophage"],
+      "groups": [
+        {
+          "name": "Cacho de alvéolos",
+          "why": "Cada bronquíolo termina num cacho de alvéolos, onde o ar troca de lugar com o sangue.",
+          "weight": 4,
+          "parts": [
+            {
+              "kind": "obstacle",
+              "shape": "center",
+              "sprite": "bronchus"
+            },
+            {
+              "kind": "obstacle",
+              "shape": "ring",
+              "sprite": "alveolus",
+              "count": [4, 5],
+              "radiusTiles": 1.5,
+              "gap": true
+            },
+            {
+              "kind": "decor",
+              "shape": "scatter",
+              "sprite": "airBubble",
+              "count": [2, 3],
+              "radiusTiles": 2.4
+            }
+          ]
+        },
+        {
+          "name": "Depósito de fuligem",
+          "why": "A fuligem respirada se junta num ponto, e os macrófagos chegam em volta para limpar.",
+          "weight": 3,
+          "parts": [
+            {
+              "kind": "destructible",
+              "shape": "cluster",
+              "count": [2, 3],
+              "radiusTiles": 1.1
+            },
+            {
+              "kind": "decor",
+              "shape": "ring",
+              "sprite": "macrophage",
+              "count": [2, 3],
+              "radiusTiles": 2.0
+            }
+          ]
+        },
+        {
+          "name": "Ramo bronquial",
+          "why": "Os brônquios se dividem em ramos que levam o ar para dentro.",
+          "weight": 2,
+          "parts": [
+            {
+              "kind": "obstacle",
+              "shape": "line",
+              "sprite": "bronchus",
+              "count": [3, 4],
+              "spacingTiles": 0.9
+            },
+            {
+              "kind": "decor",
+              "shape": "scatter",
+              "sprite": "airBubble",
+              "count": [1, 2],
+              "radiusTiles": 1.8
+            }
+          ]
+        }
+      ]
     },
     "brain": {
       "name": "Cérebro",
       "tiles": ["brain_base", "brain_glia", "brain_axon"],
-      "obstacles": { "neuron": 13, "astrocyte": 12 },
-      "destructible": { "id": "amyloid", "radius": 12, "hits": 2, "drop": "vesicle" },
-      "decor": ["synapse", "myelin"]
+      "obstacles": {
+        "neuron": 13,
+        "astrocyte": 12
+      },
+      "destructible": {
+        "id": "amyloid",
+        "radius": 12,
+        "hits": 2,
+        "drop": "vesicle"
+      },
+      "decor": ["synapse", "myelin"],
+      "groups": [
+        {
+          "name": "Rede de neurônios",
+          "why": "Neurônios ligados por sinapses, com mielina nos axônios entre eles.",
+          "weight": 3,
+          "parts": [
+            {
+              "kind": "obstacle",
+              "shape": "cluster",
+              "sprite": "neuron",
+              "count": [2, 3],
+              "radiusTiles": 1.8
+            },
+            {
+              "kind": "decor",
+              "shape": "scatter",
+              "sprite": "synapse",
+              "count": [3, 4],
+              "radiusTiles": 1.6
+            },
+            {
+              "kind": "decor",
+              "shape": "scatter",
+              "sprite": "myelin",
+              "count": [2, 3],
+              "radiusTiles": 2.3
+            }
+          ]
+        },
+        {
+          "name": "Placa amiloide",
+          "why": "Proteína amiloide acumulada (como no Alzheimer); os astrócitos cercam a placa para isolar o estrago.",
+          "weight": 3,
+          "parts": [
+            {
+              "kind": "destructible",
+              "shape": "center"
+            },
+            {
+              "kind": "obstacle",
+              "shape": "ring",
+              "sprite": "astrocyte",
+              "count": [3, 4],
+              "radiusTiles": 1.9,
+              "gap": true
+            }
+          ]
+        },
+        {
+          "name": "Neurônio e astrócitos",
+          "why": "Os astrócitos ficam em volta do neurônio, alimentando e protegendo.",
+          "weight": 2,
+          "parts": [
+            {
+              "kind": "obstacle",
+              "shape": "center",
+              "sprite": "neuron"
+            },
+            {
+              "kind": "obstacle",
+              "shape": "ring",
+              "sprite": "astrocyte",
+              "count": [2, 3],
+              "radiusTiles": 1.5,
+              "gap": true
+            },
+            {
+              "kind": "decor",
+              "shape": "scatter",
+              "sprite": "synapse",
+              "count": [1, 2],
+              "radiusTiles": 2.2
+            }
+          ]
+        }
+      ]
     }
   }
 }

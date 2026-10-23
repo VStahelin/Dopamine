@@ -38,3 +38,4 @@ As decisões de design tomadas antes deste registro continuam marcadas como "dec
 | [0030](0030-variedade-da-run-reformulada.md) | Fase 5.6 reformulada: crises pela doença, receptor nativo e Superdosagem de atributos | design | proposta |
 | [0031](0031-lancar-em-todas-as-plataformas.md) | Lançar em todas as plataformas, empacotando a mesma build web | processo | proposta |
 | [0032](0032-local-escolhido-e-sinergia.md) | Local do corpo escolhido pelo jogador, com sinergia agente × local na saúde (fase 5.12) | design | proposta |
+| [0033](0033-grupos-de-objetos-no-mapa.md) | Objetos do mapa em grupos com motivo biológico | design | proposta |

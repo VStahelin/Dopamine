@@ -33,24 +33,42 @@ describe('mapas gerados (fase 5.7)', () => {
     }
   });
 
-  it('obstáculos de grupos diferentes ficam longe o bastante para passar', () => {
-    const min = MAP.obstacleMinDistanceTiles * MAP.tileSizePx;
+  it('grupos diferentes deixam uma passagem entre eles', () => {
+    const passage = MAP.passageTiles * MAP.tileSizePx;
     for (let seed = 1; seed <= 20; seed++) {
       const c = generateChunk(MAP, { ...params, seed }, 2, 2);
-      // O primeiro objeto de cada grupo é o que respeita a distância; as cópias encostam nele.
-      const anchors = c.objects.filter(
-        (o, i) =>
-          o.kind !== 'decor' &&
-          !c.objects
-            .slice(0, i)
-            .some((p) => p.sprite === o.sprite && Math.hypot(p.x - o.x, p.y - o.y) < p.radius * 2),
-      );
-      for (const a of anchors) {
-        for (const b of anchors) {
-          if (a === b) continue;
-          expect(Math.hypot(a.x - b.x, a.y - b.y)).toBeGreaterThanOrEqual(min - 1);
+      const solids = c.objects.filter((o) => o.kind !== 'decor');
+      for (const a of solids) {
+        for (const b of solids) {
+          if (a.group === b.group) continue;
+          const gap = Math.hypot(a.x - b.x, a.y - b.y) - a.radius - b.radius;
+          expect(gap).toBeGreaterThanOrEqual(passage - 1);
         }
       }
+    }
+  });
+
+  it('cada ambiente monta grupos com motivo, com objetos que existem nele', () => {
+    for (const env of Object.keys(MAP.environments) as (keyof typeof MAP.environments)[]) {
+      const def = MAP.environments[env];
+      expect(def.groups.length).toBeGreaterThan(0);
+      for (const g of def.groups) {
+        expect(g.why.length).toBeGreaterThan(0);
+        for (const part of g.parts) {
+          if (part.kind === 'obstacle') expect(def.obstacles[part.sprite!]).toBeDefined();
+          if (part.kind === 'decor') expect(def.decor).toContain(part.sprite);
+        }
+      }
+      // Num mapa denso, a maior parte dos objetos com colisão vem em grupos de mais de um.
+      let grouped = 0;
+      let total = 0;
+      for (let seed = 1; seed <= 10; seed++) {
+        const c = generateChunk(MAP, { seed, env, density: 'dense' }, 3, 1);
+        const solids = c.objects.filter((o) => o.kind !== 'decor');
+        total += solids.length;
+        grouped += solids.filter((o) => solids.some((p) => p !== o && p.group === o.group)).length;
+      }
+      expect(grouped / total).toBeGreaterThan(0.5);
     }
   });
 

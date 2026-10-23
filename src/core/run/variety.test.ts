@@ -45,7 +45,7 @@ describe('formações e crises (fase 5.6)', () => {
 
   it('a doença escolhe a formação: Física baixa traz açúcares e lipídios', () => {
     const counts: Record<string, number> = {};
-    for (let seed = 1; seed <= 40; seed++) {
+    for (let seed = 1; seed <= 80; seed++) {
       const r = createRun(
         seed,
         rules({ sugar: 2.5, lipid: 2.5, stress: 0.2, radical: 0.2, toxin: 0.2 }),
@@ -55,7 +55,7 @@ describe('formações e crises (fase 5.6)', () => {
       counts[id] = (counts[id] ?? 0) + 1;
     }
     const physical = (counts.glycemicSpike ?? 0) + (counts.lipidWall ?? 0);
-    expect(physical).toBeGreaterThan(25);
+    expect(physical).toBeGreaterThan(44);
   });
 
   it('o pico do dente de serra traz a crise: a formação da doença em dobro', () => {

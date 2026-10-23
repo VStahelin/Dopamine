@@ -1,4 +1,10 @@
-import type { MapConfig, MapDensity, MapEnvironment } from '../../config';
+import type {
+  MapConfig,
+  MapDensity,
+  MapEnvironment,
+  MapEnvironmentDef,
+  MapGroupDef,
+} from '../../config';
 import { Rng } from '../random';
 import { hash, lattice, valueNoise } from './noise';
 
@@ -16,6 +22,8 @@ export interface MapObject {
   y: number;
   /** Raio de colisão (0 na decoração). */
   radius: number;
+  /** Grupo do bloco a que pertence (docs/mapas.md, "Grupos"); -1 na decoração solta. */
+  group: number;
 }
 
 export interface Chunk {
@@ -62,51 +70,69 @@ export function generateChunk(cfg: MapConfig, p: MapParams, bx: number, by: numb
   const cy = by * n + n / 2;
   const local = 0.3 + valueNoise(p.seed + 2, cx, cy, cfg.densityNoise.scaleTiles);
   const density = cfg.densities[p.density];
-  const maxObstacles = Math.round(between(rng, density.obstacles) * local);
+
+  const groups = Math.round(between(rng, density.groups) * local);
+  const singles = Math.round(between(rng, density.obstacles) * local);
   const destructibles = between(rng, density.destructibles);
 
-  // 3. Pontos com distância mínima (amostragem por tentativa), longe da borda e do começo.
-  const minDist = cfg.obstacleMinDistanceTiles * tile;
+  // 3. O que vai no bloco: primeiro os grupos com motivo, depois os objetos soltos.
+  const obstacleIds = Object.keys(env.obstacles);
+  const layouts: Layout[] = [];
+  for (let i = 0; i < groups; i++) {
+    const def = rng.weighted(env.groups, (g) => g.weight);
+    if (def) layouts.push(layoutGroup(def, env, tile, rng));
+  }
+  for (let i = 0; i < singles; i++) {
+    const sprite = obstacleIds[rng.int(obstacleIds.length)]!;
+    const radius = env.obstacles[sprite]!;
+    layouts.push({ footprint: radius, parts: [{ kind: 'obstacle', sprite, x: 0, y: 0, radius }] });
+  }
+  for (let i = 0; i < destructibles; i++) {
+    const { id, radius } = env.destructible;
+    layouts.push({
+      footprint: radius,
+      parts: [{ kind: 'destructible', sprite: id, x: 0, y: 0, radius }],
+    });
+  }
+
+  // 4. Cada um num lugar livre: longe da borda, do começo da run e dos outros, com uma passagem
+  // de `passageTiles` entre eles, borda a borda.
+  const passage = cfg.passageTiles * tile;
   const margin = cfg.edgeMarginTiles * tile;
   const startFree = cfg.startFreeTiles * tile;
   const ox = bx * size;
   const oy = by * size;
-  const points: { x: number; y: number }[] = [];
-  for (let tries = 0; tries < 60 && points.length < maxObstacles + destructibles; tries++) {
-    const x = ox + rng.range(margin, size - margin);
-    const y = oy + rng.range(margin, size - margin);
-    if (x * x + y * y < startFree * startFree) continue;
-    if (points.some((q) => (q.x - x) ** 2 + (q.y - y) ** 2 < minDist * minDist)) continue;
-    points.push({ x, y });
-  }
-
   const objects: MapObject[] = [];
-  const push = (kind: MapObject['kind'], sprite: string, x: number, y: number, radius: number) =>
-    objects.push({ index: objects.length, kind, sprite, x, y, radius });
-  const obstacleIds = Object.keys(env.obstacles);
-  points.forEach((pt, i) => {
-    if (i < destructibles) {
-      push('destructible', env.destructible.id, pt.x, pt.y, env.destructible.radius);
-      return;
-    }
-    const sprite = obstacleIds[rng.int(obstacleIds.length)]!;
-    const r = env.obstacles[sprite]!;
-    push('obstacle', sprite, pt.x, pt.y, r);
-    // Aglomerado: 1 ou 2 cópias encostadas (o grupo conta como um obstáculo só).
-    if (rng.next() < cfg.clusterChance) {
-      const copies = 1 + rng.int(2);
-      for (let c = 0; c < copies; c++) {
-        const a = rng.range(0, Math.PI * 2);
-        push('obstacle', sprite, pt.x + Math.cos(a) * r * 1.8, pt.y + Math.sin(a) * r * 1.8, r);
+  const placed: { x: number; y: number; footprint: number }[] = [];
+  layouts.forEach((layout, group) => {
+    const f = layout.footprint;
+    if (margin + f > size - margin - f) return;
+    for (let tries = 0; tries < 30; tries++) {
+      const x = ox + rng.range(margin + f, size - margin - f);
+      const y = oy + rng.range(margin + f, size - margin - f);
+      if (Math.hypot(x, y) < startFree + f) continue;
+      if (placed.some((q) => Math.hypot(q.x - x, q.y - y) < q.footprint + f + passage)) continue;
+      placed.push({ x, y, footprint: f });
+      for (const o of layout.parts) {
+        objects.push({ ...o, index: objects.length, x: x + o.x, y: y + o.y, group });
       }
+      return;
     }
   });
 
-  // 5. Decoração, sem colisão, em qualquer lugar.
+  // 5. Decoração solta, sem colisão, em qualquer lugar (a maior parte vem nos grupos).
   const decor = between(rng, cfg.decorPerChunk);
   for (let i = 0; i < decor; i++) {
     const sprite = env.decor[rng.int(env.decor.length)]!;
-    push('decor', sprite, ox + rng.range(0, size), oy + rng.range(0, size), 0);
+    objects.push({
+      index: objects.length,
+      kind: 'decor',
+      sprite,
+      x: ox + rng.range(0, size),
+      y: oy + rng.range(0, size),
+      radius: 0,
+      group: -1,
+    });
   }
 
   // 6. Ninho de vesículas, nunca no bloco do começo.
@@ -122,6 +148,75 @@ export function generateChunk(cfg: MapConfig, p: MapParams, bx: number, by: numb
   }
 
   return { bx, by, tiles, objects, nest };
+}
+
+/** Um grupo (ou objeto solto) montado em volta de (0, 0), antes de ir para o bloco. */
+interface Layout {
+  /** Raio que os objetos com colisão ocupam, da borda de fora ao centro. */
+  footprint: number;
+  parts: Omit<MapObject, 'index' | 'group'>[];
+}
+
+/**
+ * Monta um grupo com motivo (docs/mapas.md, "Grupos") em volta de (0, 0): centro, anel com
+ * abertura, fileira, aglomerado ou dispersão, parte por parte.
+ */
+function layoutGroup(def: MapGroupDef, env: MapEnvironmentDef, tile: number, rng: Rng): Layout {
+  const parts: Layout['parts'] = [];
+  const free = (x: number, y: number, r: number) =>
+    parts.every((o) => o.radius === 0 || Math.hypot(o.x - x, o.y - y) >= o.radius + r);
+  for (const part of def.parts) {
+    const destructible = part.kind === 'destructible';
+    const sprite = destructible ? env.destructible.id : part.sprite!;
+    const radius =
+      part.kind === 'decor' ? 0 : destructible ? env.destructible.radius : env.obstacles[sprite]!;
+    const n = part.shape === 'center' ? 1 : between(rng, part.count ?? [1, 1]);
+    const reach = (part.radiusTiles ?? 1) * tile;
+    const add = (x: number, y: number) => parts.push({ kind: part.kind, sprite, x, y, radius });
+    switch (part.shape) {
+      case 'center':
+        add(0, 0);
+        break;
+      case 'ring': {
+        // Uma posição a mais fica vazia: a entrada do anel.
+        const slots = n + (part.gap ? 1 : 0);
+        const a0 = rng.range(0, Math.PI * 2);
+        for (let i = 0; i < n; i++) {
+          const a = a0 + (i / slots) * Math.PI * 2;
+          add(Math.cos(a) * reach, Math.sin(a) * reach);
+        }
+        break;
+      }
+      case 'line': {
+        const a = rng.range(0, Math.PI);
+        const step = (part.spacingTiles ?? 1) * tile;
+        for (let i = 0; i < n; i++) {
+          const d = (i - (n - 1) / 2) * step;
+          add(Math.cos(a) * d, Math.sin(a) * d);
+        }
+        break;
+      }
+      case 'cluster':
+      case 'scatter':
+        for (let i = 0; i < n; i++) {
+          for (let tries = 0; tries < 20; tries++) {
+            const a = rng.range(0, Math.PI * 2);
+            const d = Math.sqrt(rng.next()) * reach;
+            const x = Math.cos(a) * d;
+            const y = Math.sin(a) * d;
+            if (radius > 0 && !free(x, y, radius)) continue;
+            add(x, y);
+            break;
+          }
+        }
+        break;
+    }
+  }
+  const footprint = parts.reduce(
+    (m, o) => (o.radius > 0 ? Math.max(m, Math.hypot(o.x, o.y) + o.radius) : m),
+    0,
+  );
+  return { footprint, parts };
 }
 
 /** Sorteia o ambiente e a densidade da run a partir da semente. */

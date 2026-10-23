@@ -32,21 +32,22 @@ O mundo continua infinito, como hoje. Ele é dividido em **blocos** (chunks) de 
 
 1. **Chão.** Todo tile começa no tile base do ambiente. Um ruído suave, com manchas de uns 6 tiles, troca o base pela variação 1 onde passa de 0,62; cada tile tem mais 4% de chance de virar a variação 2. As variações só mudam o miolo do tile, então qualquer vizinho casa.
 2. **Densidade local.** Um segundo ruído, bem mais largo (cerca de 2 blocos), cria clareiras e trechos fechados dentro da mesma run.
-3. **Obstáculos.** Pontos sorteados com distância mínima de 3 tiles entre si (amostragem de Poisson). Cada ponto vira obstáculo se a densidade local deixar, até o limite da densidade da run. 30% dos obstáculos vêm em aglomerado de 2 ou 3 cópias encostadas.
-4. **Destrutíveis.** 0 a 2 por bloco, nos pontos que sobraram.
-5. **Decoração.** 6 a 12 por bloco, em qualquer lugar livre; não tem colisão.
-6. **Ponto de interesse.** 12% de chance por bloco, nunca no bloco inicial nem colado a outro ponto de interesse.
+3. **Grupos.** Alguns grupos com motivo do ambiente (veja [Grupos](#grupos)), sorteados pelo peso, conforme a densidade da run e a local ([decisão 0033](decisoes/0033-grupos-de-objetos-no-mapa.md), proposta).
+4. **Objetos soltos.** Poucos obstáculos e destrutíveis sozinhos, para o espaço entre os grupos não ficar vazio.
+5. **Lugar de cada um.** Cada grupo (ou objeto solto) vai para um ponto sorteado longe da borda do bloco e do começo da run, com uma passagem de 2 tiles, borda a borda, até o vizinho mais perto.
+6. **Decoração solta.** 2 a 4 por bloco, em qualquer lugar; o resto da decoração vem nos grupos.
+7. **Ponto de interesse.** 12% de chance por bloco, nunca no bloco inicial nem colado a outro ponto de interesse.
 
-| Densidade | Chance na run | Obstáculos por bloco | Destrutíveis por bloco |
-| --- | --- | --- | --- |
-| Aberto | 25% | 2 a 4 | 0 a 1 |
-| Padrão | 50% | 5 a 8 | 1 a 2 |
-| Denso | 25% | 9 a 12 | 1 a 2 |
+| Densidade | Chance na run | Grupos por bloco | Obstáculos soltos | Destrutíveis soltos |
+| --- | --- | --- | --- | --- |
+| Aberto | 25% | 0 a 1 | 1 a 2 | 0 a 1 |
+| Padrão | 50% | 1 a 2 | 2 a 3 | 0 a 1 |
+| Denso | 25% | 2 a 3 | 3 a 5 | 0 a 1 |
 
 ### Regras que nunca quebram
 
 - **Começo livre:** nada com colisão num raio de 4 tiles do ponto de início.
-- **Sempre passa:** dois obstáculos (ou aglomerados) ficam a pelo menos 3 tiles um do outro, o triplo do agente. Assim nenhum beco fecha e não precisa de busca de caminho.
+- **Sempre passa:** entre dois grupos (ou objetos soltos) fica uma passagem de pelo menos 2 tiles, borda a borda, mais que o dobro do agente. Todo anel tem uma abertura. Assim nenhum beco fecha e não precisa de busca de caminho.
 - **Colisão simples:** obstáculo é um círculo. Agente e moléculas deslizam pela borda; projéteis, gemas e ATP passam por cima.
 - **Quem atravessa:** o chefe e as moléculas das formações da [fase 5.6](roadmap.md#fase-56-variedade-da-run) ignoram obstáculos; o chefe quebra os destrutíveis em que encosta.
 - **Nada nasce dentro:** molécula, gema ou item que cairia dentro de um obstáculo é empurrado para o lugar livre mais perto.
@@ -171,6 +172,38 @@ A sinergia deixa a run mais dura (a família dobrada é a que a doença já puxa
 
 Quando virar código, em `src/config/map.json` (por ambiente: `family`, `sector`, e as regras gerais `localFamilyWeight` 2, `localSectorMultiplier` 1,5, `randomLocalAtpBonus` 0,1, `unlockStar` 1) e em `src/config/agents.json` (por agente: `synergy` com o local e o setor, e `crossesBloodBrainBarrier`). A sinergia (`synergyHealth` 4, `synergyCollateralMultiplier` 0,5, `synergyNativeReceptorLevel` 1) fica em `src/config/organism.json`, junto com as outras regras de saúde. As contas ficam em `src/core/organism/`, sem Phaser.
 
+## Grupos
+
+Os objetos não nascem sozinhos: cada bloco recebe grupos que têm um motivo no corpo, como numa lâmina de histologia ([decisão 0033](decisoes/0033-grupos-de-objetos-no-mapa.md), proposta). Um grupo é feito de partes, e cada parte põe um objeto do ambiente numa forma em volta do centro do grupo:
+
+| Forma | Como fica |
+| --- | --- |
+| Centro | Um objeto no meio do grupo |
+| Anel | Objetos em volta, com uma posição vazia que serve de entrada |
+| Fileira | Objetos em linha, numa direção sorteada |
+| Aglomerado | Objetos juntos sem se sobrepor, dentro de um raio |
+| Dispersão | Decoração espalhada dentro de um raio |
+
+| Ambiente | Grupo | O que tem | Por que existe |
+| --- | --- | --- | --- |
+| Corrente sanguínea | Placa de ateroma | Colesterol no meio e em volta, às vezes um coágulo de fibrina, plaquetas | O colesterol gruda na parede e se acumula; em cima da placa, as plaquetas começam um coágulo |
+| | Hemácias empilhadas | 3 ou 4 hemácias em fileira, albumina em volta | Em fluxo lento, as hemácias se empilham como moedas (rouleaux) |
+| | Coágulo em formação | Coágulo de fibrina no meio, anel de hemácias, plaquetas | A fibrina prende as hemácias; as plaquetas chegam para fechar o buraco |
+| Fígado | Lóbulo hepático | Veia central, anel de 6 ou 7 hepatócitos, Kupffer dentro, bile em volta | É a unidade do fígado: hepatócitos em volta da veia central, bile correndo por fora |
+| | Esteatose | 2 ou 3 gotas de gordura cercadas de hepatócitos | Gordura acumulada dentro de um grupo de hepatócitos |
+| | Cordão de hepatócitos | Fileira de hepatócitos com bile ao lado | Entre os lóbulos, os hepatócitos formam fileiras |
+| Intestino | Fileira de vilosidades | 4 ou 5 vilosidades em linha, enzimas entre elas | As vilosidades crescem lado a lado na parede |
+| | Colônia bacteriana | 2 a 4 bactérias juntas, às vezes uma fibra, muco | A flora cresce junta no muco, presa às fibras |
+| | Bolo de fibras | 2 ou 3 fibras emboladas, às vezes uma bactéria | Fibra não digerida se embola |
+| Pulmão | Cacho de alvéolos | Brônquio no meio, anel de alvéolos, bolhas de ar | Cada bronquíolo termina num cacho de alvéolos |
+| | Depósito de fuligem | 2 ou 3 fuligens juntas, macrófagos em volta | A fuligem respirada se junta e os macrófagos chegam para limpar |
+| | Ramo bronquial | Fileira de brônquios, bolhas de ar | Os brônquios se dividem em ramos |
+| Cérebro | Rede de neurônios | 2 ou 3 neurônios, sinapses e mielina entre eles | Neurônios ligados por sinapses, com mielina nos axônios |
+| | Placa amiloide | Placa no meio, anel de astrócitos | A proteína amiloide se acumula (como no Alzheimer) e os astrócitos cercam a placa |
+| | Neurônio e astrócitos | Neurônio no meio, 2 ou 3 astrócitos, sinapses | Os astrócitos ficam em volta do neurônio, alimentando e protegendo |
+
+Os grupos ficam em `src/config/map.json`, em `environments.<id>.groups`, com o peso de cada um e o texto do motivo. Para criar um grupo novo, basta juntar partes com sprites do ambiente; um teste confere que todo ambiente tem grupos e que as partes existem.
+
 ## Pontos de interesse
 
 Pequenas montagens que quebram a repetição e dão um motivo para andar pelo mapa, como os castiçais agrupados e as salas do Vampire Survivors.
@@ -197,8 +230,8 @@ Quando virar código, um `src/config/map.json`, com o tipo em `src/config/types.
 
 - Tamanho do tile e do bloco, blocos ativos e distância para descartar.
 - Ruídos: escala e limiar das manchas do chão e da densidade local; chance da variação 2.
-- Densidades: chance na run, obstáculos e destrutíveis por bloco.
-- Obstáculos: distância mínima, chance de aglomerado, raio livre do início.
+- Densidades: chance na run, grupos, obstáculos e destrutíveis soltos por bloco.
+- Passagem entre grupos, margem da borda do bloco, raio livre do início.
 - Por ambiente: tiles, objetos de cada tipo com peso, raio de colisão, vida e drop dos destrutíveis, zona de terreno e o efeito dela.
 - Pontos de interesse: chance por bloco, pesos e tamanhos.
 

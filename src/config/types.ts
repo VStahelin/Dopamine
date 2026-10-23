@@ -776,6 +776,35 @@ export interface MapEnvironmentDef {
   obstacles: Record<string, number>;
   destructible: { id: string; radius: number; hits: number; drop: DestructibleDrop };
   decor: string[];
+  /** Grupos com motivo (docs/mapas.md, "Grupos"): o que aparece junto, e por quê. */
+  groups: MapGroupDef[];
+}
+
+/** Como uma parte do grupo se espalha em volta do centro. */
+export type MapGroupShape = 'center' | 'ring' | 'line' | 'cluster' | 'scatter';
+
+/** Uma parte de um grupo: objetos do mesmo sprite numa forma. */
+export interface MapGroupPart {
+  kind: 'obstacle' | 'destructible' | 'decor';
+  /** Sprite do ambiente; o destrutível usa o do ambiente. */
+  sprite?: string;
+  shape: MapGroupShape;
+  /** Quantos (sorteado entre os dois); `center` é sempre 1. */
+  count?: [number, number];
+  /** Raio do anel, do aglomerado ou da dispersão, em tiles. */
+  radiusTiles?: number;
+  /** Distância entre os objetos da fileira, em tiles. */
+  spacingTiles?: number;
+  /** O anel tem uma abertura (uma posição vazia) para entrar. */
+  gap?: boolean;
+}
+
+export interface MapGroupDef {
+  name: string;
+  /** O motivo biológico do grupo, para o doc e para quem for desenhar. */
+  why: string;
+  weight: number;
+  parts: MapGroupPart[];
 }
 
 /** Mapas gerados por semente, em blocos (docs/mapas.md). Distâncias em unidades do mundo. */
@@ -791,13 +820,20 @@ export interface MapConfig {
   densityNoise: { scaleTiles: number };
   densities: Record<
     MapDensity,
-    { name: string; chance: number; obstacles: [number, number]; destructibles: [number, number] }
+    {
+      name: string;
+      chance: number;
+      /** Grupos com motivo por bloco. */
+      groups: [number, number];
+      /** Obstáculos e destrutíveis soltos por bloco, além dos grupos. */
+      obstacles: [number, number];
+      destructibles: [number, number];
+    }
   >;
-  /** Distância mínima entre obstáculos: nenhum beco fecha. */
-  obstacleMinDistanceTiles: number;
-  /** Obstáculos longe da borda do bloco, para a distância mínima valer entre blocos. */
+  /** Passagem mínima entre dois grupos (ou objetos soltos), borda a borda: nenhum beco fecha. */
+  passageTiles: number;
+  /** Tudo longe da borda do bloco, para a passagem valer entre blocos. */
   edgeMarginTiles: number;
-  clusterChance: number;
   /** Nada com colisão neste raio do começo da run. */
   startFreeTiles: number;
   decorPerChunk: [number, number];

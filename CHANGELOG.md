@@ -5,6 +5,7 @@ O que mudou em cada versão do Dopamina Blaster. O jogo mostra este arquivo em O
 ## Em desenvolvimento
 
 ### Ajustes
+- Os objetos do mapa agora aparecem em grupos que fazem sentido no corpo: lóbulos do fígado (hepatócitos em volta da veia central), placas amiloides cercadas de astrócitos, colônias de bactérias no muco, cachos de alvéolos, hemácias empilhadas e outros. Sempre sobra uma passagem entre os grupos.
 - O agregado (mini chefe) ficou gigante, roxo e com um brilho dourado pulsando, sem o círculo vermelho em volta.
 
 ### Correções
