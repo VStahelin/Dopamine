@@ -400,7 +400,7 @@ Deixar o jogo com a cara do canvas de identidade visual e pronto para outras pes
 - [ ] Som e música: as faixas chiptune metal e os efeitos de [sonoplastia.md](sonoplastia.md), com troca de música na run, volume de Música e Efeitos nas Opções e `src/config/audio.json`.
   - [x] Música: 9 faixas em loop e 3 jingles, troca na run (tempo, crise, chefe), abafada nas telas por cima, aba Som nas Opções (mudo, Geral, Música, Efeitos, abafar, segundo plano).
   - [ ] Jingles `bossIn` e `crisisIn` (faltam gerar).
-  - [ ] Efeitos sonoros e volume de Efeitos.
+  - [ ] Efeitos sonoros e volume de Efeitos: a lista de [efeitos-sonoros.md](efeitos-sonoros.md), primeiro os P1.
 - [ ] PWA: ícones e polimento da instalação na tela inicial (o offline vem da fase 2.5).
 - [ ] Layout em telas largas e altas (painéis laterais, mais pista).
 - [ ] Rodada de testes com 2 ou 3 amigos e ajuste dos números.

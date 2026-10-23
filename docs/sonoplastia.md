@@ -62,17 +62,9 @@ O jogo não mistura camadas da mesma faixa: troca de faixa com crossfade, o que 
 
 ## Efeitos sonoros
 
-Os efeitos seguem o mesmo tema: ruído e pulso de chip com ataque curto, e um golpe de metal (prato, caixa, corda abafada) nos eventos grandes. Muitos tocam dezenas de vezes por segundo, então precisam ser curtos e variar um pouco de altura a cada vez.
+A lista completa está em [efeitos-sonoros.md](efeitos-sonoros.md): 131 efeitos em 15 categorias (agente, especiais, armas, evoluções, moléculas, chefes, coleta, ampolas, level up, sinapses, mapa, run, campo longo e interface), cada um com id, quando toca, duração, variações, prioridade e um prompt pronto para o app, além das regras de mixagem.
 
-| Grupo | Efeitos | Regra |
-| --- | --- | --- |
-| Armas | Disparo de cada arma (Radical Livre, Jato Ácido, Nuvem de Elétrons, Catalisador, Poça, Reação em Cadeia, Raio UV), especial de cada agente | No máximo 4 iguais ao mesmo tempo; altura sorteada ±5% |
-| Moléculas | Impacto, decomposição (estalo), cascata, agregado nasce, agregado quebra | A cascata sobe de tom a cada nível de quebra |
-| Coleta | Gema de XP, ATP, item da vesícula, vesícula rompendo | Gemas coletadas em sequência sobem de tom, como um combo |
-| Agente | Interação perdida, Soro (cura), Segunda dose | Interação perdida é o som mais grave e seco do jogo |
-| Interface | Toque, confirmar, voltar, comprar, erro, nova versão pronta | Todos em chip puro, sem metal |
-
-Os apps de geração de música não fazem bem efeitos curtos. Para eles, a proposta é um gerador de efeitos de chip gratuito ([jsfxr](https://sfxr.me/) ou [ChipTone](https://sfbgames.itch.io/chiptone)), com as configurações salvas em `tools/sfx/` para refazer depois.
+Em resumo: os efeitos seguem o mesmo tema, chip na frente e um golpe de metal (power chord abafado, prato, caixa) só nos eventos grandes. Os frequentes são curtos, variam de altura a cada vez e têm limite de cópias ao mesmo tempo; gemas, saltos da Reação em Cadeia e quebras em cascata sobem de tom em sequência, como um combo. A interface é chip puro, sem metal.
 
 ## Entrega dos arquivos
 
