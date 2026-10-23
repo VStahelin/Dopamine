@@ -696,6 +696,8 @@ export type SupplementEffect =
   | { kind: 'special'; stat: 'cooldown' | 'power' | 'duration' | 'charges'; value: number }
   /** Nitrogênio líquido: chance de congelar a molécula atingida. */
   | { kind: 'freezeOnHit'; chance: number; seconds: number }
+  /** Quimiotaxia: sinapses enchem mais rápido e o mapa ganha estruturas a mais. */
+  | { kind: 'chemotaxis'; fillBonus: number; extraStructures: number }
   /** Aquaporina: de tempos em tempos todas as gemas correm até o agente. */
   | { kind: 'gemPulse'; seconds: number }
   /** Eletrodo: chance de faísca ao decompor, que atinge as moléculas mais perto. */
@@ -719,4 +721,36 @@ export interface SupplementsConfig {
   /** Peso do reagente quando a arma dele está no máximo sem ele. */
   reagentBoost: number;
   items: Record<string, SupplementDef>;
+}
+
+/** Estruturas do mapa (fase 5.11, decisão 0029); a potenciada é uma sinapse rara. */
+export type StructureKind = 'synapse' | 'synapseLTP' | 'focus' | 'clot' | 'adrenal';
+
+export interface StructuresConfig {
+  /** Raio do círculo de cada estrutura. */
+  radiusPx: number;
+  /** A run começa com uma sinapse a esta distância do agente. */
+  firstSynapseDistancePx: number;
+  everySeconds: number;
+  maxOnField: number;
+  /** A estrutura a mais que este tanto de telas de distância some, para abrir lugar. */
+  despawnViewMultiplier: number;
+  /** Peso no sorteio de cada estrutura nova (a potenciada sai da sinapse). */
+  weights: Record<'synapse' | 'focus' | 'adrenal' | 'clot', number>;
+  synapse: {
+    fillSeconds: number;
+    /** Fora do círculo, a barra esvazia nesta fração da velocidade. */
+    drainFactor: number;
+    choices: number;
+    potentiatedChance: number;
+    potentiatedFillSeconds: number;
+    /** Índice da raridade mínima (rarities.json) dos cartões da potenciada. */
+    potentiatedMinRarity: number;
+  };
+  /** Foco inflamatório: entrar chama a formação em volta; decompor tudo no tempo dá ampola. */
+  focus: { formation: string; seconds: number; ringRadiusPx: number; minRarity: SupplementRarity };
+  /** Coágulo: chama um agregado mais forte que solta várias ampolas. */
+  clot: { hpMultiplier: number; ampoules: number };
+  /** Glândula adrenal: ATP na hora por Estresse até o fim da run, algumas vezes. */
+  adrenal: { coins: number; stress: number; uses: number };
 }

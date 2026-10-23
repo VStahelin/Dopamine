@@ -1,5 +1,13 @@
 import * as Phaser from 'phaser';
-import { AGENTS, DISPLAY, DROPS, RUN, SECTORS, type MoleculeType } from '../../config';
+import {
+  AGENTS,
+  DISPLAY,
+  DROPS,
+  RUN,
+  SECTORS,
+  type MoleculeType,
+  type StructureKind,
+} from '../../config';
 import { addRunStars, playableAgent, rulesWithProgress } from '../../core/meta/progress';
 import { applyHealth, earn, rulesWithOrganism, runHealth } from '../../core/organism/organism';
 import { DEFAULT_RULES } from '../../core/run/rules';
@@ -62,6 +70,46 @@ const AURA_COLORS: Record<string, number> = {
  * Campo crônico: roda a simulação do core em passos fixos (decisão 0012) e desenha o estado.
  * Não guarda regra de jogo.
  */
+/** Cores de cada estrutura (prancheta "Estruturas"): rosa, violeta, vermelho, vinho e laranja. */
+const STRUCTURE_COLORS: Record<StructureKind, { main: number; dark: number }> = {
+  synapse: { main: 0xff6fa8, dark: 0xb03a70 },
+  synapseLTP: { main: 0xb072f0, dark: 0x6a3ab0 },
+  focus: { main: 0xe0433a, dark: 0x8e1616 },
+  clot: { main: 0x8e1616, dark: 0x3a0a0c },
+  adrenal: { main: 0xff9a1f, dark: 0xb5541c },
+};
+const STRUCTURE_SIZE = 18;
+const ARROW_SIZE = 18;
+
+/**
+ * Arco em pixels de arte: do ângulo `from` ao `to` (frações da volta, a partir do topo, no
+ * sentido do relógio), com espessura `thick`; `color` pode variar pelo ângulo (tracejado).
+ */
+function pixelArc(
+  g: Phaser.GameObjects.Graphics,
+  x: number,
+  y: number,
+  r: number,
+  from: number,
+  to: number,
+  thick: number,
+  px: number,
+  color: (a: number) => number,
+): void {
+  const steps = Math.ceil(2 * Math.PI * r);
+  for (let i = Math.floor(from * steps); i < to * steps; i++) {
+    const a = i / steps;
+    const t = a * Math.PI * 2 - Math.PI / 2;
+    g.fillStyle(color(a), 1);
+    g.fillRect(
+      Math.round((x + Math.cos(t) * r) / px) * px - thick / 2,
+      Math.round((y + Math.sin(t) * r) / px) * px - thick / 2,
+      thick,
+      thick,
+    );
+  }
+}
+
 /** Cor do tingimento do mapa na crise, pela família da molécula. */
 const CRISIS_TINT: Partial<Record<MoleculeType, number>> = {
   sugar: 0xffffff,
@@ -97,6 +145,8 @@ export class RunScene extends Phaser.Scene {
   private coinSprites: Phaser.GameObjects.Image[] = [];
   private vesicleSprites: Phaser.GameObjects.Image[] = [];
   private pickupSprites: Phaser.GameObjects.Image[] = [];
+  private structureSprites: Phaser.GameObjects.Image[] = [];
+  private arrowSprites: Phaser.GameObjects.Image[] = [];
   /** Opção "números de dano", relida ao voltar da pausa. */
   private showNumbers = true;
   private electronSprites: Phaser.GameObjects.Image[] = [];
@@ -151,6 +201,8 @@ export class RunScene extends Phaser.Scene {
     this.coinSprites = [];
     this.vesicleSprites = [];
     this.pickupSprites = [];
+    this.structureSprites = [];
+    this.arrowSprites = [];
     this.showNumbers = getSave(this).options.showDamageNumbers;
     this.floaters = [];
     this.areaSums.clear();
@@ -260,7 +312,13 @@ export class RunScene extends Phaser.Scene {
       stepRun(this.run, { ...input, special: this.specialQueued }, step);
       this.specialQueued = false;
       this.accumulator -= step;
-      if (this.run.over || this.run.pendingLevelUps > 0 || this.run.capsule || this.run.ampoule) {
+      if (
+        this.run.over ||
+        this.run.pendingLevelUps > 0 ||
+        this.run.capsule ||
+        this.run.ampoule ||
+        this.run.synapseOffer
+      ) {
         this.accumulator = 0;
         break;
       }
@@ -326,6 +384,10 @@ export class RunScene extends Phaser.Scene {
             : 'gemLarge';
       this.placeIcon(s, id, g.x, g.y, GEM_SIZE);
     });
+    sync(this, this.structureSprites, this.run.structures, 2, (s, st) => {
+      this.placeStructureIcon(s, st.kind, st.x, st.y, STRUCTURE_SIZE);
+    });
+    this.drawEdgeArrows();
     sync(this, this.vesicleSprites, this.run.vesicles, 2, (s, v) => {
       this.placeIcon(
         s,
@@ -384,6 +446,19 @@ export class RunScene extends Phaser.Scene {
           crisis: ev.crisis,
         });
         if (ev.crisis) this.cameras.main.shake(300, 0.006);
+      }
+      if (ev.type === 'structure') {
+        this.addPopFx(ev);
+        const hud = this.scene.get(SCENES.hud) as HudScene;
+        if (ev.kind === 'focus') hud.showBanner('DECOMPONHA O CERCO!', PALETTE_CSS.interaction);
+        if (ev.kind === 'clot') hud.showBanner('COÁGULO: AGREGADO!', PALETTE_CSS.interaction);
+        if (ev.kind === 'adrenal') this.showFloater(a.x, a.y - 16, '+ATP · +ESTRESSE', 'info');
+      }
+      if (ev.type === 'challenge') {
+        (this.scene.get(SCENES.hud) as HudScene).showBanner(
+          ev.won ? 'CERCO DESFEITO: AMPOLA!' : 'O CERCO ESCAPOU',
+          ev.won ? PALETTE_CSS.gold : PALETTE_CSS.textSoft,
+        );
       }
       if (ev.type === 'overdose') {
         (this.scene.get(SCENES.hud) as HudScene).showBanner('SUPERDOSAGEM', PALETTE_CSS.gold);
@@ -496,36 +571,76 @@ export class RunScene extends Phaser.Scene {
       pixelRing(g, p.x, p.y, p.radius, 2, px);
     }
     this.drawItemEffects(g, px);
+    this.drawStructures(g, px);
     this.drawAggregates(g, px);
     this.drawFormationWarnings(g);
     this.drawCrisisTint(g);
   }
 
   /**
-   * Agregados: contorno vermelho em volta e, fora da tela, uma seta vermelha na borda apontando
-   * para ele (fase 5.10).
+   * Agregados: contorno vermelho em volta (a seta na borda fica em drawEdgeArrows, fase 5.10).
    */
   private drawAggregates(g: Phaser.GameObjects.Graphics, px: number): void {
-    const v = this.cameras.main.worldView;
-    const { agent } = this.run;
-    const margin = 18;
     for (const e of this.run.enemies) {
       if (!e.aggregate || e.hp <= 0) continue;
       g.fillStyle(PALETTE.interaction, 0.9);
       pixelRing(g, e.x, e.y, e.radius + 3, 2, px);
-      if (v.contains(e.x, e.y)) continue;
-      const angle = Math.atan2(e.y - agent.y, e.x - agent.x);
-      const x = Phaser.Math.Clamp(e.x, v.x + margin, v.right - margin);
-      const y = Phaser.Math.Clamp(e.y, v.y + margin, v.bottom - margin);
-      const tip = (r: number, a: number) => ({ x: x + Math.cos(a) * r, y: y + Math.sin(a) * r });
-      const p1 = tip(14, angle);
-      const p2 = tip(11, angle + 2.4);
-      const p3 = tip(11, angle - 2.4);
-      g.fillStyle(PALETTE.outline, 1).fillTriangle(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
-      const q1 = tip(10, angle);
-      const q2 = tip(7.5, angle + 2.4);
-      const q3 = tip(7.5, angle - 2.4);
-      g.fillStyle(PALETTE.interaction, 1).fillTriangle(q1.x, q1.y, q2.x, q2.y, q3.x, q3.y);
+    }
+  }
+
+  /**
+   * Setas da prancheta "Estruturas" na borda da tela: uma para cada agregado fora de vista, em
+   * vermelho, e uma para a estrutura mais perto fora de vista, na cor dela.
+   */
+  private drawEdgeArrows(): void {
+    const v = this.cameras.main.worldView;
+    const { agent } = this.run;
+    const targets: { x: number; y: number; color: number }[] = [];
+    for (const e of this.run.enemies) {
+      if (e.aggregate && e.hp > 0 && !v.contains(e.x, e.y)) {
+        targets.push({ x: e.x, y: e.y, color: PALETTE.interaction });
+      }
+    }
+    const away = this.run.structures.filter((st) => !v.contains(st.x, st.y));
+    const nearest = away.sort(
+      (a, b) =>
+        (a.x - agent.x) ** 2 + (a.y - agent.y) ** 2 - ((b.x - agent.x) ** 2 + (b.y - agent.y) ** 2),
+    )[0];
+    if (nearest)
+      targets.push({ x: nearest.x, y: nearest.y, color: STRUCTURE_COLORS[nearest.kind].main });
+    const margin = 14;
+    sync(this, this.arrowSprites, targets, 12, (s, t) => {
+      const angle = Math.atan2(t.y - agent.y, t.x - agent.x);
+      this.placeStructureIcon(
+        s,
+        'arrow',
+        Phaser.Math.Clamp(t.x, v.x + margin, v.right - margin),
+        Phaser.Math.Clamp(t.y, v.y + margin, v.bottom - margin),
+        ARROW_SIZE,
+      );
+      // A seta do desenho aponta para cima.
+      s.setRotation(angle + Math.PI / 2)
+        .setTint(t.color)
+        .setTintMode(Phaser.TintModes.MULTIPLY);
+    });
+  }
+
+  /**
+   * Estruturas: o círculo tingido, a borda tracejada e, na sinapse, o anel de dentro que enche
+   * no sentido do relógio (prancheta "Estruturas de interação").
+   */
+  private drawStructures(g: Phaser.GameObjects.Graphics, px: number): void {
+    const r = this.run.rules.structures.radiusPx;
+    for (const st of this.run.structures) {
+      const c = STRUCTURE_COLORS[st.kind];
+      g.fillStyle(c.main, 0.16);
+      pixelDisc(g, st.x, st.y, r - 6, px);
+      pixelArc(g, st.x, st.y, r, 0, 1, 2, px, (a) =>
+        Math.floor(a * 40) % 2 === 0 ? c.main : c.dark,
+      );
+      if (st.progress > 0) {
+        pixelArc(g, st.x, st.y, r - 4, 0, st.progress, 3, px, () => c.main);
+      }
     }
   }
 
@@ -743,11 +858,18 @@ export class RunScene extends Phaser.Scene {
 
   private checkTransitions(): void {
     // A cápsula e a ampola abrem antes do level up que o XP do chefe trouxer.
-    const overlay = this.run.capsule ? SCENES.capsule : this.run.ampoule ? SCENES.ampoule : null;
+    const overlay = this.run.capsule
+      ? SCENES.capsule
+      : this.run.ampoule
+        ? SCENES.ampoule
+        : this.run.synapseOffer
+          ? SCENES.levelUp
+          : null;
     if (overlay && !this.overlayOpen && !this.levelUpOpen && !this.run.over) {
       this.overlayOpen = true;
       this.scene.launch(overlay, {
         run: this.run,
+        synapse: overlay === SCENES.levelUp,
         onDone: () => {
           this.overlayOpen = false;
         },
@@ -795,6 +917,22 @@ export class RunScene extends Phaser.Scene {
       };
       this.time.delayedCall(700, () => this.scene.launch(SCENES.gameOver, data));
     }
+  }
+
+  /** Sprite de estrutura (prancheta "Estruturas") no mundo, com `size` unidades de lado. */
+  private placeStructureIcon(
+    s: Phaser.GameObjects.Image,
+    id: string,
+    x: number,
+    y: number,
+    size: number,
+  ): void {
+    s.setTexture(iconKey(this, iconTexture('structures', id), size))
+      .setDisplaySize(size, size)
+      .setPosition(x, y)
+      .setRotation(0)
+      .clearTint()
+      .setAlpha(1);
   }
 
   /** Ícone de item (prancheta "Itens do mapa") no mundo, com `size` unidades de lado. */

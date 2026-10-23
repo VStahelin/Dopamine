@@ -7,6 +7,7 @@ import {
   RARITIES,
   RUN,
   STATS,
+  STRUCTURES,
   SUPPLEMENTS,
   WEAPONS,
   type AgentDef,
@@ -22,6 +23,7 @@ import {
   type RunConfig,
   type StatGroup,
   type StatsConfig,
+  type StructuresConfig,
   type SupplementsConfig,
   type WeaponDef,
   type WeaponId,
@@ -42,6 +44,7 @@ export interface RunRules {
   agents: Record<AgentId, AgentDef>;
   drops: DropsConfig;
   supplements: SupplementsConfig;
+  structures: StructuresConfig;
   /** Peso de cada família pela doença do indivíduo (organismo); escolhe as formações. */
   familyWeights?: Partial<Record<MoleculeType, number>>;
   /** Cápsulas já abertas no save, para a sorte de principiante; sem o número, 0. */
@@ -63,6 +66,7 @@ export const DEFAULT_RULES: RunRules = {
   agents: AGENTS,
   drops: DROPS,
   supplements: SUPPLEMENTS,
+  structures: STRUCTURES,
 };
 
 /**

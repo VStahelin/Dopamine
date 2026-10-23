@@ -372,6 +372,13 @@ export class HudScene extends Phaser.Scene {
       ['bunsen', run.effects.flame],
       ['glucagon', run.effects.fever],
     ] as const;
+    if (run.challenge) {
+      const total = run.rules.structures.focus.seconds;
+      effects.push({
+        content: { frame: 'debuff', icon: iconTexture('structures', 'focus') },
+        left: (run.challenge.until - run.time) / total,
+      });
+    }
     for (const [id, left] of items) {
       if (left <= 0) continue;
       effects.push({

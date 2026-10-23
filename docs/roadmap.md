@@ -30,7 +30,7 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | 5.8 | Receptores no level up | O level up fica mais curto e cada escolha pesa mais? | 2, 3 | implementada, falta validar no celular |
 | 5.9 | Suplementos e ampolas | Os suplementos dão motivo para andar pelo mapa e montam um build diferente a cada run? | 5.5, 5.8 | implementada, falta validar no celular |
 | 5.10 | Agregados (mini chefes) | Entre um chefe e outro sempre tem um alvo que vale o risco? | 5.9 | implementada, falta validar no celular |
-| 5.11 | Sinapses e estruturas | O jogador sai do lugar para buscar bônus no mapa? | 5.6, 5.9, 5.10 | não iniciada |
+| 5.11 | Sinapses e estruturas | O jogador sai do lugar para buscar bônus no mapa? | 5.6, 5.9, 5.10 | implementada, falta validar no celular |
 | 6 | Arte, polimento e lançamento | Dá para mandar o link para os amigos? | 1 a 5.11 | não iniciada |
 | 7 | Lojas e plataformas | O mesmo jogo roda e é publicado em Android, iOS, Steam e Microsoft Store? | 6 | não iniciada |
 
@@ -342,7 +342,7 @@ Os atributos que saíram do level up voltam como **suplementos**, passivos que a
 
 - [x] `supplements.json` com os suplementos e os 4 reagentes, em quatro raridades; sorteio de raridade pela Sorte e depois do suplemento. São 24 por enquanto: a Quimiotaxia entra com as sinapses.
 - [x] Suplementos que mudam atributo (somam até o teto na run) e os de efeito: Nitrogênio líquido, Aquaporina, Eletrodo, Termita e Criopreservação. A faísca e a explosão não disparam outra faísca nem explosão.
-- [ ] Quimiotaxia, junto com as sinapses (fase 5.11).
+- [x] Quimiotaxia, junto com as sinapses (fase 5.11).
 - [x] Reagentes como suplemento, com peso ×10 quando a arma deles está no MAX; tirar os reagentes das cartas do level up.
 - [x] Vitamina sai da vesícula e vira suplemento.
 - [x] Gema de XP com chance por tipo de molécula (60% comum, 40% fragmento, 100% forte), valendo o XP dividido pela chance.
@@ -372,14 +372,15 @@ Um mini chefe a cada 2 minutos, que sempre solta ampola. Regras em [megabonk.md]
 
 Estruturas no mapa em que é preciso ficar um tempo ou arriscar algo para ganhar um bônus, como os santuários do Megabonk. Regras em [megabonk.md](megabonk.md#4-sinapses-e-estruturas) ([decisão 0029](decisoes/0029-sinapses-e-estruturas.md)).
 
-- [ ] Sinapse: círculo de 48 px, barra que enche em 6 s dentro e esvazia devagar fora, e a tela de 3 cartões de bônus de atributo com raridade (reaproveitando a do level up).
-- [ ] Sinapse potenciada: 10% das sinapses, 10 s, só Lendário ou Especial.
-- [ ] Nascimento num anel fora da tela (uma sinapse perto no começo, depois uma estrutura a cada 45 s, no máximo 4), com pesos em `structures.json`.
-- [ ] Glândula adrenal (ATP por +5% de Estresse) e Coágulo (agregado extra com duas ampolas).
-- [ ] Foco inflamatório, depois do Cerco inflamatório da fase 5.6.
-- [ ] Seta na borda da tela para a estrutura mais perto; sprites das estruturas.
+- [x] Sinapse: círculo de 48 px, barra que enche em 6 s dentro e esvazia devagar fora, e a tela de 3 cartões de bônus de atributo com raridade (reaproveitando a do level up).
+- [x] Sinapse potenciada: 10% das sinapses, 10 s, só Lendário ou Especial.
+- [x] Nascimento num anel fora da tela (uma sinapse perto no começo, depois uma estrutura a cada 45 s, no máximo 4), com pesos em `structures.json`.
+- [x] Glândula adrenal (ATP por +5% de Estresse) e Coágulo (agregado extra com duas ampolas).
+- [x] Foco inflamatório, depois do Cerco inflamatório da fase 5.6. O tempo do desafio aparece na fila de efeitos da HUD.
+- [x] Seta na borda da tela para a estrutura mais perto; sprites das estruturas (da prancheta "Estruturas de interação" do canvas). O agregado passou a usar a mesma seta, em vermelho.
 - [ ] Com a fase 5.7: estruturas viram pontos de interesse dos blocos, numa clareira.
-- [ ] Atualizar [wiki.md](wiki.md) e jogar runs de 15 minutos para ajustar o tempo da sinapse no pico.
+- [x] Atualizar [wiki.md](wiki.md). A Quimiotaxia (suplemento da fase 5.9) entrou junto.
+- [ ] Jogar runs de 15 minutos para ajustar o tempo da sinapse no pico (o robô do simulador não procura sinapses).
 
 **Critério de saída:** numa run de 10 minutos o jogador completa pelo menos 3 sinapses por vontade própria, e pelo menos uma delas no meio de uma onda.
 

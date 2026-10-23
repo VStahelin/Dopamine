@@ -60,6 +60,8 @@ export function iconTexture(group: 'specials', id: SpecialKind): IconRef;
 export function iconTexture(group: 'items', id: string): IconRef;
 /** Suplementos: um ícone por id de supplements.json (prancheta "Suplementos e ampolas"). */
 export function iconTexture(group: 'supplements', id: string): IconRef;
+/** Estruturas do mapa e a seta da borda (prancheta "Estruturas de interação"). */
+export function iconTexture(group: 'structures', id: string): IconRef;
 export function iconTexture(group: IconGroup, id: string): IconRef {
   return ICONS[group][id] ? { group, id } : MISSING;
 }

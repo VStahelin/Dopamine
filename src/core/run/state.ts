@@ -4,6 +4,7 @@ import type {
   ItemId,
   MoleculeType,
   PassiveId,
+  StructureKind,
   SupplementRarity,
   WeaponId,
 } from '../../config';
@@ -42,6 +43,8 @@ export interface Enemy {
   aggregate: boolean;
   /** Veio numa formação (fase 5.6). */
   formation: boolean;
+  /** Ampolas garantidas ao decompor (agregado do Coágulo, fase 5.11). */
+  extraAmpoules: number;
   /** Anda em linha reta na direção (dirX, dirY) em vez de perseguir; some quando fica longe. */
   straight: boolean;
   dirX: number;
@@ -137,6 +140,20 @@ export interface Pickup {
   minRarity?: SupplementRarity;
 }
 
+/** Estrutura no mapa (fase 5.11): círculo em que se fica (sinapse) ou se entra (as outras). */
+export interface Structure {
+  id: number;
+  kind: StructureKind;
+  x: number;
+  y: number;
+  /** Sinapse: quanto já encheu, de 0 a 1. */
+  progress: number;
+  /** O agente estava dentro no passo anterior (a Glândula conta cada entrada). */
+  inside: boolean;
+  /** Glândula: toques que ainda restam. */
+  uses: number;
+}
+
 /** Segundos que faltam de cada efeito de item com tempo. */
 export interface ItemEffects {
   /** Gelo seco: moléculas paradas e sem encostar. */
@@ -197,6 +214,8 @@ export type RunEvent =
   | { type: 'formationWarning'; name: string; angle: number; crisis: boolean }
   | { type: 'levelUp'; level: number }
   | { type: 'overdose' }
+  | { type: 'structure'; kind: StructureKind; x: number; y: number }
+  | { type: 'challenge'; won: boolean }
   | { type: 'vesicle'; x: number; y: number }
   | { type: 'item'; kind: ItemId | 'capsule' | 'ampoule'; x: number; y: number }
   | { type: 'spark'; x1: number; y1: number; x2: number; y2: number }
@@ -293,6 +312,14 @@ export interface RunState {
     crisis: { family: MoleculeType; until: number } | null;
     seen: string[];
   };
+  /** Estruturas no mapa e o momento da próxima; -1 antes da sinapse do começo (fase 5.11). */
+  structures: Structure[];
+  nextStructureAt: number;
+  nextStructureId: number;
+  /** Cartões da sinapse cheia esperando o jogador escolher; a simulação para enquanto houver. */
+  synapseOffer: UpgradeChoice[] | null;
+  /** Desafio do Foco inflamatório: decompor as moléculas de ids [from, to) até `until`. */
+  challenge: { from: number; to: number; until: number } | null;
   /** Momento sorteado do próximo agregado, em segundos de run. */
   nextAggregateAt: number;
   /** Moléculas que já vieram como agregado nesta run, para o Compêndio. */
@@ -397,6 +424,11 @@ export function createRun(
     seen: [],
     bossesSpawned: rules.run.bosses.map(() => 0),
     nextAggregateAt: -1,
+    structures: [],
+    nextStructureAt: -1,
+    nextStructureId: 1,
+    synapseOffer: null,
+    challenge: null,
     formations: { next: -1, pending: [], crises: 0, crisis: null, seen: [] },
     seenAggregates: [],
     over: false,
@@ -441,6 +473,7 @@ export function addEnemy(
     fragment: false,
     aggregate: false,
     formation: false,
+    extraAmpoules: 0,
     straight: false,
     dirX: 0,
     dirY: 0,

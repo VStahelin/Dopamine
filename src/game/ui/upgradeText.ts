@@ -136,12 +136,16 @@ export function describeChoice(choice: UpgradeChoice): ChoiceText {
         level: '',
         description: `Recupera ${num(choice.amount)} interações`,
       };
-    case 'boost':
+    case 'boost': {
+      // Da sinapse (com raridade) ou da Superdosagem (comum, sem raridade).
+      const tier = choice.rarity === undefined ? undefined : RARITIES.tiers[choice.rarity];
       return {
-        title: 'Superdosagem',
-        level: PASSIVES[choice.id].name.toUpperCase(),
+        title: tier ? PASSIVES[choice.id].name : 'Superdosagem',
+        level: tier ? '' : PASSIVES[choice.id].name.toUpperCase(),
         description: receptorGain(PASSIVES[choice.id], choice.amount),
+        rarity: tier ? { name: tier.name, color: tier.color } : undefined,
       };
+    }
     case 'phosphocreatine':
       return {
         title: 'Fosfocreatina',

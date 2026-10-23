@@ -2,7 +2,9 @@ import type { EnemyKind } from '../../config';
 import { clampLength, type Vec2 } from '../math/vec2';
 import { damageEnemy, heal } from './combat';
 import { difficultyAt, enemyHpAt, waveFactorAt, xpToNextLevel } from './progression';
+import { addAggregate } from './aggregates';
 import { updateFormations } from './formations';
+import { updateStructures } from './structures';
 import { extendFever, updateItems } from './items';
 import { onHurt } from './supplements';
 import { refreshStats } from './upgrades';
@@ -35,6 +37,7 @@ const grid = new SpatialGrid(GRID_CELL);
  */
 export function stepRun(state: RunState, input: StepInput, dt: number): void {
   if (state.over || state.pendingLevelUps > 0 || state.capsule || state.ampoule) return;
+  if (state.synapseOffer) return;
   state.time += dt;
   state.viewRadius = input.viewRadius;
 
@@ -99,6 +102,7 @@ function spawnEnemies(state: RunState, viewRadius: number, dt: number): void {
 
   spawnAggregate(state, distance, hp);
   updateFormations(state, distance, hp);
+  updateStructures(state, dt, distance, hp);
 
   const rate =
     run.spawn.baseEnemiesPerSecond *
@@ -158,34 +162,13 @@ function spawnEnemies(state: RunState, viewRadius: number, dt: number): void {
  * de haver molécula forte liberada, vem a que libera primeiro.
  */
 function spawnAggregate(state: RunState, distance: number, hp: number): void {
-  const { run, enemies } = state.rules;
-  const ag = run.aggregates;
+  const ag = state.rules.run.aggregates;
   const gap = () => state.rng.range(ag.minGapSeconds, ag.maxGapSeconds);
   if (state.nextAggregateAt < 0) state.nextAggregateAt = gap();
   if (state.time < state.nextAggregateAt) return;
   state.nextAggregateAt = state.time + gap();
-  const strong = (Object.keys(enemies) as EnemyKind[]).filter(
-    (k) => enemies[k].contactDamage === 'strong' && !enemies[k].boss,
-  );
-  const unlocked = strong.filter((k) => enemies[k].unlockMinute <= state.time / 60);
-  const pool = unlocked.length > 0 ? unlocked : strong;
-  const by =
-    unlocked.length > 0
-      ? (k: EnemyKind) => enemies[k].spawnWeight
-      : (k: EnemyKind) => -enemies[k].unlockMinute;
-  const kind = pool.reduce<EnemyKind | undefined>(
-    (best, k) => (!best || by(k) > by(best) ? k : best),
-    undefined,
-  );
-  if (!kind) return;
   const at = spawnAround(state, distance);
-  const e = addEnemy(state, kind, at.x, at.y, hp * ag.hpMultiplier);
-  e.aggregate = true;
-  e.radius *= ag.sizeMultiplier;
-  e.speed *= ag.speedMultiplier;
-  e.xp *= ag.xpMultiplier;
-  if (!state.seenAggregates.includes(kind)) state.seenAggregates.push(kind);
-  state.events.push({ type: 'aggregate', kind });
+  addAggregate(state, at.x, at.y, hp);
 }
 
 function moveEnemies(state: RunState, dt: number): void {

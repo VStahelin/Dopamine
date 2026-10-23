@@ -17,6 +17,7 @@ import passivesJson from './passives.json';
 import raritiesJson from './rarities.json';
 import runJson from './run.json';
 import statsJson from './stats.json';
+import structuresJson from './structures.json';
 import supplementsJson from './supplements.json';
 import weaponsJson from './weapons.json';
 import {
@@ -41,6 +42,7 @@ import {
   type RunConfig,
   type SpecialKind,
   type StatsConfig,
+  type StructuresConfig,
   type SupplementsConfig,
   SUPPLEMENT_RARITIES,
   type WeaponDef,
@@ -207,6 +209,10 @@ export const AGENTS: Record<AgentId, AgentDef> = loadAgents();
 export const RARITIES: RarityConfig = raritiesJson;
 export const DROPS: DropsConfig = dropsJson as DropsConfig;
 export const SUPPLEMENTS: SupplementsConfig = loadSupplements();
+export const STRUCTURES: StructuresConfig = structuresJson as StructuresConfig;
+if (!(STRUCTURES.focus.formation in RUN.formations.list)) {
+  throw new Error('Configuração inválida em structures.json focus.formation');
+}
 for (const id of ITEM_IDS) exists(id, dropsJson.items, 'drops.json items');
 if (RARITIES.tiers.length === 0) {
   throw new Error('Configuração inválida: rarities.json sem raridades');

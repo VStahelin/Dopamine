@@ -4,6 +4,12 @@ O que mudou em cada versão do Dopamina Blaster. O jogo mostra este arquivo em O
 
 ## Em desenvolvimento
 
+### Novidades
+- Sinapses: círculos no mapa. Fique dentro até o anel encher e escolha 1 de 3 bônus de atributo. A potenciada, violeta e rara, só dá bônus Lendários ou Especiais.
+- Foco inflamatório, Coágulo e Glândula adrenal: estruturas de risco que dão ampolas ou ATP.
+- Uma seta na borda da tela aponta a estrutura mais perto.
+- Novo suplemento: Quimiotaxia, que acelera as sinapses.
+
 ## v0.10.0 · 23/10/2026
 
 ### Novidades

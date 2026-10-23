@@ -25,7 +25,7 @@ export type UpgradeChoice =
    * Superdosagem (fase 5.6, decisão 0030): com armas e receptores no máximo, um bônus pequeno de
    * atributo, comum, sem ocupar espaço. Usa o valor por nível do passivo daquele atributo.
    */
-  | { kind: 'boost'; id: PassiveId; amount: number }
+  | { kind: 'boost'; id: PassiveId; amount: number; rarity?: number }
   /** Nada mais para subir: ATP em moedas do valor atual (Fosfocreatina). */
   | { kind: 'phosphocreatine'; coins: number };
 

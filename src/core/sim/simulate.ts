@@ -17,6 +17,7 @@ import { DEFAULT_RULES, type RunRules } from '../run/rules';
 import { createRun, type RunState } from '../run/state';
 import { stepRun } from '../run/step';
 import { closeCapsule } from '../run/items';
+import { chooseSynapse } from '../run/structures';
 import { closeAmpoule } from '../run/supplements';
 import { applyChoice, levelUpOffer } from '../run/upgrades';
 
@@ -122,6 +123,7 @@ export function botRun(
   while (!run.over && run.time < maxSeconds) {
     if (run.capsule) closeCapsule(run);
     if (run.ampoule) closeAmpoule(run);
+    if (run.synapseOffer) chooseSynapse(run, run.synapseOffer[0]!);
     if (run.pendingLevelUps > 0) {
       const offer = levelUpOffer(run);
       const pick =

@@ -1,5 +1,6 @@
 import * as Phaser from 'phaser';
 import type { RunState } from '../../core/run/state';
+import { chooseSynapse } from '../../core/run/structures';
 import {
   applyChoice,
   banishChoice,
@@ -20,6 +21,8 @@ import { SCENES } from './keys';
 interface LevelUpData {
   run: RunState;
   onDone: () => void;
+  /** Sinapse cheia (fase 5.11): os mesmos cartões, sem Rerrolar, Pular e Banir. */
+  synapse?: boolean;
 }
 
 const KEYS = ['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE'] as const;
@@ -49,7 +52,7 @@ export class LevelUpScene extends Phaser.Scene {
     this.openedAt = this.time.now;
     KEYS.forEach((key, i) => {
       this.input.keyboard?.on(`keydown-${key}`, () => {
-        const choice = levelUpOffer(this.data_.run)[i];
+        const choice = this.offer()[i];
         if (choice) this.pick(choice);
       });
     });
@@ -68,10 +71,10 @@ export class LevelUpScene extends Phaser.Scene {
     this.root?.destroy();
     const { w, h } = this.size;
     const run = this.data_.run;
-    const offer = levelUpOffer(run);
-    const actions = (['rerolls', 'skips', 'banishes'] as const).filter(
-      (a) => remaining(run, a) > 0,
-    );
+    const offer = this.offer();
+    const actions = this.data_.synapse
+      ? []
+      : (['rerolls', 'skips', 'banishes'] as const).filter((a) => remaining(run, a) > 0);
 
     const cardW = Math.min(w - 24, 320);
     const gap = 6;
@@ -85,10 +88,12 @@ export class LevelUpScene extends Phaser.Scene {
     const top = Math.max(12, Math.floor((h - total) / 2));
     const left = Math.floor((w - cardW) / 2);
 
-    const title = this.banishing ? 'BANIR' : `NÍVEL ${run.level}!`;
-    const subtitle = this.banishing
-      ? 'TOQUE NA OPÇÃO QUE QUER BANIR'
-      : 'ESCOLHA UMA ARMA OU RECEPTOR';
+    const title = this.data_.synapse ? 'SINAPSE' : this.banishing ? 'BANIR' : `NÍVEL ${run.level}!`;
+    const subtitle = this.data_.synapse
+      ? 'ESCOLHA UM BÔNUS'
+      : this.banishing
+        ? 'TOQUE NA OPÇÃO QUE QUER BANIR'
+        : 'ESCOLHA UMA ARMA OU RECEPTOR';
     const children: Phaser.GameObjects.GameObject[] = [
       addDim(this, w, h),
       this.add
@@ -211,8 +216,20 @@ export class LevelUpScene extends Phaser.Scene {
       this.build();
       return;
     }
+    if (this.data_.synapse) {
+      chooseSynapse(run, choice);
+      this.data_.onDone();
+      this.scene.stop();
+      return;
+    }
     applyChoice(run, choice);
     this.next();
+  }
+
+  /** Cartões em jogo: os do level up ou os da sinapse. */
+  private offer(): UpgradeChoice[] {
+    const run = this.data_.run;
+    return this.data_.synapse ? (run.synapseOffer ?? []) : levelUpOffer(run);
   }
 
   private reroll(): void {

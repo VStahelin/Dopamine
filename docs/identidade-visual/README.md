@@ -20,7 +20,7 @@ Ao mudar uma prancheta no canvas, copie o arquivo novo para cá no mesmo commit 
 | Crônico: level up no PC | [CronicoLevelUpPC.dc.html](CronicoLevelUpPC.dc.html) | Tela de level up em tela larga | `src/game/scenes/LevelUpScene.ts` |
 | Itens do mapa (drops) | [Itens.dc.html](Itens.dc.html) | Itens das vesículas, gemas, cápsulas, vesícula e fosfocreatina ([itens.md](../itens.md)) | `icons.json`, grupo `items` |
 | Mapas: objetos e chão | [Mapas.dc.html](Mapas.dc.html) | Cinco ambientes: chão em tiles, obstáculos, destrutíveis e decoração ([mapas.md](../mapas.md)) | `src/assets/sprites/map.json` |
-| Estruturas de interação (sinapses) | [Estruturas.dc.html](Estruturas.dc.html) | Sinapse, sinapse potenciada, foco inflamatório, coágulo e glândula adrenal, a sinapse enchendo e a seta na borda ([megabonk.md](../megabonk.md)) | fase 5.11 (ainda não no código) |
-| Suplementos e ampolas | [Suplementos.dc.html](Suplementos.dc.html) | Ampola (fechada e quebrando), o receptor Mutação e os 28 suplementos com a cor da raridade | `icons.json`, grupos `supplements` e `items` |
+| Estruturas de interação (sinapses) | [Estruturas.dc.html](Estruturas.dc.html) | Sinapse, sinapse potenciada, foco inflamatório, coágulo e glândula adrenal, a sinapse enchendo e a seta na borda ([megabonk.md](../megabonk.md)) | `icons.json`, grupo `structures` (a seta "X" vira branca e o jogo tinge) |
+| Suplementos e ampolas | [Suplementos.dc.html](Suplementos.dc.html) | Ampola (fechada e quebrando), o receptor Mutação e os 29 suplementos com a cor da raridade | `icons.json`, grupos `supplements` e `items` |
 
 Falta no canvas: telas próprias para o PC (campo crônico, campo longo e menus em tela larga). Hoje só o level up tem versão de PC.

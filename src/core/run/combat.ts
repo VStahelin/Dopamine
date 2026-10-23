@@ -173,6 +173,18 @@ function dropXp(state: RunState, e: Enemy): void {
  */
 function dropAmpoule(state: RunState, e: Enemy): void {
   const a = state.rules.drops.ampoule;
+  // Agregado do Coágulo: ampolas garantidas.
+  for (let i = 0; i < e.extraAmpoules; i++) {
+    const min = state.rules.run.aggregates.minRarity;
+    state.pickups.push({
+      x: e.x + i * 12,
+      y: e.y,
+      kind: 'ampoule',
+      attracted: false,
+      minRarity: min,
+    });
+  }
+  if (e.extraAmpoules > 0) return;
   if (e.aggregate) {
     const ag = state.rules.run.aggregates;
     if (state.rng.next() >= ag.ampouleChance * Math.max(0.01, state.stats.luck)) return;

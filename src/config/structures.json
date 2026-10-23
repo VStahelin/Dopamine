@@ -1,0 +1,36 @@
+{
+  "radiusPx": 48,
+  "firstSynapseDistancePx": 300,
+  "everySeconds": 45,
+  "maxOnField": 4,
+  "despawnViewMultiplier": 3,
+  "weights": {
+    "synapse": 60,
+    "focus": 15,
+    "adrenal": 15,
+    "clot": 10
+  },
+  "synapse": {
+    "fillSeconds": 6,
+    "drainFactor": 0.25,
+    "choices": 3,
+    "potentiatedChance": 0.1,
+    "potentiatedFillSeconds": 10,
+    "potentiatedMinRarity": 4
+  },
+  "focus": {
+    "formation": "inflammatorySiege",
+    "seconds": 30,
+    "ringRadiusPx": 150,
+    "minRarity": "rare"
+  },
+  "clot": {
+    "hpMultiplier": 1.5,
+    "ampoules": 2
+  },
+  "adrenal": {
+    "coins": 20,
+    "stress": 0.05,
+    "uses": 3
+  }
+}

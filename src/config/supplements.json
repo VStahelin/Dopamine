@@ -169,6 +169,16 @@
         "value": 0.15
       }
     },
+    "chemotaxis": {
+      "name": "Quimiotaxia",
+      "rarity": "rare",
+      "description": "Sinapses enchem 25% mais rápido e o mapa ganha uma estrutura a mais.",
+      "effect": {
+        "kind": "chemotaxis",
+        "fillBonus": 0.25,
+        "extraStructures": 1
+      }
+    },
     "liquidNitrogen": {
       "name": "Nitrogênio líquido",
       "rarity": "rare",

@@ -240,6 +240,30 @@ Quando a cápsula ou o level up não têm mais o que subir, você ganha Fosfocre
 
 ---
 
+## Sinapses e estruturas
+
+*Números de `structures.json`. Uma seta na borda da tela aponta a estrutura mais perto, na cor dela.*
+
+### Sinapse
+Um círculo rosa no chão. Fique dentro e o anel enche em 6 segundos; fora, ele esvazia devagar, sem zerar. Cheio, abre 3 cartões de bônus de atributo, com raridade pela Sorte, entre todos os atributos do jogo (Rerrolar, Pular e Banir também podem aparecer). A run começa sempre com uma sinapse perto.
+
+### Sinapse potenciada
+Violeta, mais rara. Enche em 10 segundos e só oferece bônus Lendários ou Especiais.
+
+### Foco inflamatório
+Vermelho. Entrar chama um cerco de moléculas em volta de você. Decomponha todas em 30 segundos e ganhe uma ampola Rara ou melhor.
+
+### Coágulo
+Vinho. Tocar chama um agregado mais forte, que solta duas ampolas.
+
+### Glândula adrenal
+Laranja. Cada entrada dá ATP na hora e +5% de Estresse até o fim da run. Funciona três vezes.
+
+### Quando aparecem
+Uma estrutura nova a cada 45 segundos, fora da tela, até 4 no mapa. A Quimiotaxia (suplemento) faz as sinapses encherem mais rápido e põe uma estrutura a mais.
+
+---
+
 ## Suplementos e ampolas
 
 *Números de `supplements.json` e `drops.json`. O Compêndio mostra cada suplemento depois que você o toma.*
@@ -259,7 +283,7 @@ Ficam até o fim da run, não ocupam espaço e acumulam: a segunda Creatina soma
 Comum, Raro, Ultra raro e Lendário, pela cor da moldura. A Sorte deixa os raros mais comuns.
 
 ### Os que sobem atributos
-Creatina (dano), Vitamina (Sorte), Ferro (interações), Eletrólitos (recuperação), Cafeína (velocidade), Bicarbonato (empurrão), Ácido fórmico (devolve dano), Mucina (tempo sem levar dano), Glutamina (recupera ao decompor), Fluoresceína (alcance), Ginseng (recarga do especial), Surfactante (atravessa moléculas), Cobre (saltos), Anticorpo (dano em fortes e chefes), Mitocôndria (ATP), Enzima digestiva (dano crítico), Platina (chance de efeito), Nootrópico (+1 opção no level up) e Dose de reforço (+1 Segunda dose).
+Creatina (dano), Vitamina (Sorte), Ferro (interações), Quimiotaxia (sinapses), Eletrólitos (recuperação), Cafeína (velocidade), Bicarbonato (empurrão), Ácido fórmico (devolve dano), Mucina (tempo sem levar dano), Glutamina (recupera ao decompor), Fluoresceína (alcance), Ginseng (recarga do especial), Surfactante (atravessa moléculas), Cobre (saltos), Anticorpo (dano em fortes e chefes), Mitocôndria (ATP), Enzima digestiva (dano crítico), Platina (chance de efeito), Nootrópico (+1 opção no level up) e Dose de reforço (+1 Segunda dose).
 
 ### Os de efeito
 - **Nitrogênio líquido:** chance de congelar a molécula atingida por 1 segundo.
