@@ -2,14 +2,14 @@
 
 23 de outubro de 2026 · Vitor
 
-A lista enxuta de efeitos sonoros (SFX) do jogo: **48 efeitos**, dos quais os 13 do agente já foram feitos pelo Vitor e **35 faltam gerar**. Cada um tem o id do arquivo, quando toca, duração, prioridade e um prompt pronto para colar num app de geração de efeitos. O tema, a música e a entrega dos arquivos estão em [sonoplastia.md](sonoplastia.md). Os arquivos brutos vão para [audio/efeitos/](../audio/efeitos/README.md). Nada de efeito entrou no código ainda.
+A lista enxuta de efeitos sonoros (SFX) do jogo: **47 efeitos**, dos quais os 9 do agente já foram feitos pelo Vitor e **38 faltam gerar**; os especiais dos seis agentes que ainda não estão no jogo vêm depois, junto com eles. Cada um tem o id do arquivo, quando toca, duração, prioridade e um prompt pronto para colar num app de geração de efeitos. O tema, a música e a entrega dos arquivos estão em [sonoplastia.md](sonoplastia.md). Os arquivos brutos vão para [audio/efeitos/](../audio/efeitos/README.md). Nada de efeito entrou no código ainda.
 
 ## Resumo
 
 | Categoria | Efeitos | Situação |
 | --- | --- | --- |
-| [Agente](#agente) | 4 | Feitos |
-| [Especiais dos agentes](#especiais-dos-agentes) | 9 | Feitos |
+| [Agente](#agente) | 9 | Feitos |
+| [Especiais dos agentes](#especiais-dos-agentes) | 3 (+6 depois) | Faltam |
 | [Armas](#armas) | 8 | Faltam |
 | [Combate](#combate) | 3 | Faltam |
 | [Moléculas e chefes](#moléculas-e-chefes) | 4 | Faltam |
@@ -17,10 +17,10 @@ A lista enxuta de efeitos sonoros (SFX) do jogo: **48 efeitos**, dos quais os 13
 | [Ampolas, cápsula e level up](#ampolas-cápsula-e-level-up) | 6 | Faltam |
 | [Sinapses e estruturas](#sinapses-e-estruturas) | 3 | Faltam |
 | [Interface](#interface) | 6 | Faltam |
-| **Total** | **48** | **35 faltam** |
+| **Total** | **47** | **38 faltam** |
 
 - **P1:** acontece toda run; sem ele o jogo parece mudo. **P2:** mais raro, mas dá peso a um momento grande.
-- **Um arquivo, vários usos.** A lista caiu de 131 para 48 porque um mesmo efeito serve a várias coisas: o jogo muda a altura, o volume ou repete o som. A coluna "Também toca em" diz quem reaproveita cada arquivo. O que foi fundido ou cortado está em [O que saiu da lista](#o-que-saiu-da-lista).
+- **Um arquivo, vários usos.** A lista caiu de 131 para 47 porque um mesmo efeito serve a várias coisas: o jogo muda a altura, o volume ou repete o som. A coluna "Também toca em" diz quem reaproveita cada arquivo. O que foi fundido ou cortado está em [O que saiu da lista](#o-que-saiu-da-lista).
 
 ## Como soa
 
@@ -44,7 +44,7 @@ Valem para o player de efeitos quando ele for escrito; os números entram em `sr
 - **Sequência que sobe:** gema de XP, salto da Reação em Cadeia e decomposição em cascata sobem um semitom a cada repetição seguida (até 12) e voltam ao normal depois de 0,5 s.
 - **Limites:** no máximo 4 cópias do mesmo id ao mesmo tempo e 40 ms entre duas; no máximo 24 efeitos no total, saindo o de menor prioridade.
 - **Prioridade:** perder interações, morte, chefe, especial, raridade, coleta, decomposição, disparo e impacto.
-- **Ducking:** `hurt`, `death`, `bossSpawn` e `revealLegendary` baixam os outros efeitos para 50% por 0,3 s.
+- **Ducking:** `hurt`, `hurtHeavy`, `death`, `bossSpawn` e `revealLegendary` baixam os outros efeitos para 50% por 0,3 s.
 - **Pausa:** os efeitos da run param na pausa, no level up e nas telas de ampola e cápsula.
 - **Campo longo:** usa os mesmos arquivos da run (`decompose`, `atp`) a 40% do volume, no máximo uma vez a cada 150 ms.
 
@@ -60,30 +60,35 @@ Valem para o player de efeitos quando ele for escrito; os números entram em `sr
 
 ## Agente
 
-**Feitos pelo Vitor** (falta subir os arquivos para [audio/efeitos/](../audio/efeitos/README.md)).
+**Feitos pelo Vitor**, em [audio/efeitos/](../audio/efeitos/README.md).
 
-| Id | Quando toca | Também toca em | Duração | Prio. |
-| --- | --- | --- | --- | --- |
-| `hurt` | Uma molécula encosta e consome interações | Dano grande (mais grave) | 0,25 s | P1 |
-| `heal` | Recupera interações | Soro, Segunda dose | 0,5 s | P1 |
-| `death` | Interações zeram e a run acaba | | 1,5 s | P1 |
-| `specialReady` | O especial terminou de recarregar | | 0,4 s | P1 |
+| Id | Quando toca | Também toca em | Prio. |
+| --- | --- | --- | --- |
+| `hurt` | Uma molécula encosta e consome interações | | P1 |
+| `hurtHeavy` | Dano grande de uma vez (chefe, agregado, explosão) | | P2 |
+| `heal` | Recupera interações | Soro | P1 |
+| `lowHealth` | Interações abaixo de 25% | | P2 |
+| `revive` | Segunda dose: o agente volta com metade das interações | | P2 |
+| `death` | Interações zeram e a run acaba | | P1 |
+| `dodge` | Esquiva evita um dano | | P2 |
+| `shieldBlock` | Um dano é bloqueado (Tolerância, escudo da Vitamina C) | | P2 |
+| `specialReady` | O especial terminou de recarregar | | P1 |
 
 ## Especiais dos agentes
 
-**Feitos pelo Vitor.** Um por especial, tocado ao apertar o botão. Os três primeiros já estão no jogo; os outros seis entram junto com os agentes de [personagens.md](personagens.md#agentes-da-run).
+Um por especial, tocado ao apertar o botão. Os três primeiros estão no jogo e faltam gerar; os outros seis entram junto com os agentes de [personagens.md](personagens.md#agentes-da-run).
 
-| Id | Agente e especial | Prio. |
-| --- | --- | --- |
-| `specialDopamine` | Dopamina, Pico de recompensa | P1 |
-| `specialLipase` | Lipase, Emulsão | P1 |
-| `specialInsulin` | Insulina, Captação | P1 |
-| `specialVitaminC` | Vitamina C, Escudo antioxidante | P2 |
-| `specialVenvanse` | Venvanse, Hiperfoco | P2 |
-| `specialSerotonin` | Serotonina, Calmaria | P2 |
-| `specialOxytocin` | Ocitocina, Vínculo | P2 |
-| `specialAlcoholDehydrogenase` | Álcool desidrogenase, Desintoxicação | P2 |
-| `specialCaffeine` | Cafeína, Alerta | P2 |
+| Id | Agente e especial | Prio. | Prompt |
+| --- | --- | --- | --- |
+| `specialDopamine` | Dopamina, Pico de recompensa | P1 | `retro 16-bit chiptune sound effect, power up activation, fast rising FM synth sweep exploding into a bright chip chord and a distorted guitar power chord with crash cymbal, euphoric rush, no voice, no music` |
+| `specialLipase` | Lipase, Emulsão | P1 | `retro 16-bit chiptune sound effect, liquid area spell, thick bubbly splash spreading out, gurgling low FM bubbles and a soft noise swoosh, oily, no voice, no music` |
+| `specialInsulin` | Insulina, Captação | P1 | `retro 16-bit chiptune sound effect, magnetic pull, deep humming FM synth vacuum that rises in pitch, many tiny chip blips rushing inward, no voice, no music` |
+| `specialVitaminC` | Vitamina C, Escudo antioxidante (depois) | P2 | `retro 16-bit chiptune sound effect, shield up, bright crystalline square wave chord swelling with a shimmering sparkle, protective, no voice, no music` |
+| `specialVenvanse` | Venvanse, Hiperfoco (depois) | P2 | `retro 16-bit chiptune sound effect, slow motion activation, pitch dropping tape stop effect, deep reverberant FM tone, time slowing down, no voice, no music` |
+| `specialSerotonin` | Serotonina, Calmaria (depois) | P2 | `retro 16-bit chiptune sound effect, calming wave, soft warm triangle wave chord spreading out like a ripple with gentle chime, peaceful, no voice, no music` |
+| `specialOxytocin` | Ocitocina, Vínculo (depois) | P2 | `retro 16-bit chiptune sound effect, summon allies, several quick friendly ascending chip blips in harmony, cheerful, no voice, no music` |
+| `specialAlcoholDehydrogenase` | Álcool desidrogenase, Desintoxicação (depois) | P2 | `retro 16-bit chiptune sound effect, cleansing, fizzy noise wash that sweeps across and evaporates with a bright rising tone, clean, no voice, no music` |
+| `specialCaffeine` | Cafeína, Alerta (depois) | P2 | `retro 16-bit chiptune sound effect, rapid burst, very fast stutter of square wave shots spreading out with a snare roll, jittery energy, no voice, no music` |
 
 ## Armas
 
@@ -165,7 +170,7 @@ Todos em chip puro, sem metal, no mesmo timbre.
 
 ## O que saiu da lista
 
-A primeira versão tinha 131 efeitos. Os 83 que saíram viraram reaproveitamento de outro arquivo ou foram cortados.
+A primeira versão tinha 131 efeitos. Os 84 que saíram viraram reaproveitamento de outro arquivo ou foram cortados.
 
 | Saiu | Como fica |
 | --- | --- |
@@ -182,7 +187,7 @@ A primeira versão tinha 131 efeitos. Os 83 que saíram viraram reaproveitamento
 | `skip`, `banishMode`, `pause`, `resume`, `uiTab`, `uiToggle`, `uiVolume`, `uiTitleStart` | Os toques de interface |
 | `uiStar`, `uiNotice`, `uiCompendiumNew`, `offlineReport`, `newRecord` | `uiUnlock` ou `revealLegendary` |
 | Estruturas (`synapseEnter`, potenciada, foco, coágulo, adrenal) | `synapseFire`, `alarm`, `atp` |
-| Cortados sem substituto | `hurtHeavy` (é `hurt` grave), `lowHealth`, `dodge`, `shieldBlock`, `specialEnd`, `specialDopamineCrash`, `weaponNew`, `weaponMax`, `weaponReload`, `immune`, `thornsHit`, `stressBuff`, `cytokineSpawn`, `plaqueSlam`, `bossRage`, `dryIceEnd`, `feverEnd`, `ampouleDrop`, `focusFail`, `terrainZone`, `minuteMark`, `resultTally`, `runStart`, `idleFire` |
+| Cortados sem substituto | `specialEnd`, `specialDopamineCrash`, `weaponNew`, `weaponMax`, `weaponReload`, `immune`, `thornsHit`, `stressBuff`, `cytokineSpawn`, `plaqueSlam`, `bossRage`, `dryIceEnd`, `feverEnd`, `ampouleDrop`, `focusFail`, `terrainZone`, `minuteMark`, `resultTally`, `runStart`, `idleFire` |
 
 Se algum desses fizer falta quando o som estiver no jogo, ele volta como um arquivo próprio com o mesmo id.
 
@@ -196,6 +201,6 @@ Um bloco `sfx` em `src/config/audio.json`, com o tipo em `src/config/types.ts`:
 
 ## O que falta decidir
 
-- [ ] Qual ferramenta gera os 35 que faltam: a mesma dos efeitos do agente, ou jsfxr/ChipTone para os curtos? (Mesma pergunta de [sonoplastia.md](sonoplastia.md#o-que-falta-decidir).)
+- [ ] Qual ferramenta gera os 38 que faltam: a mesma dos efeitos do agente, ou jsfxr/ChipTone para os curtos? (Mesma pergunta de [sonoplastia.md](sonoplastia.md#o-que-falta-decidir).)
 - [ ] Cada tipo de molécula (lipídio, açúcar, radical...) ganha uma decomposição própria depois, ou fica uma só?
 - [ ] Os toques de interface ficam ligados por padrão, ou com uma opção própria nas Opções?
