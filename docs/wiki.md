@@ -262,6 +262,9 @@ Aberto, Padrão ou Denso: quantos obstáculos o mapa tem. Dentro do mesmo mapa h
 ### Ninhos de vesículas
 Às vezes um grupo de 3 a 5 vesículas espera numa clareira: vale o desvio.
 
+### Câmaras e corredores
+Uma **câmara** é um anel fechado de obstáculos com uma entrada só e um destrutível no meio: dá para respirar lá dentro no pico, mas quem vem atrás entra pelo mesmo lugar. Um **corredor** são duas fileiras de obstáculos com uma passagem larga no meio: as moléculas se afunilam, bom para armas que acertam em linha, como o Raio UV e o Jato Ácido.
+
 ---
 
 ## Sinapses e estruturas

@@ -325,7 +325,7 @@ O mapa do campo crônico passa a ser gerado por semente, em blocos de 16×16 til
 - [x] Decoração sem colisão e destrutíveis com vida (golpes) e drop pelo ambiente; o chefe quebra os que encosta.
 - [x] Densidade sorteada por run (Aberto, Padrão, Denso) e o nome do mapa com a semente no início, na pausa e no fim da run.
 - [x] Ninho de vesículas (12% dos blocos). As estruturas da fase 5.11 nascem numa clareira, sem obstáculo dentro do círculo.
-- [ ] Pontos de interesse câmara e corredor.
+- [x] Pontos de interesse câmara e corredor (feito na fase 5.13, com sorteio próprio por bloco em `map.json`).
 - [ ] Zonas de terreno (correnteza, bile, muco, bolsa de ar, sinapse ativa): mecânica nova, ficou para depois.
 - [x] Os cinco ambientes de uma vez, sorteados pela semente da run (a escolha do local é a [fase 5.12](#fase-512-locais-do-corpo-e-sinergias)).
 - [ ] Validar no celular a 60 FPS com o mapa Denso.
@@ -424,7 +424,7 @@ Fechar o que já existe antes de somar conteúdo: validar no celular, dar som ao
 - [x] Ícones do PWA em PNG (192, 512 e maskable) e `apple-touch-icon` para a tela inicial do iPhone, com a logo nova em pixel, favicon e artes de loja ([logo.md](logo.md)).
 - [ ] Efeitos sonoros P1 de [efeitos-sonoros.md](efeitos-sonoros.md) (armas, combate, coleta, level up e interface) e os jingles `bossIn` e `crisisIn`; tirar o "chegam em breve" das Opções.
 - [x] "De onde vem" cada bônus na aba Atributos (receptor, suplemento, Laboratório e perfil), com a prancheta "Crônico: atributos e de onde vem" do canvas.
-- [ ] Pontos de interesse câmara e corredor; estruturas numa clareira dos blocos.
+- [x] Pontos de interesse câmara e corredor, com os obstáculos do ambiente (sem arte nova). As estruturas como ponto de interesse dos blocos ficam para a fase 5.12: hoje elas já nascem numa clareira, e trocar o anel por tempo pelos blocos mexe no ritmo da run.
 - [x] Estatísticas acumuladas no save (decompostas por molécula, minutos por agente, chefes vencidos), base das conquistas da 5.16.
 - [x] Limpar o conteúdo de placeholder que sobrou em `src/game/ui/menuContent.ts`.
 - [ ] Ensinar o robô do `npm run sim` a buscar sinapses e estruturas.

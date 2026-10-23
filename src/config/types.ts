@@ -860,6 +860,13 @@ export interface MapConfig {
   /** Ninho de vesículas: chance por bloco e quantas. */
   nestChance: number;
   nestVesicles: [number, number];
+  /**
+   * Câmara (ponto de interesse): anel de obstáculos de `radiusTiles` com uma entrada de
+   * `gapSlots` posições e um destrutível do ambiente no meio.
+   */
+  chamber: { chance: number; radiusTiles: number; gapSlots: number };
+  /** Corredor (ponto de interesse): duas fileiras de obstáculos com `gapTiles` de passagem. */
+  corridor: { chance: number; gapTiles: number; lengthTiles: [number, number] };
   environments: Record<MapEnvironment, MapEnvironmentDef>;
 }
 

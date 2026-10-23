@@ -104,3 +104,62 @@ describe('mapas gerados (fase 5.7)', () => {
     );
   });
 });
+
+describe('pontos de interesse: câmara e corredor (fase 5.13)', () => {
+  const chunks = (kind: 'chamber' | 'corridor') => {
+    const out = [];
+    for (let seed = 1; seed <= 400 && out.length < 6; seed++) {
+      const c = generateChunk(MAP, { ...params, seed }, 1, 1);
+      if (c.pois.includes(kind)) out.push(c);
+    }
+    return out;
+  };
+  const agent = 13;
+
+  it('a câmara é um anel com uma entrada e um destrutível no meio, com espaço dentro', () => {
+    const found = chunks('chamber');
+    expect(found.length).toBeGreaterThan(0);
+    for (const c of found) {
+      const group = c.objects[0]!.group;
+      const parts = c.objects.filter((o) => o.group === group);
+      const center = parts.find((o) => o.kind === 'destructible')!;
+      expect(center).toBeDefined();
+      const walls = parts.filter((o) => o.kind === 'obstacle');
+      const angles = walls
+        .map((o) => Math.atan2(o.y - center.y, o.x - center.x))
+        .sort((a, b) => a - b);
+      const reach = MAP.chamber.radiusTiles * MAP.tileSizePx;
+      const gaps = angles.map((a, i) => {
+        const next = i === angles.length - 1 ? angles[0]! + Math.PI * 2 : angles[i + 1]!;
+        return (next - a) * reach - walls[0]!.radius * 2;
+      });
+      // Uma entrada larga para o agente; o resto do anel encostado.
+      expect(gaps.filter((g) => g > agent * 2)).toHaveLength(1);
+    }
+  });
+
+  it('o corredor deixa a passagem de gapTiles entre as fileiras', () => {
+    const found = chunks('corridor');
+    expect(found.length).toBeGreaterThan(0);
+    for (const c of found) {
+      const group = c.objects.find((o) => o.kind === 'obstacle')!.group;
+      const walls = c.objects.filter((o) => o.group === group && o.kind === 'obstacle');
+      // Uma fileira e depois a outra, na ordem em que foram postas.
+      const rowA = walls.slice(0, walls.length / 2);
+      const rowB = walls.slice(walls.length / 2);
+      let narrowest = Infinity;
+      for (const a of rowA) {
+        for (const b of rowB) {
+          narrowest = Math.min(narrowest, Math.hypot(a.x - b.x, a.y - b.y) - a.radius - b.radius);
+        }
+      }
+      expect(narrowest).toBeGreaterThanOrEqual(MAP.corridor.gapTiles * MAP.tileSizePx - 1);
+    }
+  });
+
+  it('o bloco do começo nunca tem ponto de interesse', () => {
+    for (let seed = 1; seed <= 200; seed++) {
+      expect(generateChunk(MAP, { ...params, seed }, 0, 0).pois).toEqual([]);
+    }
+  });
+});

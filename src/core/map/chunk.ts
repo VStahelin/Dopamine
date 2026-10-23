@@ -34,7 +34,11 @@ export interface Chunk {
   objects: MapObject[];
   /** Vesículas do ninho deste bloco (ponto de interesse), em unidades do mundo. */
   nest: { x: number; y: number }[];
+  /** Câmaras e corredores do bloco (pontos de interesse), na ordem em que foram postos. */
+  pois: PoiKind[];
 }
+
+export type PoiKind = 'chamber' | 'corridor';
 
 export interface MapParams {
   seed: number;
@@ -75,9 +79,23 @@ export function generateChunk(cfg: MapConfig, p: MapParams, bx: number, by: numb
   const singles = Math.round(between(rng, density.obstacles) * local);
   const destructibles = between(rng, density.destructibles);
 
-  // 3. O que vai no bloco: primeiro os grupos com motivo, depois os objetos soltos.
+  // 3. O que vai no bloco: primeiro os pontos de interesse (os maiores), depois os grupos com
+  // motivo e os objetos soltos. O bloco do começo nunca tem ponto de interesse.
   const obstacleIds = Object.keys(env.obstacles);
   const layouts: Layout[] = [];
+  const poiKinds: PoiKind[] = [];
+  // Sorteio próprio, para os pontos de interesse não mudarem o resto do bloco.
+  const poiRng = new Rng(hash(p.seed, bx, by, 11));
+  if (bx !== 0 || by !== 0) {
+    if (poiRng.next() < cfg.chamber.chance) {
+      layouts.push(layoutChamber(cfg, env, poiRng));
+      poiKinds.push('chamber');
+    }
+    if (poiRng.next() < cfg.corridor.chance) {
+      layouts.push(layoutCorridor(cfg, env, poiRng));
+      poiKinds.push('corridor');
+    }
+  }
   for (let i = 0; i < groups; i++) {
     const def = rng.weighted(env.groups, (g) => g.weight);
     if (def) layouts.push(layoutGroup(def, env, tile, rng));
@@ -104,6 +122,7 @@ export function generateChunk(cfg: MapConfig, p: MapParams, bx: number, by: numb
   const oy = by * size;
   const objects: MapObject[] = [];
   const placed: { x: number; y: number; footprint: number }[] = [];
+  const pois: PoiKind[] = [];
   layouts.forEach((layout, group) => {
     const f = layout.footprint;
     if (margin + f > size - margin - f) return;
@@ -116,6 +135,8 @@ export function generateChunk(cfg: MapConfig, p: MapParams, bx: number, by: numb
       for (const o of layout.parts) {
         objects.push({ ...o, index: objects.length, x: x + o.x, y: y + o.y, group });
       }
+      const poi = poiKinds[group];
+      if (poi) pois.push(poi);
       return;
     }
   });
@@ -147,7 +168,7 @@ export function generateChunk(cfg: MapConfig, p: MapParams, bx: number, by: numb
     }
   }
 
-  return { bx, by, tiles, objects, nest };
+  return { bx, by, tiles, objects, nest, pois };
 }
 
 /** Um grupo (ou objeto solto) montado em volta de (0, 0), antes de ir para o bloco. */
@@ -155,6 +176,65 @@ interface Layout {
   /** Raio que os objetos com colisão ocupam, da borda de fora ao centro. */
   footprint: number;
   parts: Omit<MapObject, 'index' | 'group'>[];
+}
+
+/**
+ * Câmara (docs/mapas.md, "Pontos de interesse"): anel fechado de obstáculos, encostados, com uma
+ * entrada de `gapSlots` posições e um destrutível do ambiente no meio. Lugar para respirar no
+ * pico, com uma saída só.
+ */
+function layoutChamber(cfg: MapConfig, env: MapEnvironmentDef, rng: Rng): Layout {
+  const ids = Object.keys(env.obstacles);
+  const sprite = ids[rng.int(ids.length)]!;
+  const radius = env.obstacles[sprite]!;
+  const reach = cfg.chamber.radiusTiles * cfg.tileSizePx;
+  const slots = Math.max(6, Math.round((Math.PI * 2 * reach) / (radius * 2)));
+  const a0 = rng.range(0, Math.PI * 2);
+  const parts: Layout['parts'] = [];
+  for (let i = cfg.chamber.gapSlots; i < slots; i++) {
+    const a = a0 + (i / slots) * Math.PI * 2;
+    parts.push({
+      kind: 'obstacle',
+      sprite,
+      x: Math.cos(a) * reach,
+      y: Math.sin(a) * reach,
+      radius,
+    });
+  }
+  const { id, radius: r } = env.destructible;
+  parts.push({ kind: 'destructible', sprite: id, x: 0, y: 0, radius: r });
+  return { footprint: reach + radius, parts };
+}
+
+/**
+ * Corredor: duas fileiras paralelas de obstáculos, encostados, com `gapTiles` de passagem entre
+ * elas e as pontas abertas. Afunila as moléculas para as armas de linha.
+ */
+function layoutCorridor(cfg: MapConfig, env: MapEnvironmentDef, rng: Rng): Layout {
+  const ids = Object.keys(env.obstacles);
+  const sprite = ids[rng.int(ids.length)]!;
+  const radius = env.obstacles[sprite]!;
+  const tile = cfg.tileSizePx;
+  const length = between(rng, cfg.corridor.lengthTiles) * tile;
+  const n = Math.max(2, Math.round(length / (radius * 2)));
+  const side = (cfg.corridor.gapTiles * tile) / 2 + radius;
+  const a = rng.range(0, Math.PI);
+  const [dx, dy] = [Math.cos(a), Math.sin(a)];
+  const parts: Layout['parts'] = [];
+  for (const s of [-1, 1]) {
+    for (let i = 0; i < n; i++) {
+      const d = (i - (n - 1) / 2) * radius * 2;
+      parts.push({
+        kind: 'obstacle',
+        sprite,
+        x: dx * d - dy * side * s,
+        y: dy * d + dx * side * s,
+        radius,
+      });
+    }
+  }
+  const half = ((n - 1) / 2) * radius * 2;
+  return { footprint: Math.hypot(half, side) + radius, parts };
 }
 
 /**

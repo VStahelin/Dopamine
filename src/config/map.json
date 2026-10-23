@@ -40,6 +40,8 @@
   "decorPerChunk": [2, 4],
   "nestChance": 0.12,
   "nestVesicles": [3, 5],
+  "chamber": { "chance": 0.08, "radiusTiles": 3, "gapSlots": 2 },
+  "corridor": { "chance": 0.06, "gapTiles": 4, "lengthTiles": [6, 8] },
   "environments": {
     "blood": {
       "name": "Corrente sanguínea",
