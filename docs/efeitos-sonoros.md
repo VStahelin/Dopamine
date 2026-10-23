@@ -238,6 +238,6 @@ Os 9 efeitos do agente já tocam na run:
 
 ## O que falta decidir
 
-- [ ] Qual ferramenta gera os 38 que faltam: a mesma dos efeitos do agente, ou jsfxr/ChipTone para os curtos? (Mesma pergunta de [sonoplastia.md](sonoplastia.md#o-que-falta-decidir).)
+- [x] Qual ferramenta gera os 38 que faltam? → o Vitor gera no mesmo app dos efeitos do agente (23/10/2026); nada é sintetizado por código. Quem programa só liga os arquivos quando eles chegam em `audio/efeitos/`.
 - [ ] Cada tipo de molécula (lipídio, açúcar, radical...) ganha uma decomposição própria depois, ou fica uma só?
 - [ ] Os toques de interface ficam ligados por padrão, ou com uma opção própria nas Opções?

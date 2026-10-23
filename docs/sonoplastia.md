@@ -215,6 +215,6 @@ Nas **Opções**, a aba Som ([menu.md](menu.md#opções)) tem Mudo, os volumes G
 - [ ] Mi menor ou Ré menor como tom do jogo inteiro?
 - [ ] Três faixas de run por tempo (como proposto), ou uma por ambiente do mapa?
 - [x] O chefe ganha música própria? → sim: o Vitor gerou `boss`, que toca enquanto o chefe está vivo (23/10/2026).
-- [ ] Os efeitos saem de jsfxr ou ChipTone, ou o app de música também faz efeitos bons o bastante?
+- [x] Os efeitos saem de jsfxr ou ChipTone, ou o app de música também faz efeitos bons o bastante? → o Vitor gera todos no app que fez os efeitos do agente (23/10/2026), sem síntese por código ([efeitos-sonoros.md](efeitos-sonoros.md#o-que-falta-decidir)).
 - [x] O campo longo toca `idle` também no Hub? → não, cada tela com a sua: `hub` nos menus, `idle` na tela do campo.
 - [ ] Música e efeitos ligados por padrão no celular, ou o jogo começa mudo até o primeiro toque em Opções?

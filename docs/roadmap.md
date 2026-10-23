@@ -44,7 +44,7 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 Bugs que o Vitor achou jogando. Marque ao corrigir, com o commit da correção.
 
 - [x] PC: interface enorme na run (HUD ocupa um terço da tela), nas Opções (os botões não cabem) e no campo longo. Corrigido: as telas de interface usam a regra de tela grande da run (`uiMinShortSidePxLarge`).
-- [ ] PC: falta uma UI própria de tela larga, desenhada no canvas (HUD da run, campo longo e menus), em vez de esticar a do celular.
+- [ ] PC: falta uma UI própria de tela larga, desenhada no canvas (HUD da run, campo longo e menus), em vez de esticar a do celular. Os menus estão em andamento ([fase 6, item 1](#fase-6-arte-polimento-e-lançamento)).
 - [x] PC: campo longo deitado espreme o campo numa faixa fina entre a HUD e o pool. Corrigido: o campo estica entre as paredes com proporção limitada.
 - [x] Celular: campo longo longe da prancheta "Tela de batalha (mockup)": paredes largas demais, campo estreito, pool com espaços pequenos.
 - [x] Celular: o dedo que movia o agente escolhia uma carta do level up ao soltar. Corrigido: a carta só responde a um toque que começou nela.
@@ -475,6 +475,16 @@ A seção [Depois: conquistas](#depois-conquistas) vira fase. Resposta proposta 
 
 Deixar o jogo com a cara do canvas de identidade visual e pronto para outras pessoas.
 
+**Ordem do que falta (Vitor, 23/10/2026):** primeiro os menus no desktop, depois os efeitos sonoros.
+
+1. **Menus no desktop.** A thread "Conceito desktop do menu" desenha as pranchetas no canvas. Depois que o Vitor aprovar, o código segue as pranchetas.
+   - [ ] Conceito no canvas aprovado: menu principal (aba Caso), Agentes, Arsenal, Laboratório, Organismo e Novidades.
+   - [ ] Menu principal em tela larga: laterais com o painel do agente e o do organismo.
+   - [ ] Abas Agentes, Arsenal, Laboratório e Organismo em colunas.
+   - [ ] Novidades em duas colunas: as versões e a versão escolhida.
+   - [ ] Validar em 1280×800 e 1920×1080, e conferir que no celular nada mudou.
+2. **Efeitos sonoros.** O Vitor está gerando os arquivos no app dele; nada é sintetizado por código. Quando os arquivos subirem em [audio/efeitos/](../audio/efeitos/README.md), ligar cada id no jogo, primeiro os P1 ([efeitos-sonoros.md](efeitos-sonoros.md#para-fazer-depois)).
+
 - [ ] Acabamento visual de HUD, molduras, botões e fontes da aba Design (a HUD e a pausa de [ui-cronico.md](ui-cronico.md) entram na fase 2.6).
 - [ ] Chão, paredes e efeitos (dano com contorno, projéteis); o chão e os objetos dos ambientes vêm da fase 5.7.
 - [x] Wiki dentro do jogo: o Compêndio ganha as páginas de [wiki.md](wiki.md), lidas do próprio arquivo (prancheta "Wiki no Compêndio") (como jogar, agentes, armas, modificadores, moléculas, progressão, campo longo, organismo e glossário).
@@ -482,10 +492,10 @@ Deixar o jogo com a cara do canvas de identidade visual e pronto para outras pes
   - [x] Música: 9 faixas em loop e 3 jingles, troca na run (tempo, crise, chefe), abafada nas telas por cima, aba Som nas Opções (mudo, Geral, Música, Efeitos, abafar, segundo plano).
   - [ ] Jingles `bossIn` e `crisisIn` (faltam gerar).
   - [x] Efeitos do agente (9) e o volume de Efeitos valendo ([efeitos-sonoros.md](efeitos-sonoros.md#como-entra-no-jogo)).
-  - [ ] Os outros efeitos da lista de [efeitos-sonoros.md](efeitos-sonoros.md#para-fazer-depois), primeiro os P1 (saíram da fase 5.13).
+  - [ ] Os outros efeitos da lista de [efeitos-sonoros.md](efeitos-sonoros.md#para-fazer-depois), primeiro os P1 (saíram da fase 5.13). Aguardando os arquivos do Vitor; depois é só ligar no jogo (item 2 acima).
 - [ ] PWA: polimento da instalação na tela inicial (os ícones em PNG já entraram na fase 5.13; o offline vem da fase 2.5).
 - [x] Primeira run guiada: um tutorial curto para quem nunca jogou, com cartões que não pausam (prancheta "Primeira run guiada", `tutorial.json`) ([lacunas-desenvolvimento.md](lacunas-desenvolvimento.md#ui-e-telas)).
-- [ ] Layout em telas largas e altas (painéis laterais, mais pista).
+- [ ] Layout em telas largas e altas (painéis laterais, mais pista): os menus estão no item 1 acima; a HUD da run e o campo longo vêm depois.
 - [ ] Rodada de testes com 2 ou 3 amigos e ajuste dos números.
 - [x] Decidir como o jogo chega aos jogadores: GitHub Pages, publicado por versão ([0018](decisoes/0018-jogo-no-pages-servidor-futuro.md)).
 
