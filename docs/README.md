@@ -25,6 +25,7 @@ Documento de conceito do jogo, um arquivo por aba do [documento original](https:
 | [wiki.md](wiki.md) | Textos da wiki dentro do jogo (Compêndio), escritos para o jogador: como jogar, agentes, armas, modificadores, moléculas, progressão, campo longo, organismo e glossário |
 | [megabonk.md](megabonk.md) | Run estilo Megabonk: level up só com armas e receptores (tomos), suplementos de ampola, XP com chance, agregados (mini chefes) e sinapses no mapa |
 | [lacunas-vs.md](lacunas-vs.md) | O que o Vampire Survivors tem que ainda não desenhamos: lista priorizada com versão química, esforço e perguntas |
+| [lacunas-desenvolvimento.md](lacunas-desenvolvimento.md) | O que ainda falta desenvolver, comparando código e docs: priorizado por impacto e esforço, agrupado por área, com a fonte de cada item e a ordem de fases proposta |
 | [roadmap.md](roadmap.md) | Fases de desenvolvimento, do protótipo da run ao lançamento, com status, critérios de saída e decisões que travam cada fase |
 | [arquitetura.md](arquitetura.md) | Estado atual do código: stack, camadas, estrutura de pastas e princípios |
 | [decisoes/](decisoes/README.md) | Registro de decisões técnicas e de design, um arquivo por decisão |

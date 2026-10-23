@@ -32,7 +32,11 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | 5.10 | Agregados (mini chefes) | Entre um chefe e outro sempre tem um alvo que vale o risco? | 5.9 | implementada, falta validar no celular |
 | 5.11 | Sinapses e estruturas | O jogador sai do lugar para buscar bônus no mapa? | 5.6, 5.9, 5.10 | implementada, falta validar no celular |
 | 5.12 | Locais do corpo e sinergias | Escolher onde agir muda a run e cura o organismo mais rápido? | 5, 5.7 | não iniciada |
-| 6 | Arte, polimento e lançamento | Dá para mandar o link para os amigos? | 1 a 5.12 | não iniciada |
+| 5.13 | Validação e ganhos rápidos (proposta) | O que já existe funciona no celular, tem som e não mostra placeholder? | 2.6 a 5.11 | não iniciada |
+| 5.14 | Famílias e chefes (proposta) | Cada família de molécula pede um jeito diferente de jogar? | 5.12, 5.13 | não iniciada |
+| 5.15 | Elenco completo (proposta) | Cada doença tem um agente feito para ela? | 5.14 | não iniciada |
+| 5.16 | Conquistas (proposta) | Jogar libera conteúdo, e não só juntar ATP? | 5.15 | não iniciada |
+| 6 | Arte, polimento e lançamento | Dá para mandar o link para os amigos? | 1 a 5.16 | não iniciada |
 | 7 | Lojas e plataformas | O mesmo jogo roda e é publicado em Android, iOS, Steam e Microsoft Store? | 6 | não iniciada |
 
 ## Bugs relatados
@@ -50,6 +54,8 @@ Bugs que o Vitor achou jogando. Marque ao corrigir, com o commit da correção.
 - [x] Pausa: o botão Opções não fazia nada. A tela abria escondida atrás da run e da HUD; agora vem para cima.
 
 **Ordem sugerida das fases 5.x:** 5.5 → 5.8 → 5.9 → 5.10 → 5.6 → 5.11 → 5.7. As fases 5.8 a 5.11 trazem as mecânicas do Megabonk ([megabonk.md](megabonk.md)) e mexem no level up e nos drops. A 5.6 vem depois dos receptores (5.8, de onde saem o receptor nativo e os cartões da Superdosagem) e antes das sinapses (5.11, cujo Foco inflamatório usa o Cerco inflamatório), e a 5.7 vem por último porque os mapas passam a hospedar as estruturas como pontos de interesse. Os números das fases não mudam para não quebrar as decisões que citam cada uma.
+
+**Ordem sugerida depois da 5.11** ([decisão 0034](decisoes/0034-fases-para-fechar-lacunas.md), proposta): 5.13 → 5.12 → 5.14 → 5.15 → 5.16 → 6. O mapa completo do que falta, com fonte, impacto e esforço de cada item, está em [lacunas-desenvolvimento.md](lacunas-desenvolvimento.md). As famílias (5.14) vêm antes dos agentes (5.15) porque três dos agentes novos têm o especial feito contra mecânicas de molécula que ainda não existem.
 
 A arte não espera a fase 6: os sprites de molécula são montados por código a partir dos átomos (aba Design), então entram já na fase 1. A fase 6 cuida do resto: HUD final, som, telas e acabamento.
 
@@ -410,6 +416,58 @@ O jogador escolhe em que parte do corpo vai agir, em vez de o ambiente da fase 5
 
 **Critério de saída:** com uma doença de cada setor, o jogador consegue dizer para onde ir e com quem; o par com sinergia cura visivelmente mais que o mesmo agente na Corrente sanguínea; e ninguém prefere sempre o "Qualquer lugar" ou sempre o mesmo local.
 
+## Fase 5.13: Validação e ganhos rápidos (proposta)
+
+Fechar o que já existe antes de somar conteúdo: validar no celular, dar som ao que acontece em toda run e tirar o que ainda parece placeholder. Itens de [lacunas-desenvolvimento.md](lacunas-desenvolvimento.md#as-12-prioridades) ([decisão 0034](decisoes/0034-fases-para-fechar-lacunas.md), proposta).
+
+- [ ] Validar no celular, em pé e deitado, as fases 2.6 a 5.11, incluindo 60 FPS com 400 moléculas e com o mapa Denso.
+- [ ] Ícones do PWA em PNG (192, 512 e maskable) e `apple-touch-icon` para a tela inicial do iPhone.
+- [ ] Efeitos sonoros P1 de [efeitos-sonoros.md](efeitos-sonoros.md) (armas, combate, coleta, level up e interface) e os jingles `bossIn` e `crisisIn`; tirar o "chegam em breve" das Opções.
+- [ ] "De onde vem" cada bônus na aba Atributos (receptor, suplemento, Laboratório e perfil).
+- [ ] Pontos de interesse câmara e corredor; estruturas numa clareira dos blocos.
+- [ ] Estatísticas acumuladas no save (decompostas por molécula, minutos por agente, chefes vencidos), base das conquistas da 5.16.
+- [ ] Limpar o conteúdo de placeholder que sobrou em `src/game/ui/menuContent.ts`.
+- [ ] Ensinar o robô do `npm run sim` a buscar sinapses e estruturas.
+
+**Critério de saída:** uma run de 15 minutos no celular roda a 60 FPS, toda ação frequente tem som, e nenhuma tela além de Conquistas mostra "EM BREVE".
+
+## Fase 5.14: Famílias e chefes (proposta)
+
+Cada família de molécula ganha o comportamento de [personagens.md](personagens.md#tipos-de-molécula-ofensora), e cada local do corpo ganha um chefe. Hoje todas as moléculas só perseguem o agente e o único chefe é a Partícula de LDL.
+
+- [ ] Comportamento por família: radicais erráticos que ricocheteiam; estresse com aura que acelera e protege os vizinhos; toxinas que pioram ao quebrar (poça do acetaldeído que tira interações); inflamação que gera inimigos.
+- [ ] Família inflamação: a Citocina (spawner parado) e o Cerco inflamatório feito dela; a Maré tóxica deixando poças.
+- [ ] Mais moléculas nas famílias com duas (estresse, radicais, toxinas), alinhando [personagens.md](personagens.md) com o código.
+- [ ] Efeitos temporários de inimigo no agente (Lentidão, Adrenalina), na fila de efeitos da HUD.
+- [ ] Um chefe por local do corpo, ligado à família do local, e a Placa como chefe de fim de indivíduo.
+- [ ] Famílias e chefes novos também no campo longo; Compêndio, wiki e `npm run sim`.
+
+**Critério de saída:** dá para reconhecer a família de uma molécula pelo jeito que ela anda, e duas runs em locais diferentes terminam com chefes diferentes.
+
+## Fase 5.15: Elenco completo (proposta)
+
+Os seis agentes de [personagens.md](personagens.md#agentes-da-run) que aparecem como "EM BREVE" na escolha do agente.
+
+- [ ] Definir em [personagens.md](personagens.md) o receptor nativo e o custo de cada agente novo.
+- [ ] Primeira leva, as famílias sem agente forte: Vitamina C (radicais), Serotonina (estresse) e Álcool desidrogenase (toxinas).
+- [ ] Segunda leva, as mecânicas novas: Cafeína (velocidade), Ocitocina (aliados) e Venvanse (pró-fármaco e tempo lento).
+- [ ] Ação, especial, ícones, sons dos especiais e sinergia de local de cada um.
+- [ ] Evolução para Nuvem de Elétrons, Poça de Solvente e Reação em Cadeia.
+- [ ] Wiki, Compêndio, `npm run sim` e ajuste da matriz de efetividade.
+
+**Critério de saída:** para cada doença existe um agente que o jogador escolhe de propósito, e os nove agentes aparecem nas runs dos amigos.
+
+## Fase 5.16: Conquistas (proposta)
+
+A seção [Depois: conquistas](#depois-conquistas) vira fase. Precisa da resposta: as conquistas substituem parte do desbloqueio por ATP, ou só somam?
+
+- [ ] Aba Conquistas no lugar do placeholder, com metas lidas das estatísticas da 5.13.
+- [ ] Conquistas que dão ATP ou liberam conteúdo (agente, receptor, local, modo).
+- [ ] Casos anteriores, já curados, abaixo do palco do hub ([menu.md](menu.md#palco-o-caso-atual)).
+- [ ] Cápsulas no mapa que liberam um agente bloqueado ([lacunas-vs.md](lacunas-vs.md#cápsulas-e-descobertas)).
+
+**Critério de saída:** pelo menos um desbloqueio importante chega por jogar, e o jogador sabe qual é a próxima conquista.
+
 ## Fase 6: Arte, polimento e lançamento
 
 Deixar o jogo com a cara do canvas de identidade visual e pronto para outras pessoas.
@@ -422,7 +480,8 @@ Deixar o jogo com a cara do canvas de identidade visual e pronto para outras pes
   - [ ] Jingles `bossIn` e `crisisIn` (faltam gerar).
   - [x] Efeitos do agente (9) e o volume de Efeitos valendo ([efeitos-sonoros.md](efeitos-sonoros.md#como-entra-no-jogo)).
   - [ ] Os outros efeitos da lista de [efeitos-sonoros.md](efeitos-sonoros.md), primeiro os P1.
-- [ ] PWA: ícones e polimento da instalação na tela inicial (o offline vem da fase 2.5).
+- [ ] PWA: polimento da instalação na tela inicial (os ícones em PNG entram na fase 5.13; o offline vem da fase 2.5).
+- [ ] Primeira run guiada: um tutorial curto para quem nunca jogou ([lacunas-desenvolvimento.md](lacunas-desenvolvimento.md#ui-e-telas)).
 - [ ] Layout em telas largas e altas (painéis laterais, mais pista).
 - [ ] Rodada de testes com 2 ou 3 amigos e ajuste dos números.
 - [x] Decidir como o jogo chega aos jogadores: GitHub Pages, publicado por versão ([0018](decisoes/0018-jogo-no-pages-servidor-futuro.md)).
@@ -431,7 +490,7 @@ Deixar o jogo com a cara do canvas de identidade visual e pronto para outras pes
 
 ## Depois: conquistas
 
-Ideia aprovada para elaborar no futuro, sem fase definida: a aba Conquistas ganha metas ("Decompor 1.000 triglicerídeos", "Nível 50 com a Lipase") que dão ATP ou liberam conteúdo, como os desbloqueios do Vampire Survivors ([lacunas-vs.md](lacunas-vs.md#conquistas)). Falta decidir se substituem parte do desbloqueio por ATP ou só somam.
+Proposta como [fase 5.16](#fase-516-conquistas-proposta) pela [decisão 0034](decisoes/0034-fases-para-fechar-lacunas.md). Ideia aprovada para elaborar no futuro: a aba Conquistas ganha metas ("Decompor 1.000 triglicerídeos", "Nível 50 com a Lipase") que dão ATP ou liberam conteúdo, como os desbloqueios do Vampire Survivors ([lacunas-vs.md](lacunas-vs.md#conquistas)). Falta decidir se substituem parte do desbloqueio por ATP ou só somam.
 
 ## Fase 7: Lojas e plataformas
 
