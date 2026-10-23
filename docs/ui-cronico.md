@@ -137,6 +137,8 @@ Regras de interface:
 
 A HUD atual (`src/game/scenes/HudScene.ts`) já tem barra de XP no topo, nível, tempo, decompostas, pips de interações e pausa. Para chegar nesta proposta faltam: as duas linhas de ícones, a moeda, os efeitos temporários, a barra do chefe, a barra de interações embaixo do agente, as cores de número de dano, o botão do especial e a pausa com abas. A maior parte depende da fase 2 (armas, reagentes, especial, chefe); a pausa com Arsenal e Atributos já pode ser feita com o que existe.
 
+Com a [fase 5.12](roadmap.md#fase-512-locais-do-corpo-e-sinergias), quando o par agente × local tem sinergia, um ícone ✚ pequeno aparece ao lado do retrato do agente, na cor do setor que ela melhora ([mapas.md](mapas.md#escolha-do-local)).
+
 ## Perguntas em aberto
 
 - [ ] Interações só embaixo do agente (como o VS), ou também um número fixo na banda?

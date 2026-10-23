@@ -2,7 +2,7 @@
 
 22 de outubro de 2026 · Vitor
 
-Cada run do campo crônico gera o próprio mapa a partir de uma semente: o chão, os obstáculos, as decorações, os destrutíveis e os pontos de interesse saem de blocos de 16×16 tiles criados em volta do agente, num de cinco **ambientes** do corpo. Assim duas runs nunca têm o mesmo chão, e a mesma semente sempre repete o mesmo mapa ([decisão 0012](decisoes/0012-passo-fixo-e-semente.md)). Entra na [fase 5.7 do roadmap](roadmap.md#fase-57-mapas-gerados) ([decisão 0026](decisoes/0026-mapas-gerados.md)).
+Cada run do campo crônico gera o próprio mapa a partir de uma semente: o chão, os obstáculos, as decorações, os destrutíveis e os pontos de interesse saem de blocos de 16×16 tiles criados em volta do agente, num de cinco **ambientes** do corpo, que o jogador escolhe antes da run ([Escolha do local](#escolha-do-local)). Assim duas runs nunca têm o mesmo chão, e a mesma semente sempre repete o mesmo mapa ([decisão 0012](decisoes/0012-passo-fixo-e-semente.md)). Entra na [fase 5.7 do roadmap](roadmap.md#fase-57-mapas-gerados) ([decisão 0026](decisoes/0026-mapas-gerados.md)).
 
 Tudo aqui é **proposta**: quantidades, distâncias e pesos são o primeiro chute para testar. Quando virar código, os números vão para `src/config/map.json` e os desenhos para `src/assets/sprites/map.json`. A arte está na prancheta "Mapas: objetos e chão" do [canvas de identidade visual](https://claude.ai/artifact/MPV17zZywrhhXBUdfnUs6F).
 
@@ -10,7 +10,7 @@ Tudo aqui é **proposta**: quantidades, distâncias e pesos são o primeiro chut
 
 | Camada | O que varia | Quem decide |
 | --- | --- | --- |
-| Ambiente | Paleta do chão, objetos, moléculas mais comuns e a zona de terreno | O local do corpo da run (ver [Ambientes](#ambientes)) |
+| Ambiente | Paleta do chão, objetos, moléculas mais comuns e a zona de terreno | O jogador, na [escolha do local](#escolha-do-local) (ver [Ambientes](#ambientes)) |
 | Densidade | Quantos obstáculos por bloco: Aberto, Padrão ou Denso | Sorteada no início da run |
 | Chão | Onde entram as variações de tile, em manchas | Ruído com a semente |
 | Obstáculos e decoração | Posição, tipo e aglomerados | Semente do bloco |
@@ -66,7 +66,7 @@ Cinco tipos de objeto, todos em pixel art de 16×16 com a paleta dos ícones.
 
 ## Ambientes
 
-Os cinco ambientes são o lado visual e de geração dos **Locais do corpo** propostos em [lacunas-vs.md](lacunas-vs.md#locais-do-corpo-estágios). O primeiro, Corrente sanguínea, é o mapa de hoje: o chão de areia vira o plasma, que de fato tem cor de palha.
+Os cinco ambientes são o lado visual e de geração dos **Locais do corpo** propostos em [lacunas-vs.md](lacunas-vs.md#locais-do-corpo-estágios); o que cada local muda na run e na saúde está em [Escolha do local](#escolha-do-local). O primeiro, Corrente sanguínea, é o mapa de hoje: o chão de areia vira o plasma, que de fato tem cor de palha.
 
 | Ambiente | Chão (tiles) | Obstáculos | Destrutível | Decoração | Zona de terreno |
 | --- | --- | --- | --- | --- | --- |
@@ -87,6 +87,89 @@ Cores do chão (do mais escuro ao mais claro), num grupo próprio de paleta por 
 | Cérebro | #8F7FA3 | #A897B9 | #B7A6C6 | #C8B9D5 |
 
 O tom 3 da Corrente sanguínea é a areia de hoje (`world.json`), e o tom 2 é o rejunte, então o chão atual continua o mesmo de longe.
+
+## Escolha do local
+
+> **Proposta da [decisão 0032](decisoes/0032-local-escolhido-e-sinergia.md), pedido do Vitor:** o jogador escolhe em que parte do corpo a run acontece, em vez de o ambiente sair da semente. O par agente × local pode ter **sinergia**, que melhora um setor de saúde no fim da run. Entra na [fase 5.12 do roadmap](roadmap.md#fase-512-locais-do-corpo-e-sinergias). A tela está em [menu.md](menu.md#escolha-do-local).
+
+A ideia é a de um remédio de verdade: o mesmo agente age melhor num lugar do que em outro. A Lipase digere gordura no intestino; a Insulina guarda glicose no fígado; a Lipase nem entra no cérebro. Escolher o local vira a segunda decisão antes da run, ao lado do agente, e as duas juntas respondem à doença do caso.
+
+### O que cada local muda
+
+Cada local é um dos cinco ambientes desta página (chão, objetos, zona) e traz uma família de molécula e um setor de saúde, os mesmos pares da [decisão 0023](decisoes/0023-organismo.md) (Física: açúcares e lipídios; Mental: estresse; Executiva: radicais; Social: toxinas).
+
+| Local | Família que dobra | Setor do local | Por quê |
+| --- | --- | --- | --- |
+| **Corrente sanguínea** | nenhuma: a mistura da doença, como hoje | nenhum | O local neutro, por onde tudo passa. É a run de hoje |
+| **Intestino** | Açúcares e lipídios | Física | É onde a comida é absorvida |
+| **Cérebro** | Estresse | Mental | Cortisol e adrenalina agem no humor e na ansiedade |
+| **Pulmão** | Radicais livres | Executiva | O oxigênio gera radicais; sem fôlego não há foco |
+| **Fígado** | Toxinas | Social | O fígado desintoxica o etanol da noite com os amigos |
+
+- **Família que dobra:** o peso da família do local no sorteio de moléculas e de formações é multiplicado por 2, por cima dos pesos da doença (`familyWeights` da fase 5). Uma doença de Física baixa no Intestino é a run mais cheia de açúcar e gordura do jogo.
+- **Setor do local:** no fim da run, o ganho do agente nesse setor é multiplicado por 1,5. Só vale se o agente já sobe esse setor; o local não cria efeito que o agente não tem.
+- **Corrente sanguínea** não dobra nada nem multiplica nada: é a referência, e continua sendo o primeiro local.
+- **Indicado:** o local cujo setor é o mais baixo do caso ganha o selo INDICADO na tela de escolha. É só um aviso; o jogador pode ir a qualquer lugar.
+
+### Sinergia agente × local
+
+Cada agente tem **um** local de sinergia (✚), escolhido pela farmacologia real. No Cérebro há ainda a **barreira hematoencefálica** (⊘): enzimas grandes não entram.
+
+| Agente | Corrente sanguínea | Intestino | Cérebro | Pulmão | Fígado |
+| --- | --- | --- | --- | --- | --- |
+| Dopamina | — | — | ✚ Mental | — | — |
+| Lipase | — | ✚ Física | ⊘ | — | — |
+| Insulina | — | — | — | — | ✚ Física |
+| Vitamina C | — | — | — | ✚ Física | — |
+| Venvanse | ✚ Executiva | — | — | — | — |
+| Serotonina | — | ✚ Mental | — | — | — |
+| Ocitocina | — | — | ✚ Social | — | — |
+| Álcool desidrogenase | — | — | ⊘ | — | ✚ Social |
+| Cafeína | — | — | — | ✚ Executiva | — |
+
+O setor depois do ✚ é o que a sinergia melhora. O porquê de cada par:
+
+- **Dopamina no Cérebro (Mental):** a via de recompensa. No jogo ela já nasce no cérebro; na vida real, quem atravessa a barreira é a L-DOPA.
+- **Lipase no Intestino (Física):** a lipase do pâncreas digere a gordura no intestino delgado.
+- **Insulina no Fígado (Física):** no fígado, a insulina guarda a glicose como glicogênio.
+- **Vitamina C no Pulmão (Física):** é o principal antioxidante do líquido que reveste os alvéolos.
+- **Venvanse na Corrente sanguínea (Executiva):** o pró-fármaco é ativado pelas hemácias, então chega mais rápido ao efeito. Extra só dele: a rampa de ativação do começo da run dura a metade.
+- **Serotonina no Intestino (Mental):** cerca de 90% da serotonina do corpo é feita no intestino; é o eixo intestino-cérebro.
+- **Ocitocina no Cérebro (Social):** é produzida no hipotálamo, onde age no vínculo.
+- **Álcool desidrogenase no Fígado (Social):** é lá que o etanol vira acetaldeído e depois acetato.
+- **Cafeína no Pulmão (Executiva):** é parente da teofilina, que abre os brônquios; mais ar, mais alerta.
+
+Com o elenco de hoje (Dopamina, Lipase e Insulina), o Pulmão ainda não tem sinergia; ela chega com a Vitamina C e a Cafeína. Cada setor tem pelo menos dois agentes com sinergia (Física tem três), então toda doença tem resposta.
+
+### Efeito da sinergia
+
+| Onde | Sinergia ✚ | Neutro — | Barreira ⊘ |
+| --- | --- | --- | --- |
+| Na run | O receptor nativo começa no nível 1 em vez de 0; ícone ✚ ao lado do retrato do agente na HUD | Nada muda | O agente não pode ser escolhido para o Cérebro |
+| No fim da run | +4 pontos no setor da sinergia (na mesma escala de minutos da fase 5: cheio em 10 min, até 2×) e o colateral do agente pela metade | Saúde como hoje | — |
+
+Exemplo, caso com Física baixa, 10 minutos de run:
+
+| Escolha | Física | Colateral | Run |
+| --- | --- | --- | --- |
+| Lipase na Corrente sanguínea | +10 | Mental −1 | Mistura da doença |
+| Lipase no Fígado | +10 | Mental −1 | Toxinas dobradas, e a Lipase é fraca contra elas |
+| Lipase no Intestino | +10 × 1,5 + 4 = **+19** | Mental −0,5 | Açúcares e lipídios dobrados; receptor nativo no nível 1 |
+
+A sinergia deixa a run mais dura (a família dobrada é a que a doença já puxa) e paga em saúde. É o loop do organismo ficando mais curto: o jogador que entende o corpo cura mais rápido, sem precisar de mais ATP. O retorno decrescente da fase 5 continua valendo, então ninguém passa de 100.
+
+### Efeito na meta
+
+- **Desbloqueio:** a Corrente sanguínea é o único local no começo. Os outros quatro abrem juntos na primeira estrela (5 min) do primeiro caso, com um aviso no hub. Depois disso, ficam abertos para sempre, inclusive depois da ALTA.
+- **Sorteio:** a tela de escolha tem um cartão "Qualquer lugar", que sorteia o local pela semente, como hoje, e dá +10% de ATP na run. Para quem prefere surpresa.
+- **Recordes:** melhor tempo por local, além do geral. As estrelas e o baú continuam sendo do caso, valendo em qualquer local.
+- **ALTA:** o próximo indivíduo tem outra doença, então o local INDICADO muda e o par que o jogador decorou deixa de ser o melhor.
+- **Semente:** o código do mapa passa a dizer o local (**INTESTINO · DENSO · #A3F9**); para jogar o mesmo mapa que um amigo, o local e a semente vão juntos.
+- **Campo longo:** continua sem local. Pode ganhar um depois, se o idle precisar de mais escolha.
+
+### Parâmetros
+
+Quando virar código, em `src/config/map.json` (por ambiente: `family`, `sector`, e as regras gerais `localFamilyWeight` 2, `localSectorMultiplier` 1,5, `randomLocalAtpBonus` 0,1, `unlockStar` 1) e em `src/config/agents.json` (por agente: `synergy` com o local e o setor, e `crossesBloodBrainBarrier`). A sinergia (`synergyHealth` 4, `synergyCollateralMultiplier` 0,5, `synergyNativeReceptorLevel` 1) fica em `src/config/organism.json`, junto com as outras regras de saúde. As contas ficam em `src/core/organism/`, sem Phaser.
 
 ## Pontos de interesse
 
@@ -121,10 +204,15 @@ Quando virar código, um `src/config/map.json`, com o tipo em `src/config/types.
 
 ## O que falta decidir
 
-- [ ] Quem escolhe o ambiente: o jogador, o caso (a doença do organismo) ou o sorteio? No código, por enquanto, o sorteio pela semente da run. (Mesma pergunta dos Locais do corpo em [lacunas-vs.md](lacunas-vs.md#perguntas-em-aberto).)
+- [x] Quem escolhe o ambiente: o jogador, o caso (a doença do organismo) ou o sorteio? → o jogador, com o sorteio como opção e o caso só indicando ([Escolha do local](#escolha-do-local), [decisão 0032](decisoes/0032-local-escolhido-e-sinergia.md), proposta). No código, até a fase 5.12, continua o sorteio pela semente.
 - [x] Entram os cinco ambientes de uma vez, ou a Corrente sanguínea primeiro e os outros um por fase? Os cinco de uma vez: a arte já estava pronta.
 - [ ] Obstáculos bloqueiam as moléculas comuns, ou só o agente? No código, os dois (o chefe e as formações atravessam). Bloquear as duas deixa o mapa tático; bloquear só o agente deixa a run mais difícil.
 - [ ] As zonas de terreno entram junto com os ambientes ou depois? Elas são mecânica nova. Ficaram para depois.
 - [ ] Destrutível que solta ATP ou vesícula (Gota de gordura, Placa amiloide) mexe na economia: limitar por run ou deixar o `npm run sim` medir?
+- [ ] Os números da sinergia (família ×2, setor do local ×1,5, +4 no setor do par, colateral pela metade) ficam bons, ou a sinergia precisa pesar mais (ou menos) que o agente certo na Corrente sanguínea? Medir no `npm run sim`.
+- [ ] A sinergia também mexe na run (receptor nativo no nível 1), ou fica só na saúde?
+- [ ] Os outros locais abrem todos na primeira estrela do primeiro caso, ou um por caso, ou com ATP?
+- [ ] A barreira hematoencefálica bloqueia o agente no Cérebro, ou só tira o efeito de saúde dele lá?
+- [ ] Cada local ganha um chefe próprio (hoje só a Partícula de LDL, em [lacunas-vs.md](lacunas-vs.md#locais-do-corpo-estágios))?
 - [ ] Dá para digitar uma semente nas Opções e jogar o mesmo mapa que um amigo?
 - [x] O tile do chão passa de 40 para 32 unidades (16 px em 2×). Passou, no `map.json`; o campo longo continua com o chão antigo. Isso muda o tamanho do rejunte de hoje; vale, ou o chão novo fica em 40 com arte de 20×20?

@@ -54,6 +54,7 @@ Os setores são decididos; o que cada um cobre e o efeito no jogo são proposta.
 
 - Ao fim da run, o agente aplica o seu efeito de saúde proporcional ao quanto o jogador avançou.
 - Os setores de saúde mudam o começo da run (vida, recarga do especial, opções de level up), conforme a tabela acima.
+- O jogador escolhe em que parte do corpo age (Corrente sanguínea, Intestino, Cérebro, Pulmão, Fígado). Cada local puxa uma família de molécula e um setor, e cada agente tem um local de sinergia que melhora um setor no fim da run ([mapas.md](mapas.md#escolha-do-local), [decisão 0032](decisoes/0032-local-escolhido-e-sinergia.md), proposta).
 
 ### Campo longo (o idle)
 

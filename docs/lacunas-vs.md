@@ -115,7 +115,7 @@ Liberados por conquistas.
 
 ### Locais do corpo (estágios)
 
-O caso escolhe onde a run acontece, ligando o mapa à fase 5. O chão, os objetos e a geração de cada local estão em [mapas.md](mapas.md#ambientes).
+O jogador escolhe onde a run acontece, e o par agente × local pode dar sinergia num setor de saúde ([mapas.md](mapas.md#escolha-do-local), [decisão 0032](decisoes/0032-local-escolhido-e-sinergia.md), proposta). O chão, os objetos e a geração de cada local estão em [mapas.md](mapas.md#ambientes).
 
 | Local | Moléculas mais comuns | Layout | Chefe |
 | --- | --- | --- | --- |
@@ -154,7 +154,7 @@ A run continua infinita, mas aos 30 minutos o caso recebe **Alta**: conta como v
 
 - [x] As recomendações de prioridade alta entram no roadmap? → sim: 1 e 6 na fase 5.5, 2 a 4 na fase 5.6, Conquistas depois.
 - [ ] A Alta aos 30 minutos e a Apoptose valem, ou a run continua infinita sem vitória?
-- [ ] Locais do corpo são escolhidos pelo jogador, ou o caso decide o local?
+- [x] Locais do corpo são escolhidos pelo jogador, ou o caso decide o local? → o jogador escolhe; o caso só marca o local indicado ([decisão 0032](decisoes/0032-local-escolhido-e-sinergia.md), proposta).
 - [ ] Conquistas substituem parte do desbloqueio por ATP, ou só somam?
 - [ ] Os nomes (Protocolo, Síntese, Superdosagem, Apoptose) funcionam? A "Alta aos 30 minutos" precisa de outro nome, porque ALTA já é o reset do organismo na fase 5.
 - [ ] Coop local interessa para jogar com os amigos, ou fica fora do escopo?

@@ -171,6 +171,10 @@ Estimulante leve.
 
 Venvanse aparece como média em tudo, mas compensa com dano alto em alvo único e contra chefes.
 
+### Locais de sinergia
+
+Cada agente age melhor num local do corpo (proposta da [decisão 0032](decisoes/0032-local-escolhido-e-sinergia.md); regras e o porquê em [mapas.md](mapas.md#sinergia-agente--local)): Dopamina no Cérebro (Mental), Lipase no Intestino (Física), Insulina no Fígado (Física), Vitamina C no Pulmão (Física), Venvanse na Corrente sanguínea (Executiva), Serotonina no Intestino (Mental), Ocitocina no Cérebro (Social), Álcool desidrogenase no Fígado (Social) e Cafeína no Pulmão (Executiva). Lipase e Álcool desidrogenase não atravessam a barreira hematoencefálica e não entram no Cérebro.
+
 ## Agentes do idle
 
 Remédios diferentes dos da run, mais lentos e constantes, fixos na base do campo vertical. Cada um empurra seus setores um pouco por hora.

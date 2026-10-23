@@ -31,7 +31,8 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | 5.9 | Suplementos e ampolas | Os suplementos dão motivo para andar pelo mapa e montam um build diferente a cada run? | 5.5, 5.8 | implementada, falta validar no celular |
 | 5.10 | Agregados (mini chefes) | Entre um chefe e outro sempre tem um alvo que vale o risco? | 5.9 | implementada, falta validar no celular |
 | 5.11 | Sinapses e estruturas | O jogador sai do lugar para buscar bônus no mapa? | 5.6, 5.9, 5.10 | implementada, falta validar no celular |
-| 6 | Arte, polimento e lançamento | Dá para mandar o link para os amigos? | 1 a 5.11 | não iniciada |
+| 5.12 | Locais do corpo e sinergias | Escolher onde agir muda a run e cura o organismo mais rápido? | 5, 5.7 | não iniciada |
+| 6 | Arte, polimento e lançamento | Dá para mandar o link para os amigos? | 1 a 5.12 | não iniciada |
 | 7 | Lojas e plataformas | O mesmo jogo roda e é publicado em Android, iOS, Steam e Microsoft Store? | 6 | não iniciada |
 
 ## Bugs relatados
@@ -320,7 +321,7 @@ O mapa do campo crônico passa a ser gerado por semente, em blocos de 16×16 til
 - [x] Ninho de vesículas (12% dos blocos). As estruturas da fase 5.11 nascem numa clareira, sem obstáculo dentro do círculo.
 - [ ] Pontos de interesse câmara e corredor.
 - [ ] Zonas de terreno (correnteza, bile, muco, bolsa de ar, sinapse ativa): mecânica nova, ficou para depois.
-- [x] Os cinco ambientes de uma vez, sorteados pela semente da run (a escolha do local fica para depois).
+- [x] Os cinco ambientes de uma vez, sorteados pela semente da run (a escolha do local é a [fase 5.12](#fase-512-locais-do-corpo-e-sinergias)).
 - [ ] Validar no celular a 60 FPS com o mapa Denso.
 
 **Critério de saída:** duas runs seguidas dão mapas que dá para distinguir num print, nenhuma run prende o agente num beco, e o mapa Denso roda a 60 FPS no celular.
@@ -389,6 +390,24 @@ Estruturas no mapa em que é preciso ficar um tempo ou arriscar algo para ganhar
 **Critério de saída:** numa run de 10 minutos o jogador completa pelo menos 3 sinapses por vontade própria, e pelo menos uma delas no meio de uma onda.
 
 **Depois:** Ribossomo (duplica um suplemento) e Farmácia (vende suplementos pelo ATP da run), quando a economia da run com ampolas estiver medida.
+
+## Fase 5.12: Locais do corpo e sinergias
+
+O jogador escolhe em que parte do corpo vai agir, em vez de o ambiente da fase 5.7 sair da semente, e o par agente × local pode ter sinergia que melhora um setor de saúde. Regras em [mapas.md](mapas.md#escolha-do-local), tela em [menu.md](menu.md#escolha-do-local) ([decisão 0032](decisoes/0032-local-escolhido-e-sinergia.md), proposta).
+
+- [ ] Local escolhido no lugar do sorteio: o gerador recebe o ambiente de fora e a semente decide só densidade e blocos; o nome do mapa e o código levam o local.
+- [ ] Família e setor por local em `map.json`: família do local com peso ×2 (moléculas e formações) e ganho do agente no setor do local ×1,5; Corrente sanguínea neutra.
+- [ ] Sinergia em `agents.json` (`synergy`) e `organism.json`: +4 no setor do par na escala de minutos, colateral pela metade, receptor nativo no nível 1. Com o elenco de hoje: Dopamina no Cérebro, Lipase no Intestino, Insulina no Fígado.
+- [ ] Barreira hematoencefálica (`crossesBloodBrainBarrier`): a Lipase não entra no Cérebro.
+- [ ] Hub: faixa do local acima do JOGAR; tela de escolha com o corpo, o cartão do local, o selo INDICADO e "Qualquer lugar" (+10% de ATP).
+- [ ] Desbloqueio dos quatro locais na primeira estrela do primeiro caso, com aviso no hub.
+- [ ] Sinergia na escolha do agente, na HUD (✚), no fim de run (linha separada na saúde) e na aba Organismo; melhor tempo por local em Recordes.
+- [ ] Wiki ([wiki.md](wiki.md)) e Compêndio com os locais e as sinergias; linha no [CHANGELOG](../CHANGELOG.md).
+- [ ] Rodar o `npm run sim` com cada doença no local indicado e na Corrente sanguínea, e ajustar os números para o segundo indivíduo não chegar na ALTA mais de 5 vezes mais rápido.
+
+**Depende de:** o organismo (fase 5, setores, famílias e efeito de saúde no fim da run) e os mapas gerados (fase 5.7, os ambientes).
+
+**Critério de saída:** com uma doença de cada setor, o jogador consegue dizer para onde ir e com quem; o par com sinergia cura visivelmente mais que o mesmo agente na Corrente sanguínea; e ninguém prefere sempre o "Qualquer lugar" ou sempre o mesmo local.
 
 ## Fase 6: Arte, polimento e lançamento
 

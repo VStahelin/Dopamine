@@ -91,7 +91,7 @@ O capítulo da referência vira o **caso**: o indivíduo que está sendo tratado
 
 ### Linha de ação
 
-- **JOGAR** (centro, o maior botão da tela): começa a run no campo crônico com o agente escolhido. Sem custo de energia.
+- **JOGAR** (centro, o maior botão da tela): começa a run no campo crônico com o agente escolhido. Sem custo de energia, no local escolhido na faixa logo acima dele ([Escolha do local](#escolha-do-local), fase 5.12).
 - **Campo longo** (esquerda, como o Acampamento): mostra o ATP acumulado no idle e abre o campo longo. Placeholder até a fase 4.
 - **Agente** (direita, no lugar da Escada da Briga): o sprite do agente escolhido; tocar abre a escolha do agente.
 
@@ -119,11 +119,65 @@ O palco fica no centro, os trilhos nas laterais, a linha de ação embaixo do pa
 | --- | --- | --- | --- |
 | Tela de título | Logo e "toque para começar" | Existe (o menu atual) | 1.5 |
 | Escolha do agente | Agentes da run com ação, especial e efetividade; bloqueados com cadeado e custo | Placeholder (só a Dopamina) | 2 |
+| Escolha do local | Corpo com os cinco locais, o que cada um muda e a sinergia com o agente ([detalhes](#escolha-do-local)) | Não existe (o local é sorteado) | 5.12 |
 | Campo longo | O idle | Placeholder | 4 |
 | Compêndio | Moléculas inimigas (com a cascata), modificadores e raridades já vistos; o resto em silhueta | Placeholder | 2 em diante |
 | Recordes | Melhor tempo, nível, decompostas, runs | Existe | — |
 | Conquistas | Metas de longo prazo | Placeholder | a definir |
 | Opções | Abas Som, Tela e Jogo (detalhes abaixo e na prancheta [Opções](identidade-visual/Opcoes.dc.html)) | Existe | — |
+
+### Escolha do local
+
+Proposta da [decisão 0032](decisoes/0032-local-escolhido-e-sinergia.md) (fase 5.12): antes da run, o jogador escolhe em que parte do corpo vai agir. As regras (família, setor, sinergia, barreira) estão em [mapas.md](mapas.md#escolha-do-local); aqui fica só a tela.
+
+**No hub**, logo acima do JOGAR, entra uma faixa fina com o local escolhido e o que o par rende:
+
+```
+│     📍 INTESTINO · ✚ FÍSICA  ▸   │  faixa do local (toque abre a escolha)
+│ [CAMPO   ] ┌───────────┐ [AGENTE]│
+│ [LONGO   ] │   JOGAR   │ [LIPASE]│
+```
+
+O JOGAR continua com um toque só: usa o último local. A faixa mostra ✚ e o setor quando o par tem sinergia, ⊘ em cinza quando o agente não entra ali (e o JOGAR troca para a Corrente sanguínea com um aviso curto), e nada quando é neutro. Antes de os locais abrirem, a faixa não aparece.
+
+**A tela**, no celular em pé:
+
+```
+┌─────────────────────────────────┐
+│ ‹ VOLTAR      ONDE AGIR?        │
+├─────────────────────────────────┤
+│            ( ● )   CÉREBRO      │  corpo pixelado em pé,
+│            /█ █\   PULMÃO       │  cada local é um ponto
+│           / ███ \  FÍGADO       │  que brilha na cor do chão;
+│             ███    INTESTINO    │  os vasos (Corrente
+│             █ █    CORRENTE ↯   │  sanguínea) em linhas
+├─────────────────────────────────┤
+│ INTESTINO          [INDICADO]   │  cartão do local tocado
+│ [tile] Açúcares e lipídios ×2   │
+│        Setor do local: Física   │
+│ Com a LIPASE: ✚ +4 Física,      │  linha do par com o agente
+│   colateral pela metade         │  escolhido
+│ Sinergia aqui: [Lip] [Ser]      │  agentes com ✚ neste local
+│ Melhor aqui: 08:12              │
+├─────────────────────────────────┤
+│ [QUALQUER LUGAR +10% ATP]  [IR] │
+└─────────────────────────────────┘
+```
+
+- **Corpo:** os cinco pontos (cérebro na cabeça, pulmão no peito, fígado à direita do abdome, intestino no meio do abdome, a corrente sanguínea nas linhas dos vasos e no coração). O ponto do local escolhido pulsa; o do setor mais baixo do caso tem o selo INDICADO. Local bloqueado fica em silhueta com cadeado e "1ª estrela".
+- **Cartão:** o tile base do ambiente, a família que dobra com os ícones das moléculas, o setor do local, a linha do par com o agente atual, os retratos pequenos dos agentes que têm sinergia ali (bloqueados em silhueta, para o jogador saber o que procurar) e o melhor tempo naquele local.
+- **Barreira:** com um agente que não atravessa, o cartão do Cérebro mostra ⊘ "NÃO ATRAVESSA A BARREIRA" e o IR fica apagado; tocar no retrato do agente abre a escolha do agente sem sair da tela.
+- **IR** começa a run direto. **QUALQUER LUGAR** sorteia o local pela semente, com +10% de ATP.
+- **Tela larga:** corpo à esquerda, cartão à direita, botões embaixo do cartão.
+- **Controles:** setas ou direcional andam entre os pontos do corpo; Enter ou A vai; Esc ou B volta.
+
+**Em outras telas:**
+
+- **Escolha do agente:** cada agente mostra o ícone do local de sinergia dele (✚ com o mini tile) e ⊘ se não entra no Cérebro.
+- **Fim de run:** a linha da saúde separa o que veio do agente, do setor do local e da sinergia ("Sinergia Lipase × Intestino: +4 Física").
+- **Aba Organismo:** em "quem ajuda cada setor", os pares com sinergia aparecem ao lado dos agentes.
+- **Palco do caso:** a ilustração do organismo destaca o local INDICADO junto com o setor doente.
+- **HUD da run:** ícone ✚ pequeno ao lado do retrato do agente quando o par tem sinergia ([ui-cronico.md](ui-cronico.md)).
 
 ### Opções
 
@@ -173,7 +227,7 @@ Regras de medida: margem lateral de 12 px, todo alvo de toque com pelo menos 44 
 ## Fluxo entre telas
 
 - Tela de título → (toque) → Hub (aba Caso).
-- Hub → JOGAR → Run (campo crônico) com o agente escolhido; o agente se troca pelo botão Agente, ao lado do JOGAR.
+- Hub → JOGAR → Run (campo crônico) com o agente e o local escolhidos; o agente se troca pelo botão Agente, ao lado do JOGAR, e o local pela faixa acima dele (Hub → faixa do local → Escolha do local → IR → Run).
 - Run ↔ Pausa; da Pausa dá para voltar ao menu (hub).
 - Run → (interações acabam) → Fim de run → recompensas e recordes → Hub, ou Jogar de novo → Run.
 - Do hub abrem as abas Agentes (fase 2), Arsenal (fase 2), Laboratório (fase 3) e Organismo (fase 5), o Campo longo (fase 4) e os trilhos Compêndio (fase 2), Recordes e Opções (fase 1). Todas voltam ao hub com Voltar ou Esc.
@@ -245,6 +299,7 @@ O hub cresce junto com o roadmap. Cada fase acende uma parte; o que ainda não e
 | 3 | ATP de verdade no topo, faixa de objetivo, baú das estrelas, aba Laboratório, selos de compra |
 | 4 | Botão Campo longo com o acumulado e painel "Enquanto você estava fora" |
 | 5 | Mini barras de saúde, organismo no palco com o setor doente, aba Organismo, troca de caso no reset |
+| 5.12 | Faixa do local acima do JOGAR, tela de escolha do local, selo INDICADO e sinergia no fim de run |
 | 6 | Arte final, animações de recompensa, som e os layouts de tela larga |
 
 ## O que falta decidir
@@ -255,3 +310,4 @@ O hub cresce junto com o roadmap. Cada fase acende uma parte; o que ainda não e
 - Conquistas entram, e em que fase?
 - O palco mostra o organismo inteiro (corpo pixelado, como no artboard) ou uma placa de Petri com as moléculas do caso?
 - Limite de três selos na tela ao mesmo tempo está bom?
+- A escolha do local fica numa faixa acima do JOGAR (um toque continua jogando), ou vira um passo obrigatório depois do JOGAR, como um mapa de fases?
