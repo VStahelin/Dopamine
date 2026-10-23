@@ -14,6 +14,7 @@ Documento de conceito do jogo, um arquivo por aba do [documento original](https:
 | [armas.md](armas.md) | Arquétipos de arma do Vampire Survivors, as 7 armas iniciais, evoluções e como a arma chega ao jogador |
 | [identidade-visual/](identidade-visual/README.md) | Cópia das pranchetas do canvas de identidade visual: guia de estilo, telas, ícones, itens e mapas, com o que cada uma virou no código |
 | [itens.md](itens.md) | Itens no mapa (drops): vesículas, os itens do conjunto do Vampire Survivors com nomes químicos, gemas de XP, cápsula do chefe e como aparecem na run |
+| [sonoplastia.md](sonoplastia.md) | Som do jogo: tema chiptune metal, lista de faixas, música dinâmica, efeitos, entrega dos arquivos e os prompts para o app de música |
 | [mapas.md](mapas.md) | Mapas gerados do campo crônico: blocos com semente, ambientes do corpo, chão em tiles, obstáculos, destrutíveis e pontos de interesse |
 | [ui-cronico.md](ui-cronico.md) | UI da run (campo crônico): HUD de batalha, tipos de ícone, números de dano, especial, pausa com status e adaptação a qualquer tela |
 | [menu.md](menu.md) | Menu principal: análise da referência mobile, hub (status, caso, JOGAR, barra de abas), telas de cada área, placeholders e navegação |
