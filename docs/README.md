@@ -12,6 +12,7 @@ Documento de conceito do jogo, um arquivo por aba do [documento original](https:
 | [plataforma.md](plataforma.md) | Engine (Phaser 4 + TypeScript, PWA), comparação de engines, arquitetura, controles, salvamento e desempenho |
 | [design.md](design.md) | Identidade visual: direção de arte, paleta, tipografia, sprites de moléculas e componentes da tela de batalha |
 | [armas.md](armas.md) | Arquétipos de arma do Vampire Survivors, as 7 armas iniciais, evoluções e como a arma chega ao jogador |
+| [logo.md](logo.md) | Logo do jogo: empilhada, horizontal, pequena, emblema, monocromáticas, ícones do PWA, favicon e artes de loja, e como trocar o nome |
 | [identidade-visual/](identidade-visual/README.md) | Cópia das pranchetas do canvas de identidade visual: guia de estilo, telas, ícones, itens e mapas, com o que cada uma virou no código |
 | [itens.md](itens.md) | Itens no mapa (drops): vesículas, os itens do conjunto do Vampire Survivors com nomes químicos, gemas de XP, cápsula do chefe e como aparecem na run |
 | [sonoplastia.md](sonoplastia.md) | Som do jogo: tema chiptune metal, lista de faixas, música dinâmica, efeitos, entrega dos arquivos e os prompts para o app de música |

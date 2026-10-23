@@ -22,6 +22,17 @@ import {
   type Painter,
   type Size,
 } from './spriteArt';
+import {
+  logoHorizontal,
+  logoSmall,
+  logoStacked,
+  paintAppIcon,
+  paintFavicon,
+  paintLogoGrid,
+  paintMaskableIcon,
+  paintStoreArt,
+  type LogoVariant,
+} from './logoArt';
 
 /**
  * Todos os PNGs de sprite (decisão 0020): onde ficam em `public/sprites/`, com que chave o jogo
@@ -32,6 +43,9 @@ import {
  * - `frames/<px>/<tipo>.png`: molduras dos espaços de ícone, uma por escala.
  * - `world/<detail>x/...`: moléculas, chão, gema, elétron, disparo e moeda, um por detail, e o
  *   mapa (`map/tiles` e `map/objects`, fase 5.7).
+ * - `logo/`: a logo em 1× (empilhada, horizontal e pequena), que o jogo carrega, e em 4× em cada
+ *   variante, para quem precisar da imagem (docs/logo.md).
+ * - `pwa/` e `store/`: favicon, ícones do PWA e artes de loja; só publicados, o jogo não carrega.
  */
 export interface SpriteFile {
   /** Caminho dentro de public/sprites. */
@@ -41,6 +55,8 @@ export interface SpriteFile {
   paint: (p: Painter) => Size;
   /** Ícones: tamanho em pixels, para carregar só os que a tela usa. */
   iconPx?: number;
+  /** `false`: só arquivo publicado (ícones do PWA, artes de loja); o jogo não carrega. */
+  preload?: false;
 }
 
 /** Ícone por grupo e id; `ui` guarda o ícone padrão (`missing`) e o cadeado (`locked`). */
@@ -81,6 +97,13 @@ export function mapObjectName(id: string): string {
 export function moleculeName(id: string): string {
   return `mol-${id}`;
 }
+
+/** Logo em 1× no jogo: `logo-stacked`, `logo-horizontal` e `logo-small`. */
+export const LOGO_KEYS = {
+  stacked: 'logo-stacked',
+  horizontal: 'logo-horizontal',
+  small: 'logo-small',
+} as const;
 
 export const WORLD_NAMES = {
   ground: 'ground',
@@ -171,5 +194,49 @@ export function spriteFiles(): SpriteFile[] {
       });
     }
   }
+  out.push(...logoFiles());
+  return out;
+}
+
+function logoFiles(): SpriteFile[] {
+  const out: SpriteFile[] = [];
+  const logos = { stacked: logoStacked(), horizontal: logoHorizontal(), small: logoSmall() };
+  const variants: Record<LogoVariant, string> = {
+    color: '',
+    monoCream: '-mono-creme',
+    monoNight: '-mono-noite',
+  };
+  for (const [name, rows] of Object.entries(logos) as [keyof typeof logos, string[]][]) {
+    out.push({
+      path: `logo/${name}.png`,
+      key: LOGO_KEYS[name],
+      paint: (p) => paintLogoGrid(p, rows, 1),
+    });
+    for (const [variant, suffix] of Object.entries(variants) as [LogoVariant, string][]) {
+      out.push({
+        path: `logo/4x/${name}${suffix}.png`,
+        key: `${LOGO_KEYS[name]}${suffix}@4`,
+        paint: (p) => paintLogoGrid(p, rows, 4, variant),
+        preload: false,
+      });
+    }
+  }
+  const only = (path: string, paint: SpriteFile['paint']): SpriteFile => ({
+    path,
+    key: path,
+    paint,
+    preload: false,
+  });
+  out.push(
+    only('pwa/favicon-16.png', (p) => paintFavicon(p, 16)),
+    only('pwa/favicon-32.png', (p) => paintFavicon(p, 32)),
+    only('pwa/icon-192.png', (p) => paintAppIcon(p, 192)),
+    only('pwa/icon-512.png', (p) => paintAppIcon(p, 512)),
+    only('pwa/maskable-192.png', (p) => paintMaskableIcon(p, 192)),
+    only('pwa/maskable-512.png', (p) => paintMaskableIcon(p, 512)),
+    only('pwa/apple-touch-icon.png', (p) => paintMaskableIcon(p, 180)),
+    only('store/banner-1024x500.png', (p) => paintStoreArt(p, 1024, 500)),
+    only('store/splash-1080x1920.png', (p) => paintStoreArt(p, 1080, 1920)),
+  );
   return out;
 }

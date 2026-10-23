@@ -44,7 +44,7 @@ Duas fontes pixeladas gratuitas do Google Fonts, com papéis separados.
 | Pixelify Sans | 600 | Textos de interface e nomes | Metano decomposto em 3 partes |
 | [Silkscreen](https://fonts.google.com/specimen/Silkscreen) | 400 | Rótulos curtos em caixa alta | INTERAÇÕES · OURO · NÍVEL |
 
-O logo escreve FARMACO em laranja numa faixa vermelha inclinada e BATTLE em verde logo abaixo, como a faixa "EXPLORE MASSIVE WORLD" da referência.
+O logo escreve FARMACO em laranja numa faixa vermelha inclinada e BATTLE em verde logo abaixo, como a faixa "EXPLORE MASSIVE WORLD" da referência. Desde a versão em pixel, o nome usa uma fonte própria em vez da Pixelify Sans e ganhou o emblema da cápsula: specs e variantes em [logo.md](logo.md).
 
 ## Sprites de moléculas
 

@@ -8,6 +8,7 @@ Ao mudar uma prancheta no canvas, copie o arquivo novo para cá no mesmo commit 
 
 | Prancheta | Arquivo | O que tem | No código |
 | --- | --- | --- | --- |
+| Logo e ícones | [Logo.dc.html](Logo.dc.html) | Logo empilhada, horizontal e pequena, monocromáticas, emblemas de 32 e 16, ícones do PWA e artes de loja ([logo.md](../logo.md)) | `src/assets/sprites/logo.json`, `src/game/render/logoArt.ts` |
 | Guia de estilo | [Main.dc.html](Main.dc.html) | Logo, paleta, tipografia, barra de interações, botões, slot de agente | `src/assets/sprites/palette.json`, `src/game/ui/` |
 | Tela de batalha (mockup) | [Batalha.dc.html](Batalha.dc.html) | Campo longo no celular em pé: interações, onda, base, pool de agentes, progresso | `src/game/scenes/IdleScene.ts` |
 | Menu principal (protótipo) | [Menu.dc.html](Menu.dc.html) | Hub com status, caso, JOGAR e barra de abas | `src/game/scenes/HubScene.ts` |

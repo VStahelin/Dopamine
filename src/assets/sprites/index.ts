@@ -15,9 +15,12 @@
  * - `map.json`: tiles de chão e objetos de 16×16 dos ambientes da fase 5.7 (prancheta "Mapas:
  *   objetos e chão", docs/mapas.md). Os tiles usam as letras 1 a 4 com as
  *   cores de `floor` de cada ambiente; os objetos usam `palette.json`.
+ * - `logo.json`: logo do jogo (prancheta "Logo e ícones", docs/logo.md): o nome, a fonte em pixel
+ *   que escreve o nome, os emblemas de 32×32 e 16×16 e a paleta própria da logo.
  */
 import framesJson from './frames.json';
 import iconsJson from './icons.json';
+import logoJson from './logo.json';
 import mapJson from './map.json';
 import moleculesJson from './molecules.json';
 import paletteJson from './palette.json';
@@ -129,3 +132,31 @@ export const WORLD_SPRITES: {
   shot: OrbStyle;
   coin: OrbStyle;
 } = worldJson;
+
+/** Cores de uma linha do nome: letras da paleta da logo para brilho, miolo, sombra e contorno. */
+export interface LogoInkStyle {
+  light: string;
+  fill: string;
+  dark: string;
+  outline: string;
+}
+
+export const LOGO: {
+  /** As linhas do nome, como aparecem na logo empilhada. Trocar aqui muda todas as variantes. */
+  name: readonly string[];
+  palette: Readonly<Record<string, string>>;
+  /** Tintas das versões monocromáticas. */
+  inks: { cream: string; night: string };
+  styles: Readonly<Record<'orange' | 'green' | 'banner', LogoInkStyle>>;
+  font: {
+    height: number;
+    spacing: number;
+    /** Letras em grades de '#' com a altura da maiúscula. */
+    glyphs: Readonly<Record<string, PixelGrid>>;
+    /** Acentos e cedilha, de 2 linhas. */
+    marks: Readonly<Record<string, PixelGrid>>;
+    /** Letra acentuada: letra base e acento. */
+    accented: Readonly<Record<string, readonly [string, string]>>;
+  };
+  emblem: { '32': PixelGrid; '16': PixelGrid };
+} = logoJson as never;

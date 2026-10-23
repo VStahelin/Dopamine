@@ -18,7 +18,7 @@ Ordenadas por impacto dividido por esforço, com as dependências respeitadas.
 | # | Lacuna | Área | Estado | Impacto | Esforço | Fase proposta |
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | Validar no celular as fases 2.6 a 5.11 (10 itens "falta validar") | Balanceamento | Metade | Alto | P–M | 5.13 |
-| 2 | Ícones do PWA em PNG (192, 512, maskable) e `apple-touch-icon` | Plataforma | Doc | Alto | P | 5.13 |
+| 2 | ~~Ícones do PWA em PNG (192, 512, maskable) e `apple-touch-icon`~~ (feito, [logo.md](logo.md)) | Plataforma | Doc | Alto | P | 5.13 |
 | 3 | Efeitos sonoros P1 (armas, combate, coleta, level up, interface) | Áudio | Doc | Alto | M | 5.13 |
 | 4 | Comportamento próprio de cada família de molécula (aura do cortisol, poça do acetaldeído, radical errático, spawner) | Inimigos | Metade | Alto | M–G | 5.14 |
 | 5 | Família inflamação: a Citocina e as moléculas do Cerco inflamatório | Inimigos | Doc | Alto | M | 5.14 |
@@ -172,7 +172,7 @@ Hoje são 15 moléculas e um chefe. Todas se comportam igual: perseguem o agente
 
 | Lacuna | Estado | Impacto | Esforço | Fonte |
 | --- | --- | --- | --- | --- |
-| **Ícones do PWA**: o manifest só tem o `favicon.svg`; falta PNG 192 e 512, ícone maskable e `apple-touch-icon` (no iPhone, a tela inicial fica sem ícone bom) | Doc | Alto | P | `vite.config.ts:67`, `index.html:10`; [roadmap fase 6](roadmap.md#fase-6-arte-polimento-e-lançamento) |
+| **Ícones do PWA**: feito com a logo nova ([logo.md](logo.md)): PNG 192 e 512, maskable, `apple-touch-icon` e favicon em PNG | Doc | Alto | P | `vite.config.ts:67`, `index.html:10`; [roadmap fase 6](roadmap.md#fase-6-arte-polimento-e-lançamento) |
 | Fase 7 inteira (lojas) | Doc | Médio | G | [publicacao.md](publicacao.md) |
 | Só português; as lojas pedem pelo menos inglês para alcance | Sem doc | Baixo | M | Sem doc; liga com a fase 7 |
 | Save na nuvem e ranking | Doc | Baixo | G | [servidor.md](servidor.md) |

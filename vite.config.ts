@@ -55,7 +55,6 @@ export default defineConfig({
       // A versão nova espera o jogador aceitar (decisão 0016); nunca recarrega sozinha.
       registerType: 'prompt',
       injectRegister: false,
-      includeAssets: ['favicon.svg'],
       manifest: {
         name: 'Farmaco Battle',
         short_name: 'Farmaco',
@@ -64,11 +63,28 @@ export default defineConfig({
         orientation: 'any',
         background_color: '#15172E',
         theme_color: '#15172E',
-        icons: [{ src: 'favicon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' }],
+        // Gerados pelo npm run sprites:build a partir de src/assets/sprites/logo.json (docs/logo.md).
+        icons: [
+          { src: 'sprites/pwa/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+          { src: 'sprites/pwa/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+          {
+            src: 'sprites/pwa/maskable-192.png',
+            sizes: '192x192',
+            type: 'image/png',
+            purpose: 'maskable',
+          },
+          {
+            src: 'sprites/pwa/maskable-512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable',
+          },
+        ],
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,woff,woff2,png,webmanifest}'],
-        globIgnores: ['version.json'],
+        // Artes de loja e a logo em 4× não entram no jogo; ficam fora do precache.
+        globIgnores: ['version.json', 'sprites/store/**', 'sprites/logo/4x/**'],
         cleanupOutdatedCaches: true,
         navigateFallback: 'index.html',
         maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,

@@ -87,12 +87,12 @@ src/
   game/
     scenes/      cenas do Phaser
     idle/        idleRunner: roda o campo longo o tempo todo e paga o offline
-    render/      paleta, zoom, spriteArt.ts (desenho dos sprites a partir dos dados), fxArt.ts (efeitos das armas em pixels de arte) e textures.ts (gerador único de texturas)
+    render/      paleta, zoom, spriteArt.ts (desenho dos sprites a partir dos dados), logoArt.ts (logo, ícones do PWA e artes de loja, a partir de logo.json), fxArt.ts (efeitos das armas em pixels de arte) e textures.ts (gerador único de texturas)
     input/       teclado e joystick virtual
     ui/          tema (fontes, textos), botões, layout das telas, textos dos upgrades, espaços de ícone, conteúdo da pausa, números de dano, rolagem
     storage/     save no IndexedDB e backup (código e arquivo)
   main.ts        ponto de entrada
-public/          favicon; manifest do PWA e fontes na fase 6
+public/          sprites em PNG (inclusive a logo, o favicon e os ícones do PWA) e áudio
 tools/sim/       simulador de progressão
 tools/sprites/   gerador dos PNGs de sprite
 tools/audio/     corte dos loops e conversão das músicas e dos efeitos

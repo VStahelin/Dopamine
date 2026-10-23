@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Logo e ícones</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&amp;family=Silkscreen:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#FFB347}a:hover{color:#FFD08A}
+</style>
+</helmet>
+<div style="width: 1280px; height: 2260px; box-sizing: border-box; padding: 48px; background: #15172E; font-family: 'Pixelify Sans', monospace; color: #F4EFE0; display: flex; flex-direction: column; gap: 36px">
+
+  <div style="display: flex; flex-direction: column; gap: 8px">
+    <div style="font-size: 44px; font-weight: 700; color: #6CD43F; text-shadow: -3px 0 #3A0A0C, 3px 0 #3A0A0C, 0 -3px #3A0A0C, 0 4px #3A0A0C">Logo e ícones</div>
+    <div style="font-size: 13px; line-height: 1.4; color: #C9CCE6; max-width: 1080px; font-size: 15px">A logo nasce da FARMACO / BATTLE da tela de título, agora toda em pixel: o nome é escrito com uma fonte própria de 5×7 em 2× (traço de 3 pixels), com brilho em cima, sombra embaixo, contorno vermelho-escuro e sombra dura. FARMACO fica na faixa vermelha e as letras sobem 1 pixel cada, no lugar da rotação. O nome sai dos Tweaks (linha 1 e linha 2): a fonte já tem os acentos, então FÁRMACO funciona sem redesenhar nada. No jogo, a mesma troca é em src/assets/sprites/logo.json.</div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px">
+      <div style="font-size: 28px; font-weight: 700; color: #FF9A1F; text-shadow: -2px 0 #3A0A0C, 2px 0 #3A0A0C, 0 -2px #3A0A0C, 0 3px #3A0A0C">Principal (empilhada)</div>
+      <div style="font-size: 14px; color: #A9AED0">tela de título, carregamento e artes de loja</div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: start"><div style="display: flex; flex-direction: column; gap: 8px">
+        <div style="display: flex; align-items: center; justify-content: center; padding: 28px; background: #15172E; border: 3px solid #07080F"><div style="position: relative; flex: none; width: {{stackedBig.w}}px; height: {{stackedBig.h}}px"><div style="{{stackedBig.css}}"></div></div></div>
+        <div style="font-size: 12px; color: #A9AED0">Fundo escuro · 4×</div>
+      </div><div style="display: flex; flex-direction: column; gap: 8px">
+        <div style="display: flex; align-items: center; justify-content: center; padding: 28px; background: #F4EFE0; border: 3px solid #07080F"><div style="position: relative; flex: none; width: {{stackedBigLight.w}}px; height: {{stackedBigLight.h}}px"><div style="{{stackedBigLight.css}}"></div></div></div>
+        <div style="font-size: 12px; color: #5B5F80">Fundo claro · 4× (a mesma arte: o contorno grosso separa do fundo)</div>
+      </div></div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px">
+      <div style="font-size: 28px; font-weight: 700; color: #FF9A1F; text-shadow: -2px 0 #3A0A0C, 2px 0 #3A0A0C, 0 -2px #3A0A0C, 0 3px #3A0A0C">Horizontal</div>
+      <div style="font-size: 14px; color: #A9AED0">faixas largas, cabeçalhos e rodapés</div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); gap: 12px; align-items: start"><div style="display: flex; flex-direction: column; gap: 8px">
+        <div style="display: flex; align-items: center; justify-content: center; padding: 20px; background: #15172E; border: 3px solid #07080F"><div style="position: relative; flex: none; width: {{horizontal.w}}px; height: {{horizontal.h}}px"><div style="{{horizontal.css}}"></div></div></div>
+        <div style="font-size: 12px; color: #A9AED0">Fundo escuro · 3×</div>
+      </div><div style="display: flex; flex-direction: column; gap: 8px">
+        <div style="display: flex; align-items: center; justify-content: center; padding: 20px; background: #F4EFE0; border: 3px solid #07080F"><div style="position: relative; flex: none; width: {{horizontalLight.w}}px; height: {{horizontalLight.h}}px"><div style="{{horizontalLight.css}}"></div></div></div>
+        <div style="font-size: 12px; color: #5B5F80">Fundo claro · 3×</div>
+      </div></div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px">
+      <div style="font-size: 28px; font-weight: 700; color: #FF9A1F; text-shadow: -2px 0 #3A0A0C, 2px 0 #3A0A0C, 0 -2px #3A0A0C, 0 3px #3A0A0C">Monocromáticas</div>
+      <div style="font-size: 14px; color: #A9AED0">uma tinta só: marca-d'água, carimbo, impressão</div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; align-items: start"><div style="display: flex; flex-direction: column; gap: 8px">
+        <div style="display: flex; align-items: center; justify-content: center; padding: 24px; background: #15172E; border: 3px solid #07080F"><div style="position: relative; flex: none; width: {{monoCream.w}}px; height: {{monoCream.h}}px"><div style="{{monoCream.css}}"></div></div></div>
+        <div style="font-size: 12px; color: #A9AED0">Creme sobre escuro · 2×</div>
+      </div><div style="display: flex; flex-direction: column; gap: 8px">
+        <div style="display: flex; align-items: center; justify-content: center; padding: 24px; background: #F4EFE0; border: 3px solid #07080F"><div style="position: relative; flex: none; width: {{monoNight.w}}px; height: {{monoNight.h}}px"><div style="{{monoNight.css}}"></div></div></div>
+        <div style="font-size: 12px; color: #5B5F80">Noite sobre claro · 2×</div>
+      </div><div style="display: flex; flex-direction: column; gap: 8px">
+        <div style="display: flex; align-items: center; justify-content: center; padding: 24px; background: #15172E; border: 3px solid #07080F"><div style="position: relative; flex: none; width: {{monoEmblemCream.w}}px; height: {{monoEmblemCream.h}}px"><div style="{{monoEmblemCream.css}}"></div></div></div>
+        <div style="font-size: 12px; color: #A9AED0">Emblema creme · 4×</div>
+      </div><div style="display: flex; flex-direction: column; gap: 8px">
+        <div style="display: flex; align-items: center; justify-content: center; padding: 24px; background: #F4EFE0; border: 3px solid #07080F"><div style="position: relative; flex: none; width: {{monoEmblemNight.w}}px; height: {{monoEmblemNight.h}}px"><div style="{{monoEmblemNight.css}}"></div></div></div>
+        <div style="font-size: 12px; color: #5B5F80">Emblema noite · 4×</div>
+      </div></div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px">
+      <div style="font-size: 28px; font-weight: 700; color: #FF9A1F; text-shadow: -2px 0 #3A0A0C, 2px 0 #3A0A0C, 0 -2px #3A0A0C, 0 3px #3A0A0C">Pequena (legível)</div>
+      <div style="font-size: 14px; color: #A9AED0">fonte em 1×, 10 pixels de altura</div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start"><div style="display: flex; flex-direction: column; gap: 8px">
+        <div style="display: flex; align-items: center; justify-content: center; padding: 20px; background: #15172E; border: 3px solid #07080F"><div style="display: flex; align-items: flex-end; gap: 24px"><div style="position: relative; flex: none; width: {{small1.w}}px; height: {{small1.h}}px"><div style="{{small1.css}}"></div></div><div style="position: relative; flex: none; width: {{small2.w}}px; height: {{small2.h}}px"><div style="{{small2.css}}"></div></div><div style="position: relative; flex: none; width: {{small3.w}}px; height: {{small3.h}}px"><div style="{{small3.css}}"></div></div></div></div>
+        <div style="font-size: 12px; color: #A9AED0">Fundo escuro · 1×, 2× e 3×</div>
+      </div><div style="display: flex; flex-direction: column; gap: 8px">
+        <div style="display: flex; align-items: center; justify-content: center; padding: 20px; background: #F4EFE0; border: 3px solid #07080F"><div style="display: flex; align-items: flex-end; gap: 24px"><div style="position: relative; flex: none; width: {{small1Light.w}}px; height: {{small1Light.h}}px"><div style="{{small1Light.css}}"></div></div><div style="position: relative; flex: none; width: {{small2Light.w}}px; height: {{small2Light.h}}px"><div style="{{small2Light.css}}"></div></div></div></div>
+        <div style="font-size: 12px; color: #5B5F80">Fundo claro · 1× e 2×</div>
+      </div></div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px">
+      <div style="font-size: 28px; font-weight: 700; color: #FF9A1F; text-shadow: -2px 0 #3A0A0C, 2px 0 #3A0A0C, 0 -2px #3A0A0C, 0 3px #3A0A0C">Emblema</div>
+      <div style="font-size: 14px; color: #A9AED0">a cápsula acerta a molécula e os átomos se soltam</div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; align-items: start"><div style="display: flex; flex-direction: column; gap: 8px">
+        <div style="display: flex; align-items: center; justify-content: center; padding: 24px; background: #15172E; border: 3px solid #07080F"><div style="position: relative; flex: none; width: {{emblem32.w}}px; height: {{emblem32.h}}px"><div style="{{emblem32.css}}"></div></div></div>
+        <div style="font-size: 12px; color: #A9AED0">32×32 · 8× · ícone do app</div>
+      </div><div style="display: flex; flex-direction: column; gap: 8px">
+        <div style="display: flex; align-items: center; justify-content: center; padding: 24px; background: #15172E; border: 3px solid #07080F"><div style="position: relative; flex: none; width: {{emblem16.w}}px; height: {{emblem16.h}}px"><div style="{{emblem16.css}}"></div></div></div>
+        <div style="font-size: 12px; color: #A9AED0">16×16 · 8× · favicon</div>
+      </div><div style="display: flex; flex-direction: column; gap: 8px">
+        <div style="display: flex; align-items: center; justify-content: center; padding: 24px; background: #F4EFE0; border: 3px solid #07080F"><div style="display: flex; align-items: flex-end; gap: 18px"><div style="position: relative; flex: none; width: {{emblem16x1.w}}px; height: {{emblem16x1.h}}px"><div style="{{emblem16x1.css}}"></div></div><div style="position: relative; flex: none; width: {{emblem16x2.w}}px; height: {{emblem16x2.h}}px"><div style="{{emblem16x2.css}}"></div></div><div style="position: relative; flex: none; width: {{emblem32x1.w}}px; height: {{emblem32x1.h}}px"><div style="{{emblem32x1.css}}"></div></div><div style="position: relative; flex: none; width: {{emblem32x2.w}}px; height: {{emblem32x2.h}}px"><div style="{{emblem32x2.css}}"></div></div></div></div>
+        <div style="font-size: 12px; color: #5B5F80">16 e 32 em 1× e 2×, sobre claro</div>
+      </div><div style="display: flex; flex-direction: column; gap: 8px">
+        <div style="display: flex; align-items: center; justify-content: center; padding: 24px; background: #15172E; border: 3px solid #07080F"><div style="display: flex; align-items: flex-end; gap: 18px"><div style="position: relative; flex: none; width: {{emblem16x1.w}}px; height: {{emblem16x1.h}}px"><div style="{{emblem16x1.css}}"></div></div><div style="position: relative; flex: none; width: {{emblem16x2.w}}px; height: {{emblem16x2.h}}px"><div style="{{emblem16x2.css}}"></div></div><div style="position: relative; flex: none; width: {{emblem32x1.w}}px; height: {{emblem32x1.h}}px"><div style="{{emblem32x1.css}}"></div></div><div style="position: relative; flex: none; width: {{emblem32x2.w}}px; height: {{emblem32x2.h}}px"><div style="{{emblem32x2.css}}"></div></div></div></div>
+        <div style="font-size: 12px; color: #A9AED0">16 e 32 em 1× e 2×, sobre escuro</div>
+      </div></div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px">
+      <div style="font-size: 28px; font-weight: 700; color: #FF9A1F; text-shadow: -2px 0 #3A0A0C, 2px 0 #3A0A0C, 0 -2px #3A0A0C, 0 3px #3A0A0C">Ícones do app</div>
+      <div style="font-size: 14px; color: #A9AED0">PNGs gerados pelo jogo (npm run sprites:build)</div>
+    </div>
+    <div style="display: flex; gap: 28px; align-items: flex-end; flex-wrap: wrap">
+      <div style="display: flex; flex-direction: column; gap: 8px"><img src="/_blob/e5339cdb88b5a61ed529e235a0b198d1" alt="Ícone do app com moldura de madeira" style="width: 192px; height: 192px; image-rendering: pixelated; display: block"><div style="font-family: 'Silkscreen', monospace; font-size: 10px; letter-spacing: 1px; color: #FFB347">ANY · 192 E 512</div></div>
+      <div style="display: flex; flex-direction: column; gap: 8px"><div style="position: relative; width: 192px; height: 192px"><img src="/_blob/6e5a4880bc46a4b02b520ffba4264532" alt="Ícone maskable" style="width: 192px; height: 192px; image-rendering: pixelated; display: block"><div style="position: absolute; left: 19px; top: 19px; width: 154px; height: 154px; border: 2px dashed #7EF0FF; border-radius: 50%; box-sizing: border-box"></div></div><div style="font-family: 'Silkscreen', monospace; font-size: 10px; letter-spacing: 1px; color: #FFB347">MASKABLE · ZONA SEGURA</div></div>
+      <div style="display: flex; flex-direction: column; gap: 8px"><img src="/_blob/6e5a4880bc46a4b02b520ffba4264532" alt="Ícone maskable cortado em círculo" style="width: 120px; height: 120px; image-rendering: pixelated; display: block; border-radius: 50%"><div style="font-family: 'Silkscreen', monospace; font-size: 10px; letter-spacing: 1px; color: #FFB347">ANDROID REDONDO</div></div>
+      <div style="display: flex; flex-direction: column; gap: 8px"><img src="/_blob/306cdf55841c7df9b6b0d780f8d7b973" alt="Ícone do iOS" style="width: 120px; height: 120px; image-rendering: pixelated; display: block; border-radius: 27px"><div style="font-family: 'Silkscreen', monospace; font-size: 10px; letter-spacing: 1px; color: #FFB347">IOS · 180</div></div>
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        <div style="display: flex; align-items: center; gap: 8px; padding: 8px 14px; background: #DCDDE6; border-radius: 10px 10px 0 0; width: 220px"><div style="position: relative; flex: none; width: {{emblem16x1.w}}px; height: {{emblem16x1.h}}px"><div style="{{emblem16x1.css}}"></div></div><div style="font-family: system-ui, sans-serif; font-size: 12px; color: #202230">Farmaco Battle</div></div>
+        <div style="display: flex; align-items: center; gap: 8px; padding: 8px 14px; background: #2B2D3A; border-radius: 10px 10px 0 0; width: 220px"><div style="position: relative; flex: none; width: {{emblem16x1.w}}px; height: {{emblem16x1.h}}px"><div style="{{emblem16x1.css}}"></div></div><div style="font-family: system-ui, sans-serif; font-size: 12px; color: #E8E9F0">Farmaco Battle</div></div>
+        <div style="font-family: 'Silkscreen', monospace; font-size: 10px; letter-spacing: 1px; color: #FFB347">FAVICON 16 E 32 · ABA CLARA E ESCURA</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: baseline; gap: 16px">
+      <div style="font-size: 28px; font-weight: 700; color: #FF9A1F; text-shadow: -2px 0 #3A0A0C, 2px 0 #3A0A0C, 0 -2px #3A0A0C, 0 3px #3A0A0C">Loja e abertura</div>
+      <div style="font-size: 14px; color: #A9AED0">a logo empilhada no meio de um fundo do jogo</div>
+    </div>
+    <div style="display: flex; gap: 28px; align-items: flex-start">
+      <div style="display: flex; flex-direction: column; gap: 8px"><img src="/_blob/c72366e680a418c820358ba9bc6816ef" alt="Banner de loja com a logo" style="width: 768px; height: 375px; image-rendering: pixelated; display: block; border: 3px solid #07080F"><div style="font-family: 'Silkscreen', monospace; font-size: 10px; letter-spacing: 1px; color: #FFB347">BANNER · 1024×500</div></div>
+      <div style="display: flex; flex-direction: column; gap: 8px"><img src="/_blob/735edee431a4c52de6a65358ef376465" alt="Tela de abertura em pé com a logo" style="width: 211px; height: 375px; image-rendering: pixelated; display: block; border: 3px solid #07080F"><div style="font-family: 'Silkscreen', monospace; font-size: 10px; letter-spacing: 1px; color: #FFB347">ABERTURA · 1080×1920</div></div>
+      <div style="flex: 1; display: flex; flex-direction: column; gap: 10px">
+        <div style="font-size: 13px; line-height: 1.4; color: #C9CCE6">Fundo noite com o pontilhado dos painéis e átomos soltos. A logo entra em escala inteira, sempre centralizada.</div>
+        <div style="font-size: 13px; line-height: 1.4; color: #C9CCE6">Estas imagens são PNGs do jogo: mudar o nome no Tweaks redesenha as logos desta prancheta, mas não estas duas. Elas mudam quando o nome muda em logo.json.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"linha1":{"editor":"text","default":"FARMACO"},"linha2":{"editor":"text","default":"BATTLE"},"$preview":{"width":1280,"height":2260}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const D = {"name":["FARMACO","BATTLE"],"palette":{"k":"#3A0A0C","q":"#3A0A0C","d":"#123A0C","O":"#FF9A1F","Y":"#FFD08A","o":"#C25E14","G":"#6CD43F","l":"#B4F58A","g":"#3A9A24","F":"#B8262A","f":"#E0433A","v":"#7A1416","R":"#E0433A","r":"#7A1416","B":"#3F6FE0","b":"#1E3A8F","S":"#F2C83A","W":"#FFFFFF","n":"#15172E","p":"#2A2E55","M":"#E0702A","m":"#F0913A","w":"#B5541C"},"inks":{"cream":"#F4EFE0","night":"#15172E"},"styles":{"orange":{"light":"Y","fill":"O","dark":"o","outline":"k"},"green":{"light":"l","fill":"G","dark":"g","outline":"d"},"banner":{"light":"f","fill":"F","dark":"v","outline":"q"}},"font":{"height":7,"spacing":1,"glyphs":{" ":["...","...","...","...","...","...","..."],"A":[".###.","#...#","#...#","#####","#...#","#...#","#...#"],"B":["####.","#...#","#...#","####.","#...#","#...#","####."],"C":[".###.","#...#","#....","#....","#....","#...#",".###."],"D":["####.","#...#","#...#","#...#","#...#","#...#","####."],"E":["#####","#....","#....","####.","#....","#....","#####"],"F":["#####","#....","#....","####.","#....","#....","#...."],"G":[".###.","#...#","#....","#.###","#...#","#...#",".###."],"H":["#...#","#...#","#...#","#####","#...#","#...#","#...#"],"I":["###",".#.",".#.",".#.",".#.",".#.","###"],"J":["....#","....#","....#","....#","....#","#...#",".###."],"K":["#...#","#..#.","#.#..","##...","#.#..","#..#.","#...#"],"L":["#....","#....","#....","#....","#....","#....","#####"],"M":["#...#","##.##","#.#.#","#.#.#","#...#","#...#","#...#"],"N":["#...#","##..#","#.#.#","#..##","#...#","#...#","#...#"],"O":[".###.","#...#","#...#","#...#","#...#","#...#",".###."],"P":["####.","#...#","#...#","####.","#....","#....","#...."],"Q":[".###.","#...#","#...#","#...#","#.#.#","#..#.",".##.#"],"R":["####.","#...#","#...#","####.","#.#..","#..#.","#...#"],"S":[".####","#....","#....",".###.","....#","....#","####."],"T":["#####","..#..","..#..","..#..","..#..","..#..","..#.."],"U":["#...#","#...#","#...#","#...#","#...#","#...#",".###."],"V":["#...#","#...#","#...#","#...#",".#.#.",".#.#.","..#.."],"W":["#...#","#...#","#...#","#.#.#","#.#.#","##.##","#...#"],"X":["#...#","#...#",".#.#.","..#..",".#.#.","#...#","#...#"],"Y":["#...#","#...#",".#.#.","..#..","..#..","..#..","..#.."],"Z":["#####","....#","...#.","..#..",".#...","#....","#####"]},"marks":{"acute":["...#.","..#.."],"grave":[".#...","..#.."],"circumflex":["..#..",".#.#."],"tilde":[".##.#","#.##."],"cedilla":["..#..",".##.."]},"accented":{"Á":["A","acute"],"À":["A","grave"],"Â":["A","circumflex"],"Ã":["A","tilde"],"É":["E","acute"],"Ê":["E","circumflex"],"Í":["I","acute"],"Ó":["O","acute"],"Ô":["O","circumflex"],"Õ":["O","tilde"],"Ú":["U","acute"],"Ç":["C","cedilla"]}},"emblem":{"32":["................................","................................","................................","...................S..kkkkkk....","..................SWSkkWWRRkk...","...................S.kWWRRRRk...",".....................kWRRRRRk...",".....................kRRRRRrk...","...............kkkkk.kRRRRrrk...",".............kkkYYYkkkkRRrrkk...","............kkYYYWOOOkkkkkkk.S..","...........kkYYYWOOOOOk.....SWS.","..........kkYYYYOOOOOOkk.....S..",".........kkYYYYOOOOOOook..kkkkk.","........kkYYYYOOOOOOoook.kkWWBk.",".......kkkYYYOOOOOOooook.kWWBBkk","......kkllkYOOOOOOooookk.kWBBBbk",".....kkllllkOOOOOoooook..kBBBbbk","....kkllllGGkOOOoooookk..kkBbbkk","...kkllllGGGGkOoooookk....kkkkk.","...klllWGGGGGGkooookk...........","..kkllWGGGGGGggkookk............","..klllGGGGGGggggkkk.............","..kllGGGGGGgggggkk..............","..klGGGGGGgggggkk...............","..kkGGGGGgggggkk................","...kGGGGgggggkk.................","...kkGGgggggkk..................","....kkkgggkkk...................","......kkkkk.....................","................................","................................"],"16":["................","........kkkkkk..",".......kkYYYOkk.","......kkYYWOOOk.",".....kkYYWOOOok.","....kkYYYOOOook.","...kklkYOOOoook.","..kklllkOOoookk.",".kkllWGGkoookk..",".kllWGGGgkokk...",".kllGGGgggkk....",".klGGGgggkk.....",".kGGGgggkk......",".kkGgggkk.......","..kkkkkk........","................"]}};
+    const NAME = [String(this.props.linha1 ?? D.name[0]), String(this.props.linha2 ?? D.name[1])];
+    const blank = (w, h) => Array.from({ length: h }, () => Array(w).fill('.'));
+    const stamp = (dst, src, x, y) => src.forEach((row, j) => [...row].forEach((c, i) => { if (c !== '.' && dst[y + j] && dst[y + j][x + i] !== undefined) dst[y + j][x + i] = c; }));
+    const rowsOf = (cells) => cells.map((r) => r.join(''));
+    const glyph = (ch) => {
+      const f = D.font; const acc = f.accented[ch]; const base = acc ? acc[0] : ch; const mark = acc ? acc[1] : null;
+      const rows = f.glyphs[base] || f.glyphs[' ']; const pixels = [];
+      rows.forEach((row, y) => [...row].forEach((c, x) => { if (c === '#') pixels.push([x, y]); }));
+      const width = rows[0].length;
+      if (mark) {
+        const m = f.marks[mark]; const top = mark === 'cedilla' ? f.height : -m.length - 1; const dx = Math.floor((width - m[0].length) / 2);
+        m.forEach((row, y) => [...row].forEach((c, x) => { if (c === '#') pixels.push([x + dx, top + y]); }));
+      }
+      return { width, pixels };
+    };
+    const textMask = (text, scale, rise, bold) => {
+      const gs = [...text.toUpperCase()].map(glyph); const gap = D.font.spacing * scale + bold;
+      const width = gs.reduce((s, g) => s + g.width * scale, 0) + gap * (gs.length - 1) + bold;
+      const ys = gs.flatMap((g) => g.pixels.map((p) => p[1]));
+      const top = Math.min(0, ...ys) * scale; const bottom = (Math.max(D.font.height - 1, ...ys) + 1) * scale;
+      const lift = rise * (gs.length - 1); const height = bottom - top + lift;
+      const on = Array.from({ length: height }, () => Array(width).fill(false)); const columnLift = Array(width).fill(0);
+      let x = 0;
+      gs.forEach((g, i) => {
+        const dy = lift - rise * i - top;
+        for (const [px, py] of g.pixels) for (let j = 0; j < scale; j++) for (let k = 0; k < scale + bold; k++) on[py * scale + j + dy][px * scale + k + x] = true;
+        for (let c = x; c < x + g.width * scale + (i < gs.length - 1 ? gap : 0); c++) columnLift[c] = rise * i;
+        x += g.width * scale + gap;
+      });
+      return { on, width, height, columnLift };
+    };
+    const inkMask = (on, st, drop) => {
+      const h = on.length, w = on[0].length, out = blank(w + 2, h + 2 + drop); const at = (x, y) => !!(on[y] && on[y][x]);
+      for (let y = -1; y <= h + drop; y++) for (let x = -1; x <= w; x++) {
+        if (at(x, y)) continue; let near = false;
+        for (let j = -1 - drop; j <= 1; j++) for (let i = -1; i <= 1; i++) if (at(x + i, y + j) && (j >= -1 || i === 0)) near = true;
+        if (near) out[y + 1][x + 1] = st.outline;
+      }
+      for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (at(x, y)) out[y + 1][x + 1] = !at(x, y - 1) ? st.light : !at(x, y + 1) ? st.dark : st.fill;
+      return out;
+    };
+    const line = (text, o) => {
+      const rise = o.rise || 0, drop = o.drop ?? o.scale, mask = textMask(text, o.scale, rise, o.bold || 0);
+      const letters = inkMask(mask.on, D.styles[o.style], drop);
+      if (!o.banner) return rowsOf(letters);
+      const padX = 3 * o.scale, padY = 2 * o.scale, notch = 2 * o.scale, bw = mask.width + 2 * padX;
+      const lift = rise * (text.length - 1), bh = mask.height - lift + 2 * padY;
+      const on = Array.from({ length: bh + lift }, () => Array(bw).fill(false));
+      for (let x = 0; x < bw; x++) {
+        const col = Math.min(mask.width - 1, Math.max(0, x - padX)), y0 = lift - mask.columnLift[col], fromEnd = Math.min(x, bw - 1 - x);
+        for (let y = 0; y < bh; y++) { const mid = Math.abs(y - (bh - 1) / 2); if (fromEnd < notch && mid < notch - fromEnd) continue; on[y0 + y][x] = true; }
+      }
+      const band = inkMask(on, D.styles.banner, drop);
+      const out = blank(band[0].length, Math.max(band.length, letters.length + padY));
+      stamp(out, band, 0, 0); stamp(out, letters, padX, padY);
+      return rowsOf(out);
+    };
+    const BIG = { scale: 2, bold: 1 };
+    const stacked = () => {
+      const top = line(NAME[0], { ...BIG, style: 'orange', rise: 1, banner: true }), bottom = line(NAME[1], { ...BIG, style: 'green', rise: 1 });
+      const em = D.emblem['32'], topW = top[0].length, bottomW = bottom[0].length;
+      const indent = Math.max(em.length + 2, topW - bottomW - 2), y2 = top.length - 8, ey = top.length - 9;
+      const out = blank(Math.max(topW, indent + bottomW), Math.max(y2 + bottom.length, ey + em.length));
+      stamp(out, top, 0, 0); stamp(out, em, 0, ey); stamp(out, bottom, indent, y2);
+      return rowsOf(out);
+    };
+    const horizontal = () => {
+      const a = line(NAME[0], { ...BIG, style: 'orange' }), b = line(NAME[1], { ...BIG, style: 'green' }), em = D.emblem['16'];
+      const h = Math.max(em.length, a.length, b.length), gap = 4, ax = em[0].length + gap, bx = ax + a[0].length + gap;
+      const out = blank(bx + b[0].length, h), ty = Math.floor((h - a.length) / 2);
+      stamp(out, em, 0, Math.floor((h - em.length) / 2)); stamp(out, a, ax, ty); stamp(out, b, bx, ty);
+      return rowsOf(out);
+    };
+    const small = () => {
+      const a = line(NAME[0], { style: 'orange', scale: 1 }), b = line(NAME[1], { style: 'green', scale: 1 });
+      const out = blank(a[0].length + 2 + b[0].length, Math.max(a.length, b.length));
+      stamp(out, a, 0, 0); stamp(out, b, a[0].length + 2, 0);
+      return rowsOf(out);
+    };
+    const holes = new Set(['k', 'd', D.styles.banner.fill, D.styles.banner.light, D.styles.banner.dark]);
+    const color = (c, v) => v === 'color' ? D.palette[c] : holes.has(c) ? null : v === 'cream' ? D.inks.cream : D.inks.night;
+    const draw = (rows, k, v = 'color') => {
+      const s = [];
+      rows.forEach((row, y) => [...row].forEach((ch, x) => { const col = color(ch, v); if (col) s.push(`${(x + 1) * k}px ${(y + 1) * k}px 0 0 ${col}`); }));
+      return { w: rows[0].length * k, h: rows.length * k, css: `position:absolute;left:${-k}px;top:${-k}px;width:${k}px;height:${k}px;box-shadow:${s.join(',')}` };
+    };
+    const st = stacked(), hz = horizontal(), sm = small(), e32 = D.emblem['32'], e16 = D.emblem['16'];
+    return {
+      stackedBig: draw(st, 4), stackedBigLight: draw(st, 4),
+      horizontal: draw(hz, 3), horizontalLight: draw(hz, 3),
+      monoCream: draw(st, 2, 'cream'), monoNight: draw(st, 2, 'night'),
+      monoEmblemCream: draw(e32, 4, 'cream'), monoEmblemNight: draw(e32, 4, 'night'),
+      small1: draw(sm, 1), small2: draw(sm, 2), small3: draw(sm, 3), small1Light: draw(sm, 1), small2Light: draw(sm, 2),
+      emblem32: draw(e32, 8), emblem16: draw(e16, 8),
+      emblem16x1: draw(e16, 1), emblem16x2: draw(e16, 2), emblem32x1: draw(e32, 1), emblem32x2: draw(e32, 2)
+    };
+  }
+}
+</script>
+</body>
+</html>

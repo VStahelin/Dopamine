@@ -421,7 +421,7 @@ O jogador escolhe em que parte do corpo vai agir, em vez de o ambiente da fase 5
 Fechar o que já existe antes de somar conteúdo: validar no celular, dar som ao que acontece em toda run e tirar o que ainda parece placeholder. Itens de [lacunas-desenvolvimento.md](lacunas-desenvolvimento.md#as-12-prioridades) ([decisão 0034](decisoes/0034-fases-para-fechar-lacunas.md), proposta).
 
 - [ ] Validar no celular, em pé e deitado, as fases 2.6 a 5.11, incluindo 60 FPS com 400 moléculas e com o mapa Denso.
-- [ ] Ícones do PWA em PNG (192, 512 e maskable) e `apple-touch-icon` para a tela inicial do iPhone.
+- [x] Ícones do PWA em PNG (192, 512 e maskable) e `apple-touch-icon` para a tela inicial do iPhone, com a logo nova em pixel, favicon e artes de loja ([logo.md](logo.md)).
 - [ ] Efeitos sonoros P1 de [efeitos-sonoros.md](efeitos-sonoros.md) (armas, combate, coleta, level up e interface) e os jingles `bossIn` e `crisisIn`; tirar o "chegam em breve" das Opções.
 - [ ] "De onde vem" cada bônus na aba Atributos (receptor, suplemento, Laboratório e perfil).
 - [ ] Pontos de interesse câmara e corredor; estruturas numa clareira dos blocos.
@@ -480,7 +480,7 @@ Deixar o jogo com a cara do canvas de identidade visual e pronto para outras pes
   - [ ] Jingles `bossIn` e `crisisIn` (faltam gerar).
   - [x] Efeitos do agente (9) e o volume de Efeitos valendo ([efeitos-sonoros.md](efeitos-sonoros.md#como-entra-no-jogo)).
   - [ ] Os outros efeitos da lista de [efeitos-sonoros.md](efeitos-sonoros.md), primeiro os P1.
-- [ ] PWA: polimento da instalação na tela inicial (os ícones em PNG entram na fase 5.13; o offline vem da fase 2.5).
+- [ ] PWA: polimento da instalação na tela inicial (os ícones em PNG já entraram na fase 5.13; o offline vem da fase 2.5).
 - [ ] Primeira run guiada: um tutorial curto para quem nunca jogou ([lacunas-desenvolvimento.md](lacunas-desenvolvimento.md#ui-e-telas)).
 - [ ] Layout em telas largas e altas (painéis laterais, mais pista).
 - [ ] Rodada de testes com 2 ou 3 amigos e ajuste dos números.

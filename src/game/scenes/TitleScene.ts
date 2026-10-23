@@ -1,8 +1,8 @@
 import * as Phaser from 'phaser';
-import { PALETTE, PALETTE_CSS } from '../render/palette';
-import { AGENT_TEXTURES, textureKey } from '../render/textures';
+import { PALETTE_CSS } from '../render/palette';
+import { LOGO_KEYS } from '../render/spriteFiles';
 import { addButtonColumn } from '../ui/menuLayout';
-import { impactText, labelText } from '../ui/theme';
+import { labelText } from '../ui/theme';
 import { setupUiLayout } from '../ui/uiLayout';
 import { hideLoader } from '../ui/loader';
 import { SCENES } from './keys';
@@ -25,28 +25,16 @@ export class TitleScene extends Phaser.Scene {
 
     setupUiLayout(this, (w, h) => {
       this.root?.destroy();
-      // Logo (140) + botão (40): o bloco todo fica centralizado na vertical.
-      const logoTop = Math.max(16, Math.floor((h - 190) / 2) - 10);
+      // Logo em escala inteira (2× ou 3×, pela largura) + botão (40), centralizados na vertical.
+      const logo = this.add.image(0, 0, LOGO_KEYS.stacked).setOrigin(0.5, 0);
+      const logoScale = Math.max(1, Math.min(3, Math.floor((w - 24) / logo.width)));
+      logo.setScale(logoScale);
+      const logoH = logo.height * logoScale;
+      const logoTop = Math.max(16, Math.floor((h - logoH - 56) / 2) - 10);
       const cx = Math.floor(w / 2);
+      logo.setPosition(cx, logoTop);
 
-      // Faixa vermelha inclinada atrás de FARMACO, como na referência da aba Design.
-      const band = this.add.graphics();
-      band.fillStyle(PALETTE.outline).fillRect(-125, -21, 250, 42);
-      band.fillStyle(PALETTE.interaction).fillRect(-122, -18, 244, 36);
-      band.setPosition(cx, logoTop + 70).setRotation(-0.06);
-
-      const agent = this.add
-        .image(cx, logoTop + 20, textureKey(AGENT_TEXTURES.dopamine, 3))
-        .setScale(2 / 3);
-      const title = this.add
-        .text(cx, logoTop + 70, 'FARMACO', impactText(34, PALETTE_CSS.logoOrange))
-        .setOrigin(0.5)
-        .setRotation(-0.06);
-      const subtitle = this.add
-        .text(cx, logoTop + 104, 'BATTLE', impactText(26, PALETTE_CSS.logoGreen))
-        .setOrigin(0.5);
-
-      const { buttons } = addButtonColumn(this, w, logoTop + 140, [
+      const { buttons } = addButtonColumn(this, w, logoTop + logoH + 16, [
         { label: 'COMEÇAR', onClick: () => this.play() },
       ]);
       const version = this.add
@@ -58,7 +46,7 @@ export class TitleScene extends Phaser.Scene {
         )
         .setOrigin(0.5, 0);
 
-      this.root = this.add.container(0, 0, [band, agent, title, subtitle, ...buttons, version]);
+      this.root = this.add.container(0, 0, [logo, ...buttons, version]);
     });
   }
 

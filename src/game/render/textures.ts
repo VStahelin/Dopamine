@@ -105,6 +105,7 @@ function queueIcons(scene: Phaser.Scene, zoom: number, everything: boolean): boo
   const sizes = iconSizesFor(zoom);
   let queued = false;
   for (const file of FILES) {
+    if (file.preload === false) continue;
     if (file.iconPx !== undefined ? !sizes.has(file.iconPx) : !everything) continue;
     if (scene.textures.exists(file.key)) continue;
     scene.load.image(file.key, url(file));
