@@ -18,7 +18,7 @@ Tudo aqui é **proposta**. Volumes, tempos de troca e nomes de arquivo vão para
 
 **O motivo.** Todas as faixas reaproveitam uma frase curta de 4 notas, o motivo da Dopamina, tocada na escala menor. O tema principal apresenta o motivo inteiro; o hub toca devagar e limpo; a run toca acelerado; o chefe toca em tom mais grave. Quem joga reconhece o jogo pela frase. Nos apps de geração não dá para escrever as notas, então o caminho é gerar o tema principal primeiro e usar o recurso de continuar ou "cover" do app a partir dele nas outras faixas.
 
-**Tonalidade e ritmo.** Mi menor ou Ré menor (as cordas soltas de uma guitarra em Drop D), entre 90 e 180 BPM conforme a tensão. Escalas frígia e menor harmônica para o chefe e as crises.
+**Tonalidade e ritmo.** Mi menor ou Ré menor (as cordas soltas de uma guitarra em Drop D), entre 90 e 180 BPM conforme a tensão. Escalas frígia e menor harmônica para o chefe e as crises. Os prompts usam Mi menor até essa escolha fechar.
 
 ## As faixas
 
