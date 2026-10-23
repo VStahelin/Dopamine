@@ -49,7 +49,7 @@ Só as decisões **importantes**, que têm impacto na construção do jogo, vira
 
 Duas skills do repositório cuidam disso (em `.claude/skills/`; quem não usa Claude Code segue o mesmo passo a passo dos arquivos):
 
-- [criar-versao](.claude/skills/criar-versao/SKILL.md): confere a `main`, roda o check e cria a tag `vX.Y.Z` com `npm version`. Não publica.
+- [criar-versao](.claude/skills/criar-versao/SKILL.md): confere a `main`, valida o changelog da versão, roda o check e cria a tag `vX.Y.Z` com `npm version`. Não publica.
 - [publicar-versao](.claude/skills/publicar-versao/SKILL.md): envia a `main` e a tag, acompanha o deploy no GitHub Pages e confere a versão no ar.
 
 ## Convenções
