@@ -25,6 +25,9 @@ const TABS: [Tab, string][] = [
 
 type Obj = Phaser.GameObjects.GameObject;
 
+/** Deitada e com esta largura lógica, as três seções ficam lado a lado (prancheta do PC). */
+const WIDE = 760;
+
 const VOLUMES: [keyof SoundOptions & `${string}Volume`, string, string][] = [
   ['masterVolume', 'Geral', 'Multiplica música e efeitos'],
   ['musicVolume', 'Música', 'Trilhas do título, hub, run e jingles'],
@@ -59,7 +62,7 @@ const UPDATE_NOTE: Record<UpdateStatus, string> = {
  */
 export class OptionsScene extends Phaser.Scene {
   private root?: Phaser.GameObjects.Container;
-  private scroll?: ScrollArea;
+  private scrolls: ScrollArea[] = [];
   private size = { w: 0, h: 0 };
   private fromRun = false;
   private tab: Tab = 'sound';
@@ -76,6 +79,9 @@ export class OptionsScene extends Phaser.Scene {
     this.note = '';
     if (!this.fromRun) music.setMain('hub');
     this.input.keyboard?.on('keydown-ESC', () => this.back());
+    this.input.keyboard?.on('keydown-M', () =>
+      this.setSound({ muted: !getSave(this).options.sound.muted }),
+    );
     setupUiLayout(this, (w, h) => {
       this.size = { w, h };
       this.build(true);
@@ -83,8 +89,8 @@ export class OptionsScene extends Phaser.Scene {
     const unsubscribe = updates.subscribe(() => this.build());
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       unsubscribe();
-      this.scroll?.destroy();
-      this.scroll = undefined;
+      for (const sc of this.scrolls) sc.destroy();
+      this.scrolls = [];
     });
     this.scale.on(Phaser.Scale.Events.ENTER_FULLSCREEN, this.rebuild, this);
     this.scale.on(Phaser.Scale.Events.LEAVE_FULLSCREEN, this.rebuild, this);
@@ -148,14 +154,17 @@ export class OptionsScene extends Phaser.Scene {
     this.build();
   }
 
-  /** Monta a tela; `resetScroll` volta a lista para o topo (troca de aba ou de tamanho). */
+  /** Monta a tela; `resetScroll` volta as listas para o topo (troca de aba ou de tamanho). */
   private build(resetScroll = false): void {
-    const offset = resetScroll ? 0 : (this.scroll?.offset() ?? 0);
-    this.scroll?.destroy();
+    const offsets = resetScroll ? [] : this.scrolls.map((sc) => sc.offset());
+    for (const sc of this.scrolls) sc.destroy();
+    this.scrolls = [];
     this.root?.destroy();
     const { w, h } = this.size;
     const safe = safeAreaUi(this.cameras.main.zoom);
-    const width = Math.min(420, w - safe.left - safe.right - 24);
+    // No PC (prancheta "Opções no PC"): sem abas, Som, Tela e Jogo lado a lado.
+    const wide = w > h && w >= WIDE;
+    const width = Math.min(wide ? 1180 : 420, w - safe.left - safe.right - 24);
     const left = Math.floor((w - width) / 2);
     const top = safe.top + 14;
     const children: Obj[] = [];
@@ -181,34 +190,37 @@ export class OptionsScene extends Phaser.Scene {
         .setOrigin(0.5, 0),
     );
 
-    const tabsY = top + 54;
-    const tw = Math.floor((width - 12) / 3);
-    TABS.forEach(([id, label], i) => {
-      children.push(
-        addButton(this, {
-          x: left + i * (tw + 6),
-          y: tabsY,
-          width: i === 2 ? width - 2 * (tw + 6) : tw,
-          height: 44,
-          label,
-          fontSize: 11,
-          variant: id === this.tab ? 'primary' : 'secondary',
-          onClick: () => {
-            if (this.tab === id) return;
-            this.tab = id;
-            this.note = '';
-            this.build(true);
-          },
-        }),
-      );
-    });
+    let panelY = top + 54;
+    if (!wide) {
+      const tw = Math.floor((width - 12) / 3);
+      TABS.forEach(([id, label], i) => {
+        children.push(
+          addButton(this, {
+            x: left + i * (tw + 6),
+            y: panelY,
+            width: i === 2 ? width - 2 * (tw + 6) : tw,
+            height: 44,
+            label,
+            fontSize: 11,
+            variant: id === this.tab ? 'primary' : 'secondary',
+            onClick: () => {
+              if (this.tab === id) return;
+              this.tab = id;
+              this.note = '';
+              this.build(true);
+            },
+          }),
+        );
+      });
+      panelY += 54;
+    }
 
-    // Embaixo: VOLTAR e a linha de versão.
+    // Embaixo: VOLTAR e a versão (no PC, versão à esquerda e "Esc volta" à direita).
     const s = updates.state;
     const bottom = h - safe.bottom - 10;
-    const versionY = bottom - 10;
-    const backY = versionY - 8 - 48;
+    const backY = wide ? bottom - 48 : bottom - 18 - 48;
     const bw = Math.min(width, 260);
+    const version = `VERSÃO ${s.currentVersion} · BUILD ${s.currentBuild}`;
     children.push(
       addButton(this, {
         x: Math.floor((w - bw) / 2),
@@ -219,41 +231,81 @@ export class OptionsScene extends Phaser.Scene {
         variant: 'secondary',
         onClick: () => this.back(),
       }),
-      this.add
-        .text(
-          w / 2,
-          versionY,
-          `VERSÃO ${s.currentVersion} · BUILD ${s.currentBuild}`,
-          labelText(8, PALETTE_CSS.textMuted),
-        )
-        .setOrigin(0.5, 0),
     );
+    if (wide) {
+      children.push(
+        this.add
+          .text(left, backY + 20, version, labelText(8, PALETTE_CSS.textMuted))
+          .setOrigin(0, 0),
+        this.add
+          .text(left + width, backY + 20, 'ESC VOLTA · M MUDO', labelText(8, PALETTE_CSS.textMuted))
+          .setOrigin(1, 0),
+      );
+    } else {
+      children.push(
+        this.add
+          .text(w / 2, bottom - 10, version, labelText(8, PALETTE_CSS.textMuted))
+          .setOrigin(0.5, 0),
+      );
+    }
 
-    // Painel com moldura de madeira e o conteúdo da aba, rolável.
-    const panelY = tabsY + 54;
-    const panelH = backY - 10 - panelY;
+    // Painéis com moldura de madeira e o conteúdo rolável: um por aba, ou os três no PC.
+    const panelH = backY - 12 - panelY;
+    const gap = 16;
+    const unit = (width - 2 * gap) / 3.5;
+    const panels: { tab: Tab; x: number; width: number }[] = wide
+      ? [
+          { tab: 'sound', x: left, width: Math.floor(unit * 1.5) },
+          { tab: 'screen', x: left + Math.floor(unit * 1.5) + gap, width: Math.floor(unit) },
+          {
+            tab: 'game',
+            x: left + Math.floor(unit * 2.5) + 2 * gap,
+            width: width - Math.floor(unit * 2.5) - 2 * gap,
+          },
+        ]
+      : [{ tab: this.tab, x: left, width }];
     const g = this.add.graphics();
-    g.fillStyle(PALETTE.outline).fillRect(left, panelY, width, panelH);
-    g.fillStyle(PALETTE.wood).fillRect(left + 3, panelY + 3, width - 6, panelH - 6);
-    g.fillStyle(PALETTE.ink).fillRect(left + 5, panelY + 5, width - 10, panelH - 10);
-    g.fillStyle(PALETTE.night).fillRect(left + 7, panelY + 7, width - 14, panelH - 14);
     children.push(g);
+    for (const p of panels) {
+      g.fillStyle(PALETTE.outline).fillRect(p.x, panelY, p.width, panelH);
+      g.fillStyle(PALETTE.wood).fillRect(p.x + 3, panelY + 3, p.width - 6, panelH - 6);
+      g.fillStyle(PALETTE.ink).fillRect(p.x + 5, panelY + 5, p.width - 10, panelH - 10);
+      g.fillStyle(PALETTE.night).fillRect(p.x + 7, panelY + 7, p.width - 14, panelH - 14);
+    }
     this.root = this.add.container(0, 0, children);
 
-    const inner = { x: left + 14, y: panelY + 14, width: width - 28 };
-    const rows =
-      this.tab === 'sound'
-        ? this.soundRows(inner)
-        : this.tab === 'screen'
-          ? this.screenRows(inner)
-          : this.gameRows(inner);
-    this.scroll = addScrollArea(
-      this,
-      rows,
-      { x: left + 7, y: panelY + 7, width: width - 14, height: panelH - 14 },
-      offset,
-    );
-    this.scroll.isolate();
+    panels.forEach((p, i) => {
+      let y = panelY + 14;
+      const header: Obj[] = [];
+      if (wide) {
+        const label = TABS.find(([id]) => id === p.tab)![1];
+        header.push(
+          this.add.text(
+            p.x + 14,
+            y,
+            label,
+            withShadow(impactText(17, PALETTE_CSS.logoOrange), PALETTE_CSS.outline, 2),
+          ),
+        );
+        y += 30;
+      }
+      const inner = { x: p.x + 14, y, width: p.width - 28 };
+      const rows =
+        p.tab === 'sound'
+          ? this.soundRows(inner)
+          : p.tab === 'screen'
+            ? this.screenRows(inner)
+            : this.gameRows(inner);
+      this.scrolls.push(
+        addScrollArea(
+          this,
+          [...header, ...rows],
+          { x: p.x + 7, y: panelY + 7, width: p.width - 14, height: panelH - 14 },
+          offsets[i] ?? 0,
+        ),
+      );
+    });
+    for (const sc of this.scrolls) sc.isolate();
   }
 
   // ---- Peças da prancheta ----
