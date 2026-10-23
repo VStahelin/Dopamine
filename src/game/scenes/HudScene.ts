@@ -1,12 +1,13 @@
 import * as Phaser from 'phaser';
-import { DROPS, PASSIVES, type PassiveId } from '../../config';
+import { DROPS, PASSIVES, type PassiveId, type WeaponId } from '../../config';
 import { waveAt } from '../../core/run/progression';
 import { specialReadiness } from '../../core/run/specials';
+import { tutorialCard } from '../../core/run/tutorial';
 import { nativeLevel } from '../../core/run/upgrades';
 import type { RunState } from '../../core/run/state';
 import { VirtualJoystick } from '../input/virtualJoystick';
 import { PALETTE, PALETTE_CSS } from '../render/palette';
-import { addIcon, iconTexture } from '../render/textures';
+import { addIcon, AGENT_TEXTURES, iconTexture, TEXTURES, textureKey } from '../render/textures';
 import { getSave } from '../storage/saveStore';
 import {
   IconSlot,
@@ -17,9 +18,9 @@ import {
   type SlotContent,
 } from '../ui/iconSlot';
 import { safeAreaUi, type Insets } from '../ui/safeArea';
-import { formatTime, hudLabelText, impactText, labelText, withShadow } from '../ui/theme';
+import { bodyText, formatTime, hudLabelText, impactText, labelText, withShadow } from '../ui/theme';
 import { setupUiLayout } from '../ui/uiLayout';
-import { drawIcon } from '../ui/icons';
+import { drawCreamSlot, drawIcon, drawInkBox } from '../ui/icons';
 import { SCENES } from './keys';
 import type { RunScene } from './RunScene';
 
@@ -62,6 +63,9 @@ export class HudScene extends Phaser.Scene {
   private specialIcon!: Phaser.GameObjects.Image;
   /** Aviso grande abaixo da banda: formação chegando, crise, Superdosagem (fase 5.6). */
   private banner?: Phaser.GameObjects.Text;
+  /** Cartão da primeira run guiada e o passo que ele mostra ("" = escondido). */
+  private tutorialBox?: Phaser.GameObjects.Container;
+  private tutorialKey = '';
   /** Painel do modo debug, embaixo à esquerda. */
   private debugText?: Phaser.GameObjects.Text;
   private box = {
@@ -282,6 +286,109 @@ export class HudScene extends Phaser.Scene {
       children.push(this.fpsText);
     }
     this.root = this.add.container(0, 0, children);
+    // O cartão do tutorial se refaz no próximo quadro com o tamanho novo.
+    this.tutorialKey = '';
+  }
+
+  /**
+   * Primeira run guiada (prancheta "Primeira run guiada"): cartão no terço de baixo, com o passo,
+   * o texto e um ícone; no passo do especial, uma seta piscando em cima do botão.
+   */
+  private updateTutorial(run: RunState, time: number): void {
+    const t = this.runScene.tutorial;
+    const card = t ? tutorialCard(t, run) : null;
+    const key = card ? `${card.number}` : '';
+    if (key !== this.tutorialKey) {
+      this.tutorialKey = key;
+      this.tutorialBox?.destroy();
+      this.tutorialBox = card ? this.buildTutorial(run, card) : undefined;
+    }
+    if (card?.def.id === 'special') {
+      const { x, y } = this.specialAt;
+      const bob = Math.round(Math.sin(time / 150) * 3);
+      this.g
+        .fillStyle(PALETTE.gold)
+        .fillTriangle(
+          x + SPECIAL_SIZE / 2 - 10,
+          y - 26 + bob,
+          x + SPECIAL_SIZE / 2 + 10,
+          y - 26 + bob,
+          x + SPECIAL_SIZE / 2,
+          y - 12 + bob,
+        );
+      this.g.lineStyle(3, PALETTE.gold, 0.6 + 0.4 * Math.sin(time / 150));
+      this.g.strokeRect(x - 4, y - 4, SPECIAL_SIZE + 8, SPECIAL_SIZE + 8);
+    }
+  }
+
+  private buildTutorial(
+    run: RunState,
+    card: NonNullable<ReturnType<typeof tutorialCard>>,
+  ): Phaser.GameObjects.Container {
+    const { w, h } = this.box;
+    const width = Math.min(330, w - 32);
+    const left = Math.floor((w - width) / 2);
+    const top = Math.floor(h * 0.62);
+    const g = this.add.graphics();
+    const text = this.add.text(left + 60, top + 26, card.def.text, {
+      ...bodyText(12, PALETTE_CSS.text),
+      wordWrap: { width: width - 72 },
+    });
+    const height = Math.max(58, Math.ceil(text.height) + 36);
+    g.fillStyle(PALETTE.gold).fillRect(left - 3, top - 3, width + 6, height + 6);
+    drawInkBox(g, left, top, width, height, PALETTE.panel);
+    drawCreamSlot(g, left + 10, top + 10, 40, 40);
+    const objects: Phaser.GameObjects.GameObject[] = [
+      g,
+      text,
+      this.add.text(left + 60, top + 10, card.def.title, labelText(9, PALETTE_CSS.sectionOrange)),
+      this.add
+        .text(
+          left + width - 10,
+          top + 10,
+          `${card.number}/${card.total}`,
+          labelText(8, PALETTE_CSS.cyan),
+        )
+        .setOrigin(1, 0),
+    ];
+    const def = run.rules.agents[run.agentId];
+    const cx = left + 30;
+    const cy = top + 30;
+    switch (card.def.icon) {
+      case 'move':
+        objects.push(
+          this.add.image(cx, cy, textureKey(AGENT_TEXTURES[run.agentId], 2)).setScale(0.32),
+        );
+        break;
+      case 'weapon':
+        objects.push(
+          addIcon(this, cx - 16, cy - 16, iconTexture('weapons', def.action as WeaponId), 32),
+        );
+        break;
+      case 'gem':
+        objects.push(this.add.image(cx, cy, textureKey(TEXTURES.gem, 2)).setScale(1.5));
+        break;
+      case 'special':
+        objects.push(
+          addIcon(this, cx - 16, cy - 16, iconTexture('specials', def.special.kind), 32),
+        );
+        break;
+      case 'time':
+        drawIcon(g, 'trophy', cx - 12, cy - 12, PALETTE.gold);
+        break;
+    }
+    // Pular: some com o tutorial inteiro nesta run.
+    const skip = this.add
+      .text(left + width + 3, top + height + 6, 'PULAR TUTORIAL ›', {
+        ...labelText(8, PALETTE_CSS.text),
+        backgroundColor: PALETTE_CSS.ink,
+        padding: { x: 6, y: 5 },
+      })
+      .setOrigin(1, 0)
+      .setInteractive({ useHandCursor: true });
+    skip.on('pointerdown', () => this.runScene.skipTutorial());
+    objects.push(skip);
+    return this.add.container(0, 0, objects).setDepth(20);
   }
 
   override update(time: number): void {
@@ -315,6 +422,7 @@ export class HudScene extends Phaser.Scene {
 
     this.updateRows(run);
     this.drawCounters(g, run);
+    this.updateTutorial(run, time);
 
     const wave = waveAt(run.time, run.rules.economy.difficulty);
     this.timeText

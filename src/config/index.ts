@@ -21,6 +21,7 @@ import runJson from './run.json';
 import statsJson from './stats.json';
 import structuresJson from './structures.json';
 import supplementsJson from './supplements.json';
+import tutorialJson from './tutorial.json';
 import weaponsJson from './weapons.json';
 import {
   RUN_STAT_KEYS,
@@ -38,6 +39,7 @@ import {
   type IdleAgentKind,
   type IdleConfig,
   type MetaConfig,
+  type TutorialConfig,
   type OrganismConfig,
   SECTORS,
   type MoleculeType,
@@ -383,6 +385,7 @@ function loadMeta(): MetaConfig {
 }
 
 export const META: MetaConfig = loadMeta();
+export const TUTORIAL: TutorialConfig = tutorialJson as TutorialConfig;
 
 /** Confere idle.json: tipos dos agentes, moléculas das ondas e ids de início e custo. */
 function loadIdle(): IdleConfig {

@@ -36,7 +36,7 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | 5.14 | Famílias e chefes | Cada família de molécula pede um jeito diferente de jogar? | 5.12, 5.13 | em andamento (falta validar) |
 | 5.15 | Elenco completo | Cada doença tem um agente feito para ela? | 5.14 | em andamento (falta validar) |
 | 5.16 | Conquistas | Jogar libera conteúdo, e não só juntar ATP? | 5.15 | em andamento (falta validar) |
-| 6 | Arte, polimento e lançamento | Dá para mandar o link para os amigos? | 1 a 5.16 | não iniciada |
+| 6 | Arte, polimento e lançamento | Dá para mandar o link para os amigos? | 1 a 5.16 | em andamento |
 | 7 | Lojas e plataformas | O mesmo jogo roda e é publicado em Android, iOS, Steam e Microsoft Store? | 6 | não iniciada |
 
 ## Bugs relatados
@@ -484,7 +484,7 @@ Deixar o jogo com a cara do canvas de identidade visual e pronto para outras pes
   - [x] Efeitos do agente (9) e o volume de Efeitos valendo ([efeitos-sonoros.md](efeitos-sonoros.md#como-entra-no-jogo)).
   - [ ] Os outros efeitos da lista de [efeitos-sonoros.md](efeitos-sonoros.md#para-fazer-depois), primeiro os P1 (saíram da fase 5.13).
 - [ ] PWA: polimento da instalação na tela inicial (os ícones em PNG já entraram na fase 5.13; o offline vem da fase 2.5).
-- [ ] Primeira run guiada: um tutorial curto para quem nunca jogou ([lacunas-desenvolvimento.md](lacunas-desenvolvimento.md#ui-e-telas)).
+- [x] Primeira run guiada: um tutorial curto para quem nunca jogou, com cartões que não pausam (prancheta "Primeira run guiada", `tutorial.json`) ([lacunas-desenvolvimento.md](lacunas-desenvolvimento.md#ui-e-telas)).
 - [ ] Layout em telas largas e altas (painéis laterais, mais pista).
 - [ ] Rodada de testes com 2 ou 3 amigos e ajuste dos números.
 - [x] Decidir como o jogo chega aos jogadores: GitHub Pages, publicado por versão ([0018](decisoes/0018-jogo-no-pages-servidor-futuro.md)).

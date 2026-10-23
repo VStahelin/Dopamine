@@ -152,6 +152,7 @@ export function updateSpecial(state: RunState, pressed: boolean, dt: number): vo
       hitType(state, def.type, (def.damage ?? 0) * power);
       break;
   }
+  state.used.specials++;
   state.events.push({ type: 'special', kind: def.kind });
 }
 

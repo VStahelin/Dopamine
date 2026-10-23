@@ -23,6 +23,7 @@ import {
 import { applyHealth, earn, rulesWithOrganism } from '../../core/organism/organism';
 import { DEFAULT_RULES } from '../../core/run/rules';
 import { specialActive } from '../../core/run/specials';
+import { createTutorial, updateTutorial, type TutorialProgress } from '../../core/run/tutorial';
 import { auraRadius, orbitPositions } from '../../core/run/weapons';
 import { recordRun } from '../../core/save/saveData';
 import { createRun, drainEvents, runResult, type RunState } from '../../core/run/state';
@@ -202,6 +203,8 @@ export class RunScene extends Phaser.Scene {
   private fx: Fx[] = [];
   /** Especial pedido pelo jogador, entregue ao core no próximo passo. */
   private specialQueued = false;
+  /** Dicas da primeira run guiada; `null` fora da primeira run ou depois de Pular. */
+  tutorial: TutorialProgress | null = null;
   private floaters: Floater[] = [];
   /** Dano contínuo somado por região do campo, e recuperação somada. */
   private areaSums = new Map<string, { x: number; y: number; amount: number }>();
@@ -247,6 +250,8 @@ export class RunScene extends Phaser.Scene {
       capsulesOpened: save.capsulesOpened,
     };
     this.run = createRun(seed, rules, agentId);
+    // Primeira run guiada (fase 6): só na primeira run do save.
+    this.tutorial = save.records.runs === 0 ? createTutorial(this.run) : null;
     this.specialQueued = false;
     this.electronSprites = [];
     this.fx = [];
@@ -355,6 +360,11 @@ export class RunScene extends Phaser.Scene {
   }
 
   /** Pede o especial (tecla Espaço ou o botão da HUD). */
+  /** Pular tutorial: some de vez nesta run. */
+  skipTutorial(): void {
+    this.tutorial = null;
+  }
+
   queueSpecial(): void {
     if (!this.paused && !this.levelUpOpen) this.specialQueued = true;
   }
@@ -413,6 +423,7 @@ export class RunScene extends Phaser.Scene {
       stepRun(this.run, { ...input, special: this.specialQueued }, step);
       this.specialQueued = false;
       this.accumulator -= step;
+      if (this.tutorial) updateTutorial(this.tutorial, this.run);
       if (
         this.run.over ||
         this.run.pendingLevelUps > 0 ||

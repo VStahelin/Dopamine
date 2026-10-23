@@ -1,0 +1,37 @@
+{
+  "steps": [
+    {
+      "id": "move",
+      "title": "COMO JOGAR",
+      "text": "Arraste em qualquer lugar da tela para mover o agente.",
+      "icon": "move",
+      "movePx": 120
+    },
+    {
+      "id": "act",
+      "title": "COMO JOGAR",
+      "text": "Seu agente age sozinho: chegue perto das moléculas para decompô-las.",
+      "icon": "weapon",
+      "kills": 5
+    },
+    {
+      "id": "gems",
+      "title": "COMO JOGAR",
+      "text": "Pegue as gemas de XP que as moléculas soltam para subir de nível.",
+      "icon": "gem"
+    },
+    {
+      "id": "special",
+      "title": "ESPECIAL PRONTO",
+      "text": "Toque no botão laranja para soltar o especial.",
+      "icon": "special"
+    },
+    {
+      "id": "survive",
+      "title": "SOBREVIVA",
+      "text": "Cada minuto as moléculas ficam mais fortes. Boa sorte!",
+      "icon": "time",
+      "seconds": 6
+    }
+  ]
+}

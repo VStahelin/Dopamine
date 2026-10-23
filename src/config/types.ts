@@ -587,6 +587,24 @@ export interface IdleConfig {
   speedUp: number;
 }
 
+/** Passo da primeira run guiada (fase 6, prancheta "Primeira run guiada"). */
+export interface TutorialStepDef {
+  id: 'move' | 'act' | 'gems' | 'special' | 'survive';
+  title: string;
+  text: string;
+  icon: 'move' | 'weapon' | 'gem' | 'special' | 'time';
+  /** move: distância que o agente anda para o passo sumir. */
+  movePx?: number;
+  /** act: moléculas decompostas para o passo sumir. */
+  kills?: number;
+  /** survive: segundos na tela. */
+  seconds?: number;
+}
+
+export interface TutorialConfig {
+  steps: TutorialStepDef[];
+}
+
 export interface DisplayConfig {
   /** Tamanho do ladrilho do chão, em unidades do mundo (decisão 0009). */
   tileSizePx: number;

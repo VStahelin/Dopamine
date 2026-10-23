@@ -13,6 +13,9 @@ Textos da wiki que o jogador lê dentro do jogo, no Compêndio. Cada seção `##
 ### O que é uma run
 Você controla um agente dentro do organismo: uma molécula de remédio contra as moléculas que fazem mal. Você só anda; o agente ataca sozinho. A run acaba quando as interações do agente acabam.
 
+### Primeira run
+Na primeira run do save, cartões no terço de baixo da tela ensinam o básico sem pausar o jogo: mover, deixar o agente agir, pegar as gemas, soltar o especial e sobreviver. Cada cartão some quando você faz o que ele pede. O do especial só aparece com uma carga pronta, com uma seta em cima do botão. "Pular tutorial" fecha todos.
+
 ### Interações
 São a vida do agente: o estoque de moléculas dele. Cada molécula inimiga que encosta se liga ao agente e gasta interações. A barra embaixo do agente mostra quanto sobrou; abaixo de 25% a tela pulsa em vermelho.
 

@@ -27,7 +27,7 @@ Ordenadas por impacto dividido por esforço, com as dependências respeitadas.
 | 8 | ~~Os 6 agentes que faltam: Vitamina C, Serotonina, Álcool desidrogenase, Cafeína, Ocitocina, Venvanse~~ (feito) | Agentes | Doc | Alto | G | 5.15 |
 | 9 | ~~Evolução para Nuvem de Elétrons, Poça de Solvente e Reação em Cadeia~~ (feito) | Armas | Sem doc | Médio | M | 5.15 |
 | 10 | ~~Estatísticas acumuladas no save e Conquistas~~ (feito, [0036](decisoes/0036-conquistas-somam-a-loja.md)) | Meta | Metade | Alto | M | 5.16 |
-| 11 | Primeira run guiada (tutorial) | UI | Sem doc | Alto | M | 6 |
+| 11 | ~~Primeira run guiada (tutorial)~~ (feito) | UI | Sem doc | Alto | M | 6 |
 | 12 | UI de tela larga no PC (HUD, idle, menus) | UI | Metade | Médio | G | 6 |
 
 ## Ganhos rápidos e apostas grandes
@@ -161,7 +161,7 @@ Hoje são 15 moléculas e um chefe. Todas se comportam igual: perseguem o agente
 
 | Lacuna | Estado | Impacto | Esforço | Fonte |
 | --- | --- | --- | --- | --- |
-| **Primeira run guiada**: nenhum tutorial; o critério da fase 6 é "um amigo joga sem explicação" | Sem doc | Alto | M | Nenhuma ocorrência de tutorial em `src/` |
+| ~~**Primeira run guiada**: nenhum tutorial~~ (feito na fase 6); o critério da fase 6 é "um amigo joga sem explicação" | Sem doc | Alto | M | Nenhuma ocorrência de tutorial em `src/` |
 | **UI própria de tela larga** no PC (hoje estica a do celular) | Metade | Médio | G | [roadmap, bugs relatados](roadmap.md#bugs-relatados); [menu.md](menu.md#tela-larga-pc-celular-deitado) |
 | Acabamento visual da HUD, molduras, botões e fontes | Doc | Médio | M | [roadmap fase 6](roadmap.md#fase-6-arte-polimento-e-lançamento) |
 | Conteúdo de placeholder morto no código: `TAB_SECTIONS`, `AGENT_SELECT` e `SCREENS.idle` e `SCREENS.compendium` com "FASE 2/3/4" e exemplos que não batem com o jogo | Sem doc | Baixo | P | `src/game/ui/menuContent.ts:59-165`; só `SCREENS.achievements` é usado |

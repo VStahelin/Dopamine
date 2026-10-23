@@ -349,7 +349,7 @@ export interface RunState {
   /** Opções sorteadas para o level up atual. */
   offer: UpgradeChoice[] | null;
   /** Usos de Segunda dose, Rerrolar, Pular e Banir já gastos nesta run. */
-  used: { revives: number; rerolls: number; skips: number; banishes: number };
+  used: { revives: number; rerolls: number; skips: number; banishes: number; specials: number };
   /** Opções banidas pelo resto da run (chaves de `choiceKey`). */
   banished: string[];
   /** Tipos de molécula vistos nesta run, para o Compêndio. */
@@ -516,7 +516,7 @@ export function createRun(
     stats,
     pendingLevelUps: 0,
     offer: null,
-    used: { revives: 0, rerolls: 0, skips: 0, banishes: 0 },
+    used: { revives: 0, rerolls: 0, skips: 0, banishes: 0, specials: 0 },
     banished: [],
     seen: [],
     bossesSpawned: rules.run.bosses.map(() => 0),
