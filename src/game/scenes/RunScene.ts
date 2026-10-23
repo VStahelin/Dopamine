@@ -52,8 +52,9 @@ const SUM_EVERY_SECONDS = 0.5;
 /** Barra de interações embaixo do agente, em unidades do mundo. */
 const LIFE_BAR_WIDTH = 40;
 const LIFE_PIPS = 10;
-/** Os números sobem e somem em cerca de 0,6 s. */
+/** Os números sobem e somem em cerca de 0,6 s; o nome de um item pego fica 1,4 s. */
 const FLOATER_SECONDS = 0.6;
+const ITEM_FLOATER_SECONDS = 1.4;
 
 /** Cores do agregado (fase 5.10): molécula pintada e brilho pulsante atrás dela. */
 const AGGREGATE_TINT = parseInt(RUN.aggregates.tint.slice(1), 16);
@@ -62,6 +63,7 @@ const AGGREGATE_GLOW = parseInt(RUN.aggregates.glowColor.slice(1), 16);
 interface Floater {
   text: Phaser.GameObjects.Text;
   life: number;
+  total: number;
 }
 
 /** Efeito rápido desenhado a partir de um acontecimento do core (cone, feixe, golpe). */
@@ -543,13 +545,10 @@ export class RunScene extends Phaser.Scene {
       if (ev.type === 'special') this.cameras.main.flash(200, 255, 179, 71);
       if (ev.type === 'vesicle') this.addPopFx(ev);
       if (ev.type === 'lysosome') this.cameras.main.flash(300, 255, 255, 255);
-      if (
-        ev.type === 'item' &&
-        ev.kind !== 'capsule' &&
-        ev.kind !== 'ampoule' &&
-        !DROPS.items[ev.kind].coins
-      ) {
-        this.showFloater(a.x, a.y - 16, DROPS.items[ev.kind].name.toUpperCase(), 'info');
+      if (ev.type === 'item' && ev.kind !== 'capsule' && ev.kind !== 'ampoule') {
+        // Todo item pego do chão mostra o nome subindo em cima do agente.
+        const name = DROPS.items[ev.kind].name.toUpperCase();
+        this.showFloater(a.x, a.y - 30, name, 'item', ITEM_FLOATER_SECONDS);
       }
     }
     this.flushSums(dt);
@@ -985,7 +984,13 @@ export class RunScene extends Phaser.Scene {
   }
 
   /** Número que sobe e some, com a cor e o tamanho do tipo (docs/ui-cronico.md). */
-  private showFloater(x: number, y: number, label: string, kind: NumberKind): void {
+  private showFloater(
+    x: number,
+    y: number,
+    label: string,
+    kind: NumberKind,
+    seconds = FLOATER_SECONDS,
+  ): void {
     if (!this.showNumbers && HIT_KINDS.has(kind)) return;
     let floater = this.floaters.find((f) => f.life <= 0);
     if (!floater) {
@@ -994,14 +999,15 @@ export class RunScene extends Phaser.Scene {
           .text(0, 0, '', { fontStyle: '700', resolution: this.zoom })
           .setOrigin(0.5)
           .setDepth(20);
-        floater = { text, life: 0 };
+        floater = { text, life: 0, total: FLOATER_SECONDS };
         this.floaters.push(floater);
       } else {
         floater = this.floaters.reduce((a, b) => (a.life < b.life ? a : b));
       }
     }
     const style = NUMBER_STYLES[kind];
-    floater.life = FLOATER_SECONDS;
+    floater.life = seconds;
+    floater.total = seconds;
     floater.text
       .setFontFamily(style.font)
       .setFontSize(style.size)
@@ -1018,7 +1024,7 @@ export class RunScene extends Phaser.Scene {
       if (f.life <= 0) continue;
       f.life -= dt;
       f.text.y -= 20 * dt;
-      f.text.setAlpha(Math.min(1, Math.max(0, (f.life / FLOATER_SECONDS) * 2)));
+      f.text.setAlpha(Math.min(1, Math.max(0, (f.life / f.total) * 2)));
       if (f.life <= 0) f.text.setVisible(false);
     }
   }

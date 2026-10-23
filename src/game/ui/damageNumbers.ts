@@ -3,7 +3,7 @@ import { FONT_LABEL, FONT_MAIN } from './theme';
 
 /** Tipos de número na tela (docs/ui-cronico.md, "Números de dano e feedback"). */
 export type NumberKind =
-  'damage' | 'crit' | 'strong' | 'weak' | 'area' | 'hurt' | 'heal' | 'immune' | 'info';
+  'damage' | 'crit' | 'strong' | 'weak' | 'area' | 'hurt' | 'heal' | 'immune' | 'info' | 'item';
 
 export interface NumberStyle {
   /** Tamanho em unidades do mundo. */
@@ -31,6 +31,8 @@ export const NUMBER_STYLES: Record<NumberKind, NumberStyle> = {
   heal: main(13, PALETTE_CSS.numberHeal, PALETTE_CSS.numberHealOutline),
   immune: { size: 9, color: PALETTE_CSS.textSoft, outline: PALETTE_CSS.ink, font: FONT_LABEL },
   info: main(12, PALETTE_CSS.cyan, PALETTE_CSS.cyanOutline),
+  /** Nome do item pego do chão: maior, dourado e mais demorado que os números. */
+  item: main(17, PALETTE_CSS.goldHi, PALETTE_CSS.critOutline),
 };
 
 /** Números de golpe, que o interruptor das Opções esconde; interações e avisos sempre aparecem. */
