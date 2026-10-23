@@ -124,6 +124,8 @@ A decomposição é o som que mais toca no jogo: precisa ser gostosa de ouvir mi
 | `bossSpawn` | O chefe entra no mapa | Agregado nascendo (mais agudo e baixo) | 1,5 s | P1 | `retro 16-bit chiptune sound effect, giant boss arrives, deep rumbling FM bass roar made of distorted noise, ground shaking thud, heavy guitar power chord, no voice, no music` |
 | `bigBoom` | O chefe é decomposto | Agregado quebrando (mais curto), Lisossomo limpando a tela | 1,5 s | P1 | `retro 16-bit chiptune sound effect, huge crunchy explosion with scattering chip fragments, crash cymbal and a distorted guitar power chord ringing out, no voice, no music` |
 
+enemyHit, decompose nao vou criar pq acho que iria poluir muito o jogo
+
 ## Coleta e itens
 
 | Id | Quando toca | Também toca em | Duração | Prio. | Prompt |
@@ -133,7 +135,7 @@ A decomposição é o som que mais toca no jogo: precisa ser gostosa de ouvir mi
 | `itemPickup` | Pega um item de consumo | Glucagon, Bico de Bunsen, todo item sem som próprio | 0,35 s | P1 | `retro 16-bit chiptune sound effect, item pickup, quick bright ascending three-note chip jingle, no voice, no music` |
 | `vesicleBreak` | Uma vesícula é rompida | Destrutível do mapa quebrando | 0,3 s | P1 | `retro 16-bit chiptune sound effect, bubble burst, soft wet pop with a little crack, no voice, no music` |
 | `whoosh` | Osmose: todas as gemas correm até o agente | Aquaporina | 0,8 s | P2 | `retro 16-bit chiptune sound effect, vacuum pull, rising whoosh with many tiny chip pings rushing in, no voice, no music` |
-
+-----
 ## Ampolas, cápsula e level up
 
 Os jingles `levelup` e `capsule` da música abrem essas telas; os efeitos aqui são a quebra, a revelação e os botões.
