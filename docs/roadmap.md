@@ -427,7 +427,7 @@ Fechar o que já existe antes de somar conteúdo: validar no celular, dar som ao
 - [x] Pontos de interesse câmara e corredor, com os obstáculos do ambiente (sem arte nova). As estruturas como ponto de interesse dos blocos ficam para a fase 5.12: hoje elas já nascem numa clareira, e trocar o anel por tempo pelos blocos mexe no ritmo da run.
 - [x] Estatísticas acumuladas no save (decompostas por molécula, minutos por agente, chefes vencidos), base das conquistas da 5.16.
 - [x] Limpar o conteúdo de placeholder que sobrou em `src/game/ui/menuContent.ts`.
-- [ ] Ensinar o robô do `npm run sim` a buscar sinapses e estruturas.
+- [x] Ensinar o robô do `npm run sim` a buscar sinapses e estruturas: ele vai até a sinapse ou Glândula adrenal mais perto (até 600 px) e fica nela, e evita o Foco inflamatório e o Coágulo. Com isso o ATP médio por run sobe de 28 para 51 (15 runs, perfil casual) e as runs ficam um pouco mais curtas: quase todo o ganho vem da Glândula adrenal (20 moedas por toque, 3 toques), que vale rever. O primeiro desbloqueio sai na run 8 a 10, longe da meta de 2 a 3 da fase 3.
 
 **Critério de saída:** uma run de 15 minutos no celular roda a 60 FPS, toda ação frequente tem som, e nenhuma tela além de Conquistas mostra "EM BREVE".
 

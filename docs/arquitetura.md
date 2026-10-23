@@ -65,7 +65,7 @@ As telas de interface usam [uiLayout.ts](../src/game/ui/uiLayout.ts): zoom intei
 Fora dessas camadas:
 
 - **`tools/audio/`**: `music.py` corta os loops e converte as músicas de `audio/musicas/` para `public/audio/music/` ([sonoplastia.md](sonoplastia.md#como-entra-no-jogo)); `sfx.py` converte os efeitos de `audio/efeitos/` para `public/audio/sfx/` ([efeitos-sonoros.md](efeitos-sonoros.md#como-entra-no-jogo)).
-- **`tools/sim/`**: `npm run sim` roda o simulador de `src/core/sim/` (um robô joga runs seguidas e compra entre elas) e mostra a curva de progressão da meta. `node tools/sim/still.mjs` roda um robô parado com cada agente, para ver se ficar parado ainda segura a run.
+- **`tools/sim/`**: `npm run sim` roda o simulador de `src/core/sim/` (um robô joga runs seguidas e compra entre elas; ele foge, pega gemas e itens e busca sinapses e Glândulas adrenais) e mostra a curva de progressão da meta. `node tools/sim/still.mjs` roda um robô parado com cada agente, para ver se ficar parado ainda segura a run.
 - **`tests/`** ou arquivos `*.test.ts` ao lado do código: testes do `core`.
 
 ## Estrutura de pastas

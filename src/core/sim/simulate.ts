@@ -67,9 +67,33 @@ export interface SimReport {
   grindWalls: number[];
 }
 
+/** Até onde o robô sai do caminho para buscar uma sinapse ou uma Glândula adrenal. */
+const STRUCTURE_REACH = 600;
+
+/**
+ * Sinapse ou Glândula adrenal mais perto, as estruturas que o robô busca (fase 5.13). Foco
+ * inflamatório e Coágulo ficam de fora: são o risco que um jogador casual evita.
+ */
+function nearestStructure(run: RunState): { x: number; y: number; inside: boolean } | undefined {
+  const { agent } = run;
+  let best: { x: number; y: number; inside: boolean } | undefined;
+  let bestD = STRUCTURE_REACH;
+  for (const s of run.structures) {
+    if (s.kind !== 'synapse' && s.kind !== 'synapseLTP' && s.kind !== 'adrenal') continue;
+    const d = Math.hypot(s.x - agent.x, s.y - agent.y);
+    if (d >= bestD) continue;
+    bestD = d;
+    // Na sinapse, ficar perto do meio até encher; na glândula, entrar de novo a cada toque.
+    const hold = s.kind === 'adrenal' ? 0 : run.rules.structures.radiusPx * 0.4;
+    best = { x: s.x, y: s.y, inside: d < hold };
+  }
+  return best;
+}
+
 /**
  * Direção do robô: se tem inimigo muito perto, foge (somando a repulsão dos vizinhos); se não, vai
- * atrás da gema ou moeda mais próxima, desviando um pouco dos inimigos no caminho.
+ * até a sinapse ou glândula mais perto e fica nela; sem estrutura por perto, vai atrás da gema ou
+ * moeda mais próxima, desviando um pouco dos inimigos no caminho.
  */
 function botMove(run: RunState): { x: number; y: number } {
   const { agent } = run;
@@ -90,6 +114,19 @@ function botMove(run: RunState): { x: number; y: number } {
   const flee = Math.hypot(fx, fy);
   if (nearest < 28 && flee > 0) return { x: fx / flee, y: fy / flee };
 
+  let x = flee > 0 ? (fx / flee) * 0.6 : 0;
+  let y = flee > 0 ? (fy / flee) * 0.6 : 0;
+  const structure = nearestStructure(run);
+  if (structure) {
+    if (!structure.inside) {
+      const len = Math.hypot(structure.x - agent.x, structure.y - agent.y);
+      x += (structure.x - agent.x) / len;
+      y += (structure.y - agent.y) / len;
+    }
+    const sl = Math.hypot(x, y);
+    return sl > 0 ? { x: x / sl, y: y / sl } : { x: 0, y: 0 };
+  }
+
   let best: { x: number; y: number } | undefined;
   let bestD = Infinity;
   // Gemas, ATP e itens; a ampola e a cápsula precisam ser tocadas, então o robô vai até elas.
@@ -100,8 +137,6 @@ function botMove(run: RunState): { x: number; y: number } {
       best = g;
     }
   }
-  let x = flee > 0 ? (fx / flee) * 0.6 : 0;
-  let y = flee > 0 ? (fy / flee) * 0.6 : 0;
   if (best && bestD > 4) {
     const len = Math.sqrt(bestD);
     x += (best.x - agent.x) / len;
