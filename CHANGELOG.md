@@ -4,6 +4,8 @@ O que mudou em cada versão do Dopamina Blaster. O jogo mostra este arquivo em O
 
 ## Em desenvolvimento
 
+## v0.15.0 · 23/10/2026
+
 ### Ajustes
 - Os objetos do mapa agora aparecem em grupos que fazem sentido no corpo: lóbulos do fígado (hepatócitos em volta da veia central), placas amiloides cercadas de astrócitos, colônias de bactérias no muco, cachos de alvéolos, hemácias empilhadas e outros. Sempre sobra uma passagem entre os grupos.
 - Pegar um item do chão mostra o nome dele subindo em cima do agente, maior e em dourado (antes era pequeno, sumia rápido e não aparecia no ATP).
