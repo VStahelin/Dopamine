@@ -43,6 +43,8 @@ import { SCENES } from './keys';
 import { AUDIO } from '../../config';
 import { music } from '../audio/music';
 import { runMusic } from '../audio/musicLogic';
+import { sfx } from '../audio/sfx';
+import { hurtSound, lowHealthTick } from '../audio/sfxLogic';
 
 /** Passos de simulação no máximo por quadro, para não travar depois de uma pausa longa. */
 const MAX_STEPS_PER_FRAME = 8;
@@ -181,6 +183,8 @@ export class RunScene extends Phaser.Scene {
   /** Dano contínuo somado por região do campo, e recuperação somada. */
   private areaSums = new Map<string, { x: number; y: number; amount: number }>();
   private healSum = 0;
+  /** Segundos até repetir o aviso de interações baixas. */
+  private lowHealthTimer = 0;
   private sumTimer = 0;
   private lifeGfx!: Phaser.GameObjects.Graphics;
   /** Modo debug (Opções): hitboxes e números da run. */
@@ -235,6 +239,7 @@ export class RunScene extends Phaser.Scene {
     this.floaters = [];
     this.areaSums.clear();
     this.healSum = 0;
+    this.lowHealthTimer = 0;
     this.sumTimer = 0;
 
     this.detail = 0;
@@ -384,6 +389,15 @@ export class RunScene extends Phaser.Scene {
         break;
       }
     }
+    const { agent, stats } = this.run;
+    const low = lowHealthTick(
+      agent.interactions / stats.maxInteractions,
+      this.lowHealthTimer,
+      deltaMs / 1000,
+      AUDIO.sfx,
+    );
+    this.lowHealthTimer = low.timer;
+    if (low.play && !this.run.over) sfx.play('lowHealth');
   }
 
   private viewRadius(): number {
@@ -487,13 +501,22 @@ export class RunScene extends Phaser.Scene {
         if (kind === 'area') this.addAreaDamage(ev.x, ev.y, ev.amount);
         else this.showFloater(ev.x, ev.y, hitLabel(kind, ev.amount), kind);
       }
-      if (ev.type === 'heal') this.healSum += ev.amount;
-      if (ev.type === 'dodge') this.showFloater(a.x, a.y - 12, 'ESQUIVA', 'info');
+      if (ev.type === 'heal') {
+        this.healSum += ev.amount;
+        if (ev.amount >= AUDIO.sfx.healMinAmount) sfx.play('heal');
+      }
+      if (ev.type === 'dodge') {
+        this.showFloater(a.x, a.y - 12, 'ESQUIVA', 'info');
+        sfx.play('dodge');
+      }
+      if (ev.type === 'specialReady') sfx.play('specialReady');
       if (ev.type === 'revive') {
+        sfx.play('revive');
         this.showFloater(a.x, a.y - 14, 'SEGUNDA DOSE!', 'info');
         this.cameras.main.flash(250, 57, 211, 240);
       }
       if (ev.type === 'hurt') {
+        sfx.play(hurtSound(ev.amount, ev.blocked, this.run.stats.maxInteractions, AUDIO.sfx));
         this.cameras.main.shake(90, 0.006);
         this.showFloater(a.x, a.y - 14, `-${Math.round(ev.amount)}`, 'hurt');
         this.agentSprite.setTint(PALETTE.interaction).setTintMode(Phaser.TintModes.FILL);
@@ -1064,6 +1087,7 @@ export class RunScene extends Phaser.Scene {
 
     if (this.run.over && !this.overHandled) {
       this.overHandled = true;
+      if (!this.gaveUp) sfx.play('death');
       const result = runResult(this.run);
       const recorded = recordRun(getSave(this), result);
       const { newRecords } = recorded;

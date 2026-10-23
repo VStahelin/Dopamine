@@ -204,12 +204,15 @@ export type RunEvent =
   | { type: 'dodge' }
   | { type: 'revive' }
   | { type: 'kill'; x: number; y: number; kind: EnemyKind }
-  | { type: 'hurt'; amount: number }
+  /** `blocked`: o que a Membrana segurou do golpe. */
+  | { type: 'hurt'; amount: number; blocked: number }
   | { type: 'shoot'; weapon: WeaponId }
   | { type: 'cone'; x: number; y: number; angle: number; range: number; spread: number }
   | { type: 'beam'; x: number; y: number; angle: number; length: number; width: number }
   | { type: 'strike'; x: number; y: number; radius: number }
   | { type: 'special'; kind: string }
+  /** O especial ganhou a primeira carga: o botão ficou pronto. */
+  | { type: 'specialReady' }
   | { type: 'boss'; kind: EnemyKind }
   | { type: 'aggregate'; kind: EnemyKind }
   /** Uma formação (ou a crise) vai nascer do lado de `angle`, visto do agente. */

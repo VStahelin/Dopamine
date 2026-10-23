@@ -32,6 +32,7 @@ import {
   type DropsConfig,
   ITEM_IDS,
   MUSIC_TRACKS,
+  SFX_IDS,
   type EconomyConfig,
   type EnemyDef,
   type IdleAgentKind,
@@ -62,6 +63,7 @@ export {
   MAP_ENVIRONMENTS,
   MUSIC_TRACKS,
   RUN_STAT_KEYS,
+  SFX_IDS,
   SECTORS,
   SUPPLEMENT_RARITIES,
 } from './types';
@@ -223,6 +225,10 @@ function loadAudio(): AudioConfig {
     if (!t) throw new Error(`Configuração inválida em audio.json: falta a faixa "${id}"`);
     if (t.loop && !(t.loopFrom !== undefined && t.loopTo !== undefined && t.loopFrom < t.loopTo))
       throw new Error(`Configuração inválida em audio.json: loop da faixa "${id}"`);
+  }
+  for (const id of SFX_IDS) {
+    if (!audio.sfx.effects[id])
+      throw new Error(`Configuração inválida em audio.json: falta o efeito "${id}"`);
   }
   return audio;
 }

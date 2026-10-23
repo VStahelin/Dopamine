@@ -4,7 +4,7 @@
 
 O som do Farmaco Battle é **chiptune metal**: os canais de um console 8/16-bit (pulso, triângulo, ruído e o FM do Mega Drive) tocando riffs de metal, com guitarra distorcida e bateria de bumbo duplo por cima. As músicas são feitas num app de geração de música, fora do repositório; esta aba define o tema, a lista de faixas, como o jogo troca de música e o formato de entrega, com um prompt pronto para cada faixa.
 
-**A música já está no jogo** (v0.14.0): todas as faixas e jingles abaixo, menos `bossIn` e `crisisIn`, que ainda não foram gerados. Os efeitos sonoros ainda são proposta. Volumes, tempos de troca e a lista de faixas ficam em `src/config/audio.json`; o player está em `src/game/audio/` (veja [Como entra no jogo](#como-entra-no-jogo)).
+**A música já está no jogo** (v0.14.0): todas as faixas e jingles abaixo, menos `bossIn` e `crisisIn`, que ainda não foram gerados. Dos efeitos sonoros, os 9 do agente já tocam ([efeitos-sonoros.md](efeitos-sonoros.md#como-entra-no-jogo)). Volumes, tempos de troca e a lista de faixas ficam em `src/config/audio.json`; o player está em `src/game/audio/` (veja [Como entra no jogo](#como-entra-no-jogo)).
 
 ## O tema
 
@@ -205,9 +205,9 @@ As faixas que o Vitor gerou ficam em `audio/musicas/` com o nome que saíram do 
 - Volume padrão da música, os passos do botão nas Opções, o volume abafado e a frequência do filtro, o volume da run durante a crise e durante um jingle.
 - Tempo de crossfade e os minutos de `run2` e `run3`.
 - Lista de faixas, na ordem em que são baixadas, com o arquivo de origem, os pontos de loop e o `rev`.
-- Efeitos: ainda não entraram.
+- Efeitos: os limites e regras do grupo `sfx` e os arquivos de cada efeito ([efeitos-sonoros.md](efeitos-sonoros.md#como-entra-no-jogo)).
 
-Nas **Opções**, a aba Som ([menu.md](menu.md#opções)) tem Mudo, os volumes Geral, Música e Efeitos em passos de 10% (o Geral multiplica os outros), Abafar na pausa e Tocar em segundo plano, tudo no save (`options.sound`). O volume de Efeitos já fica guardado e passa a valer quando os efeitos entrarem.
+Nas **Opções**, a aba Som ([menu.md](menu.md#opções)) tem Mudo, os volumes Geral, Música e Efeitos em passos de 10% (o Geral multiplica os outros), Abafar na pausa e Tocar em segundo plano, tudo no save (`options.sound`). O volume de Efeitos vale para os efeitos que já estão no jogo e toca uma amostra ao mudar.
 
 ## O que falta decidir
 

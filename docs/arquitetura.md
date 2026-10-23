@@ -47,7 +47,7 @@ A regra de dependência é verificada pelo ESLint (`no-restricted-imports` em [e
 | `idle` | [IdleScene.ts](../src/game/scenes/IdleScene.ts) | Campo longo (prancheta "Tela de batalha"): BASE, ondas, pool de agentes, melhorias e x2. A simulação roda no [idleRunner](../src/game/idle/idleRunner.ts), mesmo com a tela fechada |
 | `levelUp`, `pause`, `gameOver` | [LevelUpScene.ts](../src/game/scenes/LevelUpScene.ts), [PauseScene.ts](../src/game/scenes/PauseScene.ts), [GameOverScene.ts](../src/game/scenes/GameOverScene.ts) | Telas por cima da run; a pausa tem as abas Arsenal, Atributos e Run (duas colunas na tela deitada) e abre as Opções por cima |
 
-A música fica em [src/game/audio/](../src/game/audio/music.ts): um player único em Web Audio, ligado ao contexto de som do Phaser, que baixa as faixas de `public/audio/music/` em segundo plano (OGG ou M4A, o que o navegador tocar), troca com crossfade e repete só o trecho de loop. Cada tela pede a sua faixa no `create`; a run calcula a música a cada quadro com [musicLogic.ts](../src/game/audio/musicLogic.ts) (tempo, crise, chefe, telas por cima). As faixas ficam fora do precache e entram no cache `dopamina-audio` do service worker na primeira vez.
+A música fica em [src/game/audio/](../src/game/audio/music.ts): um player único em Web Audio, ligado ao contexto de som do Phaser, que baixa as faixas de `public/audio/music/` em segundo plano (OGG ou M4A, o que o navegador tocar), troca com crossfade e repete só o trecho de loop. Cada tela pede a sua faixa no `create`; a run calcula a música a cada quadro com [musicLogic.ts](../src/game/audio/musicLogic.ts) (tempo, crise, chefe, telas por cima). As faixas ficam fora do precache e entram no cache `dopamina-audio` do service worker na primeira vez. Os efeitos sonoros têm um player próprio no mesmo contexto ([sfx.ts](../src/game/audio/sfx.ts)), que baixa `public/audio/sfx/` do mesmo jeito; a run toca cada um pelos eventos do `core` (`hurt`, `heal`, `dodge`, `revive`, `specialReady`).
 
 As telas de interface usam [uiLayout.ts](../src/game/ui/uiLayout.ts): zoom inteiro a partir do canto superior esquerdo e layout refeito a cada redimensionamento.
 
@@ -64,7 +64,7 @@ As telas de interface usam [uiLayout.ts](../src/game/ui/uiLayout.ts): zoom intei
 
 Fora dessas camadas:
 
-- **`tools/audio/`**: `music.py` corta os loops e converte as músicas de `audio/musicas/` para `public/audio/music/` ([sonoplastia.md](sonoplastia.md#como-entra-no-jogo)).
+- **`tools/audio/`**: `music.py` corta os loops e converte as músicas de `audio/musicas/` para `public/audio/music/` ([sonoplastia.md](sonoplastia.md#como-entra-no-jogo)); `sfx.py` converte os efeitos de `audio/efeitos/` para `public/audio/sfx/` ([efeitos-sonoros.md](efeitos-sonoros.md#como-entra-no-jogo)).
 - **`tools/sim/`**: `npm run sim` roda o simulador de `src/core/sim/` (um robô joga runs seguidas e compra entre elas) e mostra a curva de progressão da meta. `node tools/sim/still.mjs` roda um robô parado com cada agente, para ver se ficar parado ainda segura a run.
 - **`tests/`** ou arquivos `*.test.ts` ao lado do código: testes do `core`.
 
@@ -95,7 +95,7 @@ src/
 public/          favicon; manifest do PWA e fontes na fase 6
 tools/sim/       simulador de progressão
 tools/sprites/   gerador dos PNGs de sprite
-tools/audio/     corte dos loops e conversão das músicas
+tools/audio/     corte dos loops e conversão das músicas e dos efeitos
 .github/         workflow de CI (verificações, sem deploy)
 docs/            design, roadmap, arquitetura e decisões
 ```
@@ -133,6 +133,7 @@ Precisa de Node 20.19 ou mais novo.
 | `npm run sim` | Simulador de progressão: runs seguidas com um robô, compras entre elas, primeiro desbloqueio e paredes de grind (`-- --runs 30 --max 360`) |
 | `npm run sprites:build` | Gera os PNGs de `public/sprites/` a partir dos dados de `src/assets/sprites/` |
 | `python3 tools/audio/music.py` | Corta os loops e converte as músicas de `audio/musicas/` para `public/audio/music/` (precisa de numpy e ffmpeg; [sonoplastia.md](sonoplastia.md#como-entra-no-jogo)) |
+| `python3 tools/audio/sfx.py` | Converte os efeitos de `audio/efeitos/` para `public/audio/sfx/` (precisa de ffmpeg; [efeitos-sonoros.md](efeitos-sonoros.md#como-entra-no-jogo)) |
 | `npm run sprites:check` | Confere se os PNGs estão iguais aos dados (faz parte do `npm run check`) |
 | `npm run serve` | Serve a build publicada localmente, em HTTPS, para testar atualizações no PC |
 | `npm version minor` + `git push --follow-tags` | Gera uma versão: dispara o deploy no GitHub Pages (skills `criar-versao` e `publicar-versao`) |

@@ -258,7 +258,7 @@ function touchAgent(state: RunState, dt: number): void {
   const amount = Math.max(rules.run.minDamageTaken, hit - stats.armor);
   agent.interactions = Math.max(0, agent.interactions - amount);
   state.tally.interactionsLost += amount;
-  state.events.push({ type: 'hurt', amount });
+  state.events.push({ type: 'hurt', amount, blocked: Math.max(0, hit - amount) });
   onHurt(state);
   // Reflexo: devolve parte do dano a quem encostou.
   if (stats.thorns > 0) damageEnemy(state, attacker, hit * stats.thorns);

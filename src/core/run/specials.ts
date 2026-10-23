@@ -44,6 +44,7 @@ export function updateSpecial(state: RunState, pressed: boolean, dt: number): vo
     sp.cooldown = Math.max(0, sp.cooldown - dt);
     if (sp.cooldown === 0) {
       sp.charges++;
+      if (sp.charges === 1) state.events.push({ type: 'specialReady' });
       if (sp.charges < max) sp.cooldown = specialCooldown(state);
     }
   }

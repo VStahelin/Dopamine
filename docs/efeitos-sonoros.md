@@ -2,7 +2,7 @@
 
 23 de outubro de 2026 · Vitor
 
-A lista enxuta de efeitos sonoros (SFX) do jogo: **47 efeitos**, dos quais os 9 do agente já foram feitos pelo Vitor e **38 faltam gerar**; os especiais dos seis agentes que ainda não estão no jogo vêm depois, junto com eles. Cada um tem o id do arquivo, quando toca, duração, prioridade e um prompt pronto para colar num app de geração de efeitos. O tema, a música e a entrega dos arquivos estão em [sonoplastia.md](sonoplastia.md). Os arquivos brutos vão para [audio/efeitos/](../audio/efeitos/README.md). Nada de efeito entrou no código ainda.
+A lista enxuta de efeitos sonoros (SFX) do jogo: **47 efeitos**, dos quais os 9 do agente já foram feitos pelo Vitor e **38 faltam gerar**; os especiais dos seis agentes que ainda não estão no jogo vêm depois, junto com eles. Cada um tem o id do arquivo, quando toca, duração, prioridade e um prompt pronto para colar num app de geração de efeitos. O tema, a música e a entrega dos arquivos estão em [sonoplastia.md](sonoplastia.md). Os arquivos brutos vão para [audio/efeitos/](../audio/efeitos/README.md). Os 9 do agente já tocam no jogo (veja [Como entra no jogo](#como-entra-no-jogo)).
 
 ## Resumo
 
@@ -191,13 +191,26 @@ A primeira versão tinha 131 efeitos. Os 84 que saíram viraram reaproveitamento
 
 Se algum desses fizer falta quando o som estiver no jogo, ele volta como um arquivo próprio com o mesmo id.
 
-## Configuração (quando virar código)
+## Como entra no jogo
 
-Um bloco `sfx` em `src/config/audio.json`, com o tipo em `src/config/types.ts`:
+Os 9 efeitos do agente já tocam na run:
 
-- Por efeito: arquivo, volume relativo, prioridade e se sobe de tom em sequência.
-- Por uso: qual arquivo toca, com que velocidade (altura) e volume. É aqui que `fentonFire` vira `radicalFire` repetido, por exemplo.
-- Geral: limite de cópias por id, intervalo mínimo, limite total, variação de altura, ducking.
+| Id | Quando toca no jogo |
+| --- | --- |
+| `hurt` | Uma molécula encosta e tira interações |
+| `hurtHeavy` | O golpe tira 10% ou mais das interações máximas |
+| `shieldBlock` | A Membrana segurou pelo menos metade do golpe (no lugar de `hurt`) |
+| `heal` | Uma cura de 5 interações ou mais (o Soro, por exemplo); o roubo de vida, de 1 em 1, fica mudo |
+| `lowHealth` | Interações abaixo de 25%: toca ao cair e repete a cada 4 s |
+| `revive` | Segunda dose |
+| `death` | Fim de run por interações zeradas (desistir não toca) |
+| `dodge` | Esquiva |
+| `specialReady` | O especial ganha a primeira carga; também é a amostra ao mexer no volume de Efeitos nas Opções |
+
+- **Arquivos:** os brutos ficam em `audio/efeitos/`, ligados por `source` em `src/config/audio.json` (grupo `sfx.effects`). `python3 tools/audio/sfx.py` tira o silêncio do começo e do fim, leva todos a −18 LUFS, converte para mono e grava `public/audio/sfx/<id>.ogg` e `.m4a`.
+- **Player:** `src/game/audio/sfx.ts`, no mesmo contexto Web Audio da música. Cada toque sorteia a altura em ±5%, com no máximo 4 cópias do mesmo efeito e 40 ms entre dois toques. A escolha entre `hurt`, `hurtHeavy` e `shieldBlock` e o aviso de `lowHealth` ficam em `sfxLogic.ts`, com testes.
+- **Efeito novo ou trocado:** ponha o arquivo em `audio/efeitos/`, adicione (ou aponte) o `source` no `audio.json` e o id em `SFX_IDS` (`src/config/types.ts`), rode `python3 tools/audio/sfx.py` e suba o `rev` do efeito trocado.
+- **Ainda não:** reaproveitar um arquivo com outra altura, sequência que sobe, prioridade e ducking entram junto com os efeitos de armas e coleta.
 
 ## O que falta decidir
 

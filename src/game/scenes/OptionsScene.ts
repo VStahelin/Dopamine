@@ -13,6 +13,7 @@ import { SCENES } from './keys';
 import type { SoundOptions } from '../../config';
 import type { Options } from '../../core/save/saveData';
 import { music } from '../audio/music';
+import { sfx } from '../audio/sfx';
 import { stepVolume } from '../audio/musicLogic';
 
 type Tab = 'sound' | 'screen' | 'game';
@@ -31,7 +32,7 @@ const WIDE = 760;
 const VOLUMES: [keyof SoundOptions & `${string}Volume`, string, string][] = [
   ['masterVolume', 'Geral', 'Multiplica música e efeitos'],
   ['musicVolume', 'Música', 'Trilhas do título, hub, run e jingles'],
-  ['sfxVolume', 'Efeitos sonoros', 'Armas, moléculas, itens e botões (chegam em breve)'],
+  ['sfxVolume', 'Efeitos sonoros', 'O agente; armas, itens e botões chegam em breve'],
 ];
 
 /** Texto do botão de atualização para cada estado do gestor. */
@@ -124,6 +125,7 @@ export class OptionsScene extends Phaser.Scene {
     const options = change(now.options);
     setSave(this, { ...now, options });
     music.applySound(options.sound);
+    sfx.applySound(options.sound);
     this.build();
   }
 
@@ -142,6 +144,7 @@ export class OptionsScene extends Phaser.Scene {
     }
     setSave(this, save);
     music.applySound(save.options.sound);
+    sfx.applySound(save.options.sound);
     this.setNote('SAVE IMPORTADO');
   }
 
@@ -424,9 +427,11 @@ export class OptionsScene extends Phaser.Scene {
 
     y = this.section(out, x, y, width, 'VOLUME');
     for (const [key, name, hint] of VOLUMES) {
-      y = this.volumeRow(out, x, y, width, name, hint, sound[key], sound.muted, (v) =>
-        this.setSound({ [key]: v }),
-      );
+      y = this.volumeRow(out, x, y, width, name, hint, sound[key], sound.muted, (v) => {
+        this.setSound({ [key]: v });
+        // Amostra do volume novo dos efeitos.
+        if (key !== 'musicVolume') sfx.play('specialReady');
+      });
     }
 
     y = this.section(out, x, y + 4, width, 'COMPORTAMENTO');

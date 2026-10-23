@@ -893,7 +893,7 @@ export interface SoundOptions {
   /** Multiplica música e efeitos. */
   masterVolume: number;
   musicVolume: number;
-  /** Efeitos sonoros: guardado desde já, toca quando os efeitos entrarem. */
+  /** Efeitos sonoros. */
   sfxVolume: number;
   /** Música abafada com a pausa, o level up e a cápsula abertos. */
   muffleOnPause: boolean;
@@ -917,4 +917,50 @@ export interface AudioConfig {
   /** Minuto da run em que entra cada faixa mais pesada. */
   runTrackMinutes: { run2: number; run3: number };
   tracks: Record<MusicTrackId, MusicTrackDef>;
+  sfx: SfxConfig;
+}
+
+/** Ids dos efeitos sonoros que já estão no jogo (docs/efeitos-sonoros.md). */
+export const SFX_IDS = [
+  'hurt',
+  'hurtHeavy',
+  'heal',
+  'lowHealth',
+  'revive',
+  'death',
+  'dodge',
+  'shieldBlock',
+  'specialReady',
+] as const;
+export type SfxId = (typeof SFX_IDS)[number];
+
+/** Um efeito em `public/audio/sfx/<id>.ogg` e `.m4a`, gerado por `tools/audio/sfx.py`. */
+export interface SfxDef {
+  /** Arquivo original em `audio/efeitos/`. */
+  source: string;
+  /** Volume relativo do efeito, de 0 a 1. */
+  volume: number;
+  /** Sobe quando o arquivo muda, para o cache do jogo baixar de novo. */
+  rev: number;
+}
+
+/** Efeitos sonoros (docs/efeitos-sonoros.md): mixagem, quando cada um toca e os arquivos. */
+export interface SfxConfig {
+  /** Volume (LUFS) de todos os efeitos depois de `tools/audio/sfx.py`. */
+  targetLufs: number;
+  /** Altura sorteada a cada toque: ± esta fração. */
+  pitchJitter: number;
+  /** Cópias do mesmo efeito tocando ao mesmo tempo, no máximo. */
+  maxVoicesPerId: number;
+  /** Intervalo mínimo entre dois toques do mesmo efeito, em segundos. */
+  minGapSeconds: number;
+  /** Dano a partir desta fração das interações máximas toca `hurtHeavy`. */
+  heavyHurtRatio: number;
+  /** Cura menor que isto (em interações) não toca `heal`, para o roubo de vida não virar ruído. */
+  healMinAmount: number;
+  /** Abaixo desta fração das interações máximas toca `lowHealth`. */
+  lowHealthRatio: number;
+  /** Intervalo entre dois avisos de `lowHealth`, em segundos. */
+  lowHealthRepeatSeconds: number;
+  effects: Record<SfxId, SfxDef>;
 }

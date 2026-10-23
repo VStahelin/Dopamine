@@ -2,6 +2,7 @@ import * as Phaser from 'phaser';
 import { preloadSprites } from '../render/textures';
 import { idleRunner } from '../idle/idleRunner';
 import { music } from '../audio/music';
+import { sfx } from '../audio/sfx';
 import { initSave, loadSave } from '../storage/saveStore';
 import { setLoaderProgress, setLoaderStatus } from '../ui/loader';
 import { SCENES } from './keys';
@@ -23,6 +24,7 @@ export class BootScene extends Phaser.Scene {
     void loadSave().then((save) => {
       initSave(this, save);
       music.start(this.game, save.options.sound);
+      sfx.start(this.game, save.options.sound);
       idleRunner.start(this.game);
       this.scene.start(SCENES.title);
     });

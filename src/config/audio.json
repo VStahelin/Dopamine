@@ -95,5 +95,62 @@
       "loop": false,
       "rev": 1
     }
+  },
+  "sfx": {
+    "targetLufs": -18,
+    "pitchJitter": 0.05,
+    "maxVoicesPerId": 4,
+    "minGapSeconds": 0.04,
+    "heavyHurtRatio": 0.1,
+    "healMinAmount": 5,
+    "lowHealthRatio": 0.25,
+    "lowHealthRepeatSeconds": 4,
+    "effects": {
+      "hurt": {
+        "source": "Hurt.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "hurtHeavy": {
+        "source": "hurtHeavy.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "heal": {
+        "source": "heal.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "lowHealth": {
+        "source": "lowHealth.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "revive": {
+        "source": "revive.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "death": {
+        "source": "death.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "dodge": {
+        "source": "dodge.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "shieldBlock": {
+        "source": "shieldBlock.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "specialReady": {
+        "source": "specialReady.mp3",
+        "volume": 1,
+        "rev": 1
+      }
+    }
   }
 }
