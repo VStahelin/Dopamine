@@ -52,11 +52,14 @@
     "minGapSeconds": 20,
     "maxGapSeconds": 60,
     "hpMultiplier": 12,
-    "sizeMultiplier": 1.5,
+    "sizeMultiplier": 2.2,
     "speedMultiplier": 0.7,
     "xpMultiplier": 12,
     "minRarity": "rare",
-    "ampouleChance": 0.15
+    "ampouleChance": 0.15,
+    "tint": "#D9A0FF",
+    "glowColor": "#FFE08A",
+    "glowPulsesPerSecond": 1.5
   },
   "formations": {
     "firstAtSeconds": 75,

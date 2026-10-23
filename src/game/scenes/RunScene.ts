@@ -55,6 +55,10 @@ const LIFE_PIPS = 10;
 /** Os números sobem e somem em cerca de 0,6 s. */
 const FLOATER_SECONDS = 0.6;
 
+/** Cores do agregado (fase 5.10): molécula pintada e brilho pulsante atrás dela. */
+const AGGREGATE_TINT = parseInt(RUN.aggregates.tint.slice(1), 16);
+const AGGREGATE_GLOW = parseInt(RUN.aggregates.glowColor.slice(1), 16);
+
 interface Floater {
   text: Phaser.GameObjects.Text;
   life: number;
@@ -150,6 +154,8 @@ export class RunScene extends Phaser.Scene {
   private ground!: Phaser.GameObjects.TileSprite;
   private agentSprite!: Phaser.GameObjects.Image;
   private enemySprites: Phaser.GameObjects.Image[] = [];
+  /** Brilho atrás dos agregados: a mesma molécula, pintada e um pouco maior. */
+  private glowSprites: Phaser.GameObjects.Image[] = [];
   private projectileSprites: Phaser.GameObjects.Image[] = [];
   private gemSprites: Phaser.GameObjects.Image[] = [];
   private coinSprites: Phaser.GameObjects.Image[] = [];
@@ -212,6 +218,7 @@ export class RunScene extends Phaser.Scene {
     this.gameOverMusic = false;
     this.gaveUp = false;
     this.enemySprites = [];
+    this.glowSprites = [];
     this.projectileSprites = [];
     this.gemSprites = [];
     this.coinSprites = [];
@@ -394,7 +401,7 @@ export class RunScene extends Phaser.Scene {
     const frozen = this.run.effects.freeze > 0;
 
     sync(this, this.enemySprites, this.run.enemies, 5, (s, e) => {
-      // O agregado é a mesma molécula, maior (fase 5.10).
+      // O agregado é a mesma molécula, gigante e de outra cor, com brilho (fase 5.10).
       const size = e.aggregate ? RUN.aggregates.sizeMultiplier : 1;
       s.setTexture(this.tex(ENEMY_TEXTURES[e.kind]))
         .setScale(size / this.detail)
@@ -404,7 +411,20 @@ export class RunScene extends Phaser.Scene {
       // Gelo seco ou Nitrogênio líquido: moléculas pintadas de azul.
       else if (frozen || e.frozen > 0) {
         s.setTint(PALETTE.water).setTintMode(Phaser.TintModes.MULTIPLY);
-      } else s.clearTint();
+      } else if (e.aggregate) s.setTint(AGGREGATE_TINT).setTintMode(Phaser.TintModes.MULTIPLY);
+      else s.clearTint();
+    });
+    const pulse =
+      0.5 + 0.5 * Math.sin(this.run.time * Math.PI * 2 * RUN.aggregates.glowPulsesPerSecond);
+    const aggregates = this.run.enemies.filter((e) => e.aggregate && e.hp > 0);
+    sync(this, this.glowSprites, aggregates, 4.9, (s, e) => {
+      s.setTexture(this.tex(ENEMY_TEXTURES[e.kind]))
+        .setScale((RUN.aggregates.sizeMultiplier * (1.12 + 0.06 * pulse)) / this.detail)
+        .setPosition(e.x, e.y)
+        .setFlipX(e.x > agent.x)
+        .setTint(AGGREGATE_GLOW)
+        .setTintMode(Phaser.TintModes.FILL)
+        .setAlpha(0.35 + 0.35 * pulse);
     });
     this.drawFields();
     const electrons = this.run.weapons.flatMap((w, i) =>
@@ -674,20 +694,8 @@ export class RunScene extends Phaser.Scene {
     }
     this.drawItemEffects(g, px);
     this.drawStructures(g, px);
-    this.drawAggregates(g, px);
     this.drawFormationWarnings(g);
     this.drawCrisisTint(g);
-  }
-
-  /**
-   * Agregados: contorno vermelho em volta (a seta na borda fica em drawEdgeArrows, fase 5.10).
-   */
-  private drawAggregates(g: Phaser.GameObjects.Graphics, px: number): void {
-    for (const e of this.run.enemies) {
-      if (!e.aggregate || e.hp <= 0) continue;
-      g.fillStyle(PALETTE.interaction, 0.9);
-      pixelRing(g, e.x, e.y, e.radius + 3, 2, px);
-    }
   }
 
   /**

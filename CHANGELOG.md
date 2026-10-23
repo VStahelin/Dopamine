@@ -4,6 +4,9 @@ O que mudou em cada versão do Dopamina Blaster. O jogo mostra este arquivo em O
 
 ## Em desenvolvimento
 
+### Ajustes
+- O agregado (mini chefe) ficou gigante, roxo e com um brilho dourado pulsando, sem o círculo vermelho em volta.
+
 ### Correções
 - As Opções abertas pelo menu depois de uma run apareciam como se fossem da pausa, e VOLTAR travava o jogo.
 

@@ -51,6 +51,11 @@ export interface AggregateConfig {
   /** Chance de soltar ampola, com raridade mínima `minRarity`: com um por minuto, sempre seria demais. */
   ampouleChance: number;
   minRarity: SupplementRarity;
+  /** Cor da molécula (multiplica o sprite), em #RRGGBB: o agregado tem cor própria. */
+  tint: string;
+  /** Brilho pulsante em volta, em #RRGGBB, e quantas pulsadas por segundo. */
+  glowColor: string;
+  glowPulsesPerSecond: number;
 }
 
 /**
