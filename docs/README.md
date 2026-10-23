@@ -29,4 +29,5 @@ Documento de conceito do jogo, um arquivo por aba do [documento original](https:
 | [lacunas-desenvolvimento.md](lacunas-desenvolvimento.md) | O que ainda falta desenvolver, comparando código e docs: priorizado por impacto e esforço, agrupado por área, com a fonte de cada item e a ordem de fases proposta |
 | [roadmap.md](roadmap.md) | Fases de desenvolvimento, do protótipo da run ao lançamento, com status, critérios de saída e decisões que travam cada fase |
 | [arquitetura.md](arquitetura.md) | Estado atual do código: stack, camadas, estrutura de pastas e princípios |
+| [playtests/](playtests/README.md) | Levantamentos de playtest: feedback de quem jogou, anotado e ainda não aplicado, por rodada |
 | [decisoes/](decisoes/README.md) | Registro de decisões técnicas e de design, um arquivo por decisão |
