@@ -1,0 +1,93 @@
+{
+  "musicVolume": 0.6,
+  "volumeSteps": [0, 0.2, 0.4, 0.6, 0.8, 1],
+  "crossfadeSeconds": 1.5,
+  "muffledVolume": 0.5,
+  "muffledLowpassHz": 900,
+  "crisisRunVolume": 0.3,
+  "jingleDuckVolume": 0.35,
+  "runTrackMinutes": {
+    "run2": 10,
+    "run3": 20
+  },
+  "tracks": {
+    "title": {
+      "source": "Tittle - Gallop of the Chip.m4a",
+      "loop": true,
+      "loopFrom": 12.93,
+      "loopTo": 78.52,
+      "rev": 1
+    },
+    "hub": {
+      "source": "Hub - 16-Bit Lab Menu.m4a",
+      "loop": true,
+      "loopFrom": 15.36,
+      "loopTo": 147.61,
+      "rev": 1
+    },
+    "run1": {
+      "source": "Run 1 - 16-Bit Battle.m4a",
+      "loop": true,
+      "loopFrom": 14.85,
+      "loopTo": 110.57,
+      "rev": 1
+    },
+    "levelup": {
+      "source": "Level Up.m4a",
+      "loop": false,
+      "rev": 1
+    },
+    "capsule": {
+      "source": "Arcade Reward.m4a",
+      "loop": false,
+      "rev": 1
+    },
+    "gameover": {
+      "source": "Game Over Theme.m4a",
+      "loop": true,
+      "loopFrom": 1.22,
+      "loopTo": 155.42,
+      "rev": 1
+    },
+    "crisis": {
+      "source": "Crisis - 16-Bit Doom.m4a",
+      "loop": true,
+      "loopFrom": 2.92,
+      "loopTo": 19.8,
+      "rev": 1
+    },
+    "boss": {
+      "source": "Boss - 16-Bit Armageddon.m4a",
+      "loop": true,
+      "loopFrom": 8.21,
+      "loopTo": 77.78,
+      "rev": 1
+    },
+    "run2": {
+      "source": "Run 2 - Battle Loop.m4a",
+      "loop": true,
+      "loopFrom": 14.72,
+      "loopTo": 111.49,
+      "rev": 1
+    },
+    "idle": {
+      "source": "Idle - Factory Arpeggios.m4a",
+      "loop": true,
+      "loopFrom": 12.44,
+      "loopTo": 121.37,
+      "rev": 1
+    },
+    "run3": {
+      "source": "Run 3 - 16-Bit Battle.m4a",
+      "loop": true,
+      "loopFrom": 13.08,
+      "loopTo": 136.21,
+      "rev": 1
+    },
+    "alta": {
+      "source": "Victory Fanfare.m4a",
+      "loop": false,
+      "rev": 1
+    }
+  }
+}
