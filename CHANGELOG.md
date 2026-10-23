@@ -4,6 +4,8 @@ O que mudou em cada versão do Farmaco Battle. O jogo mostra este arquivo em Op�
 
 ## Em desenvolvimento
 
+## v0.19.0 · 23/10/2026
+
 ### Novidades
 - Conquistas: a medalha do caso abre 21 metas, como decompor 1.000 radicais livres ou durar 10 minutos. Cada uma dá ATP ou libera de graça um agente ou uma arma, e a tela mostra qual é a próxima.
 - Cápsula de agente: às vezes, depois dos 3 minutos, aparece longe de você uma cápsula com um agente que você ainda não tem. Siga a seta dourada e toque nela para libertá-lo.

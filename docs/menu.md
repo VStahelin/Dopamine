@@ -111,7 +111,16 @@ A barra fica visível em todas as abas; trocar de aba não precisa de Voltar.
 
 ### Tela larga (PC, celular deitado)
 
-O palco fica no centro, os trilhos nas laterais, a linha de ação embaixo do palco e a barra de abas no rodapé, centralizada com largura máxima.
+**Proposta** (pranchetas "Menu no PC" no canvas, 1280×800, esperando o Vitor aprovar). Vale quando a tela é mais larga que alta; no celular em pé nada muda.
+
+- **Barra de status no topo** (76 px, largura toda): retrato do organismo, indivíduo e doença, as 4 barras com o valor e a média, a faixa do próximo objetivo no meio, ATP e Opções (≡, tecla O) à direita.
+- **Trilho à esquerda** (208 px) no lugar da barra de abas do rodapé: as 5 abas em pé, cada uma com a tecla (1 a 5) e Caso sempre em madeira; embaixo os atalhos Compêndio, Conquistas e Recordes (os trilhos do celular). Fora do Caso, o pé do trilho tem um JOGAR compacto (Enter joga de qualquer aba); no Caso, a legenda das teclas.
+- **Caso** ([HubPC](identidade-visual/HubPC.dc.html)): três colunas. À esquerda, o agente da run com a lista para trocar sem sair da aba; no meio, o palco do celular (caso anterior, nome, melhor tempo, scan com o local INDICADO, estrelas, baú), a faixa do local e a linha Campo longo · JOGAR; à direita, os setores, a próxima conquista e os recordes.
+- **Agentes** ([AgentesPC](identidade-visual/AgentesPC.dc.html)): grade 3×3 com retrato, afinidade e local de sinergia; os agentes do idle numa linha embaixo; a ficha completa do agente aberto à direita, com ESCOLHER ou DESBLOQUEAR. Clicar abre a ficha; escolher é o botão da ficha.
+- **Arsenal** ([ArsenalPC](identidade-visual/ArsenalPC.dc.html)): cada arma numa linha com a receita inteira (arma + reagente = evolução) e o preço das bloqueadas; as ações dos agentes; à direita os 16 receptores em duas colunas e os 7 reagentes.
+- **Laboratório** ([LabPC](identidade-visual/LabPC.dc.html)): a árvore deita. A raiz Interações fica à esquerda e cada coluna do meta.json (Força, Química, Corpo, Coleta, Controle, Especial) vira uma trilha da esquerda para a direita; o detalhe do nó (níveis, agora e próximo, requisito e COMPRAR) fica numa coluna à direita.
+- **Organismo** ([OrganismoPC](identidade-visual/OrganismoPC.dc.html)): o corpo com cada local pintado pela saúde do setor dele (Cérebro = Mental, Pulmão = Executiva, Fígado = Social, Intestino = Física) e a ALTA embaixo; os quatro setores em cartões 2×2, com o efeito de agora, as famílias, quem ajuda na run e no campo longo e quem piora. O setor da doença ganha a moldura de madeira.
+- **Novidades** ([NovidadesPC](identidade-visual/NovidadesPC.dc.html)): como as Opções no PC, com as versões numa coluna à esquerda e a versão aberta ao lado; ↑ e ↓ trocam a versão, Esc volta para as Opções.
 
 ## As outras telas
 
@@ -273,7 +282,7 @@ O hub é desenhado para o celular em pé e se adapta esticando o palco ou abrind
 | Celular baixo | 375×667 (16:9) | Palco encolhe até 360 px; a ilustração do organismo diminui um degrau de escala e o baú vai para o lado das estrelas |
 | Celular alto | 412×915 ou mais | Palco cresce; aparece a prévia do caso anterior embaixo, como o capítulo 25 do print |
 | Tablet em pé | 820×1180 | Tudo em escala 2×, coluna central de 540 px; trilhos encostam na coluna |
-| PC ou tablet deitado | 1280×720 ou mais | Coluna central de 480 px com status, palco, ação e abas; os trilhos viram painéis laterais abertos (Recordes e objetivo à direita, organismo e saúde à esquerda) |
+| PC ou tablet deitado | 1280×720 ou mais | Barra de status no topo, abas num trilho à esquerda e o conteúdo da aba em colunas ([Tela larga](#tela-larga-pc-celular-deitado)) |
 
 **Controles**
 

@@ -14,6 +14,12 @@ Ao mudar uma prancheta no canvas, copie o arquivo novo para cá no mesmo commit 
 | Menu principal (protótipo) | [Menu.dc.html](Menu.dc.html) | Hub com status, caso, JOGAR e barra de abas | `src/game/scenes/HubScene.ts` |
 | Opções | [Opcoes.dc.html](Opcoes.dc.html) | Opções com as abas Som (mudo, volumes geral, música e efeitos), Tela e Jogo, do hub e da pausa ([menu.md](../menu.md#opções)) | `src/game/scenes/OptionsScene.ts` |
 | Opções no PC | [OpcoesPC.dc.html](OpcoesPC.dc.html) | As mesmas opções em tela larga, com Som, Tela e Jogo lado a lado e atalhos M (mudo) e Esc | `src/game/scenes/OptionsScene.ts` |
+| Menu no PC: Caso | [HubPC.dc.html](HubPC.dc.html) | Hub em 1280×800: barra de status no topo, trilho de abas à esquerda (teclas 1 a 5, atalhos e JOGAR compacto), painel do agente à esquerda, o caso no meio e organismo, próxima conquista e recordes à direita ([menu.md](../menu.md#tela-larga-pc-celular-deitado)) | `src/game/scenes/HubScene.ts` |
+| Menu no PC: Agentes | [AgentesPC.dc.html](AgentesPC.dc.html) | Grade 3×3 dos agentes da run, agentes do idle embaixo e a ficha do agente aberto à direita (ação, especial, afinidade, perfil, sinergia, saúde, escolher ou desbloquear) | `src/game/ui/catalogViews.ts` (`renderAgents`) |
+| Menu no PC: Arsenal | [ArsenalPC.dc.html](ArsenalPC.dc.html) | Cada arma numa linha com a receita da evolução (arma + reagente = evolução), as ações dos agentes, os 16 receptores em duas colunas e os reagentes | `src/game/ui/catalogViews.ts` (`renderArsenal`) |
+| Menu no PC: Laboratório | [LabPC.dc.html](LabPC.dc.html) | A árvore deitada, uma trilha por coluna saindo da raiz Interações, com a legenda dos estados e o detalhe do nó (níveis, agora e próximo, requisito, comprar) | `src/game/ui/labView.ts` |
+| Menu no PC: Organismo | [OrganismoPC.dc.html](OrganismoPC.dc.html) | O corpo com cada local pintado pela saúde do setor dele, a ALTA embaixo e os quatro setores em cartões (efeito agora, famílias, quem ajuda e quem piora) | `src/game/ui/organismView.ts` |
+| Novidades no PC | [NovidadesPC.dc.html](NovidadesPC.dc.html) | As versões numa coluna e a versão aberta ao lado, no formato das Opções no PC | `src/game/scenes/ChangelogScene.ts` |
 | Sprites de moléculas | [Moleculas.dc.html](Moleculas.dc.html) | Átomos por elemento e moléculas montadas | `src/assets/sprites/molecules.json` |
 | Crônico: HUD de batalha | [CronicoBatalha.dc.html](CronicoBatalha.dc.html) | HUD da run em pé | `src/game/ui/` (HUD da run) |
 | Crônico: pausa e status | [CronicoPausa.dc.html](CronicoPausa.dc.html) | Pausa com arsenal e atributos | `src/game/scenes/PauseScene.ts` |
@@ -33,4 +39,4 @@ Ao mudar uma prancheta no canvas, copie o arquivo novo para cá no mesmo commit 
 | Estruturas de interação (sinapses) | [Estruturas.dc.html](Estruturas.dc.html) | Sinapse, sinapse potenciada, foco inflamatório, coágulo e glândula adrenal, a sinapse enchendo e a seta na borda ([megabonk.md](../megabonk.md)) | `icons.json`, grupo `structures` (a seta "X" vira branca e o jogo tinge) |
 | Suplementos e ampolas | [Suplementos.dc.html](Suplementos.dc.html) | Ampola (fechada e quebrando), o receptor Mutação e os 29 suplementos com a cor da raridade | `icons.json`, grupos `supplements` e `items` |
 
-Falta no canvas: telas próprias para o PC (campo crônico, campo longo e menus em tela larga). Hoje só o level up e as Opções têm versão de PC.
+Falta no canvas: telas próprias para o PC do campo crônico (HUD da run) e do campo longo. Level up, Opções, Compêndio e o menu (Caso, Agentes, Arsenal, Laboratório, Organismo e Novidades) já têm versão de PC; as do menu ainda são proposta, esperando o Vitor aprovar.
