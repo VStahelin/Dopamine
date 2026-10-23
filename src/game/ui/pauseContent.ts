@@ -237,14 +237,26 @@ function supplementGrid(run: RunState): Build {
   };
 }
 
-/** Aba Arsenal: armas, receptores, suplementos e efeitos, com os espaços livres e bloqueados. */
-export function arsenalRows(run: RunState): Build[] {
-  const weaponOpen = Math.floor(run.stats.weaponSlots);
+/** Receptores da run e quantos espaços de arma e de receptor estão abertos. */
+export function slotCounts(run: RunState): {
+  weaponOpen: number;
+  held: PassiveId[];
+  passiveOpen: number;
+} {
   const held = (Object.keys(run.passives) as PassiveId[]).filter(
     (id) => (run.passives[id]?.level ?? 0) > 0,
   );
-  const passiveOpen =
-    Math.floor(run.stats.modifierSlots) + held.filter((id) => PASSIVES[id].freeSlot).length;
+  return {
+    weaponOpen: Math.floor(run.stats.weaponSlots),
+    held,
+    passiveOpen:
+      Math.floor(run.stats.modifierSlots) + held.filter((id) => PASSIVES[id].freeSlot).length,
+  };
+}
+
+/** Aba Arsenal: armas, receptores, suplementos e efeitos, com os espaços livres e bloqueados. */
+export function arsenalRows(run: RunState): Build[] {
+  const { weaponOpen, held, passiveOpen } = slotCounts(run);
   const weaponFill = rowSlots(
     run.weapons.map((w) => weaponSlot(w)),
     weaponOpen,
@@ -280,7 +292,7 @@ export function arsenalRows(run: RunState): Build[] {
 }
 
 /** Grupos da prancheta "Crônico: pausa e status"; level up e risco ficam juntos. */
-const STAT_GROUPS: [(keyof typeof STATS)[], string][] = [
+export const STAT_GROUPS: [(keyof typeof STATS)[], string][] = [
   [['offense'], 'OFENSIVOS'],
   [['defense'], 'DEFENSIVOS'],
   [['mobility'], 'MOBILIDADE E COLETA'],

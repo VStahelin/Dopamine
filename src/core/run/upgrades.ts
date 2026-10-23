@@ -1,6 +1,6 @@
 import type { PassiveDef, PassiveId, RunStatKey, WeaponId } from '../../config';
 import { newWeapon, type RunState } from './state';
-import { computeStats, statDef } from './stats';
+import { computeStats, statDef, type RunStats } from './stats';
 import { weaponMaxLevel } from './weaponParams';
 
 export type UpgradeChoice =
@@ -242,12 +242,45 @@ export function applyUpgrade(state: RunState, choice: UpgradeChoice): void {
 
 /** Recalcula os atributos com os receptores, o receptor nativo e o que a run somou fora deles. */
 export function refreshStats(state: RunState): void {
+  state.stats = statsWith(state, state.passives, state.bonus);
+}
+
+function statsWith(
+  state: RunState,
+  passives: RunState['passives'],
+  extra: RunState['bonus'],
+): RunStats {
   const native = state.rules.agents[state.agentId].nativeReceptor;
-  const bonus = { ...state.bonus };
+  const bonus = { ...extra };
   if (native.stat) {
     bonus[native.stat] = (bonus[native.stat] ?? 0) + native.perLevel * nativeLevel(state);
   }
-  state.stats = computeStats(state.rules, state.passives, bonus);
+  return computeStats(state.rules, passives, bonus);
+}
+
+/**
+ * Atributos depois de um receptor ou bônus, sem mexer na run (prévia do level up). Devolve
+ * `null` para o que não mexe em atributo ou é sorteado na hora (Mutação).
+ */
+export function statsAfter(state: RunState, choice: UpgradeChoice): RunStats | null {
+  if (choice.kind === 'passive') {
+    if (state.rules.passives[choice.id].mutation) return null;
+    const current = state.passives[choice.id] ?? { level: 0, bonus: 0 };
+    const passives = {
+      ...state.passives,
+      [choice.id]: { level: current.level + 1, bonus: current.bonus + choice.amount },
+    };
+    return statsWith(state, passives, state.bonus);
+  }
+  if (choice.kind === 'boost') {
+    const def = state.rules.passives[choice.id];
+    const bonus = { ...state.bonus };
+    for (const stat of [def.stat, def.alsoStat]) {
+      if (stat) bonus[stat] = (bonus[stat] ?? 0) + choice.amount;
+    }
+    return statsWith(state, state.passives, bonus);
+  }
+  return null;
 }
 
 /** Nível do receptor nativo: 1 a cada tantos níveis de run, até o máximo (fase 5.6). */

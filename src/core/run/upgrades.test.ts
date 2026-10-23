@@ -12,6 +12,7 @@ import {
   rerollOffer,
   rollRarity,
   skipLevelUp,
+  statsAfter,
 } from './upgrades';
 
 function runWithLevelUps(n: number, seed = 1) {
@@ -118,5 +119,27 @@ describe('Rerrolar, Pular e Banir', () => {
       run.offer = null;
       expect(levelUpOffer(run).map(choiceKey)).not.toContain(choiceKey(target));
     }
+  });
+});
+
+describe('statsAfter', () => {
+  it('mostra o atributo depois do receptor, sem mexer na run', () => {
+    const run = runWithLevelUps(1);
+    const before = run.stats.damage;
+    const after = statsAfter(run, {
+      kind: 'passive',
+      id: 'reactivity',
+      level: 1,
+      rarity: 0,
+      amount: 0.2,
+    });
+    expect(after?.damage).toBeCloseTo(before + 0.2);
+    expect(run.stats.damage).toBe(before);
+    expect(run.passives.reactivity).toBeUndefined();
+  });
+
+  it('não prevê arma nem cura', () => {
+    const run = runWithLevelUps(1);
+    expect(statsAfter(run, { kind: 'heal', amount: 30 })).toBeNull();
   });
 });

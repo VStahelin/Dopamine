@@ -4,6 +4,10 @@ O que mudou em cada versão do Dopamina Blaster. O jogo mostra este arquivo em O
 
 ## Em desenvolvimento
 
+### Novidades
+- Tela de level up nova: cada cartão mostra o que muda ("Reatividade 100% → 120%", "NV 3 → NV 4") e avisa quando leva a uma evolução; os espaços de arma e receptor aparecem em cima; Rerrolar, Pular e Banir ficam sempre à vista, com os usos, e os banidos da run aparecem embaixo.
+- No PC, o level up tem os atributos à esquerda e o arsenal à direita; passar o mouse num cartão mostra o efeito nos dois. Teclas 1 a 5 escolhem, R rerrola, S pula e B bane.
+
 ## v0.12.1 · 23/10/2026
 
 ### Novidades

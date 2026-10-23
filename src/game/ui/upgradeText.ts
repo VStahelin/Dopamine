@@ -4,11 +4,16 @@ import {
   WEAPONS,
   type AgentDef,
   type PassiveDef,
+  type PassiveId,
   type RunStatKey,
+  type WeaponId,
   type WeaponParams,
 } from '../../config';
-import type { UpgradeChoice } from '../../core/run/upgrades';
-import { levelStep } from '../../core/run/weaponParams';
+import type { RunState } from '../../core/run/state';
+import { statDef, type RunStats } from '../../core/run/stats';
+import { coinValue, statsAfter, type UpgradeChoice } from '../../core/run/upgrades';
+import { levelStep, weaponMaxLevel } from '../../core/run/weaponParams';
+import { statValue } from './statText';
 
 const pct = (v: number) => `${Math.round(Math.abs(v) * 100)}%`;
 const num = (v: number) => Math.abs(v).toLocaleString('pt-BR', { maximumFractionDigits: 1 });
@@ -153,4 +158,77 @@ export function describeChoice(choice: UpgradeChoice): ChoiceText {
         description: `ATP igual a ${num(choice.coins)} moedas`,
       };
   }
+}
+
+/** Prévia de uma opção: o número que muda e a dica de evolução (prancheta "Crônico: level up"). */
+export interface ChoicePreview {
+  /** "Reatividade 130% → 150%", "Raio UV NV 4 → NV 5", "Armas 4 → 5/6". */
+  line?: string;
+  /** "MAX + COENZIMA → ENZIMA": a escolha leva a uma evolução. */
+  evo?: string;
+  /** Atributos depois da escolha, para a coluna de atributos do PC. */
+  after?: RunStats;
+}
+
+/** O que muda na run com a opção, sem mexer nela. */
+export function choicePreview(run: RunState, choice: UpgradeChoice): ChoicePreview {
+  const after = statsAfter(run, choice) ?? undefined;
+  switch (choice.kind) {
+    case 'weapon': {
+      const def = WEAPONS[choice.id];
+      if (choice.level === 1) {
+        const open = Math.floor(run.stats.weaponSlots);
+        return { line: `Armas ${run.weapons.length} → ${run.weapons.length + 1}/${open}` };
+      }
+      const max = weaponMaxLevel(def);
+      const to = choice.level >= max ? 'MAX' : `NV ${choice.level}`;
+      const evo =
+        choice.level >= max && def.evolution
+          ? `MAX + ${PASSIVES[def.evolution.reagent as PassiveId].name} → ${WEAPONS[def.evolution.into as WeaponId].name}`
+          : undefined;
+      return {
+        line: `${def.name} NV ${choice.level - 1} → ${to}`,
+        evo: evo?.toUpperCase(),
+      };
+    }
+    case 'evolve':
+      return { line: `${WEAPONS[choice.id].name} → ${WEAPONS[choice.into].name}` };
+    case 'passive':
+    case 'boost': {
+      const def = PASSIVES[choice.id];
+      // Reagente de uma arma que o agente tem: avisa a evolução que ele destrava.
+      const weapon = run.weapons.find((w) => WEAPONS[w.id].evolution?.reagent === choice.id);
+      const into = weapon && WEAPONS[weapon.id].evolution?.into;
+      const evo =
+        choice.kind === 'passive' && weapon && into
+          ? `${WEAPONS[weapon.id].name} MAX + ${def.name} → ${WEAPONS[into as WeaponId].name}`.toUpperCase()
+          : undefined;
+      if (!after) return { evo };
+      const name = statDef(run.rules, def.stat).name;
+      return {
+        line: `${name} ${statShown(run, def.stat, run.stats)} → ${statShown(run, def.stat, after)}`,
+        evo,
+        after,
+      };
+    }
+    case 'heal': {
+      const max = Math.round(run.stats.maxInteractions);
+      const now = Math.ceil(run.agent.interactions);
+      return {
+        line: `Interações ${now}/${max} → ${Math.min(max, now + Math.round(choice.amount))}/${max}`,
+      };
+    }
+    case 'phosphocreatine': {
+      const gain = choice.coins * coinValue(run) * run.stats.currencyGain;
+      return { line: `ATP ${Math.floor(run.atp)} → ${Math.floor(run.atp + gain)}` };
+    }
+  }
+}
+
+/** Valor de um atributo como a pausa mostra; Interações vem com o estoque atual. */
+export function statShown(run: RunState, key: RunStatKey, stats: RunStats): string {
+  if (key === 'maxInteractions') {
+    return `${Math.ceil(run.agent.interactions)}/${Math.round(stats.maxInteractions)}`;
+  }
+  return statValue(key, stats[key]);
 }

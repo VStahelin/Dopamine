@@ -205,7 +205,7 @@ A fase 2.6 trouxe os ícones, a HUD e a pausa das pranchetas "Crônico". Esta fa
 
 - [x] Fim de run com o ícone de cada arma, o dano que ela causou e o ATP ganho.
 - [x] Recordes com os ícones da identidade visual e o ATP guardado. O Compêndio e o Título já usavam as molduras e as moléculas do canvas.
-- [ ] Level up como nas pranchetas "Level up" e "Level up no PC" ([ui-cronico.md](ui-cronico.md#level-up)): prévia do atributo em cada cartão, Rerrolar, Pular e Banir sempre visíveis (apagados sem usos), modo banir, teclas S e B, e no PC os atributos e o arsenal nas laterais.
+- [x] Level up como nas pranchetas "Level up" e "Level up no PC" ([ui-cronico.md](ui-cronico.md#level-up)): prévia do atributo em cada cartão, Rerrolar, Pular e Banir sempre visíveis (apagados sem usos), modo banir, teclas S e B, e no PC os atributos e o arsenal nas laterais.
 - [ ] Validar no celular, em pé e deitado, junto com a fase 2.6.
 
 Fica para quando a mecânica existir: efeitos temporários de inimigos e itens (Lentidão, Adrenalina da prancheta) e a evolução de arma pelo baú do chefe (a prancheta diz que a arma em MAX evolui no próximo baú; hoje a evolução é uma opção do level up). Os efeitos dos itens e a evolução pela cápsula do chefe entram na [fase 5.5](#fase-55-itens-no-mapa).
