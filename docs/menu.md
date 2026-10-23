@@ -123,7 +123,7 @@ O palco fica no centro, os trilhos nas laterais, a linha de ação embaixo do pa
 | Compêndio | Moléculas inimigas (com a cascata), modificadores e raridades já vistos; o resto em silhueta | Placeholder | 2 em diante |
 | Recordes | Melhor tempo, nível, decompostas, runs | Existe | — |
 | Conquistas | Metas de longo prazo | Placeholder | a definir |
-| Opções | Abas Som, Tela e Jogo (detalhes abaixo e na prancheta [Opções](identidade-visual/Opcoes.dc.html)) | Existe sem a aba Som | 6 (som) |
+| Opções | Abas Som, Tela e Jogo (detalhes abaixo e na prancheta [Opções](identidade-visual/Opcoes.dc.html)) | Existe | — |
 
 ### Opções
 

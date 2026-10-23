@@ -1,4 +1,4 @@
-import type { AudioConfig, MusicTrackId } from '../../config';
+import type { AudioConfig, MusicTrackId, SoundOptions } from '../../config';
 
 /** O que a run diz para a música a cada quadro (docs/sonoplastia.md, "Música dinâmica"). */
 export interface RunMusicInput {
@@ -51,8 +51,12 @@ export function runMusic(
   };
 }
 
-/** Próximo valor do botão Música nas Opções, voltando ao começo depois do último. */
-export function nextVolume(current: number, steps: readonly number[]): number {
-  const i = steps.findIndex((v) => v > current + 1e-6);
-  return i === -1 ? steps[0]! : steps[i]!;
+/** Volume final da música: zero no mudo; o Geral multiplica o da Música. */
+export function musicLevel(sound: SoundOptions): number {
+  return sound.muted ? 0 : sound.masterVolume * sound.musicVolume;
+}
+
+/** Volume em passos de 10% (os 10 pips das Opções), de 0 a 1. */
+export function stepVolume(volume: number, steps: number): number {
+  return Math.min(10, Math.max(0, Math.round(volume * 10) + steps)) / 10;
 }

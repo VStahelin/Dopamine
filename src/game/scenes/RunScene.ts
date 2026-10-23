@@ -283,7 +283,9 @@ export class RunScene extends Phaser.Scene {
         time: this.run.time,
         crisis: this.run.formations.crisis !== null,
         bossAlive: this.run.enemies.some((e) => e.boss && e.hp > 0),
-        overlay: this.paused || this.levelUpOpen || this.overlayOpen,
+        overlay:
+          getSave(this).options.sound.muffleOnPause &&
+          (this.paused || this.levelUpOpen || this.overlayOpen),
         over: this.run.over,
       },
       AUDIO,

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { AUDIO } from '../../config';
-import { nextVolume, runMusic, runTrack } from './musicLogic';
+import { musicLevel, runMusic, runTrack, stepVolume } from './musicLogic';
 
 const base = { time: 0, crisis: false, bossAlive: false, overlay: false, over: false };
 
@@ -33,10 +33,17 @@ describe('música da run', () => {
   });
 });
 
-describe('botão Música', () => {
-  it('passa pelos valores e volta ao zero', () => {
-    expect(nextVolume(0.6, [0, 0.2, 0.4, 0.6, 0.8, 1])).toBe(0.8);
-    expect(nextVolume(1, [0, 0.2, 0.4, 0.6, 0.8, 1])).toBe(0);
-    expect(nextVolume(0.7, [0, 0.2, 0.4, 0.6, 0.8, 1])).toBe(0.8);
+describe('volume', () => {
+  it('o Geral multiplica a Música e o mudo zera', () => {
+    const sound = { ...AUDIO.sound, masterVolume: 0.5, musicVolume: 0.8 };
+    expect(musicLevel(sound)).toBeCloseTo(0.4);
+    expect(musicLevel({ ...sound, muted: true })).toBe(0);
+  });
+
+  it('anda em passos de 10% sem sair de 0 a 1', () => {
+    expect(stepVolume(0.7, 1)).toBe(0.8);
+    expect(stepVolume(0.7, -1)).toBe(0.6);
+    expect(stepVolume(1, 1)).toBe(1);
+    expect(stepVolume(0, -1)).toBe(0);
   });
 });

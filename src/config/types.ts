@@ -831,12 +831,25 @@ export interface MusicTrackDef {
   rev: number;
 }
 
+/** Aba Som das Opções (docs/menu.md), guardada no save; volumes de 0 a 1, em passos de 0,1. */
+export interface SoundOptions {
+  /** Corta tudo sem mexer nos volumes. */
+  muted: boolean;
+  /** Multiplica música e efeitos. */
+  masterVolume: number;
+  musicVolume: number;
+  /** Efeitos sonoros: guardado desde já, toca quando os efeitos entrarem. */
+  sfxVolume: number;
+  /** Música abafada com a pausa, o level up e a cápsula abertos. */
+  muffleOnPause: boolean;
+  /** Com o app escondido, o som continua (o campo longo segue rodando). */
+  playInBackground: boolean;
+}
+
 /** Música (docs/sonoplastia.md): volumes, trocas e as faixas, na ordem em que carregam. */
 export interface AudioConfig {
-  /** Volume padrão da música, de 0 a 1. */
-  musicVolume: number;
-  /** Valores do botão Música nas Opções. */
-  volumeSteps: number[];
+  /** Padrão da aba Som. */
+  sound: SoundOptions;
   /** Tempo das trocas de faixa, em segundos. */
   crossfadeSeconds: number;
   /** Volume da música com a pausa, o level up ou a cápsula abertos, com os agudos cortados. */

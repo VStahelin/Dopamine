@@ -14,7 +14,7 @@ const REGISTRY_KEY = 'save';
 const defaults = () => ({
   showFps: DISPLAY.showFps,
   showDamageNumbers: true,
-  musicVolume: AUDIO.musicVolume,
+  sound: AUDIO.sound,
 });
 
 function openDb(): Promise<IDBDatabase> {

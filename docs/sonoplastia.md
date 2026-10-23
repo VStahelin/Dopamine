@@ -215,7 +215,7 @@ As faixas que o Vitor gerou ficam em `audio/musicas/` com o nome que saíram do 
 - Lista de faixas, na ordem em que são baixadas, com o arquivo de origem, os pontos de loop e o `rev`.
 - Efeitos: ainda não entraram.
 
-Nas **Opções**, o botão Música passa por 0, 20, 40, 60, 80 e 100% e fica no save. O de Efeitos entra junto com os efeitos.
+Nas **Opções**, a aba Som ([menu.md](menu.md#opções)) tem Mudo, os volumes Geral, Música e Efeitos em passos de 10% (o Geral multiplica os outros), Abafar na pausa e Tocar em segundo plano, tudo no save (`options.sound`). O volume de Efeitos já fica guardado e passa a valer quando os efeitos entrarem.
 
 ## O que falta decidir
 

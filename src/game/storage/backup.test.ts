@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { defaultSave } from '../../core/save/saveData';
 import { exportCode, importBackup } from './backup';
+import { AUDIO } from '../../config';
 
 describe('backup do save', () => {
   const save = {
-    ...defaultSave({ showFps: false, showDamageNumbers: true, musicVolume: 0.6 }),
+    ...defaultSave({ showFps: false, showDamageNumbers: true, sound: AUDIO.sound }),
     atp: 1234,
     selectedAgent: 'dopamine',
   };

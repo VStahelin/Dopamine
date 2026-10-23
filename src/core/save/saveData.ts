@@ -1,5 +1,5 @@
 import type { RunResult } from '../run/state';
-import { IDLE, SECTORS } from '../../config';
+import { IDLE, SECTORS, type SoundOptions } from '../../config';
 import { defaultIdle, maxSlots, type IdleProgress } from '../idle/progress';
 import { defaultProgress, type MetaProgress } from '../meta/progress';
 import { defaultOrganism, type OrganismState } from '../organism/organism';
@@ -23,8 +23,8 @@ export interface Options {
   showDamageNumbers: boolean;
   /** Modo debug: hitboxes e números da run por cima do campo (para afinar o jogo). */
   debug?: boolean;
-  /** Volume da música, de 0 a 1 (docs/sonoplastia.md). */
-  musicVolume: number;
+  /** Aba Som das Opções (docs/menu.md). */
+  sound: SoundOptions;
 }
 
 export interface SaveData {
@@ -116,10 +116,7 @@ export function migrateSave(raw: unknown, defaults: Options): SaveData {
           ? o.showDamageNumbers
           : base.options.showDamageNumbers,
       debug: o.debug === true,
-      musicVolume:
-        typeof o.musicVolume === 'number' && o.musicVolume >= 0 && o.musicVolume <= 1
-          ? o.musicVolume
-          : base.options.musicVolume,
+      sound: migrateSound(o.sound, base.options.sound),
     },
     selectedAgent: typeof data.selectedAgent === 'string' ? data.selectedAgent : base.selectedAgent,
     seen: Array.isArray(data.seen) ? data.seen.filter((k) => typeof k === 'string') : [],
@@ -242,5 +239,20 @@ function migrateOrganism(raw: unknown): OrganismState {
     sectors,
     atpEarned: num(m.atpEarned, 0),
     inherited: Math.floor(num(m.inherited, 0)),
+  };
+}
+
+function migrateSound(data: unknown, base: SoundOptions): SoundOptions {
+  const o = (data ?? {}) as Partial<Record<keyof SoundOptions, unknown>>;
+  const vol = (v: unknown, fallback: number) =>
+    typeof v === 'number' && v >= 0 && v <= 1 ? v : fallback;
+  const flag = (v: unknown, fallback: boolean) => (typeof v === 'boolean' ? v : fallback);
+  return {
+    muted: flag(o.muted, base.muted),
+    masterVolume: vol(o.masterVolume, base.masterVolume),
+    musicVolume: vol(o.musicVolume, base.musicVolume),
+    sfxVolume: vol(o.sfxVolume, base.sfxVolume),
+    muffleOnPause: flag(o.muffleOnPause, base.muffleOnPause),
+    playInBackground: flag(o.playInBackground, base.playInBackground),
   };
 }

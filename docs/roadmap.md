@@ -398,7 +398,7 @@ Deixar o jogo com a cara do canvas de identidade visual e pronto para outras pes
 - [ ] Chão, paredes e efeitos (dano com contorno, projéteis); o chão e os objetos dos ambientes vêm da fase 5.7.
 - [ ] Wiki dentro do jogo: o Compêndio ganha as páginas de [wiki.md](wiki.md) (como jogar, agentes, armas, modificadores, moléculas, progressão, campo longo, organismo e glossário).
 - [ ] Som e música: as faixas chiptune metal e os efeitos de [sonoplastia.md](sonoplastia.md), com troca de música na run, volume de Música e Efeitos nas Opções e `src/config/audio.json`.
-  - [x] Música: 9 faixas em loop e 3 jingles, troca na run (tempo, crise, chefe), abafada nas telas por cima, volume de Música nas Opções.
+  - [x] Música: 9 faixas em loop e 3 jingles, troca na run (tempo, crise, chefe), abafada nas telas por cima, aba Som nas Opções (mudo, Geral, Música, Efeitos, abafar, segundo plano).
   - [ ] Jingles `bossIn` e `crisisIn` (faltam gerar).
   - [ ] Efeitos sonoros e volume de Efeitos.
 - [ ] PWA: ícones e polimento da instalação na tela inicial (o offline vem da fase 2.5).

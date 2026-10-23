@@ -41,7 +41,7 @@ A regra de dependência é verificada pelo ESLint (`no-restricted-imports` em [e
 | `title` | [TitleScene.ts](../src/game/scenes/TitleScene.ts) | Logo e Começar |
 | `hub` | [HubScene.ts](../src/game/scenes/HubScene.ts) | Menu principal ([menu.md](menu.md)): status, caso com estrelas, JOGAR, trilhos e as 5 abas |
 | `placeholder` | [PlaceholderScene.ts](../src/game/scenes/PlaceholderScene.ts) | Telas abertas pelo hub que ainda não têm conteúdo, no formato comum ([sectionView.ts](../src/game/ui/sectionView.ts)) |
-| `records`, `options` | [RecordsScene.ts](../src/game/scenes/RecordsScene.ts), [OptionsScene.ts](../src/game/scenes/OptionsScene.ts) | Recordes salvos; opções (volume da música, FPS, tela cheia) |
+| `records`, `options` | [RecordsScene.ts](../src/game/scenes/RecordsScene.ts), [OptionsScene.ts](../src/game/scenes/OptionsScene.ts) | Recordes salvos; opções com as abas Som, Tela e Jogo |
 | `run` | [RunScene.ts](../src/game/scenes/RunScene.ts) | Chama o `stepRun` do `core` em passos fixos e desenha o estado (sprites reaproveitados, números de dano); abre as telas por cima |
 | `hud` | [HudScene.ts](../src/game/scenes/HudScene.ts) | Por cima da run ([ui-cronico.md](ui-cronico.md)): banda com XP, ícones de armas e reagentes, tempo, onda e decompostas; efeitos, chefe e pausa abaixo dela; botão do especial, joystick e FPS |
 | `idle` | [IdleScene.ts](../src/game/scenes/IdleScene.ts) | Campo longo (prancheta "Tela de batalha"): BASE, ondas, pool de agentes, melhorias e x2. A simulação roda no [idleRunner](../src/game/idle/idleRunner.ts), mesmo com a tela fechada |

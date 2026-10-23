@@ -22,7 +22,7 @@ export class BootScene extends Phaser.Scene {
     setLoaderProgress(null);
     void loadSave().then((save) => {
       initSave(this, save);
-      music.start(this.game, save.options.musicVolume);
+      music.start(this.game, save.options.sound);
       idleRunner.start(this.game);
       this.scene.start(SCENES.title);
     });

@@ -47,7 +47,7 @@ export function importBackup(text: string): SaveData | null {
     return migrateSave(data.save, {
       showFps: DISPLAY.showFps,
       showDamageNumbers: true,
-      musicVolume: AUDIO.musicVolume,
+      sound: AUDIO.sound,
     });
   } catch {
     return null;

@@ -1,5 +1,6 @@
 import * as Phaser from 'phaser';
-import { AUDIO, MUSIC_TRACKS, type MusicTrackId } from '../../config';
+import { AUDIO, MUSIC_TRACKS, type MusicTrackId, type SoundOptions } from '../../config';
+import { musicLevel } from './musicLogic';
 
 /** Uma faixa tocando, com o volume próprio para os crossfades. */
 interface Voice {
@@ -19,12 +20,14 @@ function pickFormat(): 'ogg' | 'm4a' | null {
 /**
  * Música do jogo (docs/sonoplastia.md), tocada direto no contexto Web Audio do Phaser: assim as
  * faixas em loop tocam a introdução uma vez e repetem só o trecho do loop, e as trocas têm
- * crossfade. O Phaser suspende o contexto com o jogo em segundo plano, e a música para junto.
+ * crossfade. Com "Tocar em segundo plano" desligado, o Phaser suspende o contexto com o jogo
+ * escondido, e a música para junto.
  * As faixas carregam em segundo plano, na ordem de `audio.json`; pedida antes de carregar, a
  * faixa entra quando chegar.
  */
 class MusicPlayer {
   private ctx: AudioContext | null = null;
+  private game: Phaser.Game | null = null;
   private out!: GainNode;
   private mix!: GainNode;
   private filter!: BiquadFilterNode;
@@ -37,8 +40,9 @@ class MusicPlayer {
   private jingleUntil = 0;
 
   /** Liga a música ao jogo; sem Web Audio, o jogo segue mudo. */
-  start(game: Phaser.Game, volume: number): void {
+  start(game: Phaser.Game, sound: SoundOptions): void {
     if (this.ctx || !(game.sound instanceof Phaser.Sound.WebAudioSoundManager)) return;
+    this.game = game;
     const format = pickFormat();
     if (!format) return;
     const ctx = game.sound.context;
@@ -48,7 +52,8 @@ class MusicPlayer {
     this.filter.frequency.value = 20000;
     this.mix = ctx.createGain();
     this.out = ctx.createGain();
-    this.out.gain.value = volume;
+    this.out.gain.value = musicLevel(sound);
+    game.sound.pauseOnBlur = !sound.playInBackground;
     this.mix.connect(this.filter).connect(this.out).connect(game.sound.destination);
     void this.loadAll(format);
   }
@@ -69,8 +74,11 @@ class MusicPlayer {
     }
   }
 
-  setVolume(volume: number): void {
-    if (this.ctx) this.out.gain.setTargetAtTime(volume, this.ctx.currentTime, 0.05);
+  /** Aplica a aba Som das Opções: volumes, mudo e segundo plano. */
+  applySound(sound: SoundOptions): void {
+    if (!this.ctx || !this.game) return;
+    this.out.gain.setTargetAtTime(musicLevel(sound), this.ctx.currentTime, 0.05);
+    this.game.sound.pauseOnBlur = !sound.playInBackground;
   }
 
   /** Troca a faixa principal com crossfade; a mesma faixa continua de onde está. */

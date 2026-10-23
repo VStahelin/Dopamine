@@ -1,6 +1,12 @@
 {
-  "musicVolume": 0.6,
-  "volumeSteps": [0, 0.2, 0.4, 0.6, 0.8, 1],
+  "sound": {
+    "muted": false,
+    "masterVolume": 0.8,
+    "musicVolume": 0.7,
+    "sfxVolume": 1,
+    "muffleOnPause": true,
+    "playInBackground": false
+  },
   "crossfadeSeconds": 1.5,
   "muffledVolume": 0.5,
   "muffledLowpassHz": 900,

@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { defaultSave, migrateSave, recordRun, SAVE_VERSION } from './saveData';
+import { AUDIO } from '../../config';
 
-const defaults = { showFps: true, showDamageNumbers: true, musicVolume: 0.6 };
+const defaults = { showFps: true, showDamageNumbers: true, sound: AUDIO.sound };
 
 describe('migrateSave', () => {
   it('devolve o padrão para save vazio ou inválido', () => {

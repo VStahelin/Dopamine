@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { AGENTS, ECONOMY, ORGANISM } from '../../config';
+import { AGENTS, AUDIO, ECONOMY, ORGANISM } from '../../config';
 import { DEFAULT_RULES } from '../run/rules';
 import { createRun } from '../run/state';
 import { defaultSave } from '../save/saveData';
@@ -84,7 +84,7 @@ describe('alta', () => {
   });
 
   it('zera Laboratório, idle e ATP, e mantém os desbloqueios', () => {
-    const base = defaultSave({ showFps: false, showDamageNumbers: true, musicVolume: 0.6 });
+    const base = defaultSave({ showFps: false, showDamageNumbers: true, sound: AUDIO.sound });
     const save = {
       ...base,
       atp: 500,
