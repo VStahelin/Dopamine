@@ -1,13 +1,14 @@
 import type { EnemyKind } from '../../config';
 import { clampLength, type Vec2 } from '../math/vec2';
-import { damageEnemy, heal } from './combat';
+import { heal } from './combat';
 import { difficultyAt, enemyHpAt, waveFactorAt, xpToNextLevel } from './progression';
 import { addAggregate } from './aggregates';
 import { updateFormations } from './formations';
 import { collideWithMap, updateDestructibles, updateRunMap } from './mapStep';
 import { updateStructures } from './structures';
 import { extendFever, updateItems } from './items';
-import { onHurt } from './supplements';
+import { hurtAgent } from './hurt';
+import { agentFxSpeed, updateBehaviors } from './behaviors';
 import { refreshStats } from './upgrades';
 import { SpatialGrid } from './spatialGrid';
 import { updateSpecial } from './specials';
@@ -53,6 +54,7 @@ export function stepRun(state: RunState, input: StepInput, dt: number): void {
   // Acontecimentos a partir daqui são deste passo (as vesículas olham só os golpes dele).
   const firstEvent = state.events.length;
   applyFields(state, dt, grid);
+  updateBehaviors(state, dt, grid);
   moveEnemies(state, dt);
   collideWithMap(state);
   updateWeapons(state, dt, grid);
@@ -69,7 +71,8 @@ export function stepRun(state: RunState, input: StepInput, dt: number): void {
 
 function moveAgent(state: RunState, intent: Vec2, dt: number): void {
   const dir = clampLength(intent, 1);
-  const speed = state.rules.run.agent.moveSpeedPxPerSecond * state.stats.moveSpeed;
+  const speed =
+    state.rules.run.agent.moveSpeedPxPerSecond * state.stats.moveSpeed * agentFxSpeed(state);
   state.agent.x += dir.x * speed * dt;
   state.agent.y += dir.y * speed * dt;
   if (dir.x !== 0) state.agent.facingX = Math.sign(dir.x);
@@ -95,13 +98,17 @@ function spawnEnemies(state: RunState, viewRadius: number, dt: number): void {
   const distance = viewRadius + run.spawn.marginOutsideViewPx;
 
   // Chefes no começo de cada pico do dente de serra.
+  // O chefe marcado com `local` vira o chefe do local da run (fase 5.14).
   run.bosses.forEach((b, i) => {
+    if (b.max !== undefined && state.bossesSpawned[i]! >= b.max) return;
     const next = (state.bossesSpawned[i]! + 1) * b.everyMinutes * 60;
     if (state.time < next) return;
     state.bossesSpawned[i]!++;
+    const env = state.rules.mapEnv;
+    const kind = (b.local && env ? state.rules.map.environments[env].boss : b.kind) as EnemyKind;
     const at = spawnAround(state, distance);
-    addEnemy(state, b.kind as EnemyKind, at.x, at.y, hp);
-    state.events.push({ type: 'boss', kind: b.kind as EnemyKind });
+    addEnemy(state, kind, at.x, at.y, hp);
+    state.events.push({ type: 'boss', kind });
   });
 
   spawnAggregate(state, distance, hp);
@@ -205,9 +212,16 @@ function moveEnemies(state: RunState, dt: number): void {
       e.x += e.dirX * e.speed * e.slow * dt;
       e.y += e.dirY * e.speed * e.slow * dt;
     } else if (dist > 0.001 && !frozen && e.frozen <= 0) {
-      const step = Math.min(e.speed * e.slow * dt, dist);
-      e.x += (dx / dist) * step;
-      e.y += (dy / dist) * step;
+      // Rumo: direto ao agente, girado pelo desvio dos erráticos; quem mantém distância recua.
+      const away = e.keepAway > 0 && dist < e.keepAway ? -1 : 1;
+      const room = e.keepAway > 0 ? Math.abs(dist - e.keepAway) : dist;
+      const step = Math.min(e.speed * e.slow * dt, room);
+      const c = Math.cos(e.heading);
+      const s = Math.sin(e.heading);
+      const ux = ((dx * c - dy * s) / dist) * away;
+      const uy = ((dx * s + dy * c) / dist) * away;
+      e.x += ux * step;
+      e.y += uy * step;
     }
     grid.query(e.x, e.y, e.radius * 2, (j) => {
       if (j <= i) return;
@@ -262,31 +276,7 @@ function touchAgent(state: RunState, dt: number): void {
   });
   if (!attacker) return;
 
-  agent.invulnerableFor = stats.invulnerabilitySeconds;
-  if (state.rng.next() < stats.dodge) {
-    state.events.push({ type: 'dodge' });
-    return;
-  }
-
-  const hit = attacker.contactDamage;
-  const amount = Math.max(rules.run.minDamageTaken, hit - stats.armor);
-  agent.interactions = Math.max(0, agent.interactions - amount);
-  state.tally.interactionsLost += amount;
-  state.events.push({ type: 'hurt', amount, blocked: Math.max(0, hit - amount) });
-  onHurt(state);
-  // Reflexo: devolve parte do dano a quem encostou.
-  if (stats.thorns > 0) damageEnemy(state, attacker, hit * stats.thorns);
-
-  if (agent.interactions > 0) return;
-  // Segunda dose: volta com metade das interações.
-  if (state.used.revives < Math.floor(stats.revives)) {
-    state.used.revives++;
-    agent.interactions = stats.maxInteractions / 2;
-    agent.invulnerableFor = rules.run.combat.reviveInvulnerabilitySeconds;
-    state.events.push({ type: 'revive' });
-    return;
-  }
-  state.over = true;
+  hurtAgent(state, attacker.contactDamage, attacker);
 }
 
 /** ATP no chão: atraído pelo mesmo raio de coleta das gemas, com Rendimento ao coletar. */

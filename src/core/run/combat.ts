@@ -138,6 +138,20 @@ export function damageEnemy(
   }
   spawnFragments(state, e);
   onKill(state, e);
+  // Comportamentos ao decompor (fase 5.14): poça do Acetaldeído e Adrenalina no agente.
+  for (const b of state.rules.enemies[e.kind].behaviors ?? []) {
+    if (b.kind === 'poolOnDeath') {
+      state.hazards.push({
+        x: e.x,
+        y: e.y,
+        radius: b.radiusPx,
+        life: b.seconds,
+        maxLife: b.seconds,
+      });
+    }
+    if (b.kind === 'rushOnDeath')
+      state.agentFx.rush = state.rules.run.agentEffects.adrenaline.seconds;
+  }
 }
 
 /** Cascata: a molécula decomposta se quebra nas mais fracas, em volta de onde estava. */

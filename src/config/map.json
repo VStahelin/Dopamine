@@ -40,8 +40,16 @@
   "decorPerChunk": [2, 4],
   "nestChance": 0.12,
   "nestVesicles": [3, 5],
-  "chamber": { "chance": 0.08, "radiusTiles": 3, "gapSlots": 2 },
-  "corridor": { "chance": 0.06, "gapTiles": 4, "lengthTiles": [6, 8] },
+  "chamber": {
+    "chance": 0.08,
+    "radiusTiles": 3,
+    "gapSlots": 2
+  },
+  "corridor": {
+    "chance": 0.06,
+    "gapTiles": 4,
+    "lengthTiles": [6, 8]
+  },
   "locals": {
     "familyWeight": 2,
     "sectorMultiplier": 1.5,
@@ -53,6 +61,7 @@
       "name": "Corrente sanguínea",
       "families": [],
       "sector": null,
+      "boss": "ldl",
       "tiles": ["blood_base", "blood_flow", "blood_protein"],
       "obstacles": {
         "redCell": 13,
@@ -151,6 +160,7 @@
       "name": "Fígado",
       "families": ["toxin"],
       "sector": "social",
+      "boss": "napqi",
       "tiles": ["liver_base", "liver_nuclei", "liver_fat"],
       "obstacles": {
         "hepatocyte": 13,
@@ -246,6 +256,7 @@
       "name": "Intestino",
       "families": ["sugar", "lipid"],
       "sector": "physical",
+      "boss": "amylopectin",
       "tiles": ["intestine_base", "intestine_crypts", "intestine_mucus"],
       "obstacles": {
         "villus": 12,
@@ -333,6 +344,7 @@
       "name": "Pulmão",
       "families": ["radical"],
       "sector": "executive",
+      "boss": "benzopyrene",
       "tiles": ["lung_base", "lung_air", "lung_dust"],
       "obstacles": {
         "alveolus": 13,
@@ -420,6 +432,7 @@
       "name": "Cérebro",
       "families": ["stress"],
       "sector": "mental",
+      "boss": "crh",
       "tiles": ["brain_base", "brain_glia", "brain_axon"],
       "obstacles": {
         "neuron": 13,

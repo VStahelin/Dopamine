@@ -53,6 +53,25 @@ export interface Enemy {
   straight: boolean;
   dirX: number;
   dirY: number;
+  /** Comportamentos (fase 5.14): segundos de vida, desvio do rumo, relógio do próximo ato. */
+  age: number;
+  heading: number;
+  turnTimer: number;
+  actTimer: number;
+  /** Quem a gerou (Citocina, chefes); 0 se nasceu sozinha. */
+  parent: number;
+  /** Distância que mantém do agente (Cortisol); 0 se encosta. */
+  keepAway: number;
+}
+
+/** Poça tóxica no chão (fase 5.14): tira interações e deixa o agente lento. */
+export interface Hazard {
+  x: number;
+  y: number;
+  radius: number;
+  /** Segundos que ainda faltam. */
+  life: number;
+  maxLife: number;
 }
 
 export interface Projectile {
@@ -216,6 +235,8 @@ export type RunEvent =
   /** O especial ganhou a primeira carga: o botão ficou pronto. */
   | { type: 'specialReady' }
   | { type: 'boss'; kind: EnemyKind }
+  /** Uma molécula geradora (Citocina, chefes) soltou outra. */
+  | { type: 'spawned'; x: number; y: number }
   | { type: 'aggregate'; kind: EnemyKind }
   /** Uma formação (ou a crise) vai nascer do lado de `angle`, visto do agente. */
   | { type: 'formationWarning'; name: string; angle: number; crisis: boolean }
@@ -262,6 +283,10 @@ export interface RunState {
   enemies: Enemy[];
   projectiles: Projectile[];
   zones: Zone[];
+  /** Poças tóxicas das moléculas (fase 5.14). */
+  hazards: Hazard[];
+  /** Efeitos de inimigo no agente: segundos de Lentidão e de Adrenalina, e o relógio da poça. */
+  agentFx: { slow: number; rush: number; poolTick: number };
   pulses: Pulse[];
   gems: Gem[];
   coins: Coin[];
@@ -431,6 +456,8 @@ export function createRun(
     enemies: [],
     projectiles: [],
     zones: [],
+    hazards: [],
+    agentFx: { slow: 0, rush: 0, poolTick: 0 },
     pulses: [],
     gems: [],
     coins: [],
@@ -533,6 +560,12 @@ export function addEnemy(
     straight: false,
     dirX: 0,
     dirY: 0,
+    age: 0,
+    heading: 0,
+    turnTimer: 0,
+    actTimer: 0,
+    parent: 0,
+    keepAway: def.behaviors?.find((b) => b.kind === 'keepAway')?.distancePx ?? 0,
   };
   state.enemies.push(enemy);
   if (!state.seen.includes(kind)) state.seen.push(kind);

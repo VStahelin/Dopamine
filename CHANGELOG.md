@@ -8,6 +8,10 @@ O que mudou em cada versão do Farmaco Battle. O jogo mostra este arquivo em Op�
 - Escolha onde agir: depois da primeira estrela do caso, a faixa acima do JOGAR abre a tela "Onde agir?" com o corpo e os cinco locais. Cada local dobra uma família de molécula e cura mais o setor dele; "Qualquer lugar" sorteia e dá +10% de ATP.
 - Sinergia agente × local: Dopamina no Cérebro, Lipase no Intestino e Insulina no Fígado começam com o perfil no nível 1 e, no fim da run, curam +4 no setor do par com o colateral pela metade. A Lipase não atravessa a barreira e não entra no Cérebro.
 - Recordes e Compêndio mostram os locais, com o melhor tempo em cada um.
+- Cada família de molécula se mexe do seu jeito: radicais erráticos, estresse com aura que acelera e protege os vizinhos, Acetaldeído que deixa poça tóxica e Peróxido que estoura ao encostar.
+- Família nova, a inflamação: a Citocina fica parada soltando Bradicininas. Moléculas novas: Superóxido, Peróxido de hidrogênio, Noradrenalina e Amônia.
+- Um chefe por local: LDL na Corrente sanguínea, NAPQI no Fígado, Amilopectina no Intestino, Benzopireno no Pulmão e CRH no Cérebro. Aos 15 minutos chega a Placa de ateroma.
+- Efeitos de inimigo na fila de efeitos: Lentidão dentro da poça e Adrenalina ao decompor Adrenalina ou Noradrenalina.
 
 ## v0.17.0 · 23/10/2026
 

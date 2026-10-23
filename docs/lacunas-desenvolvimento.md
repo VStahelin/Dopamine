@@ -20,9 +20,9 @@ Ordenadas por impacto dividido por esforço, com as dependências respeitadas.
 | 1 | Validar no celular as fases 2.6 a 5.11 (10 itens "falta validar") | Balanceamento | Metade | Alto | P–M | 5.13 |
 | 2 | ~~Ícones do PWA em PNG (192, 512, maskable) e `apple-touch-icon`~~ (feito, [logo.md](logo.md)) | Plataforma | Doc | Alto | P | 5.13 |
 | 3 | Efeitos sonoros P1 (armas, combate, coleta, level up, interface) | Áudio | Doc | Alto | M | 6 (depois, [lista](efeitos-sonoros.md#para-fazer-depois)) |
-| 4 | Comportamento próprio de cada família de molécula (aura do cortisol, poça do acetaldeído, radical errático, spawner) | Inimigos | Metade | Alto | M–G | 5.14 |
-| 5 | Família inflamação: a Citocina e as moléculas do Cerco inflamatório | Inimigos | Doc | Alto | M | 5.14 |
-| 6 | Mais chefes: um por local do corpo e a Placa de fim de indivíduo | Inimigos | Doc / Sem doc | Alto | M–G | 5.14 |
+| 4 | ~~Comportamento próprio de cada família de molécula (aura do cortisol, poça do acetaldeído, radical errático, spawner)~~ (feito, [0035](decisoes/0035-familias-e-chefes-por-local.md)) | Inimigos | Metade | Alto | M–G | 5.14 |
+| 5 | ~~Família inflamação: a Citocina e as moléculas do Cerco inflamatório~~ (feito) | Inimigos | Doc | Alto | M | 5.14 |
+| 6 | ~~Mais chefes: um por local do corpo e a Placa de fim de indivíduo~~ (feito) | Inimigos | Doc / Sem doc | Alto | M–G | 5.14 |
 | 7 | Locais do corpo e sinergias (fase 5.12 inteira) | Mapas | Doc | Alto | M–G | 5.12 |
 | 8 | Os 6 agentes que faltam: Vitamina C, Serotonina, Álcool desidrogenase, Cafeína, Ocitocina, Venvanse | Agentes | Doc | Alto | G | 5.15 |
 | 9 | Evolução para Nuvem de Elétrons, Poça de Solvente e Reação em Cadeia | Armas | Sem doc | Médio | M | 5.15 |

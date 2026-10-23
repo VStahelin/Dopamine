@@ -108,7 +108,8 @@ const ARROW_SIZE = 18;
 
 /**
  * Arco em pixels de arte: do ângulo `from` ao `to` (frações da volta, a partir do topo, no
- * sentido do relógio), com espessura `thick`; `color` pode variar pelo ângulo (tracejado).
+ * sentido do relógio), com espessura `thick`; `color` pode variar pelo ângulo (tracejado) e
+ * `undefined` deixa o ponto vazio.
  */
 function pixelArc(
   g: Phaser.GameObjects.Graphics,
@@ -119,13 +120,15 @@ function pixelArc(
   to: number,
   thick: number,
   px: number,
-  color: (a: number) => number,
+  color: (a: number) => number | undefined,
 ): void {
   const steps = Math.ceil(2 * Math.PI * r);
   for (let i = Math.floor(from * steps); i < to * steps; i++) {
     const a = i / steps;
     const t = a * Math.PI * 2 - Math.PI / 2;
-    g.fillStyle(color(a), 1);
+    const c = color(a);
+    if (c === undefined) continue;
+    g.fillStyle(c, 1);
     g.fillRect(
       Math.round((x + Math.cos(t) * r) / px) * px - thick / 2,
       Math.round((y + Math.sin(t) * r) / px) * px - thick / 2,
@@ -724,6 +727,7 @@ export class RunScene extends Phaser.Scene {
       g.fillStyle(emulsion ? PALETTE.creamShade : PALETTE.chlorineDark, 0.55 * a);
       pixelRing(g, z.x, z.y, z.radius, 1, px);
     }
+    this.drawEnemyFields(g, px);
     for (const p of this.run.pulses) {
       const a = 1 - p.radius / p.maxRadius;
       g.fillStyle(PALETTE.dopaminePink, 0.8 * a + 0.2);
@@ -733,6 +737,30 @@ export class RunScene extends Phaser.Scene {
     this.drawStructures(g, px);
     this.drawFormationWarnings(g);
     this.drawCrisisTint(g);
+  }
+
+  /**
+   * Fase 5.14: poças tóxicas no chão e o anel tracejado laranja em volta de quem tem aura do
+   * estresse (prancheta "Famílias e chefes").
+   */
+  private drawEnemyFields(g: Phaser.GameObjects.Graphics, px: number): void {
+    for (const h of this.run.hazards) {
+      const a = Math.min(1, h.life * 2);
+      g.fillStyle(PALETTE.toxicPool, 0.35 * a);
+      pixelDisc(g, h.x, h.y, h.radius, px);
+      g.fillStyle(PALETTE.toxicPoolDark, 0.7 * a);
+      pixelRing(g, h.x, h.y, h.radius, 2, px);
+    }
+    const { enemies } = this.run.rules;
+    for (const e of this.run.enemies) {
+      if (e.hp <= 0) continue;
+      const aura = enemies[e.kind].behaviors?.find((b) => b.kind === 'aura');
+      if (aura?.kind !== 'aura') continue;
+      const spin = this.run.time * 0.15;
+      pixelArc(g, e.x, e.y, aura.radiusPx, spin, spin + 1, 2, px, (t) =>
+        Math.floor(t * 48) % 2 === 0 ? PALETTE.stress : undefined,
+      );
+    }
   }
 
   /**

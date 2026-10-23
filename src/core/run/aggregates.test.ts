@@ -43,7 +43,8 @@ describe('agregados (fase 5.10)', () => {
       expect(Math.min(...gaps)).toBeGreaterThanOrEqual(r.rules.run.aggregates.minGapSeconds - 1);
       expect(times.length).toBeGreaterThanOrEqual(10);
     }
-  });
+    // Três runs de 10 minutos sem armas: as Citocinas do Cerco inflamatório acumulam Bradicininas.
+  }, 20000);
 
   it('são a molécula forte, maior, mais lenta e muito mais forte', () => {
     const r = createRun(1, rules());

@@ -35,7 +35,13 @@
   "bosses": [
     {
       "kind": "ldl",
-      "everyMinutes": 5
+      "everyMinutes": 5,
+      "local": true
+    },
+    {
+      "kind": "plaque",
+      "everyMinutes": 15,
+      "max": 1
     }
   ],
   "curse": {
@@ -83,7 +89,7 @@
         "description": "Anel de moléculas que fecha devagar em volta do agente.",
         "family": "inflammation",
         "shape": "ring",
-        "kinds": [],
+        "kinds": ["bradykinin", "bradykinin", "bradykinin", "cytokine"],
         "count": 28,
         "speedMultiplier": 0.5
       },
@@ -136,5 +142,19 @@
   "nativeReceptor": {
     "everyLevels": 10,
     "maxLevel": 5
+  },
+  "agentEffects": {
+    "slow": {
+      "mobility": -0.2,
+      "lingerSeconds": 0.3
+    },
+    "adrenaline": {
+      "mobility": 0.3,
+      "seconds": 4
+    }
+  },
+  "pools": {
+    "interactionsPerTick": 1,
+    "tickSeconds": 1
   }
 }

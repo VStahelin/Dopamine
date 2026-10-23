@@ -126,6 +126,8 @@ function loadEnemies(): Record<EnemyKind, EnemyDef> {
   for (const [id, def] of Object.entries(enemiesJson as Record<string, Raw>)) {
     for (const f of def.fragments ?? [])
       exists(f.kind, enemiesJson, `enemies.json ${id}.fragments`);
+    for (const b of def.behaviors ?? [])
+      if (b.kind === 'spawner') exists(b.spawn, enemiesJson, `enemies.json ${id}.behaviors`);
     out[id as EnemyKind] = {
       ...def,
       type: oneOf(def.type, MOLECULE_TYPES, `enemies.json ${id}.type`),

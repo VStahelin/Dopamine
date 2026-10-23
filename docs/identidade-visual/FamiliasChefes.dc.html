@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Famílias e chefes</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&amp;family=Silkscreen:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1280px; height: 1100px; box-sizing: border-box; padding: 40px 48px; background: #15172E; font-family: 'Pixelify Sans', monospace; color: #F4EFE0; display: flex; flex-direction: column; gap: 22px">
+  <div style="display: flex; align-items: baseline; gap: 16px">
+    <div style="font-size: 30px; font-weight: 700; color: #FF9A1F; text-shadow: -3px 0 #3A0A0C, 3px 0 #3A0A0C, 0 -3px #3A0A0C, 0 3px #3A0A0C, 0 5px #3A0A0C">FAMÍLIAS E CHEFES</div>
+    <div style="font-size: 16px; color: #C9CCE6">Fase 5.14 (decisão 0035): como cada família anda, as moléculas novas e um chefe por local</div>
+  </div>
+
+  <sc-for list="{{sections}}" as="sec" hint-placeholder-count="3">
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="font-family: 'Silkscreen', monospace; font-size: 14px; letter-spacing: 1px; color: {{sec.color}}">{{sec.label}}</div>
+      <div style="display: flex; flex-wrap: wrap; gap: 16px">
+        <sc-for list="{{sec.items}}" as="m" hint-placeholder-count="6">
+          <div style="width: 182px; height: {{sec.h}}; box-sizing: border-box; border: 4px solid #07080F; background: #2A2E55; box-shadow: inset 0 -6px 0 #1B1E3A, inset 0 4px 0 #474C85; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 10px 10px">
+            <div style="height: {{sec.art}}; width: 100%; display: flex; align-items: center; justify-content: center; position: relative">
+              <div style="position: absolute; left: 50%; top: 50%; width: {{m.ringD}}; height: {{m.ringD}}; transform: translate(-50%, -50%); border-radius: 50%; {{m.ring}}"></div>
+              <div style="position: relative; width: 0; height: 0">
+                <sc-for list="{{m.bonds}}" as="b" hint-placeholder-count="4">
+                  <div style="position: absolute; transform-origin: 0 50%; background: #1A1424; {{b.style}}"></div>
+                </sc-for>
+                <sc-for list="{{m.atoms}}" as="a" hint-placeholder-count="4">
+                  <div style="position: absolute; clip-path: polygon(25% 0,75% 0,75% 12.5%,87.5% 12.5%,87.5% 25%,100% 25%,100% 75%,87.5% 75%,87.5% 87.5%,75% 87.5%,75% 100%,25% 100%,25% 87.5%,12.5% 87.5%,12.5% 75%,0 75%,0 25%,12.5% 25%,12.5% 12.5%,25% 12.5%); {{a.outer}}">
+                    <div style="position: absolute; inset: 2px; clip-path: polygon(25% 0,75% 0,75% 12.5%,87.5% 12.5%,87.5% 25%,100% 25%,100% 75%,87.5% 75%,87.5% 87.5%,75% 87.5%,75% 100%,25% 100%,25% 87.5%,12.5% 87.5%,12.5% 75%,0 75%,0 25%,12.5% 25%,12.5% 12.5%,25% 12.5%); {{a.inner}}"></div>
+                    <div style="position: absolute; {{a.hi}}"></div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="font-size: 16px; font-weight: 700; text-align: center">{{m.name}}</div>
+            <div style="font-family: 'Silkscreen', monospace; font-size: 9px; letter-spacing: 1px; color: {{m.tagColor}}; text-align: center">{{m.tag}}</div>
+            <div style="font-size: 12px; color: #C9CCE6; text-align: center; line-height: 1.3">{{m.note}}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-for>
+
+  <div style="display: flex; gap: 40px; align-items: flex-start">
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="font-family: 'Silkscreen', monospace; font-size: 14px; letter-spacing: 1px; color: #FF8A7A">EFEITOS NO AGENTE (16×16)</div>
+      <div style="display: flex; gap: 24px">
+        <sc-for list="{{effects}}" as="e" hint-placeholder-count="2">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; width: 170px">
+            <div style="width: 64px; height: 64px; box-sizing: border-box; border: 4px solid {{e.border}}; background: {{e.fill}}; position: relative"><div style="position: absolute; left: 4px; top: 4px"><div style="{{e.icon}}"></div></div></div>
+            <div style="font-size: 15px; font-weight: 700">{{e.name}}</div>
+            <div style="font-size: 12px; color: #C9CCE6; text-align: center">{{e.note}}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="font-family: 'Silkscreen', monospace; font-size: 14px; letter-spacing: 1px; color: #FF8A7A">NO CAMPO</div>
+      <div style="display: flex; gap: 24px; align-items: center">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; width: 170px">
+          <div style="width: 96px; height: 96px; border-radius: 50%; background: rgba(166,200,58,0.35); box-shadow: inset 0 0 0 4px #6E8A1C"></div>
+          <div style="font-size: 15px; font-weight: 700">Poça tóxica</div>
+          <div style="font-size: 12px; color: #C9CCE6; text-align: center">Verde-amarelo, redonda, do tamanho do dano, some em 3 s</div>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; width: 170px">
+          <div style="width: 96px; height: 96px; border-radius: 50%; border: 3px dashed #FF9A1F; box-sizing: border-box"></div>
+          <div style="font-size: 15px; font-weight: 700">Aura do estresse</div>
+          <div style="font-size: 12px; color: #C9CCE6; text-align: center">Anel tracejado laranja em volta do Cortisol e do CRH</div>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; width: 170px">
+          <div style="width: 96px; height: 96px; display: flex; align-items: center; justify-content: center"><div style="font-family: 'Silkscreen', monospace; font-size: 22px; color: #FF6FA8">+ + +</div></div>
+          <div style="font-size: 15px; font-weight: 700">Citocina gerando</div>
+          <div style="font-size: 12px; color: #C9CCE6; text-align: center">Pisca rosa quando solta uma Bradicinina</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1100}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const EL = {"C": {"fill": "#4A4F5C", "dark": "#1C1E25", "light": "#8A90A0", "size": 9}, "H": {"fill": "#EDEBDD", "dark": "#6E6C5E", "light": "#FFFFFF", "size": 6}, "O": {"fill": "#E0433A", "dark": "#5A0E10", "light": "#FF9A8A", "size": 9}, "N": {"fill": "#3F6FE0", "dark": "#13245E", "light": "#9FBEFF", "size": 9}, "S": {"fill": "#F2C83A", "dark": "#6E500C", "light": "#FFF2A8", "size": 10}, "Cl": {"fill": "#5BC43A", "dark": "#1A4E12", "light": "#B4F58A", "size": 9}, "Mg": {"fill": "#B8C7D6", "dark": "#3E4C68", "light": "#F0F6FF", "size": 12}};
+    const MOL = {"superoxide": {"atoms": [["O", -3.5, 0], ["O", 3.5, 0]], "bonds": [[0, 1]]}, "hydrogenPeroxide": {"atoms": [["H", -8.4, 3.5], ["O", -3.5, 0.7], ["O", 3.5, -0.7], ["H", 8.4, -3.5]], "bonds": [[0, 1], [1, 2], [2, 3]]}, "noradrenaline": {"atoms": [["C", -3.54, -4.38], ["C", 2.52, -0.88], ["C", 2.52, 6.12], ["C", -3.54, 9.62], ["C", -9.6, 6.12], ["C", -9.6, -0.88], ["O", -15.66, 9.62], ["O", -15.66, -4.38], ["C", 8.58, -4.38], ["O", 8.58, -11.38], ["C", 14.64, -0.88], ["N", 20.7, -4.38]], "bonds": [[0, 1, 2], [1, 2], [2, 3, 2], [3, 4], [4, 5, 2], [5, 0], [4, 6], [5, 7], [1, 8], [8, 9], [8, 10], [10, 11]]}, "ammonia": {"atoms": [["N", 0, 0], ["H", -4.85, 2.8], ["H", 4.85, 2.8], ["H", 0, -5.6]], "bonds": [[0, 1], [0, 2], [0, 3]]}, "cytokine": {"atoms": [["N", -0.52, -13.71], ["C", 7.12, -11.23], ["C", 11.84, -4.73], ["N", 11.84, 3.3], ["C", 7.12, 9.8], ["C", -0.52, 12.29], ["N", -8.16, 9.8], ["C", -12.88, 3.3], ["C", -12.88, -4.73], ["C", -8.16, -11.23], ["O", 18.5, -6.89], ["O", -12.27, 15.47], ["S", -4.02, -0.71], ["S", 2.98, -0.71]], "bonds": [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8], [8, 9], [9, 0], [2, 10, 2], [6, 11, 2], [12, 13], [13, 2], [12, 7]]}, "bradykinin": {"atoms": [["N", -9.6, 0.0], ["C", -3.6, -3.5], ["C", 2.4, 0.0], ["O", 2.4, 7.0], ["O", 8.4, -3.5]], "bonds": [[0, 1], [1, 2], [2, 3, 2], [2, 4]]}, "napqi": {"atoms": [["C", -2.86, -15.72], ["C", 5.02, -11.17], ["C", 5.02, -2.07], ["C", -2.86, 2.48], ["C", -10.75, -2.07], ["C", -10.75, -11.17], ["O", -2.86, -24.82], ["N", -2.86, 11.58], ["C", 5.02, 16.13], ["O", 12.9, 11.58], ["C", 5.02, 25.23]], "bonds": [[0, 1], [1, 2, 2], [2, 3], [3, 4], [4, 5, 2], [5, 0], [0, 6, 2], [3, 7, 2], [7, 8], [8, 9, 2], [8, 10]]}, "amylopectin": {"atoms": [["O", -17.0, -6.65], ["C", -11.8, -3.65], ["C", -11.8, 2.35], ["C", -17.0, 5.35], ["C", -22.2, 2.35], ["C", -22.2, -3.65], ["O", 0.0, -14.65], ["C", 5.2, -11.65], ["C", 5.2, -5.65], ["C", 0.0, -2.65], ["C", -5.2, -5.65], ["C", -5.2, -11.65], ["O", 17.0, -6.65], ["C", 22.2, -3.65], ["C", 22.2, 2.35], ["C", 17.0, 5.35], ["C", 11.8, 2.35], ["C", 11.8, -3.65], ["O", 0.0, 4.35], ["C", 5.2, 7.35], ["C", 5.2, 13.35], ["C", 0.0, 16.35], ["C", -5.2, 13.35], ["C", -5.2, 7.35], ["O", -8.5, -1.65], ["O", 8.5, -1.65], ["O", 0.0, 0.85]], "bonds": [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 0], [6, 7], [7, 8], [8, 9], [9, 10], [10, 11], [11, 6], [12, 13], [13, 14], [14, 15], [15, 16], [16, 17], [17, 12], [18, 19], [19, 20], [20, 21], [21, 22], [22, 23], [23, 18], [2, 24], [24, 10], [8, 25], [25, 16], [9, 26], [26, 18]]}, "benzopyrene": {"atoms": [["C", -6.06, -0.55], ["C", -12.12, 2.95], ["C", -18.19, -0.55], ["C", -18.19, -7.55], ["C", -12.12, -11.05], ["C", -6.06, -7.55], ["C", 6.06, -0.55], ["C", 0.0, 2.95], ["C", -0.0, -11.05], ["C", 6.06, -7.55], ["C", 0.0, 9.95], ["C", -6.06, 13.45], ["C", -12.12, 9.95], ["C", 12.12, 9.95], ["C", 6.06, 13.45], ["C", 12.12, 2.95], ["C", 18.19, -0.55], ["C", 12.12, -11.05], ["C", 18.19, -7.55]], "bonds": [[0, 1, 2], [0, 5], [0, 7], [1, 2, 2], [1, 12], [2, 3], [3, 4, 2], [4, 5], [5, 8], [6, 7, 2], [6, 9], [6, 15], [7, 10, 2], [8, 9], [9, 17], [10, 11, 2], [10, 14], [11, 12], [13, 14, 2], [13, 15], [15, 16], [16, 18, 2], [17, 18]]}, "crh": {"atoms": [["N", 6.43, -0.51], ["C", 6.71, 2.54], ["C", 4.54, 5.63], ["N", 0.22, 6.92], ["C", -4.67, 5.02], ["C", -7.81, -0.09], ["N", -7.2, -6.8], ["C", -2.21, -12.39], ["C", 5.86, -14.09], ["N", 14.06, -10.37], ["C", 18.88, -1.88], ["C", 17.69, 8.56], ["N", 10.08, 16.88], ["C", -1.71, 19.31], ["C", -13.38, 14.06], ["N", -20.14, 2.32], ["C", -18.68, -11.92], ["S", -8.68, -23.19]], "bonds": [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8], [8, 9], [9, 10], [10, 11], [11, 12], [12, 13], [13, 14], [14, 15], [15, 16], [16, 17]]}, "plaque": {"atoms": [["C", -33.75, 0.0], ["C", -28.12, 9.75], ["C", -22.5, 19.48], ["O", -16.88, 29.23], ["C", -28.12, -9.75], ["C", -22.5, 0.0], ["N", -16.88, 9.75], ["C", -11.25, 19.48], ["C", -5.62, 29.23], ["C", -22.5, -19.48], ["O", -16.88, -9.75], ["C", -11.25, 0.0], ["C", -5.62, 9.75], ["C", 0.0, 19.48], ["C", 5.62, 29.23], ["C", -16.88, -29.23], ["C", -11.25, -19.48], ["C", -5.62, -9.75], ["O", 0.0, 0.0], ["C", 5.62, 9.75], ["C", 11.25, 19.48], ["N", 16.88, 29.23], ["C", -5.62, -29.23], ["C", 0.0, -19.48], ["C", 5.62, -9.75], ["O", 11.25, 0.0], ["C", 16.88, 9.75], ["C", 22.5, 19.48], ["C", 5.62, -29.23], ["C", 11.25, -19.48], ["C", 16.88, -9.75], ["C", 22.5, 0.0], ["C", 28.12, 9.75], ["O", 16.88, -29.23], ["C", 22.5, -19.48], ["C", 28.12, -9.75], ["N", 33.75, 0.0]], "bonds": [[0, 1], [0, 4], [0, 5], [1, 6], [2, 3], [2, 6], [3, 7], [3, 8], [4, 9], [4, 10], [5, 6], [5, 11], [6, 7], [6, 11], [7, 12], [7, 13], [8, 14], [9, 10], [9, 16], [10, 16], [11, 12], [11, 17], [11, 18], [12, 13], [12, 19], [13, 19], [14, 20], [14, 21], [15, 16], [15, 22], [16, 22], [17, 18], [17, 23], [17, 24], [18, 19], [18, 25], [19, 25], [20, 21], [20, 26], [20, 27], [22, 28], [23, 24], [23, 29], [24, 25], [24, 29], [25, 30], [25, 31], [26, 27], [26, 32], [27, 32], [28, 33], [29, 30], [29, 33], [30, 31], [30, 34], [30, 35], [31, 36], [32, 36], [33, 34], [35, 36]]}, "ldl": {"atoms": [["N", 0, -20], ["O", 10, -17.32], ["C", 17.32, -10], ["N", 20, 0], ["C", 17.32, 10], ["O", 10, 17.32], ["N", 0, 20], ["O", -10, 17.32], ["C", -17.32, 10], ["N", -20, 0], ["C", -17.32, -10], ["O", -10, -17.32], ["C", 0, -7], ["C", 6.06, -3.5], ["C", 6.06, 3.5], ["C", 0, 7], ["C", -6.06, 3.5], ["C", -6.06, -3.5], ["O", 0, 0]], "bonds": [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8], [8, 9], [9, 10], [10, 11], [11, 0], [12, 13], [13, 14], [14, 15], [15, 16], [16, 17], [17, 12], [12, 18]]}};
+    const build = (id, k, extra) => {
+      const mol = MOL[id];
+      const atoms = mol.atoms.map(([e, x, y]) => {
+        const c = EL[e], s = Math.round(c.size * k), h = Math.max(2, Math.round(s / 5));
+        return {
+          outer: `left:${x * k - s / 2}px;top:${y * k - s / 2}px;width:${s}px;height:${s}px;background:${c.dark}`,
+          inner: `background:${c.fill}`,
+          hi: `left:${Math.round(s * 0.24)}px;top:${Math.round(s * 0.24)}px;width:${h}px;height:${h}px;background:${c.light}`
+        };
+      });
+      const bonds = [];
+      mol.bonds.forEach(([a, b, n]) => {
+        const [, x1, y1] = mol.atoms[a], [, x2, y2] = mol.atoms[b];
+        const dx = (x2 - x1) * k, dy = (y2 - y1) * k, len = Math.hypot(dx, dy);
+        const ang = Math.atan2(dy, dx) * 180 / Math.PI, t = 1.6 * k;
+        (n === 2 ? [-1.3 * k, 1.3 * k] : [0]).forEach(o => {
+          const px = -dy / len * o, py = dx / len * o;
+          bonds.push({ style: `left:${x1 * k + px}px;top:${y1 * k + py - t / 2}px;width:${len}px;height:${t}px;transform:rotate(${ang}deg)` });
+        });
+      });
+      return Object.assign({ atoms, bonds, ring: '', ringD: '0px', tagColor: '#A9AED0' }, extra);
+    };
+    const aura = (d) => ({ ring: 'border: 3px dashed #FF9A1F; box-sizing: border-box', ringD: d });
+    const FAM = { radical: '#FF8A7A', stress: '#FF9A1F', toxin: '#A6C83A', inflammation: '#FF6FA8', sugar: '#F2C83A', lipid: '#C9CCE6' };
+    const mol = (id, name, fam, tag, note, k) => build(id, k || 3, { name, tag, note, tagColor: FAM[fam] });
+    const molecules = [
+      mol('superoxide', 'Superóxido', 'radical', 'RADICAL · ERRÁTICO', 'Rápido, muda de direção. Vira Peróxido de hidrogênio.', 4),
+      mol('hydrogenPeroxide', 'Peróxido de hidrogênio', 'radical', 'RADICAL · ESTOURA', 'Estoura ao encostar, com dano forte, e some.', 3.5),
+      Object.assign(mol('noradrenaline', 'Noradrenalina', 'stress', 'ESTRESSE · AURA CURTA', 'Acelera quem está perto e some em 10 s. Decompor dá Adrenalina.', 2.2), aura('120px')),
+      mol('ammonia', 'Amônia', 'toxin', 'TOXINA', 'Fraca e em bando; o fígado a transforma em ureia.', 4),
+      mol('cytokine', 'Citocina', 'inflammation', 'INFLAMAÇÃO · GERADORA', 'Parada. Solta uma Bradicinina a cada 4 s, até 6.', 2.4),
+      mol('bradykinin', 'Bradicinina', 'inflammation', 'INFLAMAÇÃO', 'Pequena e rápida, nasce da Citocina.', 3.2)
+    ];
+    const boss = (id, name, fam, local, note, k) => build(id, k, { name, tag: local, note, tagColor: FAM[fam] });
+    const bosses = [
+      boss('ldl', 'Partícula de LDL', 'lipid', 'CORRENTE SANGUÍNEA', 'Tanque. Quebra em triglicerídeos e ácidos graxos.', 2.4),
+      boss('napqi', 'NAPQI', 'toxin', 'FÍGADO', 'Metabólito tóxico do paracetamol. Deixa poças por onde passa.', 2.4),
+      boss('amylopectin', 'Amilopectina', 'sugar', 'INTESTINO', 'Amido ramificado. Solta glicoses e quebra em maltoses.', 2.2),
+      boss('benzopyrene', 'Benzopireno', 'radical', 'PULMÃO', 'Da fumaça. Errático, solta radicais hidroxila.', 2.4),
+      Object.assign(boss('crh', 'CRH', 'stress', 'CÉREBRO', 'Dispara o estresse: aura grande que acelera e protege.', 2.2), aura('150px')),
+      boss('plaque', 'Placa de ateroma', 'lipid', 'FIM DO CASO · 15 MIN', 'Parada e enorme. Vale a cápsula de prata.', 1.6)
+    ];
+    const PAL = { K: '#1A1424', W: '#FFFFFF', G: '#A6C83A', g: '#6E8A1C', l: '#E4F59A', Y: '#F2C83A', O: '#FF9A1F' };
+    const icon = (rows, c) => {
+      const s = [];
+      rows.forEach((row, y) => [...row].forEach((ch, x) => { if (PAL[ch]) s.push(`${(x + 1) * c}px ${(y + 1) * c}px 0 0 ${PAL[ch]}`); }));
+      return `position:absolute;left:${-c}px;top:${-c}px;width:${c}px;height:${c}px;box-shadow:${s.join(',')}`;
+    };
+    const I = {"slow": ["................", "......KKKK......", ".....KlGGlK.....", "....KlGGGGGK....", "....KGGGGGGK....", "....KGGgGGGK....", ".....KGGGGK.....", "......KKKK......", "...K........K...", "..KWK......KWK..", "..KWWK....KWWK..", "...KWWK..KWWK...", "....KWWKKWWK....", ".....KWWWWK.....", "......KWWK......", ".......KK......."], "adrenaline": ["..........KKKK..", ".........KYYYK..", "........KYYOK...", ".......KYYOK....", "......KYYOK.....", ".....KYYOKKKK...", "....KYYYYYYYK...", "...KOOOOYYOK....", "...KKKKOYOK.....", "......KOYK......", ".....KOOK.......", "....KOOK........", "...KOK..........", "..KOK...........", "..KK............", "................"]};
+    const effects = [
+      { name: 'Lentidão', note: '−20% de Mobilidade enquanto estiver na poça tóxica.', icon: icon(I.slow, 3), border: '#E0433A', fill: '#5A1416' },
+      { name: 'Adrenalina', note: '+30% de Mobilidade por 4 s ao decompor Adrenalina ou Noradrenalina.', icon: icon(I.adrenaline, 3), border: '#5BC43A', fill: '#1A4E12' }
+    ];
+    return {
+      sections: [
+        { label: 'MOLÉCULAS NOVAS (SPRITE 3×)', color: '#7EF0FF', h: '250px', art: '120px', items: molecules },
+        { label: 'UM CHEFE POR LOCAL E A PLACA', color: '#FF8A7A', h: '290px', art: '160px', items: bosses }
+      ],
+      effects
+    };
+  }
+}
+</script>
+</body>
+</html>

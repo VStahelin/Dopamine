@@ -56,6 +56,10 @@ export const PALETTE = {
   dopaminePink: 0xff6fa8,
   uv: 0xb072f0,
   uvDark: 0x4a1e7a,
+  /** Poça tóxica e aura do estresse (prancheta "Famílias e chefes"). */
+  toxicPool: 0xa6c83a,
+  toxicPoolDark: 0x6e8a1c,
+  stress: 0xff9a1f,
   /** Botão de desistir. */
   wine: 0x5a1416,
   wineHi: 0x7a2a2c,

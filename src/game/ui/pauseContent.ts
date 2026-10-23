@@ -7,7 +7,7 @@ import { statSources, type StatSource } from '../../core/run/upgrades';
 import { weaponMaxLevel } from '../../core/run/weaponParams';
 import { paramsOf } from '../../core/run/weapons';
 import { PALETTE, PALETTE_CSS } from '../render/palette';
-import { iconTexture } from '../render/textures';
+import { iconTexture, type IconRef } from '../render/textures';
 import {
   addIconSlot,
   passiveSlot,
@@ -193,16 +193,31 @@ function passiveRow(run: RunState, id: PassiveId): Build {
   };
 }
 
-/** Efeitos ativos: o especial e a queda depois dele. */
+/** Efeitos ativos: o especial, a queda depois dele e os efeitos de inimigo. */
 function effectRows(run: RunState): Build[] {
   const def = run.rules.agents[run.agentId].special;
   const icon = iconTexture('specials', def.kind);
-  const list: { frame: 'buff' | 'debuff'; name: string; left: number }[] = [];
+  const list: { frame: 'buff' | 'debuff'; name: string; left: number; icon: IconRef }[] = [];
   if (run.special.active > 0)
-    list.push({ frame: 'buff', name: def.name, left: run.special.active });
-  if (run.special.crash > 0) list.push({ frame: 'debuff', name: 'Queda', left: run.special.crash });
+    list.push({ frame: 'buff', name: def.name, left: run.special.active, icon });
+  if (run.special.crash > 0)
+    list.push({ frame: 'debuff', name: 'Queda', left: run.special.crash, icon });
+  if (run.agentFx.slow > 0)
+    list.push({
+      frame: 'debuff',
+      name: 'Lentidão',
+      left: run.agentFx.slow,
+      icon: iconTexture('items', 'slow'),
+    });
+  if (run.agentFx.rush > 0)
+    list.push({
+      frame: 'buff',
+      name: 'Adrenalina',
+      left: run.agentFx.rush,
+      icon: iconTexture('items', 'adrenaline'),
+    });
   return list.map((e) => (scene, width) => {
-    const slot = addIconSlot(scene, 6, 5, 1, { frame: e.frame, icon });
+    const slot = addIconSlot(scene, 6, 5, 1, { frame: e.frame, icon: e.icon });
     const color = e.frame === 'buff' ? PALETTE_CSS.numberHeal : PALETTE_CSS.numberHurt;
     return row(scene, width, 34, [
       box(scene, width, 34),

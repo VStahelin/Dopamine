@@ -34,27 +34,38 @@ As cascatas seguem o metabolismo real.
 
 ### Radicais livres
 
+- **Radical hidroxila.** Pequeno, muito rápido e errático.
+- **Peroxinitrito.** Errático. Ao ser quebrado, vira radicais hidroxila.
 - **Superóxido.** Rápido e errático. Ao ser quebrado, vira peróxido de hidrogênio.
-- **Peróxido de hidrogênio.** Mais lento, explode numa área pequena se encostar no agente. Ao ser quebrado, vira água e oxigênio, inofensivos.
+- **Peróxido de hidrogênio.** Estoura ao encostar no agente, com dano forte, e some sem recompensa.
 
 ### Hormônios do estresse
 
-- **Cortisol.** Não ataca: fica longe e dá velocidade e resistência aos inimigos perto dele. Prioridade de alvo.
-- **Adrenalina.** Versão rápida e curta do cortisol: acelera muito os inimigos por alguns segundos e some.
+- **Cortisol.** Fica longe e dá velocidade e resistência aos inimigos perto dele (aura). Prioridade de alvo. Ao ser quebrado, vira adrenalina.
+- **Adrenalina.** Rápida e em grupo; some sozinha depois de alguns segundos. Quem a decompõe ganha Adrenalina (mais Mobilidade por alguns segundos).
+- **Noradrenalina.** Aura curta que acelera os vizinhos; some em 10 segundos e também dá Adrenalina.
 
 ### Toxinas
 
-- **Etanol.** Fraco. Ao ser quebrado, vira acetaldeído.
-- **Acetaldeído.** Mais tóxico que o etanol: dano maior e deixa uma poça que tira interações. Ao ser quebrado, vira acetato, inofensivo. Quebrar o etanol sem conseguir terminar o serviço piora a situação.
+- **Etanol.** Fraco, chega em grupo.
+- **Acetaldeído.** Ao ser quebrado, vira etanol e deixa uma poça tóxica: dentro dela o agente perde interações aos poucos e fica com Lentidão.
+- **Amônia.** Fraca e comum, em grupo.
 
 ### Inflamação
 
-- **Citocina.** Fica parada e solta pequenos inimigos de tempos em tempos até ser destruída.
+- **Citocina.** Fica parada e solta bradicininas de tempos em tempos, até um teto, até ser destruída.
+- **Bradicinina.** Pequena, nasce da citocina e do Cerco inflamatório.
 
 ### Chefes
 
-- **Partícula de LDL.** Chefe tanque. Quebra em colesterol, triglicerídeos e proteína, que viram uma onda de fragmentos.
-- **Placa.** Chefe de fim de indivíduo: um bloco que fecha parte do mapa e só cai com agentes fortes contra lipídios e inflamação.
+Um chefe a cada 5 minutos, que depende do local do corpo ([decisão 0035](decisoes/0035-familias-e-chefes-por-local.md)):
+
+- **Partícula de LDL** (Corrente sanguínea). Chefe tanque. Quebra em triglicerídeos e ácidos graxos.
+- **NAPQI** (Fígado). O metabólito tóxico do paracetamol: deixa poças por onde passa e quebra em acetaldeídos.
+- **Amilopectina** (Intestino). Tanque que solta glicoses e quebra em maltoses.
+- **Benzopireno** (Pulmão). Da fumaça: errático, solta radicais hidroxila e quebra em superóxidos.
+- **CRH** (Cérebro). O hormônio que dispara o estresse: aura grande que acelera e protege; quebra em cortisol e adrenalinas.
+- **Placa de ateroma.** Chefe de fim de caso: nasce uma vez aos 15 minutos, em qualquer local, parada, enorme e soltando ácidos graxos. Vale a cápsula de prata.
 
 ## Agentes da run
 

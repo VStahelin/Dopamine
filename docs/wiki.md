@@ -26,7 +26,7 @@ Cada agente tem um especial, disparado pelo botão grande no canto (ou Espaço n
 Moléculas decompostas soltam gemas azuis. Passe perto para coletar. Encheu a barra do topo, você sobe de nível e escolhe uma arma ou um receptor.
 
 ### Ondas e chefes
-A dificuldade sobe com o tempo: nascem mais moléculas e cada uma nasce com mais vida. Desde o começo elas aguentam mais de um golpe das armas iniciais, então ficar parado não segura a run. A cada 5 minutos vem um pico de onda (o tempo fica laranja), com mais moléculas, seguido de um respiro curto. A cada 5 minutos também aparece um chefe: a Partícula de LDL.
+A dificuldade sobe com o tempo: nascem mais moléculas e cada uma nasce com mais vida. Desde o começo elas aguentam mais de um golpe das armas iniciais, então ficar parado não segura a run. A cada 5 minutos vem um pico de onda (o tempo fica laranja), com mais moléculas, seguido de um respiro curto. A cada 5 minutos também aparece um chefe, que depende do local do corpo (veja Chefes, em Moléculas). Aos 15 minutos chega a Placa de ateroma, o chefe de fim de caso.
 
 ### Formações
 A cada 90 segundos vem uma formação, com aviso no topo e uma seta do lado de onde ela vai entrar:
@@ -179,22 +179,31 @@ Penetração, Reação em cadeia, Força da catálise, Repulsão, Especificidade
 *Números de `enemies.json` e `organism.json`. O Compêndio mostra cada molécula depois que você a encontra.*
 
 ### Tipos de molécula
-Cada molécula tem um tipo: açúcar, lipídio, estresse, radical ou toxina. O tipo decide a afinidade dos agentes e qual setor do organismo puxa aquela família.
+Cada molécula tem um tipo: açúcar, lipídio, estresse, radical, toxina ou inflamação. O tipo decide a afinidade dos agentes, qual setor do organismo puxa aquela família e o jeito que ela se mexe.
 
 ### Açúcares
 Glicose e Frutose são pequenas e chegam em grupos. Maltose e Sacarose se quebram em Glicose e Frutose. O Amido é forte e se quebra em Maltose.
 
 ### Lipídios
-Ácido graxo é comum; o Triglicerídeo é forte e se quebra em Glicerol e Ácidos graxos. O chefe, a **Partícula de LDL**, aparece a cada 5 minutos e se quebra em Triglicerídeos e Ácidos graxos.
+Ácido graxo é comum; o Triglicerídeo é forte e se quebra em Glicerol e Ácidos graxos. São lentos e resistentes.
 
 ### Estresse
-A Adrenalina é rápida e chega em grupos. O Cortisol é forte e se quebra em Adrenalina. Vêm muito quando a Mental está baixa.
+Têm **aura**: as moléculas perto andam mais rápido e levam menos dano (o anel laranja tracejado). O Cortisol é forte, fica longe de você e se quebra em Adrenalina; decomponha ele primeiro. A Adrenalina é rápida e chega em grupos; a Noradrenalina tem uma aura curta. As duas somem sozinhas depois de alguns segundos, sem dar nada, e decompor uma delas te dá **Adrenalina**. Vêm muito quando a Mental está baixa.
 
 ### Radicais livres
-O Radical hidroxila é pequeno e muito rápido. O Peroxinitrito se quebra em radicais hidroxila. Vêm muito quando a Executiva está baixa.
+São **erráticos**: mudam de direção o tempo todo. O Radical hidroxila é pequeno e muito rápido. O Peroxinitrito se quebra em radicais hidroxila e o Superóxido, em Peróxido de hidrogênio. O **Peróxido** estoura ao encostar em você, tira 15 interações e some sem dar nada. Vêm muito quando a Executiva está baixa.
 
 ### Toxinas
-O Etanol chega em grupos. O Acetaldeído se quebra em Etanol. Vêm muito quando a Social está baixa.
+O Etanol e a Amônia chegam em grupos. O Acetaldeído se quebra em Etanol e deixa uma **poça tóxica** (verde) por 3 segundos. Vêm muito quando a Social está baixa.
+
+### Inflamação
+A **Citocina** fica parada e solta uma Bradicinina a cada 4 segundos, até 6 por vez. Decomponha a Citocina para parar o fluxo. As duas vêm no Cerco inflamatório.
+
+### Poças e efeitos
+Dentro de uma poça tóxica você perde 1 interação por segundo e fica com **Lentidão** (−20% de Mobilidade). A **Adrenalina** dá +30% de Mobilidade por 4 segundos. Os dois aparecem na fila de efeitos, embaixo do retrato.
+
+### Chefes
+A cada 5 minutos vem o chefe do local: **Partícula de LDL** na Corrente sanguínea (tanque, se quebra em Triglicerídeos e Ácidos graxos), **NAPQI** no Fígado (deixa poças por onde passa), **Amilopectina** no Intestino (solta Glicoses), **Benzopireno** no Pulmão (errático, solta Radicais hidroxila) e **CRH** no Cérebro (aura grande). Aos 15 minutos, em qualquer local, nasce uma vez a **Placa de ateroma**: parada, enorme, soltando Ácidos graxos. Todo chefe solta a cápsula.
 
 ---
 

@@ -378,7 +378,7 @@ export class HudScene extends Phaser.Scene {
 
   /**
    * Efeitos temporários: o especial ativo (verde), a queda depois dele (vermelho) e os itens com
-   * tempo (Gelo seco, Bico de Bunsen, Febre de ATP).
+   * tempo (Gelo seco, Bico de Bunsen, Febre de ATP) e os efeitos de inimigo.
    */
   private updateEffects(g: Phaser.GameObjects.Graphics, run: RunState): void {
     const def = run.rules.agents[run.agentId].special;
@@ -413,6 +413,20 @@ export class HudScene extends Phaser.Scene {
       effects.push({
         content: { frame: 'buff', icon: iconTexture('items', id) },
         left: left / (DROPS.items[id].seconds ?? 1),
+      });
+    }
+    // Efeitos de inimigo (fase 5.14): Lentidão na poça tóxica e Adrenalina ao decompor o estresse.
+    const fx = run.rules.run.agentEffects;
+    if (run.agentFx.slow > 0) {
+      effects.push({
+        content: { frame: 'debuff', icon: iconTexture('items', 'slow') },
+        left: run.agentFx.slow / fx.slow.lingerSeconds,
+      });
+    }
+    if (run.agentFx.rush > 0) {
+      effects.push({
+        content: { frame: 'buff', icon: iconTexture('items', 'adrenaline') },
+        left: run.agentFx.rush / fx.adrenaline.seconds,
       });
     }
     this.effectSlots.forEach((slot, i) => {

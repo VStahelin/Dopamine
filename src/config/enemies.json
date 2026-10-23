@@ -160,7 +160,16 @@
     "radiusPx": 19,
     "unlockMinute": 0,
     "spawnWeight": 3,
-    "groupSize": 3
+    "groupSize": 3,
+    "behaviors": [
+      {
+        "kind": "lifetime",
+        "seconds": 12
+      },
+      {
+        "kind": "rushOnDeath"
+      }
+    ]
   },
   "cortisol": {
     "name": "Cortisol",
@@ -178,6 +187,45 @@
         "kind": "adrenaline",
         "count": 2
       }
+    ],
+    "behaviors": [
+      {
+        "kind": "aura",
+        "radiusPx": 110,
+        "speed": 0.3,
+        "damageTaken": -0.25
+      },
+      {
+        "kind": "keepAway",
+        "distancePx": 170
+      }
+    ]
+  },
+  "noradrenaline": {
+    "name": "Noradrenalina",
+    "type": "stress",
+    "hp": 8,
+    "speedPxPerSecond": 70,
+    "contactDamage": "common",
+    "xp": 1,
+    "radiusPx": 18,
+    "unlockMinute": 2,
+    "spawnWeight": 1.5,
+    "groupSize": 2,
+    "behaviors": [
+      {
+        "kind": "aura",
+        "radiusPx": 70,
+        "speed": 0.25,
+        "damageTaken": 0
+      },
+      {
+        "kind": "lifetime",
+        "seconds": 10
+      },
+      {
+        "kind": "rushOnDeath"
+      }
     ]
   },
   "hydroxylRadical": {
@@ -190,7 +238,14 @@
     "radiusPx": 8,
     "unlockMinute": 0,
     "spawnWeight": 3,
-    "groupSize": 5
+    "groupSize": 5,
+    "behaviors": [
+      {
+        "kind": "erratic",
+        "turnSeconds": 0.3,
+        "angleDegrees": 60
+      }
+    ]
   },
   "peroxynitrite": {
     "name": "Peroxinitrito",
@@ -207,6 +262,55 @@
       {
         "kind": "hydroxylRadical",
         "count": 2
+      }
+    ],
+    "behaviors": [
+      {
+        "kind": "erratic",
+        "turnSeconds": 0.5,
+        "angleDegrees": 45
+      }
+    ]
+  },
+  "superoxide": {
+    "name": "Superóxido",
+    "type": "radical",
+    "hp": 4,
+    "speedPxPerSecond": 95,
+    "contactDamage": "common",
+    "xp": 1,
+    "radiusPx": 10,
+    "unlockMinute": 1,
+    "spawnWeight": 2,
+    "groupSize": 3,
+    "fragments": [
+      {
+        "kind": "hydrogenPeroxide",
+        "count": 1
+      }
+    ],
+    "behaviors": [
+      {
+        "kind": "erratic",
+        "turnSeconds": 0.4,
+        "angleDegrees": 70
+      }
+    ]
+  },
+  "hydrogenPeroxide": {
+    "name": "Peróxido de hidrogênio",
+    "type": "radical",
+    "hp": 6,
+    "speedPxPerSecond": 50,
+    "contactDamage": "strong",
+    "xp": 1,
+    "radiusPx": 12,
+    "unlockMinute": 999,
+    "spawnWeight": 0,
+    "groupSize": 1,
+    "behaviors": [
+      {
+        "kind": "burst"
       }
     ]
   },
@@ -237,6 +341,205 @@
       {
         "kind": "ethanol",
         "count": 2
+      }
+    ],
+    "behaviors": [
+      {
+        "kind": "poolOnDeath",
+        "radiusPx": 30,
+        "seconds": 3
+      }
+    ]
+  },
+  "ammonia": {
+    "name": "Amônia",
+    "type": "toxin",
+    "hp": 4,
+    "speedPxPerSecond": 58,
+    "contactDamage": "common",
+    "xp": 1,
+    "radiusPx": 10,
+    "unlockMinute": 1,
+    "spawnWeight": 2.5,
+    "groupSize": 5
+  },
+  "cytokine": {
+    "name": "Citocina",
+    "type": "inflammation",
+    "hp": 30,
+    "speedPxPerSecond": 0,
+    "contactDamage": "strong",
+    "xp": 5,
+    "radiusPx": 19,
+    "unlockMinute": 3,
+    "spawnWeight": 0.6,
+    "groupSize": 1,
+    "behaviors": [
+      {
+        "kind": "spawner",
+        "spawn": "bradykinin",
+        "everySeconds": 4,
+        "max": 6
+      }
+    ]
+  },
+  "bradykinin": {
+    "name": "Bradicinina",
+    "type": "inflammation",
+    "hp": 3,
+    "speedPxPerSecond": 80,
+    "contactDamage": "common",
+    "xp": 1,
+    "radiusPx": 13,
+    "unlockMinute": 999,
+    "spawnWeight": 0,
+    "groupSize": 1
+  },
+  "napqi": {
+    "name": "NAPQI",
+    "type": "toxin",
+    "hp": 450,
+    "speedPxPerSecond": 22,
+    "contactDamage": "boss",
+    "xp": 60,
+    "radiusPx": 22,
+    "unlockMinute": 999,
+    "spawnWeight": 0,
+    "groupSize": 1,
+    "boss": true,
+    "fragments": [
+      {
+        "kind": "acetaldehyde",
+        "count": 4
+      }
+    ],
+    "behaviors": [
+      {
+        "kind": "poolTrail",
+        "everySeconds": 1.2,
+        "radiusPx": 34,
+        "seconds": 4
+      }
+    ]
+  },
+  "amylopectin": {
+    "name": "Amilopectina",
+    "type": "sugar",
+    "hp": 500,
+    "speedPxPerSecond": 18,
+    "contactDamage": "boss",
+    "xp": 60,
+    "radiusPx": 24,
+    "unlockMinute": 999,
+    "spawnWeight": 0,
+    "groupSize": 1,
+    "boss": true,
+    "fragments": [
+      {
+        "kind": "maltose",
+        "count": 6
+      }
+    ],
+    "behaviors": [
+      {
+        "kind": "spawner",
+        "spawn": "glucose",
+        "everySeconds": 3,
+        "max": 10
+      }
+    ]
+  },
+  "benzopyrene": {
+    "name": "Benzopireno",
+    "type": "radical",
+    "hp": 400,
+    "speedPxPerSecond": 30,
+    "contactDamage": "boss",
+    "xp": 60,
+    "radiusPx": 22,
+    "unlockMinute": 999,
+    "spawnWeight": 0,
+    "groupSize": 1,
+    "boss": true,
+    "fragments": [
+      {
+        "kind": "superoxide",
+        "count": 4
+      }
+    ],
+    "behaviors": [
+      {
+        "kind": "erratic",
+        "turnSeconds": 0.8,
+        "angleDegrees": 50
+      },
+      {
+        "kind": "spawner",
+        "spawn": "hydroxylRadical",
+        "everySeconds": 2.5,
+        "max": 8
+      }
+    ]
+  },
+  "crh": {
+    "name": "CRH",
+    "type": "stress",
+    "hp": 420,
+    "speedPxPerSecond": 24,
+    "contactDamage": "boss",
+    "xp": 60,
+    "radiusPx": 23,
+    "unlockMinute": 999,
+    "spawnWeight": 0,
+    "groupSize": 1,
+    "boss": true,
+    "fragments": [
+      {
+        "kind": "cortisol",
+        "count": 1
+      },
+      {
+        "kind": "adrenaline",
+        "count": 3
+      }
+    ],
+    "behaviors": [
+      {
+        "kind": "aura",
+        "radiusPx": 180,
+        "speed": 0.4,
+        "damageTaken": -0.3
+      }
+    ]
+  },
+  "plaque": {
+    "name": "Placa de ateroma",
+    "type": "lipid",
+    "hp": 1500,
+    "speedPxPerSecond": 0,
+    "contactDamage": "boss",
+    "xp": 120,
+    "radiusPx": 32,
+    "unlockMinute": 999,
+    "spawnWeight": 0,
+    "groupSize": 1,
+    "boss": true,
+    "fragments": [
+      {
+        "kind": "triglyceride",
+        "count": 4
+      },
+      {
+        "kind": "fattyAcid",
+        "count": 6
+      }
+    ],
+    "behaviors": [
+      {
+        "kind": "spawner",
+        "spawn": "fattyAcid",
+        "everySeconds": 5,
+        "max": 6
       }
     ]
   }

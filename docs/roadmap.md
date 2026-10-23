@@ -33,7 +33,7 @@ Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for tes
 | 5.11 | Sinapses e estruturas | O jogador sai do lugar para buscar bônus no mapa? | 5.6, 5.9, 5.10 | implementada, falta validar no celular |
 | 5.12 | Locais do corpo e sinergias | Escolher onde agir muda a run e cura o organismo mais rápido? | 5, 5.7 | em andamento |
 | 5.13 | Validação e ganhos rápidos | O que já existe funciona no celular e não mostra placeholder? | 2.6 a 5.11 | em andamento |
-| 5.14 | Famílias e chefes | Cada família de molécula pede um jeito diferente de jogar? | 5.12, 5.13 | não iniciada |
+| 5.14 | Famílias e chefes | Cada família de molécula pede um jeito diferente de jogar? | 5.12, 5.13 | em andamento |
 | 5.15 | Elenco completo | Cada doença tem um agente feito para ela? | 5.14 | não iniciada |
 | 5.16 | Conquistas | Jogar libera conteúdo, e não só juntar ATP? | 5.15 | não iniciada |
 | 6 | Arte, polimento e lançamento | Dá para mandar o link para os amigos? | 1 a 5.16 | não iniciada |
@@ -435,12 +435,13 @@ Fechar o que já existe antes de somar conteúdo: validar no celular e tirar o q
 
 Cada família de molécula ganha o comportamento de [personagens.md](personagens.md#tipos-de-molécula-ofensora), e cada local do corpo ganha um chefe. Hoje todas as moléculas só perseguem o agente e o único chefe é a Partícula de LDL.
 
-- [ ] Comportamento por família: radicais erráticos que ricocheteiam; estresse com aura que acelera e protege os vizinhos; toxinas que pioram ao quebrar (poça do acetaldeído que tira interações); inflamação que gera inimigos.
-- [ ] Família inflamação: a Citocina (spawner parado) e o Cerco inflamatório feito dela; a Maré tóxica deixando poças.
-- [ ] Mais moléculas nas famílias com duas (estresse, radicais, toxinas), alinhando [personagens.md](personagens.md) com o código.
-- [ ] Efeitos temporários de inimigo no agente (Lentidão, Adrenalina), na fila de efeitos da HUD.
-- [ ] Um chefe por local do corpo, ligado à família do local, e a Placa como chefe de fim de indivíduo.
-- [ ] Famílias e chefes novos também no campo longo; Compêndio, wiki e `npm run sim`.
+- [x] Comportamento por família ([decisão 0035](decisoes/0035-familias-e-chefes-por-local.md)): radicais erráticos; estresse com aura que acelera e protege os vizinhos (o Cortisol fica longe); poça do Acetaldeído que tira interações; inflamação que gera inimigos; o Peróxido que estoura.
+- [x] Família inflamação: a Citocina (spawner parado) e a Bradicinina, no Cerco inflamatório; a Maré tóxica deixa poças pelo Acetaldeído.
+- [x] Mais moléculas: Superóxido, Peróxido de hidrogênio, Noradrenalina e Amônia, com [personagens.md](personagens.md) alinhado ao código.
+- [x] Efeitos temporários de inimigo no agente (Lentidão, Adrenalina), na fila de efeitos da HUD e na pausa.
+- [x] Um chefe por local do corpo (LDL, NAPQI, Amilopectina, Benzopireno, CRH) e a Placa de ateroma aos 15 minutos.
+- [x] Moléculas novas no campo longo pelo sorteio da doença (os comportamentos ficam no campo crônico); Compêndio e wiki.
+- [ ] Validar no `npm run sim` e jogando: as famílias se reconhecem pelo jeito de andar e o chefe do local não pesa demais.
 
 **Critério de saída:** dá para reconhecer a família de uma molécula pelo jeito que ela anda, e duas runs em locais diferentes terminam com chefes diferentes.
 

@@ -139,7 +139,21 @@ export interface RunConfig {
     objectAimRangePx: number;
   };
   /** Chefes: nascem no começo de cada pico do dente de serra que caia no intervalo. */
-  bosses: { kind: string; everyMinutes: number }[];
+  bosses: {
+    kind: string;
+    everyMinutes: number;
+    /** O chefe do local (fase 5.14, `boss` em map.json) no lugar de `kind`. */
+    local?: boolean;
+    /** Quantas vezes nasce na run; sem o número, sempre. */
+    max?: number;
+  }[];
+  /** Efeitos de inimigo no agente (fase 5.14): Lentidão da poça e Adrenalina. */
+  agentEffects: {
+    slow: { mobility: number; lingerSeconds: number };
+    adrenaline: { mobility: number; seconds: number };
+  };
+  /** Poças tóxicas: interações tiradas a cada `tickSeconds` dentro delas. */
+  pools: { interactionsPerTick: number; tickSeconds: number };
   aggregates: AggregateConfig;
   /** O receptor nativo sobe 1 nível a cada `everyLevels` níveis de run, até `maxLevel`. */
   nativeReceptor: { everyLevels: number; maxLevel: number };
@@ -175,7 +189,30 @@ export interface EnemyDef {
   fragments?: { kind: string; count: number }[];
   /** Chefe: nasce pelo calendário de `bosses` em run.json, não pelo sorteio. */
   boss?: boolean;
+  /** Comportamentos da família (fase 5.14, decisão 0035); sem eles, só persegue o agente. */
+  behaviors?: EnemyBehavior[];
 }
+
+/** Um comportamento de molécula (src/core/run/behaviors.ts). */
+export type EnemyBehavior =
+  /** Radicais: a direção gira até `angleDegrees`, sorteada a cada `turnSeconds`. */
+  | { kind: 'erratic'; turnSeconds: number; angleDegrees: number }
+  /** Estresse: as moléculas no raio andam `speed` mais rápido e levam `damageTaken` de dano. */
+  | { kind: 'aura'; radiusPx: number; speed: number; damageTaken: number }
+  /** Fica a esta distância do agente em vez de encostar. */
+  | { kind: 'keepAway'; distancePx: number }
+  /** Some sozinha depois destes segundos, sem recompensa. */
+  | { kind: 'lifetime'; seconds: number }
+  /** Ao ser decomposta, dá Adrenalina ao agente. */
+  | { kind: 'rushOnDeath' }
+  /** Ao ser decomposta, deixa uma poça tóxica. */
+  | { kind: 'poolOnDeath'; radiusPx: number; seconds: number }
+  /** Deixa poças tóxicas por onde passa. */
+  | { kind: 'poolTrail'; everySeconds: number; radiusPx: number; seconds: number }
+  /** Solta `spawn` a cada `everySeconds`, até `max` vivas ao mesmo tempo. */
+  | { kind: 'spawner'; spawn: string; everySeconds: number; max: number }
+  /** Estoura ao encostar no agente: dano de contato e some, sem recompensa. */
+  | { kind: 'burst' };
 
 /**
  * Tipos de ataque (arquétipos da aba Armas): disparo com mira, cone, órbita, aura, poça no chão,
@@ -814,6 +851,8 @@ export interface MapEnvironmentDef {
   families: MoleculeType[];
   /** Setor de saúde do local, com o ganho do agente multiplicado; null no local neutro. */
   sector: Sector | null;
+  /** Chefe do local (fase 5.14), no lugar dos chefes de run.json marcados com `local`. */
+  boss: string;
 }
 
 /** Como uma parte do grupo se espalha em volta do centro. */
