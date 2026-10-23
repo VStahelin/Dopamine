@@ -801,3 +801,52 @@ export interface MapConfig {
   nestVesicles: [number, number];
   environments: Record<MapEnvironment, MapEnvironmentDef>;
 }
+
+/** Ids das faixas de música (docs/sonoplastia.md). */
+export const MUSIC_TRACKS = [
+  'title',
+  'hub',
+  'idle',
+  'run1',
+  'run2',
+  'run3',
+  'crisis',
+  'boss',
+  'gameover',
+  'alta',
+  'levelup',
+  'capsule',
+] as const;
+export type MusicTrackId = (typeof MUSIC_TRACKS)[number];
+
+/** Uma faixa em `public/audio/music/<id>.ogg` e `.m4a`, gerada por `tools/audio/music.py`. */
+export interface MusicTrackDef {
+  /** Arquivo original em `audio/musicas/`. */
+  source: string;
+  /** Faixa em loop: toca a introdução uma vez e depois repete de `loopFrom` a `loopTo` (segundos). */
+  loop: boolean;
+  loopFrom?: number;
+  loopTo?: number;
+  /** Sobe quando o arquivo muda, para o cache do jogo baixar de novo. */
+  rev: number;
+}
+
+/** Música (docs/sonoplastia.md): volumes, trocas e as faixas, na ordem em que carregam. */
+export interface AudioConfig {
+  /** Volume padrão da música, de 0 a 1. */
+  musicVolume: number;
+  /** Valores do botão Música nas Opções. */
+  volumeSteps: number[];
+  /** Tempo das trocas de faixa, em segundos. */
+  crossfadeSeconds: number;
+  /** Volume da música com a pausa, o level up ou a cápsula abertos, com os agudos cortados. */
+  muffledVolume: number;
+  muffledLowpassHz: number;
+  /** Volume da música da run enquanto a crise toca por cima. */
+  crisisRunVolume: number;
+  /** Volume da música enquanto um jingle toca. */
+  jingleDuckVolume: number;
+  /** Minuto da run em que entra cada faixa mais pesada. */
+  runTrackMinutes: { run2: number; run3: number };
+  tracks: Record<MusicTrackId, MusicTrackDef>;
+}

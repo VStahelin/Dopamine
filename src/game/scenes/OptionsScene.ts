@@ -8,6 +8,9 @@ import type { UpdateStatus } from '../update/updateLogic';
 import { addDim, setupUiLayout } from '../ui/uiLayout';
 import { downloadBackup, exportCode, importBackup, pickBackupFile } from '../storage/backup';
 import { SCENES } from './keys';
+import { AUDIO } from '../../config';
+import { music } from '../audio/music';
+import { nextVolume } from '../audio/musicLogic';
 
 const yesNo = (value: boolean) => (value ? 'SIM' : 'NÃO');
 
@@ -31,10 +34,10 @@ const UPDATE_NOTE: Record<UpdateStatus, string> = {
 };
 
 /**
- * Opções: mostrar FPS e números de dano (salvos), tela cheia, versão e verificar atualização
- * (decisão 0016).
- * Volume entra quando o jogo tiver som. Aberta pela pausa da run, fica por cima dela e volta para
- * ela, sem o botão de atualização (só nos menus, decisão 0016).
+ * Opções: volume da música, mostrar FPS e números de dano (salvos), tela cheia, versão e
+ * verificar atualização (decisão 0016).
+ * Aberta pela pausa da run, fica por cima dela e volta para ela, sem o botão de atualização (só
+ * nos menus, decisão 0016).
  */
 export class OptionsScene extends Phaser.Scene {
   private root?: Phaser.GameObjects.Container;
@@ -49,6 +52,7 @@ export class OptionsScene extends Phaser.Scene {
 
   create(data?: { fromRun?: boolean }): void {
     this.fromRun = data?.fromRun ?? false;
+    if (!this.fromRun) music.setMain('hub');
     this.input.keyboard?.on('keydown-ESC', () => this.back());
     setupUiLayout(this, (w, h) => {
       this.size = { w, h };
@@ -130,6 +134,17 @@ export class OptionsScene extends Phaser.Scene {
     const { w, h } = this.size;
     const save = getSave(this);
     const options = [
+      {
+        label: `MÚSICA: ${Math.round(save.options.musicVolume * 100)}%`,
+        variant: 'secondary' as const,
+        onClick: () => {
+          const now = getSave(this);
+          const musicVolume = nextVolume(now.options.musicVolume, AUDIO.volumeSteps);
+          setSave(this, { ...now, options: { ...now.options, musicVolume } });
+          music.setVolume(musicVolume);
+          this.build();
+        },
+      },
       {
         label: `MOSTRAR FPS: ${yesNo(save.options.showFps)}`,
         variant: 'secondary' as const,

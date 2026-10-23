@@ -8,6 +8,7 @@ import { addScrollArea, type ScrollArea } from '../ui/scrollArea';
 import { bodyText, impactText, labelText, withShadow } from '../ui/theme';
 import { setupUiLayout } from '../ui/uiLayout';
 import { SCENES } from './keys';
+import { music } from '../audio/music';
 
 const VERSIONS = parseChangelog(changelogText);
 
@@ -29,6 +30,7 @@ export class ChangelogScene extends Phaser.Scene {
   }
 
   create(): void {
+    music.setMain('hub');
     this.input.keyboard?.on('keydown-ESC', () => this.back());
     setupUiLayout(
       this,

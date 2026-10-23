@@ -10,6 +10,7 @@ import { PALETTE_CSS } from '../render/palette';
 import { addScrollArea, type ScrollArea } from '../ui/scrollArea';
 import { setupUiLayout } from '../ui/uiLayout';
 import { SCENES } from './keys';
+import { music } from '../audio/music';
 
 export type CatalogView = 'agents' | 'compendium';
 
@@ -31,6 +32,7 @@ export class CatalogScene extends Phaser.Scene {
   }
 
   create(data: { view: CatalogView }): void {
+    music.setMain('hub');
     this.view = data.view;
     this.input.keyboard?.on('keydown-ESC', () => this.back());
     setupUiLayout(

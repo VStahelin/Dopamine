@@ -23,6 +23,8 @@ export interface Options {
   showDamageNumbers: boolean;
   /** Modo debug: hitboxes e números da run por cima do campo (para afinar o jogo). */
   debug?: boolean;
+  /** Volume da música, de 0 a 1 (docs/sonoplastia.md). */
+  musicVolume: number;
 }
 
 export interface SaveData {
@@ -114,6 +116,10 @@ export function migrateSave(raw: unknown, defaults: Options): SaveData {
           ? o.showDamageNumbers
           : base.options.showDamageNumbers,
       debug: o.debug === true,
+      musicVolume:
+        typeof o.musicVolume === 'number' && o.musicVolume >= 0 && o.musicVolume <= 1
+          ? o.musicVolume
+          : base.options.musicVolume,
     },
     selectedAgent: typeof data.selectedAgent === 'string' ? data.selectedAgent : base.selectedAgent,
     seen: Array.isArray(data.seen) ? data.seen.filter((k) => typeof k === 'string') : [],

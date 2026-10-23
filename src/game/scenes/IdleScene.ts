@@ -26,6 +26,7 @@ import { safeAreaUi } from '../ui/safeArea';
 import { bodyText, impactText, labelText, withShadow } from '../ui/theme';
 import { addDim, setupUiLayout } from '../ui/uiLayout';
 import { SCENES } from './keys';
+import { music } from '../audio/music';
 
 type Obj = Phaser.GameObjects.GameObject;
 
@@ -76,6 +77,7 @@ export class IdleScene extends Phaser.Scene {
   }
 
   create(): void {
+    music.setMain('idle');
     this.panel = undefined;
     this.fast = false;
     this.collectNow();

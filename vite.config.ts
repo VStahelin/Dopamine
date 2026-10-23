@@ -72,6 +72,18 @@ export default defineConfig({
         cleanupOutdatedCaches: true,
         navigateFallback: 'index.html',
         maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
+        // Músicas ficam fora do precache (pesam ~11 MB): entram no cache na primeira vez que tocam.
+        // O `?v=` de cada arquivo (rev em src/config/audio.json) troca a versão.
+        runtimeCaching: [
+          {
+            urlPattern: ({ url }) => url.pathname.includes('/audio/'),
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'dopamina-audio',
+              expiration: { maxEntries: 40 },
+            },
+          },
+        ],
       },
     }),
   ],

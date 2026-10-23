@@ -6,6 +6,7 @@
  * abre e nos testes.
  */
 import agentsJson from './agents.json';
+import audioJson from './audio.json';
 import displayJson from './display.json';
 import dropsJson from './drops.json';
 import economyJson from './economy.json';
@@ -25,10 +26,12 @@ import {
   RUN_STAT_KEYS,
   type AffinityLevel,
   type AgentDef,
+  type AudioConfig,
   type ContactDamageKind,
   type DisplayConfig,
   type DropsConfig,
   ITEM_IDS,
+  MUSIC_TRACKS,
   type EconomyConfig,
   type EnemyDef,
   type IdleAgentKind,
@@ -54,7 +57,14 @@ import {
 } from './types';
 
 export type * from './types';
-export { ITEM_IDS, MAP_ENVIRONMENTS, RUN_STAT_KEYS, SECTORS, SUPPLEMENT_RARITIES } from './types';
+export {
+  ITEM_IDS,
+  MAP_ENVIRONMENTS,
+  MUSIC_TRACKS,
+  RUN_STAT_KEYS,
+  SECTORS,
+  SUPPLEMENT_RARITIES,
+} from './types';
 
 export type EnemyKind = keyof typeof enemiesJson;
 export type WeaponId = keyof typeof weaponsJson;
@@ -204,6 +214,20 @@ export const RUN: RunConfig = runJson as RunConfig;
 export const ECONOMY: EconomyConfig = economyJson;
 export const IDLE: IdleConfig = loadIdle();
 export const DISPLAY: DisplayConfig = displayJson;
+
+/** Confere audio.json: todas as faixas existem e os loops ficam dentro do arquivo. */
+function loadAudio(): AudioConfig {
+  const audio = audioJson as AudioConfig;
+  for (const id of MUSIC_TRACKS) {
+    const t = audio.tracks[id];
+    if (!t) throw new Error(`Configuração inválida em audio.json: falta a faixa "${id}"`);
+    if (t.loop && !(t.loopFrom !== undefined && t.loopTo !== undefined && t.loopFrom < t.loopTo))
+      throw new Error(`Configuração inválida em audio.json: loop da faixa "${id}"`);
+  }
+  return audio;
+}
+
+export const AUDIO: AudioConfig = loadAudio();
 export const ENEMIES: Record<EnemyKind, EnemyDef> = loadEnemies();
 export const WEAPONS: Record<WeaponId, WeaponDef> = loadWeapons();
 export const PASSIVES: Record<PassiveId, PassiveDef> = loadPassives();

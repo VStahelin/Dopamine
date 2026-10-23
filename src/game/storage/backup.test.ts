@@ -4,7 +4,7 @@ import { exportCode, importBackup } from './backup';
 
 describe('backup do save', () => {
   const save = {
-    ...defaultSave({ showFps: false, showDamageNumbers: true }),
+    ...defaultSave({ showFps: false, showDamageNumbers: true, musicVolume: 0.6 }),
     atp: 1234,
     selectedAgent: 'dopamine',
   };

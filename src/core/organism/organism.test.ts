@@ -84,7 +84,7 @@ describe('alta', () => {
   });
 
   it('zera Laboratório, idle e ATP, e mantém os desbloqueios', () => {
-    const base = defaultSave({ showFps: false, showDamageNumbers: true });
+    const base = defaultSave({ showFps: false, showDamageNumbers: true, musicVolume: 0.6 });
     const save = {
       ...base,
       atp: 500,

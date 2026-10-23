@@ -41,6 +41,7 @@ import { idleRunner } from '../idle/idleRunner';
 import { earn } from '../../core/organism/organism';
 import { updates } from '../update/updateManager';
 import { SCENES } from './keys';
+import { music } from '../audio/music';
 
 const TAB_KEY = 'hubTab';
 /** Alturas das faixas do artboard "Menu principal (protótipo)" (390×844). */
@@ -85,6 +86,7 @@ export class HubScene extends Phaser.Scene {
   }
 
   create(): void {
+    music.setMain('hub');
     this.awayReport = idleRunner.takeReport();
     this.input.keyboard?.on('keydown-ESC', () => this.scene.start(SCENES.title));
     // Aviso de versão nova: só aqui nos menus, uma vez por visita ao hub.
@@ -206,6 +208,7 @@ export class HubScene extends Phaser.Scene {
             const next = dischargeSave(getSave(this), Date.now());
             if (!next) return;
             setSave(this, next);
+            music.jingle('alta');
             idleRunner.rebuild();
             this.build();
           },

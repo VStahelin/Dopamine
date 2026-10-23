@@ -1,5 +1,5 @@
 import type * as Phaser from 'phaser';
-import { DISPLAY } from '../../config';
+import { AUDIO, DISPLAY } from '../../config';
 import { migrateSave, type SaveData } from '../../core/save/saveData';
 
 /** Uma cena ou o jogo: os dois dividem o mesmo registro. */
@@ -11,7 +11,11 @@ const STORE = 'save';
 const KEY = 'main';
 const REGISTRY_KEY = 'save';
 
-const defaults = () => ({ showFps: DISPLAY.showFps, showDamageNumbers: true });
+const defaults = () => ({
+  showFps: DISPLAY.showFps,
+  showDamageNumbers: true,
+  musicVolume: AUDIO.musicVolume,
+});
 
 function openDb(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {

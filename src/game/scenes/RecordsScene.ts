@@ -9,6 +9,7 @@ import { addButtonColumn } from '../ui/menuLayout';
 import { formatTime, impactText, labelText } from '../ui/theme';
 import { setupUiLayout } from '../ui/uiLayout';
 import { SCENES } from './keys';
+import { music } from '../audio/music';
 
 export class RecordsScene extends Phaser.Scene {
   private root?: Phaser.GameObjects.Container;
@@ -18,6 +19,7 @@ export class RecordsScene extends Phaser.Scene {
   }
 
   create(): void {
+    music.setMain('hub');
     const back = () => this.scene.start(SCENES.hub);
     this.input.keyboard?.on('keydown-ESC', back);
 

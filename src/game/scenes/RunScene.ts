@@ -40,6 +40,9 @@ import { HIT_KINDS, hitKind, hitLabel, NUMBER_STYLES, type NumberKind } from '..
 import type { GameOverData } from './GameOverScene';
 import type { HudScene } from './HudScene';
 import { SCENES } from './keys';
+import { AUDIO } from '../../config';
+import { music } from '../audio/music';
+import { runMusic } from '../audio/musicLogic';
 
 /** Passos de simulação no máximo por quadro, para não travar depois de uma pausa longa. */
 const MAX_STEPS_PER_FRAME = 8;
@@ -141,6 +144,8 @@ export class RunScene extends Phaser.Scene {
   /** Tela da cápsula ou da ampola aberta por cima da run. */
   private overlayOpen = false;
   private overHandled = false;
+  /** A tela de fim de run abriu e a música de fim de run já toca. */
+  private gameOverMusic = false;
   private gaveUp = false;
   private ground!: Phaser.GameObjects.TileSprite;
   private agentSprite!: Phaser.GameObjects.Image;
@@ -204,6 +209,7 @@ export class RunScene extends Phaser.Scene {
     this.overlayOpen = false;
     this.warnings = [];
     this.overHandled = false;
+    this.gameOverMusic = false;
     this.gaveUp = false;
     this.enemySprites = [];
     this.projectileSprites = [];
@@ -266,6 +272,25 @@ export class RunScene extends Phaser.Scene {
     if (!this.paused) this.simulate(deltaMs);
     this.draw(deltaMs / 1000);
     this.checkTransitions();
+    this.updateMusic();
+  }
+
+  /** Música dinâmica da run (docs/sonoplastia.md): faixa pelo tempo, crise, chefe e abafada. */
+  private updateMusic(): void {
+    if (this.gameOverMusic) return;
+    const target = runMusic(
+      {
+        time: this.run.time,
+        crisis: this.run.formations.crisis !== null,
+        bossAlive: this.run.enemies.some((e) => e.boss && e.hp > 0),
+        overlay: this.paused || this.levelUpOpen || this.overlayOpen,
+        over: this.run.over,
+      },
+      AUDIO,
+    );
+    music.setMain(target.main);
+    music.setLayer(target.layer);
+    music.setMuffled(target.muffled);
   }
 
   /** Abre ou fecha a pausa (tecla Esc, P ou o botão da HUD). */
@@ -305,6 +330,8 @@ export class RunScene extends Phaser.Scene {
 
   exitToMenu(): void {
     this.stopOverlays();
+    music.setLayer(null);
+    music.setMuffled(false);
     this.scene.start(SCENES.hub);
   }
 
@@ -987,6 +1014,7 @@ export class RunScene extends Phaser.Scene {
           : null;
     if (overlay && !this.overlayOpen && !this.levelUpOpen && !this.run.over) {
       this.overlayOpen = true;
+      music.jingle(overlay === SCENES.levelUp ? 'levelup' : 'capsule');
       this.scene.launch(overlay, {
         run: this.run,
         synapse: overlay === SCENES.levelUp,
@@ -999,6 +1027,7 @@ export class RunScene extends Phaser.Scene {
     if (this.overlayOpen) return;
     if (this.run.pendingLevelUps > 0 && !this.levelUpOpen && !this.run.over) {
       this.levelUpOpen = true;
+      music.jingle('levelup');
       this.scene.launch(SCENES.levelUp, {
         run: this.run,
         onDone: () => {
@@ -1035,7 +1064,12 @@ export class RunScene extends Phaser.Scene {
         newStars: stars.newStars,
         starReward: stars.reward,
       };
-      this.time.delayedCall(700, () => this.scene.launch(SCENES.gameOver, data));
+      this.time.delayedCall(700, () => {
+        this.gameOverMusic = true;
+        music.setMuffled(false);
+        music.setMain('gameover', 0.3);
+        this.scene.launch(SCENES.gameOver, data);
+      });
     }
   }
 

@@ -1,4 +1,4 @@
-import { DISPLAY } from '../../config';
+import { AUDIO, DISPLAY } from '../../config';
 import { migrateSave, type SaveData } from '../../core/save/saveData';
 
 /**
@@ -44,7 +44,11 @@ export function importBackup(text: string): SaveData | null {
     const json = trimmed.startsWith('{') ? trimmed : fromBase64(trimmed);
     const data = JSON.parse(json) as Partial<Backup>;
     if (data.game !== GAME || !data.save) return null;
-    return migrateSave(data.save, { showFps: DISPLAY.showFps, showDamageNumbers: true });
+    return migrateSave(data.save, {
+      showFps: DISPLAY.showFps,
+      showDamageNumbers: true,
+      musicVolume: AUDIO.musicVolume,
+    });
   } catch {
     return null;
   }

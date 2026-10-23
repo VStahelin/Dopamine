@@ -5,6 +5,7 @@ import type { SectionDef } from '../ui/menuContent';
 import { renderSection } from '../ui/sectionView';
 import { setupUiLayout } from '../ui/uiLayout';
 import { SCENES } from './keys';
+import { music } from '../audio/music';
 
 /** Tela aberta pelo hub que ainda não tem conteúdo: formato comum de placeholder + Voltar. */
 export class PlaceholderScene extends Phaser.Scene {
@@ -15,6 +16,7 @@ export class PlaceholderScene extends Phaser.Scene {
   }
 
   create(data: { def: SectionDef }): void {
+    music.setMain('hub');
     const back = () => this.scene.start(SCENES.hub);
     this.input.keyboard?.on('keydown-ESC', back);
     setupUiLayout(this, (w, h) => {

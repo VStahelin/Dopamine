@@ -6,6 +6,7 @@ import { impactText, labelText } from '../ui/theme';
 import { setupUiLayout } from '../ui/uiLayout';
 import { hideLoader } from '../ui/loader';
 import { SCENES } from './keys';
+import { music } from '../audio/music';
 
 /** Tela de título: logo e um botão que leva ao hub. */
 export class TitleScene extends Phaser.Scene {
@@ -16,6 +17,7 @@ export class TitleScene extends Phaser.Scene {
   }
 
   create(): void {
+    music.setMain('title');
     // O jogo abriu: some a tela de carregamento do index.html.
     hideLoader();
     this.input.keyboard?.on('keydown-ENTER', () => this.play());
