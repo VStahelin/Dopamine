@@ -4,6 +4,8 @@ O que mudou em cada versão do Dopamina Blaster. O jogo mostra este arquivo em O
 
 ## Em desenvolvimento
 
+## v0.10.0 · 23/10/2026
+
 ### Novidades
 - Formações: a cada 90 segundos chega um grupo programado, com aviso e seta. São seis (Pico glicêmico, Parede lipídica, Surto de cortisol, Surto oxidativo, Maré tóxica e Cerco inflamatório), e a doença do indivíduo escolhe qual vem.
 - Crises: em cada pico de onda, a formação da doença vem em dobro, com nome no topo e o mapa tingido.
