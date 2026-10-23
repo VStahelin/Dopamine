@@ -4,6 +4,13 @@ O que mudou em cada versão do Dopamina Blaster. O jogo mostra este arquivo em O
 
 ## Em desenvolvimento
 
+### Novidades
+- Modo debug nas Opções: mostra os hitboxes (agente, moléculas, disparos, obstáculos, raio de coleta) e um painel com os números da run.
+
+### Ajustes
+- Hitboxes no tamanho dos sprites: as moléculas e o agente tinham círculos de colisão com metade do tamanho do desenho, e agora encostam onde parecem encostar.
+- Run mais difícil: os hitboxes certos e mais moléculas nascendo (3 por segundo). Uma run sem melhorias costuma acabar entre 4 e 10 minutos.
+
 ## v0.12.0 · 23/10/2026
 
 ### Novidades

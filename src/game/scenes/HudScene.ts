@@ -61,6 +61,8 @@ export class HudScene extends Phaser.Scene {
   private specialIcon!: Phaser.GameObjects.Image;
   /** Aviso grande abaixo da banda: formação chegando, crise, Superdosagem (fase 5.6). */
   private banner?: Phaser.GameObjects.Text;
+  /** Painel do modo debug, embaixo à esquerda. */
+  private debugText?: Phaser.GameObjects.Text;
   private box = {
     w: 0,
     h: 0,
@@ -81,6 +83,30 @@ export class HudScene extends Phaser.Scene {
   create(): void {
     this.joystick = new VirtualJoystick(this);
     setupUiLayout(this, (w, h) => this.layout(w, h));
+  }
+
+  /** Painel do modo debug (Opções); `null` esconde. */
+  setDebugText(text: string | null): void {
+    if (text === null) {
+      this.debugText?.setVisible(false);
+      return;
+    }
+    if (!this.debugText || !this.debugText.active) {
+      this.debugText = this.add
+        .text(0, 0, '', {
+          fontFamily: 'monospace',
+          fontSize: '9px',
+          color: '#7EF0FF',
+          backgroundColor: '#07080FCC',
+          padding: { x: 4, y: 3 },
+        })
+        .setOrigin(0, 1)
+        .setDepth(50);
+    }
+    this.debugText
+      .setVisible(true)
+      .setText(text)
+      .setPosition(this.safe.left + 6, this.box.h - this.safe.bottom - 70);
   }
 
   /** Mostra um aviso grande abaixo da banda por alguns segundos. */

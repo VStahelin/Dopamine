@@ -21,6 +21,8 @@ export interface Options {
   showFps: boolean;
   /** Números de dano no campo (docs/ui-cronico.md). */
   showDamageNumbers: boolean;
+  /** Modo debug: hitboxes e números da run por cima do campo (para afinar o jogo). */
+  debug?: boolean;
 }
 
 export interface SaveData {
@@ -111,6 +113,7 @@ export function migrateSave(raw: unknown, defaults: Options): SaveData {
         typeof o.showDamageNumbers === 'boolean'
           ? o.showDamageNumbers
           : base.options.showDamageNumbers,
+      debug: o.debug === true,
     },
     selectedAgent: typeof data.selectedAgent === 'string' ? data.selectedAgent : base.selectedAgent,
     seen: Array.isArray(data.seen) ? data.seen.filter((k) => typeof k === 'string') : [],

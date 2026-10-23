@@ -152,6 +152,15 @@ export class OptionsScene extends Phaser.Scene {
         },
       },
       {
+        label: `DEBUG (HITBOX): ${yesNo(save.options.debug === true)}`,
+        variant: 'secondary' as const,
+        onClick: () => {
+          const now = getSave(this);
+          setSave(this, { ...now, options: { ...now.options, debug: !now.options.debug } });
+          this.build();
+        },
+      },
+      {
         label: `TELA CHEIA: ${yesNo(this.scale.isFullscreen)}`,
         variant: 'secondary' as const,
         onClick: () => this.scale.toggleFullscreen(),

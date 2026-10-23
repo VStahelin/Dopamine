@@ -1,7 +1,7 @@
 {
   "ticksPerSecond": 60,
   "agent": {
-    "radiusPx": 7,
+    "radiusPx": 13,
     "moveSpeedPxPerSecond": 80,
     "pickupRadiusPx": 48
   },
@@ -17,7 +17,7 @@
   },
   "minDamageTaken": 1,
   "spawn": {
-    "baseEnemiesPerSecond": 2.6,
+    "baseEnemiesPerSecond": 3,
     "maxEnemies": 400,
     "marginOutsideViewPx": 24,
     "groupSpreadPx": 18

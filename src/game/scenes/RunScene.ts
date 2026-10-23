@@ -15,6 +15,7 @@ import { DEFAULT_RULES } from '../../core/run/rules';
 import { auraRadius, orbitPositions } from '../../core/run/weapons';
 import { recordRun } from '../../core/save/saveData';
 import { createRun, drainEvents, runResult, type RunState } from '../../core/run/state';
+import { difficultyAt, enemyHpAt, waveFactorAt } from '../../core/run/progression';
 import { stepRun } from '../../core/run/step';
 import { KeyboardMove } from '../input/keyboardMove';
 import { PALETTE, PALETTE_CSS } from '../render/palette';
@@ -169,6 +170,9 @@ export class RunScene extends Phaser.Scene {
   private healSum = 0;
   private sumTimer = 0;
   private lifeGfx!: Phaser.GameObjects.Graphics;
+  /** Modo debug (Opções): hitboxes e números da run. */
+  private debug = false;
+  private debugGfx!: Phaser.GameObjects.Graphics;
   private keyboard!: KeyboardMove;
   /** Pixels de arte por unidade do mundo das texturas em uso (decisão 0009). */
   private detail = 1;
@@ -212,6 +216,7 @@ export class RunScene extends Phaser.Scene {
     this.objectSprites = [];
     this.arrowSprites = [];
     this.showNumbers = getSave(this).options.showDamageNumbers;
+    this.debug = getSave(this).options.debug === true;
     this.floaters = [];
     this.areaSums.clear();
     this.healSum = 0;
@@ -223,6 +228,7 @@ export class RunScene extends Phaser.Scene {
     this.fieldGfx = this.add.graphics().setDepth(1);
     this.fxGfx = this.add.graphics().setDepth(9);
     this.lifeGfx = this.add.graphics().setDepth(11);
+    this.debugGfx = this.add.graphics().setDepth(40);
 
     this.cameras.main.startFollow(this.agentSprite, true);
     this.applyZoom();
@@ -267,6 +273,7 @@ export class RunScene extends Phaser.Scene {
     if (this.run.over || this.levelUpOpen || this.overlayOpen) return;
     this.paused = !this.paused;
     this.showNumbers = getSave(this).options.showDamageNumbers;
+    this.debug = getSave(this).options.debug === true;
     if (this.paused) this.scene.launch(SCENES.pause);
     else this.scene.stop(SCENES.pause);
   }
@@ -500,6 +507,7 @@ export class RunScene extends Phaser.Scene {
     this.updateFloaters(dt);
     this.drawFx(dt);
     this.drawLifeBar();
+    this.drawDebug();
   }
 
   /** Soma o dano contínuo por região (célula de 24 unidades) até o próximo número. */
@@ -523,6 +531,54 @@ export class RunScene extends Phaser.Scene {
       this.showFloater(agent.x + 10, agent.y - 10, `+${Math.floor(this.healSum)}`, 'heal');
       this.healSum -= Math.floor(this.healSum);
     }
+  }
+
+  /**
+   * Modo debug: o círculo de colisão de cada coisa no campo, com a mesma conta do core, e um
+   * painel com números da run. Verde: agente; vermelho: moléculas; ciano: disparos; laranja:
+   * obstáculos; amarelo: raio de coleta; branco: raio de pegar.
+   */
+  private drawDebug(): void {
+    const g = this.debugGfx.clear();
+    const hud = this.scene.get(SCENES.hud) as HudScene;
+    if (!this.debug) {
+      hud.setDebugText(null);
+      return;
+    }
+    const r = this.run;
+    const { agent, rules, stats } = r;
+    // Linha de 2 pixels da tela, em qualquer zoom.
+    const w = 2 / this.zoom;
+    g.lineStyle(w, 0x6cd43f, 1).strokeCircle(agent.x, agent.y, rules.run.agent.radiusPx);
+    g.lineStyle(w, 0xf2c83a, 0.6).strokeCircle(
+      agent.x,
+      agent.y,
+      rules.run.agent.pickupRadiusPx * stats.magnet,
+    );
+    g.lineStyle(w, 0xffffff, 0.6).strokeCircle(agent.x, agent.y, rules.run.gems.collectRadiusPx);
+    for (const e of r.enemies) {
+      g.lineStyle(w, e.boss ? 0xff00ff : e.aggregate ? 0xff8000 : 0xff3030, 1).strokeCircle(
+        e.x,
+        e.y,
+        e.radius,
+      );
+    }
+    g.lineStyle(w, 0x39d3f0, 1);
+    for (const p of r.projectiles) g.strokeCircle(p.x, p.y, Math.max(1, p.radius));
+    g.lineStyle(w, 0xff9a1f, 1);
+    for (const s of r.map.solids) g.strokeCircle(s.object.x, s.object.y, s.object.radius);
+    g.lineStyle(w, 0xb072f0, 1);
+    for (const st of r.structures) g.strokeCircle(st.x, st.y, rules.structures.radiusPx);
+    const d = rules.economy.difficulty;
+    const lines = [
+      `tempo ${r.time.toFixed(1)}s  nível ${r.level}  fps ${Math.round(this.game.loop.actualFps)}`,
+      `moléculas ${r.enemies.length}/${rules.run.spawn.maxEnemies}  decompostas ${r.kills}`,
+      `dificuldade x${difficultyAt(r.time, d).toFixed(2)}  vida x${enemyHpAt(r.time, d).toFixed(2)}  onda x${waveFactorAt(r.time, d).toFixed(2)}`,
+      `dano x${stats.damage.toFixed(2)}  recarga x${stats.cooldown.toFixed(2)}  área x${stats.area.toFixed(2)}`,
+      `interações ${Math.ceil(agent.interactions)}/${stats.maxInteractions}  membrana ${stats.armor}`,
+      `agente (${agent.x.toFixed(0)}, ${agent.y.toFixed(0)})  ${mapName(MAP, r.map.params)}`,
+    ];
+    hud.setDebugText(lines.join('\n'));
   }
 
   /** Interações embaixo do agente: 10 segmentos, o parcial em vermelho claro. */
