@@ -23,6 +23,12 @@
     },
     "collateral": {
       "physical": -2
+    },
+    "nativeReceptor": {
+      "name": "Receptor D2",
+      "icon": "metabolism",
+      "stat": "cooldown",
+      "perLevel": -0.08
     }
   },
   "lipase": {
@@ -53,6 +59,12 @@
     },
     "collateral": {
       "mental": -1
+    },
+    "nativeReceptor": {
+      "name": "Sítio ativo",
+      "icon": "reactivity",
+      "type": "lipid",
+      "perLevel": 0.1
     }
   },
   "insulin": {
@@ -84,6 +96,12 @@
     },
     "collateral": {
       "executive": -2
+    },
+    "nativeReceptor": {
+      "name": "Receptor de insulina",
+      "icon": "magnet",
+      "stat": "magnet",
+      "perLevel": 0.25
     }
   }
 }

@@ -28,6 +28,20 @@ Moléculas decompostas soltam gemas azuis. Passe perto para coletar. Encheu a ba
 ### Ondas e chefes
 A dificuldade sobe com o tempo. A cada 5 minutos vem um pico de onda (o tempo fica laranja), com mais moléculas, seguido de um respiro curto. A cada 5 minutos também aparece um chefe: a Partícula de LDL.
 
+### Formações
+A cada 90 segundos vem uma formação, com aviso no topo e uma seta do lado de onde ela vai entrar:
+- **Pico glicêmico:** enxame de açúcares que atravessa a tela em linha reta.
+- **Parede lipídica:** fileira lenta de lipídios que varre o mapa.
+- **Surto de cortisol:** um cortisol no meio de um grupo acelerado de adrenalinas.
+- **Surto oxidativo:** radicais em três diagonais, rápidos.
+- **Maré tóxica:** fileira larga e lenta de toxinas.
+- **Cerco inflamatório:** anel de moléculas que fecha em volta de você.
+
+A doença do indivíduo escolhe qual vem: com a Física baixa, quase só açúcares e lipídios. As moléculas de formação soltam gema menos vezes.
+
+### Crises
+Em cada pico de onda (a cada 5 minutos) vem uma crise: a formação da doença em dobro, dos dois lados, com o nome no topo (Crise glicêmica, Crise de estresse...) e o mapa tingido enquanto dura.
+
 ### Agregados
 Num momento sorteado, pelo menos um por minuto (de 20 a 60 segundos depois do anterior), nasce um agregado: a molécula forte mais comum no momento, grudada numa massa só. É maior, mais lenta e tem 12 vezes a vida, com um contorno vermelho e uma seta na borda da tela quando está longe. Decompor um agregado solta uma gema vermelha e às vezes uma ampola Rara ou melhor (a Sorte ajuda), e ele se quebra em cascata como a molécula normal. A doença do indivíduo decide qual molécula vira agregado.
 
@@ -57,12 +71,14 @@ Neurotransmissor da recompensa. A generalista: efetividade média contra tudo.
 - **Ação:** Pulso dopaminérgico, anéis que saem do agente e acertam tudo por onde passam.
 - **Especial:** Pico de recompensa. Por alguns segundos, pulsos muito mais rápidos e maiores. Depois vem uma queda, com a ação mais lenta.
 - **No organismo:** sobe Mental, Executiva e Social. Colateral: tira um pouco da Física.
+- **Perfil (receptor nativo):** Receptor D2, −8% de recarga por nível.
 
 ### Lipase
 Enzima que quebra gordura. Forte contra lipídios, fraca contra o resto.
 - **Ação:** Hidrólise, golpes curtos e fortes no inimigo mais próximo, com respingo em volta.
 - **Especial:** Emulsão. Uma área no chão que deixa os lipídios dentro dela frágeis.
 - **No organismo:** sobe muito a Física. Colateral: tira um pouco da Mental.
+- **Perfil (receptor nativo):** Sítio ativo, +10% de dano contra lipídios por nível.
 - **Desbloqueio:** 1.200 ATP.
 
 ### Insulina
@@ -70,6 +86,7 @@ Hormônio que tira o açúcar da circulação. Forte contra açúcares, fraca co
 - **Ação:** Campo de captação, que puxa os açúcares para perto e os absorve.
 - **Especial:** Captação. Puxa todos os açúcares da tela de uma vez e causa dano neles.
 - **No organismo:** sobe a Física e um pouco a Mental. Colateral: tira um pouco da Executiva.
+- **Perfil (receptor nativo):** Receptor de insulina, +25% de Raio de coleta por nível.
 - **Desbloqueio:** 2.000 ATP.
 
 ---
@@ -132,6 +149,12 @@ Cada receptor e cada nível de arma vem com uma raridade, que multiplica o ganho
 
 ### Sorte
 Quanto mais Sorte, mais aparecem as raridades altas.
+
+### Perfil do agente
+Cada agente tem um receptor nativo, que não ocupa espaço e sobe sozinho: um nível a cada 10 níveis da run, até o nível 5 no nível 50. Ele aparece primeiro na linha dos receptores, com moldura dourada.
+
+### Superdosagem
+Quando todas as armas e todos os receptores estão no máximo, o level up passa a oferecer a Superdosagem: bônus pequenos de atributo, sem limite, junto da Nova dose.
 
 ### Rerrolar, Pular e Banir
 - **Rerrolar** sorteia outras cartas.

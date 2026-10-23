@@ -2,6 +2,7 @@ import {
   PASSIVES,
   RARITIES,
   WEAPONS,
+  type AgentDef,
   type PassiveDef,
   type RunStatKey,
   type WeaponParams,
@@ -57,6 +58,12 @@ export function receptorGain(def: PassiveDef, amount: number): string {
   if (def.mutation) return 'Soma um atributo sorteado, com a raridade da carta';
   const main = STAT_TEXT[def.stat](amount);
   return def.alsoStat ? `${main} e ${STAT_TEXT[def.alsoStat](amount)}` : main;
+}
+
+/** O que o receptor nativo de um agente soma por nível (fase 5.6), em texto. */
+export function nativeGain(native: AgentDef['nativeReceptor'], typeName = ''): string {
+  if (native.stat) return STAT_TEXT[native.stat](native.perLevel);
+  return `+${pct(native.perLevel)} de dano contra ${typeName}`;
 }
 
 /** O que cada nível de arma soma, em texto. */
@@ -128,6 +135,12 @@ export function describeChoice(choice: UpgradeChoice): ChoiceText {
         title: 'Nova dose',
         level: '',
         description: `Recupera ${num(choice.amount)} interações`,
+      };
+    case 'boost':
+      return {
+        title: 'Superdosagem',
+        level: PASSIVES[choice.id].name.toUpperCase(),
+        description: receptorGain(PASSIVES[choice.id], choice.amount),
       };
     case 'phosphocreatine':
       return {

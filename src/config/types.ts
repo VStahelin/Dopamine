@@ -53,6 +53,37 @@ export interface AggregateConfig {
   minRarity: SupplementRarity;
 }
 
+/**
+ * Como a formação nasce e anda (fase 5.6, decisão 0030): enxame que atravessa em linha reta,
+ * fileira que varre, três diagonais, anel que fecha em volta e grupo acelerado que persegue.
+ */
+export type FormationShape = 'swarm' | 'row' | 'diagonal' | 'ring' | 'surge';
+
+export interface FormationDef {
+  name: string;
+  /** O que a formação faz, numa frase, para o Compêndio. */
+  description: string;
+  /** Família da molécula: o peso da formação é o da família no organismo (a doença escolhe). */
+  family: MoleculeType;
+  shape: FormationShape;
+  /** Moléculas da formação, repetidas na ordem; vazio = as comuns mais puxadas pela doença. */
+  kinds: string[];
+  count: number;
+  speedMultiplier: number;
+}
+
+export interface FormationsConfig {
+  firstAtSeconds: number;
+  everySeconds: number;
+  /** Aviso na tela antes de a formação nascer. */
+  warningSeconds: number;
+  /** Chance de gema das moléculas de formação, multiplicada: sem isso, o XP de graça facilitava a run. */
+  gemChanceFactor: number;
+  list: Record<string, FormationDef>;
+  /** Nome da crise (o pico do dente de serra) pela família mais puxada pela doença. */
+  crisisNames: Record<MoleculeType, string>;
+}
+
 export interface RunConfig {
   /** Passos de simulação por segundo (passo fixo, decisão 0012). */
   ticksPerSecond: number;
@@ -94,6 +125,9 @@ export interface RunConfig {
   /** Chefes: nascem no começo de cada pico do dente de serra que caia no intervalo. */
   bosses: { kind: string; everyMinutes: number }[];
   aggregates: AggregateConfig;
+  /** O receptor nativo sobe 1 nível a cada `everyLevels` níveis de run, até `maxLevel`. */
+  nativeReceptor: { everyLevels: number; maxLevel: number };
+  formations: FormationsConfig;
   /** Quanto cada 100% de Estresse aumenta nos inimigos e na recompensa. */
   curse: { hp: number; speed: number; quantity: number; xp: number };
   gems: {
@@ -222,6 +256,18 @@ export interface AgentDef {
   collateral?: Partial<Record<Sector, number>>;
   /** Efetividade por tipo de molécula; o que faltar é neutro. */
   affinity: Partial<Record<MoleculeType, AffinityLevel>>;
+  /**
+   * Receptor nativo (fase 5.6, decisão 0030): o perfil do agente, que sobe sozinho com o nível da
+   * run. Soma `perLevel` a um atributo (`stat`) ou ao dano contra um tipo de molécula (`type`).
+   */
+  nativeReceptor: {
+    name: string;
+    /** Ícone do grupo `passives` de icons.json. */
+    icon: string;
+    stat?: RunStatKey;
+    type?: MoleculeType;
+    perLevel: number;
+  };
 }
 
 /**

@@ -201,5 +201,5 @@ export function rulesWithOrganism(
       { ...def, hp: def.hp * difficulty, spawnWeight: def.spawnWeight * (weights[def.type] ?? 1) },
     ]),
   ) as RunRules['enemies'];
-  return { ...withStats, enemies };
+  return { ...withStats, enemies, familyWeights: weights };
 }

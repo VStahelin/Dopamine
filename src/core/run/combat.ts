@@ -2,7 +2,7 @@ import type { EnemyKind, WeaponId } from '../../config';
 import { enemyHpAt } from './progression';
 import { addEnemy, type Enemy, type RunState } from './state';
 import { onHit, onKill } from './supplements';
-import { coinValue } from './upgrades';
+import { coinValue, nativeLevel } from './upgrades';
 
 /** Inimigo vivo mais perto de (x, y), ignorando os ids em `skip`. */
 export function nearestEnemy(
@@ -49,6 +49,8 @@ export function hitEnemy(state: RunState, e: Enemy, base: number, opts: HitOptio
   const { stats, rng, rules } = state;
   const affinity = affinityMultiplier(state, e);
   let amount = base * affinity * (1 + e.vulnerability);
+  const native = state.rules.agents[state.agentId].nativeReceptor;
+  if (native.type === e.type) amount *= 1 + native.perLevel * nativeLevel(state);
   if (e.elite) amount *= stats.eliteDamage;
   let crit = false;
   if (!opts.continuous) {
@@ -157,9 +159,12 @@ function dropCoin(state: RunState, e: Enemy): void {
  */
 function dropXp(state: RunState, e: Enemy): void {
   const c = state.rules.drops.gems.chance;
-  const chance = e.elite || e.boss ? c.strong : e.fragment ? c.fragment : c.common;
+  let chance = e.elite || e.boss ? c.strong : e.fragment ? c.fragment : c.common;
+  // Formação: a gema sai menos e não vale mais por isso (o XP fica abaixo do normal).
+  const value = e.xp / chance;
+  if (e.formation) chance *= state.rules.run.formations.gemChanceFactor;
   if (chance <= 0 || state.rng.next() >= chance) return;
-  dropGem(state, e.x, e.y, e.xp / chance);
+  dropGem(state, e.x, e.y, value);
 }
 
 /**

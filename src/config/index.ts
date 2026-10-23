@@ -212,6 +212,12 @@ if (RARITIES.tiers.length === 0) {
   throw new Error('Configuração inválida: rarities.json sem raridades');
 }
 for (const b of RUN.bosses) exists(b.kind, enemiesJson, 'run.json bosses');
+for (const [id, f] of Object.entries(RUN.formations.list)) {
+  const where = `run.json formations.list.${id}`;
+  oneOf(f.family, MOLECULE_TYPES, `${where}.family`);
+  oneOf(f.shape, ['swarm', 'row', 'diagonal', 'ring', 'surge'] as const, `${where}.shape`);
+  for (const k of f.kinds) exists(k, enemiesJson, `${where}.kinds`);
+}
 for (const [id, def] of Object.entries(AGENTS)) {
   if (WEAPONS[def.action as WeaponId].source !== 'agent') {
     throw new Error(`Configuração inválida em agents.json ${id}.action: a arma não é de agente`);

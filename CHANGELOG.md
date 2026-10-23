@@ -4,6 +4,13 @@ O que mudou em cada versão do Dopamina Blaster. O jogo mostra este arquivo em O
 
 ## Em desenvolvimento
 
+### Novidades
+- Formações: a cada 90 segundos chega um grupo programado, com aviso e seta. São seis (Pico glicêmico, Parede lipídica, Surto de cortisol, Surto oxidativo, Maré tóxica e Cerco inflamatório), e a doença do indivíduo escolhe qual vem.
+- Crises: em cada pico de onda, a formação da doença vem em dobro, com nome no topo e o mapa tingido.
+- Perfil do agente: cada agente tem um receptor nativo, que sobe sozinho a cada 10 níveis. A Dopamina recarrega mais rápido, a Lipase bate mais em lipídios e a Insulina coleta de mais longe.
+- Superdosagem: com tudo no máximo, o level up oferece bônus pequenos de atributo, sem limite.
+- O Compêndio ganhou a seção Formações.
+
 ## v0.9.2 · 22/10/2026
 
 ### Ajustes

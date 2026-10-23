@@ -6,6 +6,7 @@ import {
   ITEM_IDS,
   PASSIVES,
   RARITIES,
+  RUN,
   SUPPLEMENTS,
   WEAPONS,
   type AgentId,
@@ -31,7 +32,7 @@ import {
 } from '../../core/meta/progress';
 import { addButton } from './button';
 import { addIconSlot, passiveSlot, slotSize, supplementSlot, weaponIcon } from './iconSlot';
-import { receptorGain } from './upgradeText';
+import { nativeGain, receptorGain } from './upgradeText';
 import { drawCreamSlot, drawInkBox, drawLock, drawWoodFrame } from './icons';
 import { IDLE_AGENTS, RUN_AGENTS } from './menuContent';
 import { bodyText, impactText, labelText, withShadow } from './theme';
@@ -130,7 +131,7 @@ export function renderAgents(
     const a = AGENTS[id];
     const locked = shop ? !isUnlocked(shop.progress, 'agents', id) : false;
     const on = id === selected && !locked;
-    const h = 82;
+    const h = 100;
     if (on) drawWoodFrame(g, left, cy, width, h);
     else drawInkBox(g, left, cy, width, h);
     g.fillStyle(PALETTE.panel).fillRect(left + 6, cy + 6, width - 12, h - 12);
@@ -161,6 +162,17 @@ export function renderAgents(
       .map(([t]) => TYPE_NAMES[t as MoleculeType]);
     const tag = strong.length ? `FORTE CONTRA ${strong.join(', ')}` : 'MÉDIA CONTRA TUDO';
     out.push(scene.add.text(left + 78, cy + 66, tag, labelText(8, PALETTE_CSS.cyan)));
+    // Perfil: o receptor nativo, que sobe 1 nível a cada 10 níveis da run (fase 5.6).
+    const native = a.nativeReceptor;
+    const gain = nativeGain(native, native.type ? TYPE_NAMES[native.type].toLowerCase() : '');
+    out.push(
+      scene.add.text(
+        left + 78,
+        cy + 80,
+        `PERFIL: ${native.name.toUpperCase()} · ${gain.toUpperCase()} A CADA 10 NÍVEIS`,
+        { ...labelText(8, PALETTE_CSS.gold), wordWrap: { width: width - 90 } },
+      ),
+    );
     if (locked && shop) {
       // Bloqueado: no lugar de escolher, o botão de desbloquear com o custo.
       out.push(
@@ -330,6 +342,7 @@ export function renderCompendium(
   seenItems: readonly string[],
   seenSupplements: readonly string[] = [],
   seenAggregates: readonly string[] = [],
+  seenFormations: readonly string[] = [],
 ): Obj[] {
   const { left, width } = column(x, w);
   const g = scene.add.graphics();
@@ -382,7 +395,16 @@ export function renderCompendium(
   }
   const aggregates = renderAggregates(scene, g, left, cy + 12, width, seenAggregates);
   out.push(...aggregates.objects);
-  const items = renderItems(scene, g, left, aggregates.bottom + 12, width, seenItems);
+  const formations = renderFormations(
+    scene,
+    g,
+    left,
+    aggregates.bottom + 12,
+    width,
+    seenFormations,
+  );
+  out.push(...formations.objects);
+  const items = renderItems(scene, g, left, formations.bottom + 12, width, seenItems);
   out.push(...items.objects);
   out.push(...renderSupplements(scene, g, left, items.bottom + 12, width, seenSupplements));
   return out;
@@ -482,6 +504,55 @@ function renderAggregates(
           'MINI CHEFE · SEMPRE SOLTA AMPOLA',
           labelText(8, PALETTE_CSS.interaction),
         ),
+      );
+    }
+    cy += h + 4;
+  }
+  return { objects: out, bottom: cy };
+}
+
+/** Seção "Formações": os grupos programados que a doença escolhe (fase 5.6). */
+function renderFormations(
+  scene: Phaser.Scene,
+  g: Phaser.GameObjects.Graphics,
+  left: number,
+  y: number,
+  width: number,
+  seen: readonly string[],
+): { objects: Obj[]; bottom: number } {
+  const list = RUN.formations.list;
+  const ids = Object.keys(list);
+  const known = ids.filter((id) => seen.includes(id)).length;
+  const out: Obj[] = [header(scene, left, y, `FORMAÇÕES · ${known}/${ids.length}`)];
+  let cy = y + 16;
+  for (const id of ids) {
+    const def = list[id]!;
+    const isSeen = seen.includes(id);
+    const h = 40;
+    drawInkBox(g, left, cy, width, h, PALETTE.panel);
+    if (!isSeen) {
+      out.push(scene.add.text(left + 12, cy + 11, '???', impactText(13, PALETTE_CSS.textMuted)));
+    } else {
+      out.push(
+        scene.add.text(
+          left + 12,
+          cy + 4,
+          def.name,
+          withShadow(bodyText(13, PALETTE_CSS.text), PALETTE_CSS.ink, 1),
+        ),
+        scene.add
+          .text(
+            left + width - 10,
+            cy + 6,
+            TYPE_NAMES[def.family],
+            labelText(8, PALETTE_CSS.logoOrange),
+          )
+          .setOrigin(1, 0),
+        scene.add.text(left + 12, cy + 22, def.description, {
+          ...bodyText(9, PALETTE_CSS.textSoft),
+          wordWrap: { width: width - 24 },
+          maxLines: 1,
+        }),
       );
     }
     cy += h + 4;

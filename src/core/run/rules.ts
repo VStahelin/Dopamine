@@ -15,6 +15,7 @@ import {
   type EconomyConfig,
   type EnemyDef,
   type EnemyKind,
+  type MoleculeType,
   type PassiveDef,
   type PassiveId,
   type RarityConfig,
@@ -41,6 +42,8 @@ export interface RunRules {
   agents: Record<AgentId, AgentDef>;
   drops: DropsConfig;
   supplements: SupplementsConfig;
+  /** Peso de cada família pela doença do indivíduo (organismo); escolhe as formações. */
+  familyWeights?: Partial<Record<MoleculeType, number>>;
   /** Cápsulas já abertas no save, para a sorte de principiante; sem o número, 0. */
   capsulesOpened?: number;
   /** Receptores liberados na meta-progressão; sem a lista, todos. */

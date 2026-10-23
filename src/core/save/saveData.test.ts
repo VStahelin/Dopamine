@@ -34,6 +34,7 @@ describe('recordRun', () => {
       seenItems: [],
       seenSupplements: [],
       seenAggregates: [],
+      seenFormations: [],
       capsulesOpened: 0,
     }).save;
     const { save, newRecords } = recordRun(start, {
@@ -45,6 +46,7 @@ describe('recordRun', () => {
       seenItems: [],
       seenSupplements: [],
       seenAggregates: [],
+      seenFormations: [],
       capsulesOpened: 0,
     });
     expect(newRecords).toEqual(['level']);

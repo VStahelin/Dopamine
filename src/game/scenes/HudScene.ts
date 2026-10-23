@@ -2,6 +2,7 @@ import * as Phaser from 'phaser';
 import { DROPS, PASSIVES, type PassiveId } from '../../config';
 import { waveAt } from '../../core/run/progression';
 import { specialReadiness } from '../../core/run/specials';
+import { nativeLevel } from '../../core/run/upgrades';
 import type { RunState } from '../../core/run/state';
 import { VirtualJoystick } from '../input/virtualJoystick';
 import { PALETTE, PALETTE_CSS } from '../render/palette';
@@ -58,6 +59,8 @@ export class HudScene extends Phaser.Scene {
   private passiveSlots: IconSlot[] = [];
   private effectSlots: IconSlot[] = [];
   private specialIcon!: Phaser.GameObjects.Image;
+  /** Aviso grande abaixo da banda: formação chegando, crise, Superdosagem (fase 5.6). */
+  private banner?: Phaser.GameObjects.Text;
   private box = {
     w: 0,
     h: 0,
@@ -78,6 +81,23 @@ export class HudScene extends Phaser.Scene {
   create(): void {
     this.joystick = new VirtualJoystick(this);
     setupUiLayout(this, (w, h) => this.layout(w, h));
+  }
+
+  /** Mostra um aviso grande abaixo da banda por alguns segundos. */
+  showBanner(text: string, color: string, seconds = 2.5): void {
+    this.banner?.destroy();
+    const { w, below } = this.box;
+    const t = this.add
+      .text(w / 2, below + 40, text, withShadow(impactText(20, color), PALETTE_CSS.outline, 3))
+      .setOrigin(0.5, 0);
+    this.banner = t;
+    this.tweens.add({
+      targets: t,
+      alpha: 0,
+      delay: seconds * 1000,
+      duration: 400,
+      onComplete: () => t.destroy(),
+    });
   }
 
   private get runScene(): RunScene {
@@ -294,9 +314,19 @@ export class HudScene extends Phaser.Scene {
     );
     const free = held.filter((id) => PASSIVES[id].freeSlot).length;
     const passives = held.map((id) => passiveSlot(id, run.passives[id]!.level));
-    rowSlots(passives, Math.floor(run.stats.modifierSlots) + free, ROW_SLOTS).forEach((c, i) =>
-      this.passiveSlots[i]?.set(c),
-    );
+    // Receptor nativo na frente, com moldura dourada, quando já tem nível (fase 5.6).
+    const native = run.rules.agents[run.agentId].nativeReceptor;
+    const nl = nativeLevel(run);
+    if (nl > 0) {
+      passives.unshift({
+        frame: 'evolved',
+        icon: iconTexture('passives', native.icon as PassiveId),
+        label: String(nl),
+        gold: true,
+      });
+    }
+    const open = Math.floor(run.stats.modifierSlots) + free + (nl > 0 ? 1 : 0);
+    rowSlots(passives, open, ROW_SLOTS).forEach((c, i) => this.passiveSlots[i]?.set(c));
   }
 
   /** ATP com a moeda e decompostas com uma molécula pequena, como na prancheta. */

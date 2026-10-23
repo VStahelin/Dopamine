@@ -57,5 +57,79 @@
     "xpMultiplier": 12,
     "minRarity": "rare",
     "ampouleChance": 0.15
+  },
+  "formations": {
+    "firstAtSeconds": 75,
+    "everySeconds": 90,
+    "warningSeconds": 3,
+    "gemChanceFactor": 0.4,
+    "list": {
+      "glycemicSpike": {
+        "name": "Pico glicêmico",
+        "description": "Enxame de açúcares que atravessa a tela em linha reta.",
+        "family": "sugar",
+        "shape": "swarm",
+        "kinds": ["glucose", "fructose"],
+        "count": 24,
+        "speedMultiplier": 2.2
+      },
+      "inflammatorySiege": {
+        "name": "Cerco inflamatório",
+        "description": "Anel de moléculas que fecha devagar em volta do agente.",
+        "family": "inflammation",
+        "shape": "ring",
+        "kinds": [],
+        "count": 28,
+        "speedMultiplier": 0.5
+      },
+      "lipidWall": {
+        "name": "Parede lipídica",
+        "description": "Fileira lenta de lipídios que varre o mapa.",
+        "family": "lipid",
+        "shape": "row",
+        "kinds": ["fattyAcid", "fattyAcid", "triglyceride"],
+        "count": 14,
+        "speedMultiplier": 0.8
+      },
+      "cortisolSurge": {
+        "name": "Surto de cortisol",
+        "description": "Um cortisol no meio de um grupo acelerado de adrenalinas.",
+        "family": "stress",
+        "shape": "surge",
+        "kinds": ["cortisol", "adrenaline", "adrenaline", "adrenaline"],
+        "count": 12,
+        "speedMultiplier": 1.6
+      },
+      "oxidativeBurst": {
+        "name": "Surto oxidativo",
+        "description": "Radicais em três diagonais que cruzam a tela rápido.",
+        "family": "radical",
+        "shape": "diagonal",
+        "kinds": ["hydroxylRadical"],
+        "count": 18,
+        "speedMultiplier": 2
+      },
+      "toxicTide": {
+        "name": "Maré tóxica",
+        "description": "Fileira larga e lenta de toxinas.",
+        "family": "toxin",
+        "shape": "row",
+        "kinds": ["ethanol", "ethanol", "acetaldehyde"],
+        "count": 20,
+        "speedMultiplier": 0.7
+      }
+    },
+    "crisisNames": {
+      "sugar": "Crise glicêmica",
+      "lipid": "Crise lipídica",
+      "stress": "Crise de estresse",
+      "radical": "Crise oxidativa",
+      "toxin": "Crise tóxica",
+      "inflammation": "Crise inflamatória"
+    }
+  },
+  "nativeReceptor": {
+    "everyLevels": 10,
+    "maxLevel": 5
   }
 }

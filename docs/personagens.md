@@ -60,6 +60,8 @@ As cascatas seguem o metabolismo real.
 
 O jogador escolhe um antes da run e joga com ele. O ataque é automático; o jogador só se move e dispara o especial.
 
+Cada agente tem um **receptor nativo** (o perfil farmacológico, [decisão 0030](decisoes/0030-variedade-da-run-reformulada.md)): Dopamina, Receptor D2 (−8% de recarga por nível); Lipase, Sítio ativo (+10% de dano contra lipídios por nível); Insulina, Receptor de insulina (+25% de Raio de coleta por nível). Sobe 1 nível a cada 10 níveis da run, até o 5. Valores em `agents.json`.
+
 ### Dopamina
 
 A protagonista e o agente inicial.

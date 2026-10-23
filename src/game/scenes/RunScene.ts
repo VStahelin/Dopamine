@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import { AGENTS, DISPLAY, DROPS, RUN, SECTORS } from '../../config';
+import { AGENTS, DISPLAY, DROPS, RUN, SECTORS, type MoleculeType } from '../../config';
 import { addRunStars, playableAgent, rulesWithProgress } from '../../core/meta/progress';
 import { applyHealth, earn, rulesWithOrganism, runHealth } from '../../core/organism/organism';
 import { DEFAULT_RULES } from '../../core/run/rules';
@@ -8,7 +8,7 @@ import { recordRun } from '../../core/save/saveData';
 import { createRun, drainEvents, runResult, type RunState } from '../../core/run/state';
 import { stepRun } from '../../core/run/step';
 import { KeyboardMove } from '../input/keyboardMove';
-import { PALETTE } from '../render/palette';
+import { PALETTE, PALETTE_CSS } from '../render/palette';
 import { pixelBand, pixelDisc, pixelOctagonAt, pixelRing, pixelSector } from '../render/fxArt';
 import { worldScale } from '../render/pixelScale';
 import {
@@ -62,6 +62,16 @@ const AURA_COLORS: Record<string, number> = {
  * Campo crônico: roda a simulação do core em passos fixos (decisão 0012) e desenha o estado.
  * Não guarda regra de jogo.
  */
+/** Cor do tingimento do mapa na crise, pela família da molécula. */
+const CRISIS_TINT: Partial<Record<MoleculeType, number>> = {
+  sugar: 0xffffff,
+  lipid: PALETTE.sulfur,
+  stress: PALETTE.uv,
+  radical: PALETTE.oxygen,
+  toxin: PALETTE.chlorine,
+  inflammation: PALETTE.interaction,
+};
+
 /** Tamanho dos itens no chão, em unidades do mundo (o desenho ocupa só o miolo do ícone). */
 const GEM_SIZE = 18;
 const ITEM_SIZE = 16;
@@ -73,6 +83,8 @@ export class RunScene extends Phaser.Scene {
   private paused = false;
   private accumulator = 0;
   private levelUpOpen = false;
+  /** Avisos de formação: seta piscando na borda do lado de onde ela vem (fase 5.6). */
+  private warnings: { angle: number; life: number; crisis: boolean }[] = [];
   /** Tela da cápsula ou da ampola aberta por cima da run. */
   private overlayOpen = false;
   private overHandled = false;
@@ -130,6 +142,7 @@ export class RunScene extends Phaser.Scene {
     this.accumulator = 0;
     this.levelUpOpen = false;
     this.overlayOpen = false;
+    this.warnings = [];
     this.overHandled = false;
     this.gaveUp = false;
     this.enemySprites = [];
@@ -359,6 +372,22 @@ export class RunScene extends Phaser.Scene {
         this.cameras.main.shake(400, 0.01);
         this.showFloater(a.x, a.y - 30, 'CHEFE!', 'hurt');
       }
+      if (ev.type === 'formationWarning') {
+        const hud = this.scene.get(SCENES.hud) as HudScene;
+        hud.showBanner(
+          ev.name.toUpperCase(),
+          ev.crisis ? PALETTE_CSS.interaction : PALETTE_CSS.logoOrange,
+        );
+        this.warnings.push({
+          angle: ev.angle,
+          life: RUN.formations.warningSeconds,
+          crisis: ev.crisis,
+        });
+        if (ev.crisis) this.cameras.main.shake(300, 0.006);
+      }
+      if (ev.type === 'overdose') {
+        (this.scene.get(SCENES.hud) as HudScene).showBanner('SUPERDOSAGEM', PALETTE_CSS.gold);
+      }
       if (ev.type === 'aggregate') {
         this.cameras.main.shake(200, 0.005);
         this.showFloater(a.x, a.y - 30, 'AGREGADO!', 'hurt');
@@ -468,6 +497,8 @@ export class RunScene extends Phaser.Scene {
     }
     this.drawItemEffects(g, px);
     this.drawAggregates(g, px);
+    this.drawFormationWarnings(g);
+    this.drawCrisisTint(g);
   }
 
   /**
@@ -496,6 +527,48 @@ export class RunScene extends Phaser.Scene {
       const q3 = tip(7.5, angle - 2.4);
       g.fillStyle(PALETTE.interaction, 1).fillTriangle(q1.x, q1.y, q2.x, q2.y, q3.x, q3.y);
     }
+  }
+
+  /** Seta grande piscando na borda, do lado de onde a formação vai entrar. */
+  private drawFormationWarnings(g: Phaser.GameObjects.Graphics): void {
+    const v = this.cameras.main.worldView;
+    const { agent } = this.run;
+    const step = 1 / 60;
+    this.warnings = this.warnings.filter((w) => (w.life -= step) > 0);
+    for (const w of this.warnings) {
+      if (Math.floor(w.life * 6) % 2 === 1) continue;
+      const far = Math.hypot(v.width, v.height);
+      const x = Phaser.Math.Clamp(agent.x + Math.cos(w.angle) * far, v.x + 22, v.right - 22);
+      const y = Phaser.Math.Clamp(agent.y + Math.sin(w.angle) * far, v.y + 22, v.bottom - 22);
+      // A seta aponta para dentro: a formação vem de fora.
+      const a = w.angle + Math.PI;
+      const tip = (r: number, da: number) => ({
+        x: x + Math.cos(a + da) * r,
+        y: y + Math.sin(a + da) * r,
+      });
+      const p1 = tip(16, 0);
+      const p2 = tip(13, 2.4);
+      const p3 = tip(13, -2.4);
+      g.fillStyle(PALETTE.outline, 1).fillTriangle(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
+      const q1 = tip(11, 0);
+      const q2 = tip(9, 2.4);
+      const q3 = tip(9, -2.4);
+      g.fillStyle(w.crisis ? PALETTE.interaction : PALETTE.woodHi, 1);
+      g.fillTriangle(q1.x, q1.y, q2.x, q2.y, q3.x, q3.y);
+    }
+  }
+
+  /** Crise: o mapa fica levemente tingido na cor da família enquanto ela dura. */
+  private drawCrisisTint(g: Phaser.GameObjects.Graphics): void {
+    const family = this.run.formations.crisis?.family;
+    if (!family) return;
+    const v = this.cameras.main.worldView;
+    g.fillStyle(CRISIS_TINT[family] ?? PALETTE.interaction, 0.16).fillRect(
+      v.x,
+      v.y,
+      v.width,
+      v.height,
+    );
   }
 
   /** Efeitos de item com tempo: lança-chamas, anel do Gelo seco e borda da Febre de ATP. */

@@ -40,6 +40,12 @@ export interface Enemy {
   fragment: boolean;
   /** Agregado (mini chefe, fase 5.10): maior, mais forte, sempre solta ampola. */
   aggregate: boolean;
+  /** Veio numa formação (fase 5.6). */
+  formation: boolean;
+  /** Anda em linha reta na direção (dirX, dirY) em vez de perseguir; some quando fica longe. */
+  straight: boolean;
+  dirX: number;
+  dirY: number;
 }
 
 export interface Projectile {
@@ -187,7 +193,10 @@ export type RunEvent =
   | { type: 'special'; kind: string }
   | { type: 'boss'; kind: EnemyKind }
   | { type: 'aggregate'; kind: EnemyKind }
+  /** Uma formação (ou a crise) vai nascer do lado de `angle`, visto do agente. */
+  | { type: 'formationWarning'; name: string; angle: number; crisis: boolean }
   | { type: 'levelUp'; level: number }
+  | { type: 'overdose' }
   | { type: 'vesicle'; x: number; y: number }
   | { type: 'item'; kind: ItemId | 'capsule' | 'ampoule'; x: number; y: number }
   | { type: 'spark'; x1: number; y1: number; x2: number; y2: number }
@@ -247,6 +256,8 @@ export interface RunState {
   lastAmpouleAt: number;
   cryoCooldown: number;
   gemPulseTimer: number;
+  /** A run já entrou na Superdosagem (tudo no máximo). */
+  overdose: boolean;
   /** Golpe de faísca ou explosão em andamento: não dispara outra. */
   chaining: boolean;
   /** Cápsula aberta esperando o jogador ver; a simulação para enquanto houver uma. */
@@ -272,6 +283,16 @@ export interface RunState {
   banished: string[];
   /** Tipos de molécula vistos nesta run, para o Compêndio. */
   seen: EnemyKind[];
+  /** Formações e crises (fase 5.6). */
+  formations: {
+    /** Momento da próxima formação; -1 antes de agendar a primeira. */
+    next: number;
+    pending: { id: string; at: number; angle: number; crisis: boolean }[];
+    /** Picos do dente de serra que já tiveram crise. */
+    crises: number;
+    crisis: { family: MoleculeType; until: number } | null;
+    seen: string[];
+  };
   /** Momento sorteado do próximo agregado, em segundos de run. */
   nextAggregateAt: number;
   /** Moléculas que já vieram como agregado nesta run, para o Compêndio. */
@@ -303,6 +324,7 @@ export interface RunResult {
   seenItems: ItemId[];
   seenSupplements: string[];
   seenAggregates: EnemyKind[];
+  seenFormations: string[];
   capsulesOpened: number;
 }
 
@@ -353,6 +375,7 @@ export function createRun(
     cryoCooldown: 0,
     gemPulseTimer: 0,
     chaining: false,
+    overdose: false,
     capsule: null,
     capsulesOpened: 0,
     seenItems: [],
@@ -374,6 +397,7 @@ export function createRun(
     seen: [],
     bossesSpawned: rules.run.bosses.map(() => 0),
     nextAggregateAt: -1,
+    formations: { next: -1, pending: [], crises: 0, crisis: null, seen: [] },
     seenAggregates: [],
     over: false,
     nextEnemyId: 1,
@@ -416,6 +440,10 @@ export function addEnemy(
     frozen: 0,
     fragment: false,
     aggregate: false,
+    formation: false,
+    straight: false,
+    dirX: 0,
+    dirY: 0,
   };
   state.enemies.push(enemy);
   if (!state.seen.includes(kind)) state.seen.push(kind);
@@ -432,6 +460,7 @@ export function runResult(state: RunState): RunResult {
     seenItems: [...state.seenItems],
     seenSupplements: [...state.seenSupplements],
     seenAggregates: [...state.seenAggregates],
+    seenFormations: [...state.formations.seen],
     capsulesOpened: state.capsulesOpened,
   };
 }

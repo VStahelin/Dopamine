@@ -1,6 +1,6 @@
 import type { PassiveDef, PassiveId, RunStatKey, WeaponId } from '../../config';
 import { newWeapon, type RunState } from './state';
-import { computeStats } from './stats';
+import { computeStats, statDef } from './stats';
 import { weaponMaxLevel } from './weaponParams';
 
 export type UpgradeChoice =
@@ -21,6 +21,11 @@ export type UpgradeChoice =
       amount: number;
     }
   | { kind: 'heal'; amount: number }
+  /**
+   * Superdosagem (fase 5.6, decisão 0030): com armas e receptores no máximo, um bônus pequeno de
+   * atributo, comum, sem ocupar espaço. Usa o valor por nível do passivo daquele atributo.
+   */
+  | { kind: 'boost'; id: PassiveId; amount: number }
   /** Nada mais para subir: ATP em moedas do valor atual (Fosfocreatina). */
   | { kind: 'phosphocreatine'; coins: number };
 
@@ -41,6 +46,7 @@ const FALLBACK_HEAL = 30;
 /** Identifica a opção para banir: a arma ou um modificador, sem nível nem raridade. */
 export function choiceKey(choice: UpgradeChoice): string {
   if (choice.kind === 'heal' || choice.kind === 'phosphocreatine') return choice.kind;
+  if (choice.kind === 'boost') return `boost:${choice.id}`;
   return `${choice.kind}:${choice.id}`;
 }
 
@@ -164,10 +170,15 @@ export function levelUpOffer(state: RunState): UpgradeChoice[] {
     });
   }
   if (offer.length === 0) {
-    offer.push(
-      { kind: 'heal', amount: FALLBACK_HEAL },
-      { kind: 'phosphocreatine', coins: state.rules.drops.phosphocreatine.coins },
-    );
+    const boosts = overdoseOffer(state, count);
+    if (boosts.length > 0 && !state.overdose) {
+      state.overdose = true;
+      state.events.push({ type: 'overdose' });
+    }
+    offer.push(...boosts, { kind: 'heal', amount: FALLBACK_HEAL });
+    if (boosts.length === 0) {
+      offer.push({ kind: 'phosphocreatine', coins: state.rules.drops.phosphocreatine.coins });
+    }
   }
 
   state.offer = offer;
@@ -216,15 +227,61 @@ export function applyUpgrade(state: RunState, choice: UpgradeChoice): void {
     case 'phosphocreatine':
       state.atp += choice.coins * coinValue(state) * state.stats.currencyGain;
       break;
+    case 'boost': {
+      const def = state.rules.passives[choice.id];
+      for (const stat of [def.stat, def.alsoStat]) {
+        if (stat) state.bonus[stat] = (state.bonus[stat] ?? 0) + choice.amount;
+      }
+      break;
+    }
   }
   refreshStats(state);
   // Interações máximas a mais também entram no estoque atual.
   state.agent.interactions += Math.max(0, state.stats.maxInteractions - before);
 }
 
-/** Recalcula os atributos com os receptores e o que a run somou fora deles. */
+/** Recalcula os atributos com os receptores, o receptor nativo e o que a run somou fora deles. */
 export function refreshStats(state: RunState): void {
-  state.stats = computeStats(state.rules, state.passives, state.bonus);
+  const native = state.rules.agents[state.agentId].nativeReceptor;
+  const bonus = { ...state.bonus };
+  if (native.stat) {
+    bonus[native.stat] = (bonus[native.stat] ?? 0) + native.perLevel * nativeLevel(state);
+  }
+  state.stats = computeStats(state.rules, state.passives, bonus);
+}
+
+/** Nível do receptor nativo: 1 a cada tantos níveis de run, até o máximo (fase 5.6). */
+export function nativeLevel(state: RunState): number {
+  const n = state.rules.run.nativeReceptor;
+  return Math.min(n.maxLevel, Math.floor(state.level / n.everyLevels));
+}
+
+/**
+ * Cartas da Superdosagem: atributos abaixo do teto na run, um por passivo (sem reagentes, sem a
+ * Mutação e sem os de level up), sorteados.
+ */
+function overdoseOffer(state: RunState, count: number): UpgradeChoice[] {
+  const { passives } = state.rules;
+  const seen = new Set<string>();
+  const ids = (Object.keys(passives) as PassiveId[]).filter((id) => {
+    const def = passives[id];
+    if (def.kind === 'reagent' || def.mutation || MUTATION_SKIP.includes(def.stat)) return false;
+    if (seen.has(def.stat) || atCap(state, def.stat)) return false;
+    seen.add(def.stat);
+    return true;
+  });
+  const out: UpgradeChoice[] = [];
+  while (out.length < count && ids.length > 0) {
+    const id = ids.splice(state.rng.int(ids.length), 1)[0]!;
+    out.push({ kind: 'boost', id, amount: passives[id].perLevel });
+  }
+  return out;
+}
+
+function atCap(state: RunState, stat: RunStatKey): boolean {
+  const def = statDef(state.rules, stat);
+  if (def.runCap === null) return false;
+  return def.runCap < def.base ? state.stats[stat] <= def.runCap : state.stats[stat] >= def.runCap;
 }
 
 export function rarityMultiplier(state: RunState, rarity: number | undefined): number {
@@ -275,7 +332,9 @@ export function skipLevelUp(state: RunState): boolean {
 
 /** Tira a opção do sorteio pelo resto da run e sorteia de novo, gastando um Banir. */
 export function banishChoice(state: RunState, choice: UpgradeChoice): boolean {
-  if (choice.kind === 'heal' || choice.kind === 'phosphocreatine') return false;
+  if (choice.kind === 'heal' || choice.kind === 'phosphocreatine' || choice.kind === 'boost') {
+    return false;
+  }
   if (state.pendingLevelUps <= 0) return false;
   if (remaining(state, 'banishes') === 0) return false;
   state.used.banishes++;

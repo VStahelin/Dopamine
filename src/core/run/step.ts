@@ -2,8 +2,10 @@ import type { EnemyKind } from '../../config';
 import { clampLength, type Vec2 } from '../math/vec2';
 import { damageEnemy, heal } from './combat';
 import { difficultyAt, enemyHpAt, waveFactorAt, xpToNextLevel } from './progression';
+import { updateFormations } from './formations';
 import { extendFever, updateItems } from './items';
 import { onHurt } from './supplements';
+import { refreshStats } from './upgrades';
 import { SpatialGrid } from './spatialGrid';
 import { updateSpecial } from './specials';
 import { addEnemy, type Enemy, type RunState } from './state';
@@ -96,6 +98,7 @@ function spawnEnemies(state: RunState, viewRadius: number, dt: number): void {
   });
 
   spawnAggregate(state, distance, hp);
+  updateFormations(state, distance, hp);
 
   const rate =
     run.spawn.baseEnemiesPerSecond *
@@ -138,6 +141,11 @@ function spawnEnemies(state: RunState, viewRadius: number, dt: number): void {
   for (const e of state.enemies) {
     if (e.boss || e.aggregate) continue;
     if ((e.x - state.agent.x) ** 2 + (e.y - state.agent.y) ** 2 < far * far) continue;
+    // Quem atravessa a tela em linha reta só some: voltar para perto desfaria a formação.
+    if (e.straight) {
+      e.hp = 0;
+      continue;
+    }
     const at = spawnAround(state, distance);
     e.x = at.x;
     e.y = at.y;
@@ -192,7 +200,10 @@ function moveEnemies(state: RunState, dt: number): void {
     const dy = agent.y - e.y;
     const dist = Math.hypot(dx, dy);
     e.frozen = Math.max(0, e.frozen - dt);
-    if (dist > 0.001 && !frozen && e.frozen <= 0) {
+    if (e.straight && !frozen && e.frozen <= 0) {
+      e.x += e.dirX * e.speed * e.slow * dt;
+      e.y += e.dirY * e.speed * e.slow * dt;
+    } else if (dist > 0.001 && !frozen && e.frozen <= 0) {
       const step = Math.min(e.speed * e.slow * dt, dist);
       e.x += (dx / dist) * step;
       e.y += (dy / dist) * step;
@@ -333,6 +344,7 @@ function updateGems(state: RunState, dt: number): void {
     state.xpToNext = xpToNextLevel(state.level, rules.economy.xp);
     state.pendingLevelUps++;
     state.events.push({ type: 'levelUp', level: state.level });
+    if (state.level % rules.run.nativeReceptor.everyLevels === 0) refreshStats(state);
   }
 }
 
