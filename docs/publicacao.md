@@ -1,6 +1,6 @@
 # Publicação nas plataformas
 
-Como levar o Dopamina Blaster além do link do GitHub Pages: lojas de celular, Steam e Microsoft Store. O objetivo de lançar em todas as plataformas está na decisão [0031](decisoes/0031-lancar-em-todas-as-plataformas.md) (proposta) e o trabalho é a fase 7 do [roadmap](roadmap.md). Hoje o jogo é só web/PWA ([0002](decisoes/0002-phaser-4-typescript-pwa.md), [0018](decisoes/0018-jogo-no-pages-servidor-futuro.md)), e o GitHub Pages continua como versão web mesmo depois das lojas. Este arquivo é o mapa técnico, o que combina com a nota de [plataforma.md](plataforma.md) de que dá para empacotar o mesmo jogo web como app nativo sem reescrever.
+Como levar o Farmaco Battle além do link do GitHub Pages: lojas de celular, Steam e Microsoft Store. O objetivo de lançar em todas as plataformas está na decisão [0031](decisoes/0031-lancar-em-todas-as-plataformas.md) (proposta) e o trabalho é a fase 7 do [roadmap](roadmap.md). Hoje o jogo é só web/PWA ([0002](decisoes/0002-phaser-4-typescript-pwa.md), [0018](decisoes/0018-jogo-no-pages-servidor-futuro.md)), e o GitHub Pages continua como versão web mesmo depois das lojas. Este arquivo é o mapa técnico, o que combina com a nota de [plataforma.md](plataforma.md) de que dá para empacotar o mesmo jogo web como app nativo sem reescrever.
 
 Valores de taxas e requisitos de loja mudam: conferir nas páginas oficiais antes de pagar ou submeter qualquer coisa.
 

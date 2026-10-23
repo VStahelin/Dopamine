@@ -4,7 +4,7 @@ Instruções para qualquer agente de IA (Claude Code, Codex, Cursor e outros) qu
 
 ## O projeto
 
-Dopamina Blaster: roguelike incremental de auto-battle idle, em que agentes (remédios e substâncias reais) decompõem moléculas inimigas dentro de um organismo. Jogo web instalável (PWA) em Phaser 4 + TypeScript. Projeto solo, pessoal, para jogar com amigos.
+Farmaco Battle: roguelike incremental de auto-battle idle, em que agentes (remédios e substâncias reais) decompõem moléculas inimigas dentro de um organismo. Jogo web instalável (PWA) em Phaser 4 + TypeScript. Projeto solo, pessoal, para jogar com amigos.
 
 ## Onde está cada coisa
 

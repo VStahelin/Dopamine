@@ -1,6 +1,6 @@
 ---
 name: criar-versao
-description: Cria uma versão nova do Dopamina Blaster (tag vX.Y.Z) a partir da main, depois de conferir que tudo passa. Use quando o Vitor pedir para "criar versão", "gerar versão", "fechar versão" ou "criar build". Não publica: para isso existe a skill publicar-versao.
+description: Cria uma versão nova do Farmaco Battle (tag vX.Y.Z) a partir da main, depois de conferir que tudo passa. Use quando o Vitor pedir para "criar versão", "gerar versão", "fechar versão" ou "criar build". Não publica: para isso existe a skill publicar-versao.
 ---
 
 # Criar versão

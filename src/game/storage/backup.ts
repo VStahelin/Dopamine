@@ -6,7 +6,9 @@ import { migrateSave, type SaveData } from '../../core/save/saveData';
  * arquivo .json para guardar. Importar passa pela mesma migração do save, então um backup velho
  * ou mexido à mão volta ao formato atual e o que estiver errado cai no padrão.
  */
-const GAME = 'dopamina-blaster';
+const GAME = 'farmaco-battle';
+/** Nomes antigos do jogo: backups feitos antes da troca de nome continuam valendo. */
+const LEGACY_GAMES = ['dopamina-blaster'];
 
 interface Backup {
   game: string;
@@ -43,7 +45,8 @@ export function importBackup(text: string): SaveData | null {
   try {
     const json = trimmed.startsWith('{') ? trimmed : fromBase64(trimmed);
     const data = JSON.parse(json) as Partial<Backup>;
-    if (data.game !== GAME || !data.save) return null;
+    const game = data.game ?? '';
+    if ((game !== GAME && !LEGACY_GAMES.includes(game)) || !data.save) return null;
     return migrateSave(data.save, {
       showFps: DISPLAY.showFps,
       showDamageNumbers: true,

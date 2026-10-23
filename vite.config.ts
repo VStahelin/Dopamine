@@ -57,8 +57,8 @@ export default defineConfig({
       injectRegister: false,
       includeAssets: ['favicon.svg'],
       manifest: {
-        name: 'Dopamina Blaster',
-        short_name: 'Dopamina',
+        name: 'Farmaco Battle',
+        short_name: 'Farmaco',
         lang: 'pt-BR',
         display: 'fullscreen',
         orientation: 'any',

@@ -1,10 +1,10 @@
-# Dopamina Blaster — Documento de conceito
+# Farmaco Battle — Documento de conceito
 
 20 de outubro de 2026 · Vitor
 
 ## Visão geral
 
-Dopamina Blaster é um roguelike incremental de auto-battle idle em que o jogador decompõe moléculas químicas inimigas usando outras moléculas como agentes. Na proposta atual, a run acontece num mundo aberto visto de cima, no estilo Vampire Survivors, e o idle usa o campo vertical, com inimigos descendo até os agentes na base.
+Farmaco Battle é um roguelike incremental de auto-battle idle em que o jogador decompõe moléculas químicas inimigas usando outras moléculas como agentes. Na proposta atual, a run acontece num mundo aberto visto de cima, no estilo Vampire Survivors, e o idle usa o campo vertical, com inimigos descendo até os agentes na base.
 
 O jogo tem dois campos. O **campo crônico** é a run de batalha, que termina quando acabam as interações do jogador. O **campo longo** é um incremental que roda sozinho, mais devagar, e gera recursos o tempo todo. Entre as runs, a moeda acumulada compra upgrades e desbloqueia novas moléculas, para chegar mais longe na próxima.
 

@@ -1,6 +1,6 @@
 # Roadmap
 
-Plano de desenvolvimento do Dopamina Blaster, da primeira linha de código até o link para os amigos. A ordem segue a sugestão do conceito: **provar primeiro que a run é divertida** e só depois montar idle, organismo e economia em volta dela. Cada fase tem um critério de saída; não vale começar a próxima sem cumpri-lo.
+Plano de desenvolvimento do Farmaco Battle, da primeira linha de código até o link para os amigos. A ordem segue a sugestão do conceito: **provar primeiro que a run é divertida** e só depois montar idle, organismo e economia em volta dela. Cada fase tem um critério de saída; não vale começar a próxima sem cumpri-lo.
 
 Tudo aqui é **proposta**: as fases podem mudar de ordem conforme o jogo for testado. Mudanças de ordem ou de escopo de uma fase viram uma decisão em [decisoes/](decisoes/README.md).
 
@@ -72,7 +72,7 @@ A primeira versão que parece um jogo: abre num menu, entra numa run jogável e 
 
 **Menu**
 
-- [x] Tela de título com o logo (DOPAMINA / BLASTER) e o fundo do jogo.
+- [x] Tela de título com o logo (FARMACO / BATTLE) e o fundo do jogo.
 - [x] Botão Jogar, que leva direto à run.
 - [x] Recordes: melhor tempo, maior nível e mais inimigos decompostos.
 - [x] Opções: tela cheia e mostrar FPS. O volume de Música entrou na fase 6; o de Efeitos entra com os efeitos.

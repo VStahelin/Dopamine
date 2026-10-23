@@ -18,10 +18,15 @@ describe('backup do save', () => {
   });
 
   it('aceita o JSON do arquivo e recusa o que não é save do jogo', () => {
-    const json = JSON.stringify({ game: 'dopamina-blaster', save });
+    const json = JSON.stringify({ game: 'farmaco-battle', save });
     expect(importBackup(json)?.atp).toBe(1234);
     expect(importBackup('{"game":"outro","save":{}}')).toBeNull();
     expect(importBackup('não é base64 ###')).toBeNull();
     expect(importBackup('')).toBeNull();
+  });
+
+  it('aceita backup feito com o nome antigo do jogo', () => {
+    const json = JSON.stringify({ game: 'dopamina-blaster', save });
+    expect(importBackup(json)?.atp).toBe(1234);
   });
 });

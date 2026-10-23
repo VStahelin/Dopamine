@@ -1,4 +1,4 @@
-# Documentação do Dopamina Blaster
+# Documentação do Farmaco Battle
 
 Documento de conceito do jogo, um arquivo por aba do [documento original](https://claude.ai/code/artifact/931f649e-d98f-4019-a7fb-8643946bc1c5). Tudo aqui ainda é proposta em evolução; cada arquivo termina com o que falta decidir.
 

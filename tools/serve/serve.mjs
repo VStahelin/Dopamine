@@ -53,14 +53,11 @@ async function certificate() {
     { type: 7, ip: '127.0.0.1' },
     ...lanIps().map((ip) => ({ type: 7, ip })),
   ];
-  const pems = await selfsigned.generate(
-    [{ name: 'commonName', value: 'Dopamina Blaster local' }],
-    {
-      keySize: 2048,
-      notAfterDate: new Date(Date.now() + 825 * 24 * 3600 * 1000),
-      extensions: [{ name: 'subjectAltName', altNames }],
-    },
-  );
+  const pems = await selfsigned.generate([{ name: 'commonName', value: 'Farmaco Battle local' }], {
+    keySize: 2048,
+    notAfterDate: new Date(Date.now() + 825 * 24 * 3600 * 1000),
+    extensions: [{ name: 'subjectAltName', altNames }],
+  });
   mkdirSync(CERTS, { recursive: true });
   writeFileSync(keyFile, pems.private);
   writeFileSync(certFile, pems.cert);
@@ -128,7 +125,7 @@ const server = createServer({ key, cert }, (req, res) => {
 });
 
 server.listen(PORT, '0.0.0.0', () => {
-  console.log(`Dopamina Blaster servindo a build ${currentBuild() ?? '(nenhuma)'}:`);
+  console.log(`Farmaco Battle servindo a build ${currentBuild() ?? '(nenhuma)'}:`);
   console.log(`  https://localhost:${PORT}/`);
   for (const ip of lanIps()) console.log(`  https://${ip}:${PORT}/`);
   console.log(

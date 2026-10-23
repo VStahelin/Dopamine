@@ -19,7 +19,7 @@ O Vitor aprovou cinco das seis recomendações em 22/10/2026 e deixou as Conquis
 
 Esforço: **P** cabe em até um dia, **M** em alguns dias, **G** em uma semana ou mais. É estimativa, sem medir no código.
 
-## O VS lado a lado com o Dopamina Blaster
+## O VS lado a lado com o Farmaco Battle
 
 | Sistema do VS | Como é no VS | Nós hoje | Versão química proposta | Esforço | Prioridade |
 | --- | --- | --- | --- | --- | --- |

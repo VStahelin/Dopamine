@@ -12,7 +12,7 @@ Esta aba propõe as fórmulas que equilibram progressão e dificuldade, com base
 6. **Dificuldade boa é dente de serra, não rampa.** Picos de tensão seguidos de respiros onde o jogador sente o poder novo mantêm a pessoa no "canal de flow", entre o tédio e a ansiedade.
 7. **Meta-progressão demais mata a habilidade.** Se upgrades permanentes de poder bruto deixam qualquer um vencer, a derrota para de ensinar e o jogo vira grind. Desbloquear opções novas (personagens, armas, caminhos) envelhece melhor que "+X% de dano".
 
-## Princípios para o Dopamina Blaster
+## Princípios para o Farmaco Battle
 
 - **Poder grande dentro da run, pequeno fora dela.** O level up da run é onde o jogador fica forte de verdade. A meta-progressão dá um empurrão com teto.
 - **Meta-progressão abre opções.** A maior parte do que se compra no menu são agentes, especiais e escolhas novas, não números maiores.

@@ -1,6 +1,6 @@
 ---
 name: publicar-versao
-description: Publica no GitHub Pages uma versão já criada do Dopamina Blaster, enviando a main e a tag vX.Y.Z e acompanhando o deploy até o jogo estar no ar. Use quando o Vitor pedir para "publicar", "subir a versão", "fazer o deploy" ou "colocar no ar". Se a versão ainda não existe, rode antes a skill criar-versao.
+description: Publica no GitHub Pages uma versão já criada do Farmaco Battle, enviando a main e a tag vX.Y.Z e acompanhando o deploy até o jogo estar no ar. Use quando o Vitor pedir para "publicar", "subir a versão", "fazer o deploy" ou "colocar no ar". Se a versão ainda não existe, rode antes a skill criar-versao.
 ---
 
 # Publicar versão

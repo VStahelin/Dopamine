@@ -6,6 +6,7 @@ import { migrateSave, type SaveData } from '../../core/save/saveData';
 type HasRegistry = { registry: Phaser.Data.DataManager };
 
 /** Save no IndexedDB do navegador (decisão 0005). */
+// Nome antigo do jogo, mantido de propósito: trocar o banco apagaria os saves de quem já joga.
 const DB_NAME = 'dopamina-blaster';
 const STORE = 'save';
 const KEY = 'main';

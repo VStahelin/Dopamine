@@ -2,7 +2,7 @@
 
 23 de outubro de 2026 · Vitor
 
-O som do Dopamina Blaster é **chiptune metal**: os canais de um console 8/16-bit (pulso, triângulo, ruído e o FM do Mega Drive) tocando riffs de metal, com guitarra distorcida e bateria de bumbo duplo por cima. As músicas são feitas num app de geração de música, fora do repositório; esta aba define o tema, a lista de faixas, como o jogo troca de música e o formato de entrega, com um prompt pronto para cada faixa.
+O som do Farmaco Battle é **chiptune metal**: os canais de um console 8/16-bit (pulso, triângulo, ruído e o FM do Mega Drive) tocando riffs de metal, com guitarra distorcida e bateria de bumbo duplo por cima. As músicas são feitas num app de geração de música, fora do repositório; esta aba define o tema, a lista de faixas, como o jogo troca de música e o formato de entrega, com um prompt pronto para cada faixa.
 
 **A música já está no jogo** (v0.14.0): todas as faixas e jingles abaixo, menos `bossIn` e `crisisIn`, que ainda não foram gerados. Os efeitos sonoros ainda são proposta. Volumes, tempos de troca e a lista de faixas ficam em `src/config/audio.json`; o player está em `src/game/audio/` (veja [Como entra no jogo](#como-entra-no-jogo)).
 

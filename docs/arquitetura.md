@@ -1,6 +1,6 @@
 # Arquitetura
 
-Como o código do Dopamina Blaster é organizado. Este arquivo descreve **o estado atual**; o porquê de cada escolha fica nas [decisões](decisoes/README.md), ligadas em cada seção. Ao mudar algo aqui, registre a decisão primeiro.
+Como o código do Farmaco Battle é organizado. Este arquivo descreve **o estado atual**; o porquê de cada escolha fica nas [decisões](decisoes/README.md), ligadas em cada seção. Ao mudar algo aqui, registre a decisão primeiro.
 
 > **Estado:** fases 0 a 2.5 implementadas; fases 2.6, 2.7, 3 (meta-progressão), 4 (campo longo) e 5 (organismo) implementadas, falta validar no celular.
 

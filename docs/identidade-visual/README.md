@@ -1,6 +1,6 @@
 # Identidade visual (canvas)
 
-Cópia das pranchetas do canvas [Dopamina Blaster — Identidade visual](https://claude.ai/artifact/MPV17zZywrhhXBUdfnUs6F), trazida em 22 de outubro de 2026. O canvas continua sendo onde a arte é desenhada; esta pasta guarda o fonte de cada prancheta no repositório, para qualquer sessão consultar sem acesso ao canvas.
+Cópia das pranchetas do canvas [Farmaco Battle — Identidade visual](https://claude.ai/artifact/MPV17zZywrhhXBUdfnUs6F), trazida em 22 de outubro de 2026. O canvas continua sendo onde a arte é desenhada; esta pasta guarda o fonte de cada prancheta no repositório, para qualquer sessão consultar sem acesso ao canvas.
 
 Cada arquivo `.dc.html` é uma prancheta inteira (HTML com a lógica no fim, em `class Component`). A arte em pixel fica em tabelas de texto dentro do script (`ART`, `OBJ`, `TILES`, `I`): é daí que saem os JSON de `src/assets/sprites/`. O `canvas.json` é o índice do canvas, com a posição e o título de cada prancheta. Os arquivos não abrem sozinhos no navegador: dependem do `support.js` do canvas.
 

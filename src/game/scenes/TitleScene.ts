@@ -29,7 +29,7 @@ export class TitleScene extends Phaser.Scene {
       const logoTop = Math.max(16, Math.floor((h - 190) / 2) - 10);
       const cx = Math.floor(w / 2);
 
-      // Faixa vermelha inclinada atrás de DOPAMINA, como na referência da aba Design.
+      // Faixa vermelha inclinada atrás de FARMACO, como na referência da aba Design.
       const band = this.add.graphics();
       band.fillStyle(PALETTE.outline).fillRect(-125, -21, 250, 42);
       band.fillStyle(PALETTE.interaction).fillRect(-122, -18, 244, 36);
@@ -39,11 +39,11 @@ export class TitleScene extends Phaser.Scene {
         .image(cx, logoTop + 20, textureKey(AGENT_TEXTURES.dopamine, 3))
         .setScale(2 / 3);
       const title = this.add
-        .text(cx, logoTop + 70, 'DOPAMINA', impactText(34, PALETTE_CSS.logoOrange))
+        .text(cx, logoTop + 70, 'FARMACO', impactText(34, PALETTE_CSS.logoOrange))
         .setOrigin(0.5)
         .setRotation(-0.06);
       const subtitle = this.add
-        .text(cx, logoTop + 104, 'BLASTER', impactText(26, PALETTE_CSS.logoGreen))
+        .text(cx, logoTop + 104, 'BATTLE', impactText(26, PALETTE_CSS.logoGreen))
         .setOrigin(0.5);
 
       const { buttons } = addButtonColumn(this, w, logoTop + 140, [

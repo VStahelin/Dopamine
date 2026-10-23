@@ -6,7 +6,7 @@ Quatro mudanças inspiradas no Megabonk para a run ficar mais dinâmica: o level
 
 ## Resumo
 
-| # | Mudança | No Megabonk | No Dopamina Blaster | Fase |
+| # | Mudança | No Megabonk | No Farmaco Battle | Fase |
 | --- | --- | --- | --- | --- |
 | 1 | Level up enxuto | Level up só com armas e tomos, 4 espaços de cada | Level up só com **armas** e **receptores**; os 35 modificadores de hoje viram 16 receptores, e o resto sai do level up | [5.8](roadmap.md#fase-58-receptores-no-level-up) |
 | 2 | Itens que melhoram atributos | Itens passivos sem limite de espaço, que acumulam, com 4 raridades | **Suplementos**: passivos sem espaço, que acumulam, com raridade; os reagentes da evolução viram suplementos | [5.9](roadmap.md#fase-59-suplementos-e-ampolas) |

@@ -1,6 +1,6 @@
 # Identidade visual
 
-O Dopamina Blaster usa pixel art 2D com cara de HUD de RPG 16-bit: molduras de madeira laranja, contorno vermelho-escuro grosso e química de cores saturadas. As telas de referência estão no [canvas de identidade visual](https://claude.ai/artifact/MPV17zZywrhhXBUdfnUs6F).
+O Farmaco Battle usa pixel art 2D com cara de HUD de RPG 16-bit: molduras de madeira laranja, contorno vermelho-escuro grosso e química de cores saturadas. As telas de referência estão no [canvas de identidade visual](https://claude.ai/artifact/MPV17zZywrhhXBUdfnUs6F).
 
 ## Direção de arte
 
@@ -44,7 +44,7 @@ Duas fontes pixeladas gratuitas do Google Fonts, com papéis separados.
 | Pixelify Sans | 600 | Textos de interface e nomes | Metano decomposto em 3 partes |
 | [Silkscreen](https://fonts.google.com/specimen/Silkscreen) | 400 | Rótulos curtos em caixa alta | INTERAÇÕES · OURO · NÍVEL |
 
-O logo escreve DOPAMINA em laranja numa faixa vermelha inclinada e BLASTER em verde logo abaixo, como a faixa "EXPLORE MASSIVE WORLD" da referência.
+O logo escreve FARMACO em laranja numa faixa vermelha inclinada e BATTLE em verde logo abaixo, como a faixa "EXPLORE MASSIVE WORLD" da referência.
 
 ## Sprites de moléculas
 

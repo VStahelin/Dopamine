@@ -1,8 +1,11 @@
 # Novidades
 
-O que mudou em cada versão do Dopamina Blaster. O jogo mostra este arquivo em Opções › Novidades.
+O que mudou em cada versão do Farmaco Battle. O jogo mostra este arquivo em Opções › Novidades.
 
 ## Em desenvolvimento
+
+### Novidades
+- O jogo agora se chama Farmaco Battle! O nome novo aparece no título, na tela de carregamento e no app instalado. Seu save continua o mesmo, e os backups feitos antes da troca de nome continuam podendo ser importados.
 
 ## v0.15.0 · 23/10/2026
 
