@@ -74,7 +74,7 @@ A primeira versão que parece um jogo: abre num menu, entra numa run jogável e 
 - [x] Tela de título com o logo (DOPAMINA / BLASTER) e o fundo do jogo.
 - [x] Botão Jogar, que leva direto à run.
 - [x] Recordes: melhor tempo, maior nível e mais inimigos decompostos.
-- [x] Opções: tela cheia e mostrar FPS. O volume entra quando o jogo tiver som (fase 6).
+- [x] Opções: tela cheia e mostrar FPS. O volume de Música entrou na fase 6; o de Efeitos entra com os efeitos.
 - [x] Save mínimo para guardar recordes e opções entre sessões (começo do save da [decisão 0005](decisoes/0005-save-local-indexeddb.md)).
 - [x] Pausa na run, com Continuar e Voltar ao menu.
 
@@ -398,6 +398,9 @@ Deixar o jogo com a cara do canvas de identidade visual e pronto para outras pes
 - [ ] Chão, paredes e efeitos (dano com contorno, projéteis); o chão e os objetos dos ambientes vêm da fase 5.7.
 - [ ] Wiki dentro do jogo: o Compêndio ganha as páginas de [wiki.md](wiki.md) (como jogar, agentes, armas, modificadores, moléculas, progressão, campo longo, organismo e glossário).
 - [ ] Som e música: as faixas chiptune metal e os efeitos de [sonoplastia.md](sonoplastia.md), com troca de música na run, volume de Música e Efeitos nas Opções e `src/config/audio.json`.
+  - [x] Música: 9 faixas em loop e 3 jingles, troca na run (tempo, crise, chefe), abafada nas telas por cima, volume de Música nas Opções.
+  - [ ] Jingles `bossIn` e `crisisIn` (faltam gerar).
+  - [ ] Efeitos sonoros e volume de Efeitos.
 - [ ] PWA: ícones e polimento da instalação na tela inicial (o offline vem da fase 2.5).
 - [ ] Layout em telas largas e altas (painéis laterais, mais pista).
 - [ ] Rodada de testes com 2 ou 3 amigos e ajuste dos números.

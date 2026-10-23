@@ -41,11 +41,13 @@ A regra de dependência é verificada pelo ESLint (`no-restricted-imports` em [e
 | `title` | [TitleScene.ts](../src/game/scenes/TitleScene.ts) | Logo e Começar |
 | `hub` | [HubScene.ts](../src/game/scenes/HubScene.ts) | Menu principal ([menu.md](menu.md)): status, caso com estrelas, JOGAR, trilhos e as 5 abas |
 | `placeholder` | [PlaceholderScene.ts](../src/game/scenes/PlaceholderScene.ts) | Telas abertas pelo hub que ainda não têm conteúdo, no formato comum ([sectionView.ts](../src/game/ui/sectionView.ts)) |
-| `records`, `options` | [RecordsScene.ts](../src/game/scenes/RecordsScene.ts), [OptionsScene.ts](../src/game/scenes/OptionsScene.ts) | Recordes salvos; opções (FPS, tela cheia) |
+| `records`, `options` | [RecordsScene.ts](../src/game/scenes/RecordsScene.ts), [OptionsScene.ts](../src/game/scenes/OptionsScene.ts) | Recordes salvos; opções (volume da música, FPS, tela cheia) |
 | `run` | [RunScene.ts](../src/game/scenes/RunScene.ts) | Chama o `stepRun` do `core` em passos fixos e desenha o estado (sprites reaproveitados, números de dano); abre as telas por cima |
 | `hud` | [HudScene.ts](../src/game/scenes/HudScene.ts) | Por cima da run ([ui-cronico.md](ui-cronico.md)): banda com XP, ícones de armas e reagentes, tempo, onda e decompostas; efeitos, chefe e pausa abaixo dela; botão do especial, joystick e FPS |
 | `idle` | [IdleScene.ts](../src/game/scenes/IdleScene.ts) | Campo longo (prancheta "Tela de batalha"): BASE, ondas, pool de agentes, melhorias e x2. A simulação roda no [idleRunner](../src/game/idle/idleRunner.ts), mesmo com a tela fechada |
 | `levelUp`, `pause`, `gameOver` | [LevelUpScene.ts](../src/game/scenes/LevelUpScene.ts), [PauseScene.ts](../src/game/scenes/PauseScene.ts), [GameOverScene.ts](../src/game/scenes/GameOverScene.ts) | Telas por cima da run; a pausa tem as abas Arsenal, Atributos e Run (duas colunas na tela deitada) e abre as Opções por cima |
+
+A música fica em [src/game/audio/](../src/game/audio/music.ts): um player único em Web Audio, ligado ao contexto de som do Phaser, que baixa as faixas de `public/audio/music/` em segundo plano (OGG ou M4A, o que o navegador tocar), troca com crossfade e repete só o trecho de loop. Cada tela pede a sua faixa no `create`; a run calcula a música a cada quadro com [musicLogic.ts](../src/game/audio/musicLogic.ts) (tempo, crise, chefe, telas por cima). As faixas ficam fora do precache e entram no cache `dopamina-audio` do service worker na primeira vez.
 
 As telas de interface usam [uiLayout.ts](../src/game/ui/uiLayout.ts): zoom inteiro a partir do canto superior esquerdo e layout refeito a cada redimensionamento.
 
@@ -62,6 +64,7 @@ As telas de interface usam [uiLayout.ts](../src/game/ui/uiLayout.ts): zoom intei
 
 Fora dessas camadas:
 
+- **`tools/audio/`**: `music.py` corta os loops e converte as músicas de `audio/musicas/` para `public/audio/music/` ([sonoplastia.md](sonoplastia.md#como-entra-no-jogo)).
 - **`tools/sim/`**: `npm run sim` roda o simulador de `src/core/sim/` (um robô joga runs seguidas e compra entre elas) e mostra a curva de progressão da meta. `node tools/sim/still.mjs` roda um robô parado com cada agente, para ver se ficar parado ainda segura a run.
 - **`tests/`** ou arquivos `*.test.ts` ao lado do código: testes do `core`.
 
@@ -92,6 +95,7 @@ src/
 public/          favicon; manifest do PWA e fontes na fase 6
 tools/sim/       simulador de progressão
 tools/sprites/   gerador dos PNGs de sprite
+tools/audio/     corte dos loops e conversão das músicas
 .github/         workflow de CI (verificações, sem deploy)
 docs/            design, roadmap, arquitetura e decisões
 ```
@@ -128,6 +132,7 @@ Precisa de Node 20.19 ou mais novo.
 | `node tools/sim/still.mjs` | Robô parado: quanto a run dura sem mexer o agente, por agente |
 | `npm run sim` | Simulador de progressão: runs seguidas com um robô, compras entre elas, primeiro desbloqueio e paredes de grind (`-- --runs 30 --max 360`) |
 | `npm run sprites:build` | Gera os PNGs de `public/sprites/` a partir dos dados de `src/assets/sprites/` |
+| `python3 tools/audio/music.py` | Corta os loops e converte as músicas de `audio/musicas/` para `public/audio/music/` (precisa de numpy e ffmpeg; [sonoplastia.md](sonoplastia.md#como-entra-no-jogo)) |
 | `npm run sprites:check` | Confere se os PNGs estão iguais aos dados (faz parte do `npm run check`) |
 | `npm run serve` | Serve a build publicada localmente, em HTTPS, para testar atualizações no PC |
 | `npm version minor` + `git push --follow-tags` | Gera uma versão: dispara o deploy no GitHub Pages (skills `criar-versao` e `publicar-versao`) |

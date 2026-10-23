@@ -4,6 +4,10 @@ O que mudou em cada versão do Dopamina Blaster. O jogo mostra este arquivo em O
 
 ## Em desenvolvimento
 
+### Novidades
+- O jogo tem música! Chiptune metal em todas as telas: tema de título, menus, campo longo e três faixas de run que esquentam aos 10 e aos 20 minutos. A crise entra por cima da run, o chefe tem música própria enquanto estiver vivo, e o level up, a cápsula, a ampola, a ALTA e o fim de run têm jingle.
+- Botão Música nas Opções, de 0 a 100%.
+
 ## v0.13.0 · 22/10/2026
 
 ### Novidades

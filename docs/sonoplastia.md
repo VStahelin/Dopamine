@@ -4,7 +4,7 @@
 
 O som do Dopamina Blaster é **chiptune metal**: os canais de um console 8/16-bit (pulso, triângulo, ruído e o FM do Mega Drive) tocando riffs de metal, com guitarra distorcida e bateria de bumbo duplo por cima. As músicas são feitas num app de geração de música, fora do repositório; esta aba define o tema, a lista de faixas, como o jogo troca de música e o formato de entrega, com um prompt pronto para cada faixa.
 
-Tudo aqui é **proposta**. Volumes, tempos de troca e nomes de arquivo vão para `src/config/audio.json` quando o som entrar no código (fase 6 do [roadmap](roadmap.md#fase-6-arte-polimento-e-lançamento)).
+**A música já está no jogo** (v0.14.0): todas as faixas e jingles abaixo, menos `bossIn` e `crisisIn`, que ainda não foram gerados. Os efeitos sonoros ainda são proposta. Volumes, tempos de troca e a lista de faixas ficam em `src/config/audio.json`; o player está em `src/game/audio/` (veja [Como entra no jogo](#como-entra-no-jogo)).
 
 ## O tema
 
@@ -33,7 +33,7 @@ Energia vai de 1 (calmo) a 5 (máximo). Loop = a faixa recomeça sem emenda aud�
 | `run2` | Run, do minuto 10 ao 20 | loop | 2:00 | 160 | 4 | Mesma ideia mais pesada: bumbo duplo, guitarras dobradas |
 | `run3` | Run, depois do minuto 20 | loop | 2:00 | 180 | 5 | Thrash: blast beats, arpejos em velocidade máxima, sensação de sobrecarga |
 | `crisis` | Pico de onda (crise da doença) | loop | 0:30 | 170 | 5 | Sirene de chip, riff em escala menor harmônica, entra por cima da run |
-| `boss` | Chefe vivo (Partícula de LDL), **opcional, fica para depois** | loop | 1:30 | 165 | 5 | Órgão em FM, riff lento e esmagador que vira rápido no meio; o motivo em tom grave |
+| `boss` | Chefe vivo (Partícula de LDL) | loop | 1:30 | 165 | 5 | Órgão em FM, riff lento e esmagador que vira rápido no meio; o motivo em tom grave |
 | `gameover` | Fim de run | jingle + loop | 0:06 + 1:00 | 90 | 1 | Jingle curto descendente e depois um loop calmo, só chip e baixo, para a tela de resultado |
 | `alta` | ALTA do organismo (troca de indivíduo) | jingle | 0:10 a 0:15 | 150 | 4 | Fanfarra de vitória em chip com acorde final de guitarra |
 
@@ -52,11 +52,11 @@ Energia vai de 1 (calmo) a 5 (máximo). Loop = a faixa recomeça sem emenda aud�
 
 O jogo não mistura camadas da mesma faixa: troca de faixa com crossfade, o que funciona com qualquer música gerada.
 
-- **Troca na run:** `run1` → `run2` aos 10 min e `run2` → `run3` aos 20 min, com crossfade de 2 s.
-- **Pico de onda:** `crisisIn` toca, a run cai para 30% do volume e `crisis` entra por cima enquanto o pico durar; no respiro, `crisis` sai em 1,5 s.
-- **Chefe:** só `bossIn` toca por cima, e a música da run continua. O chefe aparece a cada 5 minutos, então uma faixa própria trocando a música toda hora seria demais. A faixa `boss` fica para depois, se o chefe precisar de mais peso.
-- **Pausa, level up, cápsula:** a música continua, a 50% do volume e com um filtro que corta os agudos (soa "abafada"). O jingle toca por cima, em volume cheio.
-- **Fim de run:** a música da run para na hora, toca `gameover` e depois o loop de resultado.
+- **Troca na run:** `run1` → `run2` aos 10 min e `run2` → `run3` aos 20 min, com crossfade de 1,5 s.
+- **Pico de onda:** `crisisIn` toca (quando existir), a run cai para 30% do volume e `crisis` entra por cima enquanto o pico durar; no respiro, `crisis` sai em 1,5 s.
+- **Chefe:** enquanto um chefe está vivo, `boss` substitui a música da run (e ganha da crise); quando ele morre, a faixa da run volta com crossfade. `bossIn` tocará por cima quando for gerado.
+- **Pausa, level up, cápsula:** a música continua, a 50% do volume e com um filtro que corta os agudos (soa "abafada"). O jingle toca por cima, em volume cheio, e a música baixa enquanto ele toca. A ALTA no Hub toca `alta` do mesmo jeito.
+- **Fim de run:** a música da run some na hora e `gameover` entra com a tela de resultado: a abertura toca uma vez e o resto fica em loop.
 - **Fundo:** com o app em segundo plano (o campo longo continua rodando), o som para; volta onde estava ao retornar.
 - **Menus:** `title` só na tela de título; todas as telas do hub dividem `hub`, sem recomeçar ao trocar de aba.
 
@@ -86,7 +86,7 @@ Os apps de geração de música não fazem bem efeitos curtos. Para eles, a prop
 
 - **Dois formatos:** o Phaser recebe os dois e carrega o que o navegador toca; o M4A garante o Safari do iPhone e o OGG os outros.
 - **Loops:** os apps quase sempre geram introdução e final com fade. Antes de entrar no jogo, cada loop é cortado no começo de um compasso, sem fade, e testado tocando duas vezes seguidas (o [Audacity](https://www.audacityteam.org/) resolve). Se o app tiver opção de loop ou de "instrumental sem intro", use.
-- **Offline:** as músicas entram no precache da build ([decisão 0016](decisoes/0016-offline-e-atualizacoes.md)), por isso o orçamento. Se passar de 15 MB, as faixas de `run2` e `run3` podem baixar depois da primeira run.
+- **Offline:** as músicas ficam fora do precache da build ([decisão 0016](decisoes/0016-offline-e-atualizacoes.md)) para a atualização continuar leve. O jogo baixa as faixas em segundo plano ao abrir, e o service worker guarda cada uma no cache `dopamina-audio` na primeira vez; depois disso tocam offline.
 - **Licença:** o jogo vai para lojas pagas ([decisão 0031](decisoes/0031-lancar-em-todas-as-plataformas.md)). Confira se o plano do app permite uso comercial das faixas geradas; nos planos gratuitos dos apps mais conhecidos, em geral não permite.
 
 ## Prompts para o app
@@ -140,7 +140,7 @@ chiptune metal, 16-bit Sega Genesis FM synth, NES pulse lead, distorted drop D g
 chiptune metal, 16-bit Sega Genesis FM synth, NES pulse lead, distorted drop D guitars, instrumental, no vocals, no choir, alarm siren chip lead, 170 bpm, E harmonic minor, urgent frantic riff, pounding drums, short 30 second loop, no intro, no fade out
 ```
 
-### 8. Chefe (`boss`, opcional, para depois)
+### 8. Chefe (`boss`)
 
 ```text
 chiptune metal, 16-bit Sega Genesis FM synth, NES pulse lead, distorted drop D guitars, instrumental, no vocals, no choir, boss battle, 165 bpm, E phrygian, FM church organ, crushing slow riff then fast breakdown, dark dramatic, double kick drums, seamless loop, no intro
@@ -182,23 +182,47 @@ chiptune metal, 16-bit Sega Genesis FM synth, NES pulse lead, distorted drop D g
 chiptune metal, 16-bit Sega Genesis FM synth, NES pulse lead, distorted drop D guitars, instrumental, no vocals, no choir, short warning stinger, 1.5 seconds, rising chip siren
 ```
 
+## Como entra no jogo
+
+As faixas que o Vitor gerou ficam em `audio/musicas/` com o nome que saíram do app; [tools/audio/music.py](../tools/audio/music.py) transforma cada uma no arquivo do jogo:
+
+| Id | Arquivo em `audio/musicas/` | Loop (s) |
+| --- | --- | --- |
+| `title` | Tittle - Gallop of the Chip | 12,93 a 78,52 |
+| `hub` | Hub - 16-Bit Lab Menu | 15,36 a 147,61 |
+| `idle` | Idle - Factory Arpeggios | 12,44 a 121,37 |
+| `run1` | Run 1 - 16-Bit Battle | 14,85 a 110,57 |
+| `run2` | Run 2 - Battle Loop | 14,72 a 111,49 |
+| `run3` | Run 3 - 16-Bit Battle | 13,08 a 136,21 |
+| `crisis` | Crisis - 16-Bit Doom | 2,92 a 19,80 |
+| `boss` | Boss - 16-Bit Armageddon | 8,21 a 77,78 |
+| `gameover` | Game Over Theme | 1,22 a 155,42 |
+| `alta` | Victory Fanfare | jingle |
+| `levelup` | Level Up | jingle |
+| `capsule` | Arcade Reward | jingle |
+
+- **Loop sem emenda:** o script acha onde a música se repete (harmonia e batidas parecidas), corta o arquivo no fim do loop com um crossfade de 0,25 s para o começo dele e grava os pontos em `loopFrom` e `loopTo`. O jogo toca a introdução uma vez e repete só o trecho do loop (Web Audio, `loopStart`/`loopEnd`). Se uma emenda soar mal, ajuste os dois números no JSON e rode o script de novo.
+- **Volume:** tudo normalizado para −16 LUFS.
+- **Arquivos:** `public/audio/music/<id>.ogg` (Vorbis) e `.m4a` (AAC), cerca de 11 MB cada conjunto; o navegador baixa só um dos dois.
+- **Faixa nova ou trocada:** coloque o arquivo em `audio/musicas/`, aponte `source` no `audio.json`, apague `loopFrom`/`loopTo` para o script procurar, rode `python3 tools/audio/music.py`, depois `npm run format`, e suba o `rev` da faixa para o cache dos jogadores baixar a nova.
+
 ## Configuração
 
-Quando o som entrar no código, um `src/config/audio.json`, com o tipo em `src/config/types.ts`:
+`src/config/audio.json`, com o tipo em `src/config/types.ts`:
 
-- Volume padrão de música e de efeitos, e o volume da música na pausa e no pico.
-- Tempo de crossfade de cada troca e os minutos de `run2` e `run3`.
-- Por efeito: limite de cópias ao mesmo tempo e a variação de altura.
-- Lista de faixas e efeitos com o nome do arquivo.
+- Volume padrão da música, os passos do botão nas Opções, o volume abafado e a frequência do filtro, o volume da run durante a crise e durante um jingle.
+- Tempo de crossfade e os minutos de `run2` e `run3`.
+- Lista de faixas, na ordem em que são baixadas, com o arquivo de origem, os pontos de loop e o `rev`.
+- Efeitos: ainda não entraram.
 
-Nas **Opções**, entram dois controles: Música e Efeitos, de 0 a 100%, guardados no save. Hoje a tela diz que o volume chega com o som.
+Nas **Opções**, o botão Música passa por 0, 20, 40, 60, 80 e 100% e fica no save. O de Efeitos entra junto com os efeitos.
 
 ## O que falta decidir
 
 - [ ] Qual app de geração de música, e o plano permite uso comercial?
 - [ ] Mi menor ou Ré menor como tom do jogo inteiro?
 - [ ] Três faixas de run por tempo (como proposto), ou uma por ambiente do mapa?
-- [x] O chefe ganha música própria? → por enquanto não: só o jingle `bossIn` por cima da run (Vitor, 23/10/2026).
+- [x] O chefe ganha música própria? → sim: o Vitor gerou `boss`, que toca enquanto o chefe está vivo (23/10/2026).
 - [ ] Os efeitos saem de jsfxr ou ChipTone, ou o app de música também faz efeitos bons o bastante?
-- [ ] O campo longo toca `idle` também no Hub (já que ele roda o tempo todo), ou cada tela com a sua?
+- [x] O campo longo toca `idle` também no Hub? → não, cada tela com a sua: `hub` nos menus, `idle` na tela do campo.
 - [ ] Música e efeitos ligados por padrão no celular, ou o jogo começa mudo até o primeiro toque em Opções?
