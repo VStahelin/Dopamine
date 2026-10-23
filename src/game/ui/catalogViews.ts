@@ -81,6 +81,16 @@ const TYPE_NAMES: Record<MoleculeType, string> = {
   inflammation: 'INFLAMAÇÃO',
 };
 
+/** Tipo no singular, para a etiqueta de cada molécula do Compêndio. */
+const TYPE_NAME: Record<MoleculeType, string> = {
+  lipid: 'LIPÍDIO',
+  sugar: 'AÇÚCAR',
+  radical: 'RADICAL',
+  stress: 'ESTRESSE',
+  toxin: 'TOXINA',
+  inflammation: 'INFLAMAÇÃO',
+};
+
 const KIND_NAMES: Record<WeaponKind, string> = {
   projectile: 'MIRA AUTOMÁTICA',
   cone: 'GOLPE EM CONE',
@@ -131,57 +141,74 @@ export function renderAgents(
     const a = AGENTS[id];
     const locked = shop ? !isUnlocked(shop.progress, 'agents', id) : false;
     const on = id === selected && !locked;
-    const h = 100;
-    if (on) drawWoodFrame(g, left, cy, width, h);
-    else drawInkBox(g, left, cy, width, h);
-    g.fillStyle(PALETTE.panel).fillRect(left + 6, cy + 6, width - 12, h - 12);
-    drawCreamSlot(g, left + 10, cy + 10, 58, 58);
+    // Textos à direita do retrato quebram linha dentro do cartão; a altura segue o texto.
+    const tx = left + 78;
+    const textW = left + width - 12 - tx;
     out.push(sprite(scene, AGENT_TEXTURES[id], left + 39, cy + 39, 50).setAlpha(locked ? 0.4 : 1));
-    out.push(scene.add.text(left + 78, cy + 9, a.name, impactText(15)));
-    if (on) {
-      out.push(
-        scene.add
-          .text(left + width - 12, cy + 12, 'ESCOLHIDO', labelText(8, PALETTE_CSS.gold))
-          .setOrigin(1, 0),
-      );
-    }
-    const action = WEAPONS[a.action as WeaponId].name;
-    out.push(
-      addIcon(scene, left + 78, cy + 28, iconTexture('weapons', a.action as WeaponId)),
-      scene.add.text(left + 98, cy + 30, `Ação: ${action}`, bodyText(11, PALETTE_CSS.text)),
-      addIcon(scene, left + 78, cy + 46, iconTexture('specials', a.special.kind)),
-      scene.add.text(
-        left + 98,
-        cy + 48,
-        `Especial: ${a.special.name}`,
-        bodyText(10, PALETTE_CSS.text),
-      ),
+    const badge = locked && shop ? 'BLOQUEADO' : on ? 'ESCOLHIDO' : '';
+    const badgeText = badge
+      ? scene.add
+          .text(
+            left + width - 12,
+            cy + 12,
+            badge,
+            labelText(8, locked ? PALETTE_CSS.textMuted : PALETTE_CSS.gold),
+          )
+          .setOrigin(1, 0)
+      : undefined;
+    const name = scene.add.text(tx, cy + 9, a.name, {
+      ...impactText(15),
+      wordWrap: { width: textW - (badgeText ? badgeText.width + 8 : 0) },
+    });
+    out.push(name);
+    if (badgeText) out.push(badgeText);
+    let ty = Math.max(cy + 28, name.y + name.height);
+    const line = (icon: ReturnType<typeof iconTexture>, text: string, size: number) => {
+      const t = scene.add.text(tx + 20, ty + 2, text, {
+        ...bodyText(size, PALETTE_CSS.text),
+        wordWrap: { width: textW - 20 },
+      });
+      out.push(addIcon(scene, tx, ty, icon), t);
+      ty = Math.max(ty + 18, t.y + t.height + 3);
+    };
+    line(
+      iconTexture('weapons', a.action as WeaponId),
+      `Ação: ${WEAPONS[a.action as WeaponId].name}`,
+      11,
     );
+    line(iconTexture('specials', a.special.kind), `Especial: ${a.special.name}`, 10);
     const strong = Object.entries(a.affinity)
       .filter(([, v]) => v === 'strong')
       .map(([t]) => TYPE_NAMES[t as MoleculeType]);
     const tag = strong.length ? `FORTE CONTRA ${strong.join(', ')}` : 'MÉDIA CONTRA TUDO';
-    out.push(scene.add.text(left + 78, cy + 66, tag, labelText(8, PALETTE_CSS.cyan)));
+    const tagText = scene.add.text(tx, ty + 2, tag, {
+      ...labelText(8, PALETTE_CSS.cyan),
+      wordWrap: { width: textW },
+    });
+    out.push(tagText);
+    ty = tagText.y + tagText.height + 2;
     // Perfil: o receptor nativo, que sobe 1 nível a cada 10 níveis da run (fase 5.6).
     const native = a.nativeReceptor;
     const gain = nativeGain(native, native.type ? TYPE_NAMES[native.type].toLowerCase() : '');
-    out.push(
-      scene.add.text(
-        left + 78,
-        cy + 80,
-        `PERFIL: ${native.name.toUpperCase()} · ${gain.toUpperCase()} A CADA 10 NÍVEIS`,
-        { ...labelText(8, PALETTE_CSS.gold), wordWrap: { width: width - 90 } },
-      ),
+    const profile = scene.add.text(
+      tx,
+      ty,
+      `PERFIL: ${native.name.toUpperCase()} · ${gain.toUpperCase()} A CADA 10 NÍVEIS`,
+      { ...labelText(8, PALETTE_CSS.gold), wordWrap: { width: textW }, lineSpacing: 2 },
     );
+    out.push(profile);
+    ty = profile.y + profile.height;
     if (locked && shop) {
-      // Bloqueado: no lugar de escolher, o botão de desbloquear com o custo.
-      out.push(
-        scene.add
-          .text(left + width - 12, cy + 12, 'BLOQUEADO', labelText(8, PALETTE_CSS.textMuted))
-          .setOrigin(1, 0),
-        buyButton(scene, shop, 'agents', id, left + width - 96, cy + h - 34, 84),
-      );
-    } else {
+      // Bloqueado: no lugar de escolher, o botão de desbloquear com o custo, numa linha própria.
+      out.push(buyButton(scene, shop, 'agents', id, left + width - 96, ty + 8, 84));
+      ty += 8 + 26;
+    }
+    const h = Math.max(100, Math.ceil(ty - cy) + 12);
+    if (on) drawWoodFrame(g, left, cy, width, h);
+    else drawInkBox(g, left, cy, width, h);
+    g.fillStyle(PALETTE.panel).fillRect(left + 6, cy + 6, width - 12, h - 12);
+    drawCreamSlot(g, left + 10, cy + 10, 58, 58);
+    if (!locked || !shop) {
       const zone = scene.add
         .zone(left + width / 2, cy + h / 2, width, h)
         .setInteractive({ useHandCursor: true });
@@ -234,18 +261,9 @@ export function renderArsenal(
   const ids = Object.keys(WEAPONS) as WeaponId[];
   const row = (id: WeaponId, sub: string, color: string, locked = false) => {
     const def = WEAPONS[id];
-    const h = 48;
-    drawInkBox(g, left, cy, width, h, PALETTE.panel);
     const icon = addIconSlot(scene, left + 8, cy + 12, 1, { ...weaponIcon(id), dim: locked });
     const tx = left + 8 + icon.size + 8;
-    out.push(
-      ...icon.objects,
-      scene.add.text(
-        tx,
-        cy + 6,
-        def.name,
-        withShadow(bodyText(14, PALETTE_CSS.text), PALETTE_CSS.ink, 1),
-      ),
+    const right =
       locked && shop
         ? buyButton(scene, shop, 'weapons', id, left + width - 80, cy + 11, 70)
         : scene.add
@@ -255,9 +273,20 @@ export function renderArsenal(
               KIND_NAMES[def.kind],
               labelText(8, PALETTE_CSS.textSoft),
             )
-            .setOrigin(1, 0),
-      scene.add.text(tx, cy + 28, sub, labelText(8, color)),
-    );
+            .setOrigin(1, 0);
+    const rightW = locked && shop ? 80 : (right as Phaser.GameObjects.Text).width + 12;
+    const name = scene.add.text(tx, cy + 6, def.name, {
+      ...withShadow(bodyText(14, PALETTE_CSS.text), PALETTE_CSS.ink, 1),
+      wordWrap: { width: left + width - rightW - 6 - tx },
+    });
+    const subText = scene.add.text(tx, Math.max(cy + 28, name.y + name.height + 4), sub, {
+      ...labelText(8, color),
+      wordWrap: { width: left + width - 12 - tx },
+      lineSpacing: 2,
+    });
+    out.push(...icon.objects, name, right, subText);
+    const h = Math.max(48, Math.ceil(subText.y + subText.height - cy) + 10);
+    drawInkBox(g, left, cy, width, h, PALETTE.panel);
     cy += h + 4;
   };
   for (const id of ids.filter((i) => WEAPONS[i].source === 'pool')) {
@@ -272,7 +301,7 @@ export function renderArsenal(
   out.push(header(scene, left, cy + 6, 'EVOLUÇÕES'));
   cy += 22;
   for (const id of ids.filter((i) => WEAPONS[i].source === 'evolution')) {
-    row(id, WEAPONS[id].description.toUpperCase().slice(0, 40), '#E6CC80');
+    row(id, WEAPONS[id].description.toUpperCase(), '#E6CC80');
   }
 
   // Receptores (os tomos do Megabonk, decisão 0027): o que sobe por nível e os bloqueados.
@@ -282,32 +311,33 @@ export function renderArsenal(
   for (const id of passives.filter((p) => PASSIVES[p].kind === 'receptor')) {
     const def = PASSIVES[id];
     const locked = shop ? !isUnlocked(shop.progress, 'receptors', id) : false;
-    const h = 40;
-    drawInkBox(g, left, cy, width, h, PALETTE.panel);
     const slot = addIconSlot(scene, left + 8, cy + 6, 1, {
       ...passiveSlot(id, 0),
       label: undefined,
       dim: locked,
     });
     const tx = left + 8 + slot.size + 8;
+    const rightW = locked && shop ? 86 : 12;
     const gain = `${receptorGain(def, def.perLevel)} por nível`.toUpperCase();
-    out.push(
-      ...slot.objects,
-      scene.add.text(
-        tx,
-        cy + 5,
-        def.name,
-        withShadow(bodyText(13, PALETTE_CSS.text), PALETTE_CSS.ink, 1),
-      ),
-      scene.add.text(
-        tx,
-        cy + 23,
-        locked ? 'BLOQUEADO: NÃO APARECE NO LEVEL UP' : gain,
-        labelText(8, locked ? PALETTE_CSS.textMuted : PALETTE_CSS.cyan),
-      ),
+    const name = scene.add.text(tx, cy + 5, def.name, {
+      ...withShadow(bodyText(13, PALETTE_CSS.text), PALETTE_CSS.ink, 1),
+      wordWrap: { width: left + width - rightW - tx },
+    });
+    const sub = scene.add.text(
+      tx,
+      Math.max(cy + 23, name.y + name.height + 3),
+      locked ? 'BLOQUEADO: NÃO APARECE NO LEVEL UP' : gain,
+      {
+        ...labelText(8, locked ? PALETTE_CSS.textMuted : PALETTE_CSS.cyan),
+        wordWrap: { width: left + width - 12 - tx },
+        lineSpacing: 2,
+      },
     );
+    out.push(...slot.objects, name, sub);
     if (locked && shop)
       out.push(buyButton(scene, shop, 'receptors', id, left + width - 80, cy + 7, 70));
+    const h = Math.max(40, Math.ceil(sub.y + sub.height - cy) + 7);
+    drawInkBox(g, left, cy, width, h, PALETTE.panel);
     cy += h + 4;
   }
 
@@ -353,9 +383,7 @@ export function renderCompendium(
   for (const kind of kinds) {
     const def = ENEMIES[kind];
     const isSeen = seen.includes(kind);
-    const h = 50;
-    drawInkBox(g, left, cy, width, h, PALETTE.panel);
-    drawCreamSlot(g, left + 6, cy + 6, 34, 34);
+    let h = 50;
     const img = sprite(scene, ENEMY_TEXTURES[kind], left + 23, cy + 23, 30);
     if (!isSeen) img.setTint(0x15172e).setTintMode(Phaser.TintModes.FILL);
     out.push(img);
@@ -371,26 +399,27 @@ export function renderCompendium(
           withShadow(bodyText(14, PALETTE_CSS.text), PALETTE_CSS.ink, 1),
         ),
         scene.add
-          .text(
-            left + width - 12,
-            cy + 8,
-            TYPE_NAMES[def.type].replace(/S$/, ''),
-            labelText(8, PALETTE_CSS.cyan),
-          )
+          .text(left + width - 12, cy + 8, TYPE_NAME[def.type], labelText(8, PALETTE_CSS.cyan))
           .setOrigin(1, 0),
       );
       const frag = (def.fragments ?? [])
         .map((f) => `${f.count} ${ENEMIES[f.kind as EnemyKind].name.toUpperCase()}`)
         .join(' + ');
-      out.push(
-        scene.add.text(
-          left + 50,
-          cy + 26,
-          frag ? `QUEBRA EM ${frag}` : 'DECOMPOSTA POR COMPLETO',
-          labelText(8, frag ? PALETTE_CSS.gold : PALETTE_CSS.textMuted),
-        ),
+      const fragText = scene.add.text(
+        left + 50,
+        cy + 26,
+        frag ? `QUEBRA EM ${frag}` : 'DECOMPOSTA POR COMPLETO',
+        {
+          ...labelText(8, frag ? PALETTE_CSS.gold : PALETTE_CSS.textMuted),
+          wordWrap: { width: width - 62 },
+          lineSpacing: 2,
+        },
       );
+      out.push(fragText);
+      h = Math.max(h, Math.ceil(fragText.y + fragText.height - cy) + 8);
     }
+    drawInkBox(g, left, cy, width, h, PALETTE.panel);
+    drawCreamSlot(g, left + 6, cy + 6, 34, 34);
     cy += h + 4;
   }
   const aggregates = renderAggregates(scene, g, left, cy + 12, width, seenAggregates);
@@ -426,8 +455,7 @@ function renderSupplements(
   for (const id of ids) {
     const def = SUPPLEMENTS.items[id]!;
     const isSeen = seen.includes(id);
-    const h = 40;
-    drawInkBox(g, left, cy, width, h, PALETTE.panel);
+    let h = 40;
     const slot = addIconSlot(scene, left + 6, cy + 6, 1, { ...supplementSlot(id), dim: !isSeen });
     out.push(...slot.objects);
     const tx = left + 6 + slot.size + 10;
@@ -450,13 +478,15 @@ function renderSupplements(
             labelText(8, tier?.color ?? PALETTE_CSS.cyan),
           )
           .setOrigin(1, 0),
-        scene.add.text(tx, cy + 22, def.description, {
-          ...bodyText(9, PALETTE_CSS.textSoft),
-          wordWrap: { width: left + width - 8 - tx },
-          maxLines: 1,
-        }),
       );
+      const desc = scene.add.text(tx, cy + 22, def.description, {
+        ...bodyText(9, PALETTE_CSS.textSoft),
+        wordWrap: { width: left + width - 8 - tx },
+      });
+      out.push(desc);
+      h = Math.max(h, Math.ceil(desc.y + desc.height - cy) + 6);
     }
+    drawInkBox(g, left, cy, width, h, PALETTE.panel);
     cy += h + 4;
   }
   return out;
@@ -528,8 +558,7 @@ function renderFormations(
   for (const id of ids) {
     const def = list[id]!;
     const isSeen = seen.includes(id);
-    const h = 40;
-    drawInkBox(g, left, cy, width, h, PALETTE.panel);
+    let h = 40;
     if (!isSeen) {
       out.push(scene.add.text(left + 12, cy + 11, '???', impactText(13, PALETTE_CSS.textMuted)));
     } else {
@@ -548,13 +577,15 @@ function renderFormations(
             labelText(8, PALETTE_CSS.logoOrange),
           )
           .setOrigin(1, 0),
-        scene.add.text(left + 12, cy + 22, def.description, {
-          ...bodyText(9, PALETTE_CSS.textSoft),
-          wordWrap: { width: width - 24 },
-          maxLines: 1,
-        }),
       );
+      const desc = scene.add.text(left + 12, cy + 22, def.description, {
+        ...bodyText(9, PALETTE_CSS.textSoft),
+        wordWrap: { width: width - 24 },
+      });
+      out.push(desc);
+      h = Math.max(h, Math.ceil(desc.y + desc.height - cy) + 6);
     }
+    drawInkBox(g, left, cy, width, h, PALETTE.panel);
     cy += h + 4;
   }
   return { objects: out, bottom: cy };
@@ -575,9 +606,7 @@ function renderItems(
   for (const id of ITEM_IDS) {
     const def = DROPS.items[id];
     const isSeen = seen.includes(id);
-    const h = 40;
-    drawInkBox(g, left, cy, width, h, PALETTE.panel);
-    drawCreamSlot(g, left + 6, cy + 4, 32, 32);
+    let h = 40;
     const icon = addIcon(scene, left + 6, cy + 4, iconTexture('items', id), 32);
     if (!isSeen) icon.setTint(0x15172e).setTintMode(Phaser.TintModes.FILL);
     out.push(icon);
@@ -591,12 +620,16 @@ function renderItems(
           def.name,
           withShadow(bodyText(13, PALETTE_CSS.text), PALETTE_CSS.ink, 1),
         ),
-        scene.add.text(left + 48, cy + 22, def.description, {
-          ...bodyText(9, PALETTE_CSS.textSoft),
-          wordWrap: { width: width - 56 },
-        }),
       );
+      const desc = scene.add.text(left + 48, cy + 22, def.description, {
+        ...bodyText(9, PALETTE_CSS.textSoft),
+        wordWrap: { width: width - 56 },
+      });
+      out.push(desc);
+      h = Math.max(h, Math.ceil(desc.y + desc.height - cy) + 6);
     }
+    drawInkBox(g, left, cy, width, h, PALETTE.panel);
+    drawCreamSlot(g, left + 6, cy + 4, 32, 32);
     cy += h + 4;
   }
   return { objects: out, bottom: cy };
