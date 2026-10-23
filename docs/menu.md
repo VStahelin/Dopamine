@@ -137,6 +137,8 @@ Prancheta: [Opcoes.dc.html](identidade-visual/Opcoes.dc.html), no celular em pé
 
 Embaixo de tudo, VOLTAR (ou Esc) e a linha de versão e build.
 
+**No PC** ([OpcoesPC.dc.html](identidade-visual/OpcoesPC.dc.html), 1280×800): sem abas, as três seções lado a lado em painéis (Som mais largo, Tela e Jogo), e embaixo a versão à esquerda, VOLTAR no centro e "Esc volta" à direita. A tecla M alterna o mudo e a tela cheia também sai com F11. Aberta pela pausa, o painel Jogo mostra o mesmo aviso "Só nos menus".
+
 ## Placeholder
 
 Toda tela ou botão que ainda não tem conteúdo segue o mesmo formato, para ninguém achar que é um bug:
