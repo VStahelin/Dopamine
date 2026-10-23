@@ -123,7 +123,19 @@ O palco fica no centro, os trilhos nas laterais, a linha de ação embaixo do pa
 | Compêndio | Moléculas inimigas (com a cascata), modificadores e raridades já vistos; o resto em silhueta | Placeholder | 2 em diante |
 | Recordes | Melhor tempo, nível, decompostas, runs | Existe | — |
 | Conquistas | Metas de longo prazo | Placeholder | a definir |
-| Opções | FPS, tela cheia; volume com o som | Existe | 6 (volume) |
+| Opções | Abas Som, Tela e Jogo (detalhes abaixo e na prancheta [Opções](identidade-visual/Opcoes.dc.html)) | Existe sem a aba Som | 6 (som) |
+
+### Opções
+
+Prancheta: [Opcoes.dc.html](identidade-visual/Opcoes.dc.html), no celular em pé, com a variante aberta pela pausa da run (fundo da run escurecido). Três abas no mesmo formato da pausa; tudo fica salvo no aparelho, junto com o save.
+
+| Aba | Controles | Observação |
+| --- | --- | --- |
+| Som | **Mudo** (corta tudo sem mexer nos volumes); volume **Geral**, **Música** e **Efeitos sonoros**, de 0 a 100% em passos de 10%, com `−`, `+` e toque direto na barra de 10 pips; **Abafar na pausa** (sim por padrão) e **Tocar em segundo plano** (não por padrão) | O Geral multiplica os outros dois. Com Mudo, as barras ficam apagadas e o valor mostra MUDO. Regras de mixagem na aba [Sonoplastia](sonoplastia.md) |
+| Tela | Mostrar FPS, Números de dano, Tela cheia, Debug (hitbox) | Os interruptores que já existem, no formato NÃO/SIM |
+| Jogo | Verificar atualização (com os estados), Exportar e Importar save, Novidades | Só nas Opções do hub; aberta pela pausa, a aba mostra o aviso "Só nos menus" ([decisão 0016](decisoes/0016-offline-e-atualizacoes.md)) |
+
+Embaixo de tudo, VOLTAR (ou Esc) e a linha de versão e build.
 
 ## Placeholder
 

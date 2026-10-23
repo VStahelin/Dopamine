@@ -11,6 +11,7 @@ Ao mudar uma prancheta no canvas, copie o arquivo novo para cá no mesmo commit 
 | Guia de estilo | [Main.dc.html](Main.dc.html) | Logo, paleta, tipografia, barra de interações, botões, slot de agente | `src/assets/sprites/palette.json`, `src/game/ui/` |
 | Tela de batalha (mockup) | [Batalha.dc.html](Batalha.dc.html) | Campo longo no celular em pé: interações, onda, base, pool de agentes, progresso | `src/game/scenes/IdleScene.ts` |
 | Menu principal (protótipo) | [Menu.dc.html](Menu.dc.html) | Hub com status, caso, JOGAR e barra de abas | `src/game/scenes/HubScene.ts` |
+| Opções | [Opcoes.dc.html](Opcoes.dc.html) | Opções com as abas Som (mudo, volumes geral, música e efeitos), Tela e Jogo, do hub e da pausa ([menu.md](../menu.md#opções)) | `src/game/scenes/OptionsScene.ts` |
 | Sprites de moléculas | [Moleculas.dc.html](Moleculas.dc.html) | Átomos por elemento e moléculas montadas | `src/assets/sprites/molecules.json` |
 | Crônico: HUD de batalha | [CronicoBatalha.dc.html](CronicoBatalha.dc.html) | HUD da run em pé | `src/game/ui/` (HUD da run) |
 | Crônico: pausa e status | [CronicoPausa.dc.html](CronicoPausa.dc.html) | Pausa com arsenal e atributos | `src/game/scenes/PauseScene.ts` |
