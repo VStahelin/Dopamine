@@ -62,7 +62,7 @@ O termo ao quadrado é o que garante que a run infinita acabe: o poder do jogado
 
 - **Dano de contato** × 2^(t / 7): dobra a cada 7 minutos (2× aos 7, 7× aos 20, 19× aos 30). Fica o do minuto em que a molécula nasce.
 - **Vida no fim de jogo** × 2^((t − 12) / 4) a partir dos 12 minutos: dobra a cada 4 (4× aos 20, 32× aos 32).
-- **Velocidade** × (1 + 0,012 × t), até 1,4×.
+- **Velocidade** × (1 + 0,012 × t), sem teto: +24% aos 20 minutos, +36% aos 30.
 
 Meta: uma build forte e em movimento cai perto dos 20 minutos, e quem fica parado cai logo. Medido com `node tools/sim/late.mjs` (robô com tudo comprado): mediana das builds fortes perto de 20 min, robô parado morre menos de 2 minutos depois de parar.
 

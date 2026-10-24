@@ -15,7 +15,6 @@
     "lateMinute": 12,
     "hpDoublingMinutes": 4,
     "speedPerMinute": 0.012,
-    "maxSpeedMultiplier": 1.4,
     "thresholdMinute": 20,
     "cubic": 0.002,
     "peakEveryMinutes": 5,

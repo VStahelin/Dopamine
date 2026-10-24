@@ -12,9 +12,9 @@ Playtest rodada 2 (BAL-1 a BAL-4): nas fases avançadas o jogador ficava imortal
 
 - **Dano de contato** cresce com o tempo de run: × 2^(t / `damageDoublingMinutes`), fixado quando a molécula nasce.
 - **Vida no fim de jogo:** a partir de `lateMinute`, × 2^((t − lateMinute) / `hpDoublingMinutes`), por cima do D(t) e da curva de vida que já existiam.
-- **Velocidade:** × (1 + `speedPerMinute` × t), até `maxSpeedMultiplier`.
+- **Velocidade:** × (1 + `speedPerMinute` × t), sem teto.
 - **Empurrão:** cada molécula só é empurrada de novo depois de `knockbackCooldownSeconds`; o empurrão cai com o tempo (× 1 / (1 + t / `knockbackFalloffMinutes`)); fortes, agregados e chefe ignoram uma fração dele (`knockbackResist`; o chefe ignora tudo).
-- Números em `economy.json` (`difficulty`) e `run.json` (`combat`). Valores de partida: dano dobra a cada 7 min, vida dobra a cada 4 min depois dos 12, velocidade até 1,4×, empurrão com recarga de 0,35 s e pela metade aos 8 min.
+- Números em `economy.json` (`difficulty`) e `run.json` (`combat`). Valores de partida: dano dobra a cada 7 min, vida dobra a cada 4 min depois dos 12, velocidade +1,2% por minuto, empurrão com recarga de 0,35 s e pela metade aos 8 min.
 - A meta de balanceamento é medida com `node tools/sim/late.mjs`: build forte em movimento cai perto dos 20 minutos; parado, cai logo.
 
 ## Alternativas consideradas

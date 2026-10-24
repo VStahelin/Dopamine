@@ -478,9 +478,8 @@ export interface EconomyConfig {
      */
     lateMinute: number;
     hpDoublingMinutes: number;
-    /** Velocidade das moléculas que nascem: × (1 + speedPerMinute × t), até `maxSpeedMultiplier`. */
+    /** Velocidade das moléculas que nascem: × (1 + speedPerMinute × t), sem teto. */
     speedPerMinute: number;
-    maxSpeedMultiplier: number;
     /** Limiar programável t*: a partir dele soma cubic × (t − t*)³. */
     thresholdMinute: number;
     cubic: number;

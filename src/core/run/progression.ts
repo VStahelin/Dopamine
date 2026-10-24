@@ -34,9 +34,9 @@ export function enemyDamageAt(timeSeconds: number, d: EconomyConfig['difficulty'
   return 2 ** (timeSeconds / 60 / d.damageDoublingMinutes);
 }
 
-/** Multiplicador da velocidade das moléculas que nascem agora, com teto. */
+/** Multiplicador da velocidade das moléculas que nascem agora; cresce sem teto. */
 export function enemySpeedAt(timeSeconds: number, d: EconomyConfig['difficulty']): number {
-  return Math.min(d.maxSpeedMultiplier, 1 + (d.speedPerMinute * timeSeconds) / 60);
+  return 1 + (d.speedPerMinute * timeSeconds) / 60;
 }
 
 /** Onda atual (uma a cada ciclo do dente de serra) e se está no pico agora. */

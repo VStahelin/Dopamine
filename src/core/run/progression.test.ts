@@ -84,8 +84,8 @@ describe('curva contínua do fim de jogo (decisão 0038)', () => {
     expect(at(later) / base(later)).toBeCloseTo(2);
   });
 
-  it('a velocidade sobe até o teto', () => {
+  it('a velocidade sobe sem teto', () => {
     expect(enemySpeedAt(0, d)).toBe(1);
-    expect(enemySpeedAt(600 * 60, d)).toBe(d.maxSpeedMultiplier);
+    expect(enemySpeedAt(600 * 60, d)).toBeCloseTo(1 + d.speedPerMinute * 600);
   });
 });
