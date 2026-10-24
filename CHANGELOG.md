@@ -4,6 +4,8 @@ O que mudou em cada versão do Farmaco Battle. O jogo mostra este arquivo em Op�
 
 ## Em desenvolvimento
 
+## v0.20.0 · 24/10/2026
+
 ### Novidades
 - Menu no computador: com a tela deitada e larga, o menu ganha barra de status no topo, as abas num trilho à esquerda (teclas 1 a 5) e cada aba em colunas. O Caso mostra o agente, o caso e as metas lado a lado, e o JOGAR fica no trilho em qualquer aba.
 - Compêndio novo: um índice com tudo que você já encontrou (moléculas, formações, agentes, armas, receptores, suplementos, itens, estruturas e ambientes) e o Guia do jogo. Cada verbete tem ficha, seus números e ligações para os outros, e a busca acha o que você já viu. O que é novo ganha o selo NOVO até você abrir.
