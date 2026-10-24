@@ -307,6 +307,7 @@ function updateCoins(state: RunState, dt: number): void {
     if (dist <= rules.run.gems.collectRadiusPx) {
       state.atp += c.value * stats.currencyGain;
       extendFever(state);
+      state.events.push({ type: 'collect', what: 'atp' });
       state.coins[i] = state.coins[state.coins.length - 1]!;
       state.coins.pop();
       continue;
@@ -332,6 +333,7 @@ function updateGems(state: RunState, dt: number): void {
     const dist = Math.hypot(dx, dy);
     if (dist <= rules.run.gems.collectRadiusPx) {
       state.xp += g.value * stats.xpGain;
+      state.events.push({ type: 'collect', what: 'gem' });
       state.gems[i] = state.gems[state.gems.length - 1]!;
       state.gems.pop();
       continue;

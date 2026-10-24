@@ -230,10 +230,22 @@ export type RunEvent =
   | { type: 'dodge' }
   | { type: 'shielded' }
   | { type: 'revive' }
-  | { type: 'kill'; x: number; y: number; kind: EnemyKind }
+  /** `absorbed`: decomposta por um campo que puxa o tipo dela (Campo de captação). */
+  | {
+      type: 'kill';
+      x: number;
+      y: number;
+      kind: EnemyKind;
+      boss: boolean;
+      aggregate: boolean;
+      absorbed: boolean;
+    }
   /** `blocked`: o que a Membrana segurou do golpe. */
   | { type: 'hurt'; amount: number; blocked: number }
+  /** Uma arma com recarga disparou (projétil, cone, poça, feixe, pulso, golpe). */
   | { type: 'shoot'; weapon: WeaponId }
+  /** O agente pegou uma gema de XP ou uma moeda de ATP. */
+  | { type: 'collect'; what: 'gem' | 'atp' }
   | { type: 'cone'; x: number; y: number; angle: number; range: number; spread: number }
   | {
       type: 'beam';

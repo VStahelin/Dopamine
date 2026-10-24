@@ -1,6 +1,7 @@
 import type * as Phaser from 'phaser';
 import { PALETTE } from '../../render/palette';
 import { drawIcon, type IconName } from '../icons';
+import { sfx } from '../../audio/sfx';
 
 /**
  * Medidas do menu no PC (pranchetas "Menu no PC" do canvas, docs/menu.md, Tela larga): barra
@@ -33,7 +34,10 @@ export function addZone(
   onClick: () => void,
 ): Obj {
   const zone = scene.add.zone(x + w / 2, y + h / 2, w, h).setInteractive({ useHandCursor: true });
-  zone.on('pointerup', onClick);
+  zone.on('pointerup', () => {
+    sfx.play('uiTap');
+    onClick();
+  });
   return zone;
 }
 

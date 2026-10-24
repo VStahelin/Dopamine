@@ -5,6 +5,7 @@ import { drawIcon, drawInkBox } from '../icons';
 import { floorColor } from '../locals';
 import { bodyText, labelText, withShadow } from '../theme';
 import type { CompendiumCategory, CompendiumEntry, EntryArt } from './model';
+import { sfx } from '../../audio/sfx';
 
 type Obj = Phaser.GameObjects.GameObject;
 type G = Phaser.GameObjects.Graphics;
@@ -26,7 +27,9 @@ export function tapZone(
 ): Obj {
   const zone = scene.add.zone(x + w / 2, y + h / 2, w, h).setInteractive({ useHandCursor: true });
   zone.on('pointerup', (p: Phaser.Input.Pointer) => {
-    if (p.getDistance() < TAP_PX) onTap();
+    if (p.getDistance() >= TAP_PX) return;
+    sfx.play('uiTap');
+    onTap();
   });
   return zone;
 }

@@ -2,7 +2,7 @@
 
 23 de outubro de 2026 · Vitor
 
-A lista enxuta de efeitos sonoros (SFX) do jogo: **47 efeitos**, dos quais os 9 do agente já foram feitos pelo Vitor e **38 faltam gerar**; os especiais dos seis agentes da fase 5.15 ainda não têm som. Cada um tem o id do arquivo, quando toca, duração, prioridade e um prompt pronto para colar num app de geração de efeitos. O tema, a música e a entrega dos arquivos estão em [sonoplastia.md](sonoplastia.md). Os arquivos brutos vão para [audio/efeitos/](../audio/efeitos/README.md). Os 9 do agente já tocam no jogo (veja [Como entra no jogo](#como-entra-no-jogo)); os que faltam estão em [Para fazer depois](#para-fazer-depois).
+A lista enxuta de efeitos sonoros (SFX) do jogo: **45 efeitos**, dos quais os 9 do agente já foram feitos pelo Vitor e **36 faltam gerar**; os especiais dos seis agentes da fase 5.15 ainda não têm som. Cada um tem o id do arquivo, quando toca, duração, prioridade e um prompt pronto para colar num app de geração de efeitos. O tema, a música e a entrega dos arquivos estão em [sonoplastia.md](sonoplastia.md). Os arquivos brutos vão para [audio/efeitos/](../audio/efeitos/README.md). Todos já estão ligados no jogo (veja [Como entra no jogo](#como-entra-no-jogo)); os que ainda não têm arquivo ficam mudos e estão em [Para fazer depois](#para-fazer-depois).
 
 ## Resumo
 
@@ -12,12 +12,12 @@ A lista enxuta de efeitos sonoros (SFX) do jogo: **47 efeitos**, dos quais os 9 
 | [Especiais dos agentes](#especiais-dos-agentes) | 3 (+6 depois) | Faltam |
 | [Armas](#armas) | 8 | Faltam |
 | [Combate](#combate) | 3 | Faltam |
-| [Moléculas e chefes](#moléculas-e-chefes) | 4 | Faltam |
+| [Moléculas e chefes](#moléculas-e-chefes) | 2 | Faltam |
 | [Coleta e itens](#coleta-e-itens) | 5 | Faltam |
 | [Ampolas, cápsula e level up](#ampolas-cápsula-e-level-up) | 6 | Faltam |
 | [Sinapses e estruturas](#sinapses-e-estruturas) | 3 | Faltam |
 | [Interface](#interface) | 6 | Faltam |
-| **Total** | **47** | **38 faltam** |
+| **Total** | **45** | **36 faltam** |
 
 - **P1:** acontece toda run; sem ele o jogo parece mudo. **P2:** mais raro, mas dá peso a um momento grande.
 - **Um arquivo, vários usos.** A lista caiu de 131 para 47 porque um mesmo efeito serve a várias coisas: o jogo muda a altura, o volume ou repete o som. A coluna "Também toca em" diz quem reaproveita cada arquivo. O que foi fundido ou cortado está em [O que saiu da lista](#o-que-saiu-da-lista).
@@ -124,7 +124,7 @@ A decomposição é o som que mais toca no jogo: precisa ser gostosa de ouvir mi
 | `bossSpawn` | O chefe entra no mapa | Agregado nascendo (mais agudo e baixo) | 1,5 s | P1 | `retro 16-bit chiptune sound effect, giant boss arrives, deep rumbling FM bass roar made of distorted noise, ground shaking thud, heavy guitar power chord, no voice, no music` |
 | `bigBoom` | O chefe é decomposto | Agregado quebrando (mais curto), Lisossomo limpando a tela | 1,5 s | P1 | `retro 16-bit chiptune sound effect, huge crunchy explosion with scattering chip fragments, crash cymbal and a distorted guitar power chord ringing out, no voice, no music` |
 
-enemyHit, decompose nao vou criar pq acho que iria poluir muito o jogo
+`enemyHit` e `decompose` saíram (Vitor, 24/10/2026): tocando a cada golpe e a cada molécula, poluiriam o jogo. Só a decomposição do chefe e do agregado soa (`bigBoom`).
 
 ## Coleta e itens
 
@@ -135,7 +135,6 @@ enemyHit, decompose nao vou criar pq acho que iria poluir muito o jogo
 | `itemPickup` | Pega um item de consumo | Glucagon, Bico de Bunsen, todo item sem som próprio | 0,35 s | P1 | `retro 16-bit chiptune sound effect, item pickup, quick bright ascending three-note chip jingle, no voice, no music` |
 | `vesicleBreak` | Uma vesícula é rompida | Destrutível do mapa quebrando | 0,3 s | P1 | `retro 16-bit chiptune sound effect, bubble burst, soft wet pop with a little crack, no voice, no music` |
 | `whoosh` | Osmose: todas as gemas correm até o agente | Aquaporina | 0,8 s | P2 | `retro 16-bit chiptune sound effect, vacuum pull, rising whoosh with many tiny chip pings rushing in, no voice, no music` |
------
 ## Ampolas, cápsula e level up
 
 Os jingles `levelup` e `capsule` da música abrem essas telas; os efeitos aqui são a quebra, a revelação e os botões.
@@ -172,13 +171,13 @@ Todos em chip puro, sem metal, no mesmo timbre.
 
 ## Para fazer depois
 
-Ficou para depois por decisão do Vitor em 23/10/2026: os efeitos sonoros saíram da fase 5.13 e voltam na [fase 6](roadmap.md#fase-6-arte-polimento-e-lançamento). Faltam 38 efeitos e os 2 jingles. Para cada um: gerar com o prompt da tabela, salvar em [audio/efeitos/](../audio/efeitos/README.md) com o id como nome, rodar `python3 tools/audio/sfx.py` e ligar o id no jogo. Comece pelos P1.
+Ficou para depois por decisão do Vitor em 23/10/2026: os efeitos sonoros saíram da fase 5.13 e voltam na [fase 6](roadmap.md#fase-6-arte-polimento-e-lançamento). Faltam 36 efeitos e os 2 jingles. O código já toca todos os ids (24/10/2026); para cada um, falta gerar com o prompt da tabela, salvar em [audio/efeitos/](../audio/efeitos/README.md) com o id como nome, pôr o `source` em `sfx.effects` e rodar `python3 tools/audio/sfx.py`. Comece pelos P1.
 
-**P1 (28, tocam em toda run):**
+**P1 (26, tocam em toda run):**
 
 - [ ] Especiais: `specialDopamine`, `specialLipase`, `specialInsulin`
 - [ ] Armas: `radicalFire`, `acidFire`, `zap`, `beam`, `pulse`, `strike`, `splash`, `absorb`
-- [ ] Combate e moléculas: `crit`, `enemyHit`, `decompose`, `bossSpawn`, `bigBoom`
+- [ ] Combate e moléculas: `crit`, `bossSpawn`, `bigBoom`
 - [ ] Coleta: `gem`, `atp`, `itemPickup`, `vesicleBreak`
 - [ ] Ampolas e level up: `ampouleBreak`, `reveal`, `cardPick`, `reroll`
 - [ ] Sinapses: `synapseCharge`, `synapseFire`
@@ -187,7 +186,7 @@ Ficou para depois por decisão do Vitor em 23/10/2026: os efeitos sonoros saíra
 **P2 (10, momentos grandes):**
 
 - [ ] `freeze`, `explosion`, `whoosh`, `revealLegendary`, `banish`, `alarm`, `uiUnlock`
-- [ ] Especiais dos agentes novos (os agentes entraram na fase 5.15 sem som de especial): `specialVitaminC`, `specialVenvanse`, `specialSerotonin`, `specialOxytocin`, `specialAlcoholDehydrogenase`, `specialCaffeine` (não contam nos 38)
+- [ ] Especiais dos agentes novos (os agentes entraram na fase 5.15 sem som de especial): `specialVitaminC`, `specialVenvanse`, `specialSerotonin`, `specialOxytocin`, `specialAlcoholDehydrogenase`, `specialCaffeine` (não contam nos 36)
 
 **Música:**
 
@@ -219,7 +218,7 @@ Se algum desses fizer falta quando o som estiver no jogo, ele volta como um arqu
 
 ## Como entra no jogo
 
-Os 9 efeitos do agente já tocam na run:
+Todos os ids da lista já estão ligados no código (24/10/2026). Um id sem arquivo fica mudo; para ele soar, basta o arquivo chegar (veja "Efeito novo ou trocado").
 
 | Id | Quando toca no jogo |
 | --- | --- |
@@ -230,13 +229,33 @@ Os 9 efeitos do agente já tocam na run:
 | `lowHealth` | Interações abaixo de 25%: toca ao cair e repete a cada 4 s |
 | `revive` | Segunda dose |
 | `death` | Fim de run por interações zeradas (desistir não toca) |
-| `dodge` | Esquiva |
+| `dodge` | Esquiva e escudo da Vitamina C |
 | `specialReady` | O especial ganha a primeira carga; também é a amostra ao mexer no volume de Efeitos nas Opções |
+| `special<Agente>` | Ao usar o especial: `special` + o id do agente (`specialDopamine`, `specialAlcoholDehydrogenase`) |
+| Disparos | Cada arma com recarga ao disparar, pela tabela `sfx.weapons` do `audio.json`: a evolução usa o som da base mais grave (Fenton repete 3 vezes); auras e órbitas não soam |
+| `crit` | Acerto crítico na tela |
+| `absorb` | O Campo de captação decompõe um açúcar (sobe de tom em sequência) |
+| `explosion` | Termita e Peróxido estourando na tela |
+| `zap` (agudo) | Faísca do Eletrodo |
+| `freeze` | Pegar o Gelo seco |
+| `bossSpawn` | O chefe entra; o agregado nasce mais agudo e baixo |
+| `bigBoom` | Chefe decomposto, agregado quebrando (mais agudo) e o Lisossomo |
+| `gem` | Cada gema coletada, subindo de tom |
+| `atp` | Cada moeda; ATP, Glicose e Glicogênio repetem 3 vezes; Glândula adrenal; o campo longo a 40% |
+| `itemPickup` | Qualquer outro item (Bunsen, Glucagon, cápsulas, ampola) |
+| `vesicleBreak` | Vesícula e destrutível quebrando na tela |
+| `whoosh` | Osmose |
+| `ampouleBreak`, `reveal`, `revealLegendary` | Tela da ampola (vidro e depois a raridade) e da cápsula (grave, e um som por item que sobe; evolução é a lendária) |
+| `cardPick`, `reroll`, `banish` | Level up e sinapse; PULAR toca `uiBack`; ação sem uso toca `uiError` |
+| `synapseCharge` | Loop enquanto o agente está na sinapse, mais agudo conforme enche |
+| `synapseFire` | Sinapse cheia e foco vencido; a sinapse potenciada toca `revealLegendary` |
+| `alarm` | Foco e coágulo ativados, aviso de formação (mais baixo) e de crise |
+| `uiTap`, `uiConfirm`, `uiBack` | Todo botão, pelo rótulo (VOLTAR, FECHAR, PULAR → voltar; JOGAR, COMEÇAR, CONTINUAR → confirmar) |
+| `uiBuy`, `uiError`, `uiUnlock` | Compras do Laboratório e do campo longo, falta de ATP, desbloqueio de agente, arma e receptor |
 
 - **Arquivos:** os brutos ficam em `audio/efeitos/`, ligados por `source` em `src/config/audio.json` (grupo `sfx.effects`). `python3 tools/audio/sfx.py` tira o silêncio do começo e do fim, leva todos a −18 LUFS, converte para mono e grava `public/audio/sfx/<id>.ogg` e `.m4a`.
-- **Player:** `src/game/audio/sfx.ts`, no mesmo contexto Web Audio da música. Cada toque sorteia a altura em ±5%, com no máximo 4 cópias do mesmo efeito e 40 ms entre dois toques. A escolha entre `hurt`, `hurtHeavy` e `shieldBlock` e o aviso de `lowHealth` ficam em `sfxLogic.ts`, com testes.
-- **Efeito novo ou trocado:** ponha o arquivo em `audio/efeitos/`, adicione (ou aponte) o `source` no `audio.json` e o id em `SFX_IDS` (`src/config/types.ts`), rode `python3 tools/audio/sfx.py` e suba o `rev` do efeito trocado.
-- **Ainda não:** reaproveitar um arquivo com outra altura, sequência que sobe, prioridade e ducking entram junto com os efeitos de armas e coleta.
+- **Player:** `src/game/audio/sfx.ts`, no mesmo contexto Web Audio da música. Faz tudo das [Regras de mixagem](#regras-de-mixagem): altura sorteada, reaproveitamento com outra altura, sequência que sobe, limites por id e total com prioridade, ducking e pausa da run. A escolha do som de cada acontecimento fica em `sfxLogic.ts` (`eventSounds`), com testes.
+- **Efeito novo ou trocado:** ponha o arquivo em `audio/efeitos/` e adicione (ou aponte) o `source` dele em `sfx.effects` no `audio.json`. Rode `python3 tools/audio/sfx.py` e suba o `rev` do efeito trocado. Id novo também entra em `SFX_IDS` (`src/config/types.ts`).
 
 ## O que falta decidir
 

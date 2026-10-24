@@ -105,6 +105,107 @@
     "healMinAmount": 5,
     "lowHealthRatio": 0.25,
     "lowHealthRepeatSeconds": 4,
+    "maxVoices": 24,
+    "lowerRate": 0.8,
+    "higherRate": 1.2,
+    "risingMaxSteps": 12,
+    "risingResetSeconds": 0.5,
+    "repeatGapSeconds": 0.07,
+    "duck": {
+      "ids": ["hurt", "hurtHeavy", "death", "bossSpawn", "revealLegendary"],
+      "volume": 0.5,
+      "seconds": 0.3
+    },
+    "priority": [
+      ["hurt", "hurtHeavy", "shieldBlock", "death", "revive", "lowHealth"],
+      ["bossSpawn", "bigBoom"],
+      [
+        "specialDopamine",
+        "specialLipase",
+        "specialInsulin",
+        "specialVitaminC",
+        "specialVenvanse",
+        "specialSerotonin",
+        "specialOxytocin",
+        "specialAlcoholDehydrogenase",
+        "specialCaffeine",
+        "specialReady"
+      ],
+      [
+        "revealLegendary",
+        "reveal",
+        "synapseFire",
+        "alarm",
+        "freeze",
+        "explosion",
+        "whoosh",
+        "uiUnlock"
+      ],
+      ["itemPickup", "gem", "atp", "heal", "dodge", "vesicleBreak"],
+      ["radicalFire", "acidFire", "zap", "beam", "pulse", "strike", "splash", "absorb", "crit"]
+    ],
+    "idleVolume": 0.4,
+    "idleMinGapSeconds": 0.15,
+    "weapons": {
+      "radical": {
+        "sound": "radicalFire"
+      },
+      "fenton": {
+        "sound": "radicalFire",
+        "rate": 0.8,
+        "repeat": 3
+      },
+      "ascorbicShot": {
+        "sound": "radicalFire",
+        "rate": 1.2
+      },
+      "caffeineBurst": {
+        "sound": "radicalFire",
+        "rate": 1.2
+      },
+      "acidJet": {
+        "sound": "acidFire"
+      },
+      "aquaRegia": {
+        "sound": "acidFire",
+        "rate": 0.8
+      },
+      "chainReaction": {
+        "sound": "zap"
+      },
+      "fission": {
+        "sound": "zap",
+        "rate": 0.8
+      },
+      "uvRay": {
+        "sound": "beam"
+      },
+      "laser": {
+        "sound": "beam",
+        "rate": 1.2
+      },
+      "focusBeam": {
+        "sound": "beam",
+        "rate": 0.8
+      },
+      "dopaminePulse": {
+        "sound": "pulse"
+      },
+      "lipaseStrike": {
+        "sound": "strike"
+      },
+      "adhStrike": {
+        "sound": "strike",
+        "rate": 1.2
+      },
+      "solventPool": {
+        "sound": "splash"
+      },
+      "universalSolvent": {
+        "sound": "splash",
+        "rate": 0.8
+      }
+    },
     "effects": {
       "hurt": {
         "source": "Hurt.mp3",

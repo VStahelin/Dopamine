@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import { IDLE } from '../../config';
+import { AUDIO, IDLE } from '../../config';
 import { drainIdleEvents, slotX, waveProgress } from '../../core/idle/field';
 import {
   buyIdleAgent,
@@ -27,6 +27,7 @@ import { bodyText, impactText, labelText, withShadow } from '../ui/theme';
 import { addDim, setupUiLayout } from '../ui/uiLayout';
 import { SCENES } from './keys';
 import { music } from '../audio/music';
+import { sfx } from '../audio/sfx';
 
 type Obj = Phaser.GameObjects.GameObject;
 
@@ -328,9 +329,10 @@ export class IdleScene extends Phaser.Scene {
       const zone = this.add
         .zone(cx, sy + SLOT / 2, SLOT, SLOT)
         .setInteractive({ useHandCursor: true });
-      zone.on('pointerup', () =>
-        this.openPanel(pos >= open ? { kind: 'upgrades' } : { kind: 'slot', pos }),
-      );
+      zone.on('pointerup', () => {
+        sfx.play('uiTap');
+        this.openPanel(pos >= open ? { kind: 'upgrades' } : { kind: 'slot', pos });
+      });
       out.push(zone);
     }
     return out;
@@ -347,7 +349,10 @@ export class IdleScene extends Phaser.Scene {
       .fillRect(27, by + 14, 6, 16)
       .fillRect(38, by + 14, 6, 16);
     const back = this.add.zone(36, by + 22, 44, 44).setInteractive({ useHandCursor: true });
-    back.on('pointerup', () => this.back());
+    back.on('pointerup', () => {
+      sfx.play('uiBack');
+      this.back();
+    });
     const px = 14 + 44 + 10;
     const xw = 56;
     const pw = w - px - 10 - xw - 14;
@@ -467,6 +472,7 @@ export class IdleScene extends Phaser.Scene {
           label,
           fontSize: 9,
           variant: can ? variant : 'secondary',
+          sound: can ? 'uiBuy' : 'uiError',
           onClick: () => {
             if (can) onClick();
           },
@@ -523,6 +529,7 @@ export class IdleScene extends Phaser.Scene {
           label: maxed ? 'MÁXIMO' : `${cost} ATP`,
           fontSize: 9,
           variant: !maxed && atp >= cost ? 'primary' : 'secondary',
+          sound: !maxed && atp >= cost ? 'uiBuy' : 'uiError',
           onClick: () => {
             if (!maxed && atp >= cost) this.apply(buyUpgrade(idle, atp, key));
           },
@@ -632,8 +639,11 @@ export class IdleScene extends Phaser.Scene {
           life: 0.25,
           color: PALETTE.uv,
         });
-      if (ev.type === 'kill')
+      if (ev.type === 'kill') {
         this.fx.push({ x: toX(ev.x), y: toY(ev.y), r: 10 * scale, life: 0.2, color: 0xffffff });
+        // O campo longo usa a coleta da run, mais baixa e espaçada (docs/efeitos-sonoros.md).
+        sfx.play('atp', { volume: AUDIO.sfx.idleVolume, minGap: AUDIO.sfx.idleMinGapSeconds });
+      }
       if (ev.type === 'base') {
         this.cameras.main.shake(80, 0.004);
         this.floater(

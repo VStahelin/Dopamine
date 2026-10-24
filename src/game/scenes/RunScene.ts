@@ -56,7 +56,7 @@ import { AUDIO } from '../../config';
 import { music } from '../audio/music';
 import { runMusic } from '../audio/musicLogic';
 import { sfx } from '../audio/sfx';
-import { hurtSound, lowHealthTick } from '../audio/sfxLogic';
+import { eventSounds, hurtSound, lowHealthTick, synapseChargeLevel } from '../audio/sfxLogic';
 
 /** Passos de simulação no máximo por quadro, para não travar depois de uma pausa longa. */
 const MAX_STEPS_PER_FRAME = 8;
@@ -328,6 +328,8 @@ export class RunScene extends Phaser.Scene {
       this.scale.off(Phaser.Scale.Events.RESIZE, this.applyZoom, this);
       this.game.events.off(Phaser.Core.Events.BLUR, this.pauseFromOutside, this);
       this.game.events.off(Phaser.Core.Events.HIDDEN, this.pauseFromOutside, this);
+      sfx.loop(null);
+      sfx.setRunPaused(false);
     });
 
     // Durante a run: nada de verificação nem de aviso de versão nova.
@@ -342,6 +344,15 @@ export class RunScene extends Phaser.Scene {
     this.draw(deltaMs / 1000);
     this.checkTransitions();
     this.updateMusic();
+    this.updateSfx();
+  }
+
+  /** Efeitos da run param nas telas por cima; a sinapse soa enquanto enche. */
+  private updateSfx(): void {
+    sfx.setRunPaused(this.paused || this.levelUpOpen || this.overlayOpen || this.run.over);
+    const charge = synapseChargeLevel(this.run.structures);
+    if (charge === null) sfx.loop(null);
+    else sfx.loop('synapseCharge', 1 + charge * 0.5);
   }
 
   /** Música dinâmica da run (docs/sonoplastia.md): faixa pelo tempo, crise, chefe e abafada. */
@@ -459,7 +470,7 @@ export class RunScene extends Phaser.Scene {
       AUDIO.sfx,
     );
     this.lowHealthTimer = low.timer;
-    if (low.play && !this.run.over) sfx.play('lowHealth');
+    if (low.play && !this.run.over) sfx.play('lowHealth', { run: true });
   }
 
   private viewHalf(): { x: number; y: number } {
@@ -584,8 +595,13 @@ export class RunScene extends Phaser.Scene {
       s.setAlpha(glow);
     });
 
+    const soundCtx = {
+      agentId: this.run.agentId,
+      inView: (x: number, y: number) => this.view.contains(x, y),
+    };
     for (const ev of drainEvents(this.run)) {
       const { agent: a } = this.run;
+      for (const cue of eventSounds(ev, soundCtx, AUDIO.sfx)) sfx.cue(cue);
       if (ev.type === 'damage') {
         if (!this.view.contains(ev.x, ev.y)) continue;
         const kind = ev.continuous && !ev.crit && ev.affinity > 0 ? 'area' : hitKind(ev);
@@ -594,24 +610,26 @@ export class RunScene extends Phaser.Scene {
       }
       if (ev.type === 'heal') {
         this.healSum += ev.amount;
-        if (ev.amount >= AUDIO.sfx.healMinAmount) sfx.play('heal');
+        if (ev.amount >= AUDIO.sfx.healMinAmount) sfx.play('heal', { run: true });
       }
       if (ev.type === 'dodge') {
         this.showFloater(a.x, a.y - 12, 'ESQUIVA', 'info');
-        sfx.play('dodge');
+        sfx.play('dodge', { run: true });
       }
       if (ev.type === 'shielded') {
         this.showFloater(a.x, a.y - 12, 'BLOQUEADO', 'info');
-        sfx.play('dodge');
+        sfx.play('dodge', { run: true });
       }
-      if (ev.type === 'specialReady') sfx.play('specialReady');
+      if (ev.type === 'specialReady') sfx.play('specialReady', { run: true });
       if (ev.type === 'revive') {
-        sfx.play('revive');
+        sfx.play('revive', { run: true });
         this.showFloater(a.x, a.y - 14, 'SEGUNDA DOSE!', 'info');
         this.cameras.main.flash(250, 57, 211, 240);
       }
       if (ev.type === 'hurt') {
-        sfx.play(hurtSound(ev.amount, ev.blocked, this.run.stats.maxInteractions, AUDIO.sfx));
+        sfx.play(hurtSound(ev.amount, ev.blocked, this.run.stats.maxInteractions, AUDIO.sfx), {
+          run: true,
+        });
         this.cameras.main.shake(90, 0.006);
         this.showFloater(a.x, a.y - 14, `-${Math.round(ev.amount)}`, 'hurt');
         this.agentSprite.setTint(PALETTE.interaction).setTintMode(Phaser.TintModes.FILL);

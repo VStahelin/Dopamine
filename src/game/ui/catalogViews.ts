@@ -26,6 +26,7 @@ import { nativeGain, receptorGain } from './upgradeText';
 import { drawCreamSlot, drawInkBox, drawLock, drawWoodFrame } from './icons';
 import { RUN_AGENTS, type ExampleItem } from './menuContent';
 import { bodyText, impactText, labelText, withShadow } from './theme';
+import { sfx } from '../audio/sfx';
 
 type Obj = Phaser.GameObjects.GameObject;
 
@@ -56,6 +57,7 @@ export function buyButton(
     label: `${cost} ATP`,
     fontSize: 10,
     variant: can ? 'primary' : 'secondary',
+    sound: can ? 'uiUnlock' : 'uiError',
     onClick: () => {
       if (can) shop.onBuy(kind, id);
     },
@@ -207,7 +209,9 @@ export function renderAgents(
         .setInteractive({ useHandCursor: true });
       // Na lista rolável, arrastar para rolar não escolhe o agente.
       zone.on('pointerup', (p: Phaser.Input.Pointer) => {
-        if (isTap(p)) onSelect(id);
+        if (!isTap(p)) return;
+        sfx.play('uiConfirm');
+        onSelect(id);
       });
       out.push(zone);
     }

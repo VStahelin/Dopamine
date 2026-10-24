@@ -358,7 +358,10 @@ export class OptionsScene extends Phaser.Scene {
     zone.on('pointerdown', () => (armed = true));
     zone.on('pointerout', () => (armed = false));
     zone.on('pointerup', () => {
-      if (armed) onClick();
+      if (armed) {
+        sfx.play('uiTap');
+        onClick();
+      }
       armed = false;
     });
     out.push(zone);

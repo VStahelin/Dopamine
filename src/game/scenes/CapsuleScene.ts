@@ -1,7 +1,10 @@
 import * as Phaser from 'phaser';
+import { AUDIO } from '../../config';
 import { closeCapsule } from '../../core/run/items';
 import type { CapsuleItem, RunState } from '../../core/run/state';
 import type { UpgradeChoice } from '../../core/run/upgrades';
+import { sfx } from '../audio/sfx';
+import { revealCue, type SfxCue } from '../audio/sfxLogic';
 import { PALETTE, PALETTE_CSS } from '../render/palette';
 import { addIcon, iconTexture } from '../render/textures';
 import { addButton } from '../ui/button';
@@ -19,6 +22,8 @@ interface CapsuleData {
 /** Ignora toques logo que a tela abre, como no level up. */
 const INPUT_DELAY_MS = 350;
 const ROW_H = 40;
+/** Intervalo entre os sons dos itens que sobem. */
+const REVEAL_DELAY_MS = 160;
 
 const hex = (color: string) => parseInt(color.slice(1), 16);
 
@@ -46,6 +51,17 @@ export class CapsuleScene extends Phaser.Scene {
     this.input.keyboard?.on('keydown-ENTER', () => this.done());
     this.input.keyboard?.on('keydown-SPACE', () => this.done());
     setupUiLayout(this, (w, h) => this.build(w, h));
+    // A cápsula abre num toque grave e cada item soa ao subir, pela raridade.
+    sfx.play('ampouleBreak', { rate: AUDIO.sfx.lowerRate });
+    data.run.capsule?.items.forEach((item, i) => {
+      const cue: SfxCue =
+        item.kind === 'evolve'
+          ? { id: 'revealLegendary' }
+          : item.kind === 'phosphocreatine'
+            ? { id: 'atp', repeat: 3 }
+            : revealCue(item.rarity ?? 0);
+      this.time.delayedCall(REVEAL_DELAY_MS * (i + 1), () => sfx.cue(cue, false));
+    });
   }
 
   private build(w: number, h: number): void {

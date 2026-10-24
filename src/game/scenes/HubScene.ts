@@ -50,6 +50,7 @@ import {
 } from '../ui/icons';
 import { TABS, type SectionDef, type TabId } from '../ui/menuContent';
 import { bodyText, formatTime, impactText, labelText, withShadow } from '../ui/theme';
+import { sfx } from '../audio/sfx';
 import { addDim, setupUiLayout } from '../ui/uiLayout';
 import {
   addZone,
@@ -745,7 +746,10 @@ export class HubScene extends Phaser.Scene {
     });
     zone.on('pointerup', () => {
       draw(false);
-      if (armed) this.scene.start(SCENES.run);
+      if (armed) {
+        sfx.play('uiConfirm');
+        this.scene.start(SCENES.run);
+      }
       armed = false;
     });
     return [face, label, sub, zone];
@@ -1463,7 +1467,10 @@ export class HubScene extends Phaser.Scene {
     });
     zone.on('pointerup', () => {
       drawPlay(false);
-      if (armed) this.play();
+      if (armed) {
+        sfx.play('uiConfirm');
+        this.play();
+      }
       armed = false;
     });
     out.push(face, label, sub, zone);
@@ -1567,7 +1574,10 @@ export class HubScene extends Phaser.Scene {
 
   private zone(x: number, y: number, w: number, h: number, onClick: () => void): Obj {
     const zone = this.add.zone(x + w / 2, y + h / 2, w, h).setInteractive({ useHandCursor: true });
-    zone.on('pointerup', onClick);
+    zone.on('pointerup', () => {
+      sfx.play('uiTap');
+      onClick();
+    });
     return zone;
   }
 }

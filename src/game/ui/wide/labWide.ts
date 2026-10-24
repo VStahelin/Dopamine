@@ -8,6 +8,7 @@ import { effect, nodeIcon, nodeStat, statName } from '../labView';
 import { bodyText, impactText, labelText, withShadow } from '../theme';
 import { drawInkBox } from '../icons';
 import { drawFramedPanel, type Obj } from './wideLayout';
+import { sfx } from '../../audio/sfx';
 
 /** Cor do nome de cada trilha (as colunas de meta.json, na ordem). */
 const LANE_COLORS = [
@@ -145,7 +146,10 @@ export function renderLabWide(
     const zone = scene.add
       .zone(x + node / 2, y + node / 2, node + 12, node + 12)
       .setInteractive({ useHandCursor: true });
-    zone.on('pointerup', () => o.onSelect(id));
+    zone.on('pointerup', () => {
+      sfx.play('uiTap');
+      o.onSelect(id);
+    });
     out.push(zone);
   }
 
@@ -288,6 +292,7 @@ function labDetail(
       label,
       fontSize: 16,
       variant: can ? 'primary' : 'secondary',
+      sound: can ? 'uiBuy' : 'uiError',
       onClick: () => {
         if (can) o.onBuy(id);
       },

@@ -250,9 +250,20 @@ function loadAudio(): AudioConfig {
     if (t.loop && !(t.loopFrom !== undefined && t.loopTo !== undefined && t.loopFrom < t.loopTo))
       throw new Error(`Configuração inválida em audio.json: loop da faixa "${id}"`);
   }
-  for (const id of SFX_IDS) {
-    if (!audio.sfx.effects[id])
-      throw new Error(`Configuração inválida em audio.json: falta o efeito "${id}"`);
+  const known = new Set<string>(SFX_IDS);
+  const sounds = [
+    ...Object.keys(audio.sfx.effects),
+    ...Object.values(audio.sfx.weapons).map((w) => w.sound),
+    ...audio.sfx.duck.ids,
+    ...audio.sfx.priority.flat(),
+  ];
+  for (const id of sounds) {
+    if (!known.has(id))
+      throw new Error(`Configuração inválida em audio.json: efeito "${id}" desconhecido`);
+  }
+  for (const id of Object.keys(audio.sfx.weapons)) {
+    if (!(id in weaponsJson))
+      throw new Error(`Configuração inválida em audio.json: arma "${id}" desconhecida`);
   }
   return audio;
 }

@@ -2,6 +2,8 @@ import * as Phaser from 'phaser';
 import { RARITIES, SUPPLEMENTS } from '../../config';
 import type { RunState } from '../../core/run/state';
 import { closeAmpoule, copies } from '../../core/run/supplements';
+import { sfx } from '../audio/sfx';
+import { revealCue } from '../audio/sfxLogic';
 import { PALETTE, PALETTE_CSS } from '../render/palette';
 import { addIcon, iconTexture } from '../render/textures';
 import { addIconSlot, supplementSlot } from '../ui/iconSlot';
@@ -18,6 +20,8 @@ interface AmpouleData {
 const INPUT_DELAY_MS = 350;
 /** No PC (sem toque), a tela fecha sozinha depois deste tempo. */
 const AUTO_CLOSE_MS = 1500;
+/** O suplemento soa logo depois do vidro quebrar. */
+const REVEAL_DELAY_MS = 180;
 
 const hex = (color: string) => parseInt(color.slice(1), 16);
 
@@ -50,6 +54,15 @@ export class AmpouleScene extends Phaser.Scene {
     if (!this.sys.game.device.input.touch)
       this.time.delayedCall(AUTO_CLOSE_MS, () => this.done(true));
     setupUiLayout(this, (w, h) => this.build(w, h));
+    const ampoule = data.run.ampoule;
+    const def = ampoule ? SUPPLEMENTS.items[ampoule.id] : undefined;
+    if (def) {
+      const tierId = SUPPLEMENTS.rarities[def.rarity].tier;
+      sfx.play('ampouleBreak');
+      this.time.delayedCall(REVEAL_DELAY_MS, () =>
+        sfx.cue(revealCue(RARITIES.tiers.findIndex((t) => t.id === tierId)), false),
+      );
+    }
   }
 
   private build(w: number, h: number): void {

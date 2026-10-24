@@ -1090,7 +1090,10 @@ export interface AudioConfig {
   sfx: SfxConfig;
 }
 
-/** Ids dos efeitos sonoros que já estão no jogo (docs/efeitos-sonoros.md). */
+/**
+ * Ids dos efeitos sonoros (docs/efeitos-sonoros.md). Um id sem arquivo em `sfx.effects` fica mudo
+ * até o arquivo chegar em `audio/efeitos/`.
+ */
 export const SFX_IDS = [
   'hurt',
   'hurtHeavy',
@@ -1101,6 +1104,48 @@ export const SFX_IDS = [
   'dodge',
   'shieldBlock',
   'specialReady',
+  'specialDopamine',
+  'specialLipase',
+  'specialInsulin',
+  'specialVitaminC',
+  'specialVenvanse',
+  'specialSerotonin',
+  'specialOxytocin',
+  'specialAlcoholDehydrogenase',
+  'specialCaffeine',
+  'radicalFire',
+  'acidFire',
+  'zap',
+  'beam',
+  'pulse',
+  'strike',
+  'splash',
+  'absorb',
+  'crit',
+  'freeze',
+  'explosion',
+  'bossSpawn',
+  'bigBoom',
+  'gem',
+  'atp',
+  'itemPickup',
+  'vesicleBreak',
+  'whoosh',
+  'ampouleBreak',
+  'reveal',
+  'revealLegendary',
+  'cardPick',
+  'reroll',
+  'banish',
+  'synapseCharge',
+  'synapseFire',
+  'alarm',
+  'uiTap',
+  'uiConfirm',
+  'uiBack',
+  'uiBuy',
+  'uiError',
+  'uiUnlock',
 ] as const;
 export type SfxId = (typeof SFX_IDS)[number];
 
@@ -1132,5 +1177,33 @@ export interface SfxConfig {
   lowHealthRatio: number;
   /** Intervalo entre dois avisos de `lowHealth`, em segundos. */
   lowHealthRepeatSeconds: number;
-  effects: Record<SfxId, SfxDef>;
+  /** Efeitos tocando ao mesmo tempo, no máximo; acima disso sai o de menor prioridade. */
+  maxVoices: number;
+  /** Velocidade de um uso "mais grave" e de um "mais agudo" do mesmo arquivo. */
+  lowerRate: number;
+  higherRate: number;
+  /** Sequência que sobe (gema, salto, cascata): um semitom por toque seguido, até `risingMaxSteps`. */
+  risingMaxSteps: number;
+  /** Sem toque por este tempo, a sequência volta à altura normal. */
+  risingResetSeconds: number;
+  /** Intervalo entre as cópias de um efeito repetido (Reação de Fenton toca 3 vezes). */
+  repeatGapSeconds: number;
+  /** Estes efeitos baixam os outros para `volume` por `seconds`. */
+  duck: { ids: SfxId[]; volume: number; seconds: number };
+  /** Grupos de prioridade, do mais importante ao menos; quem não está em nenhum fica por último. */
+  priority: SfxId[][];
+  /** Campo longo: volume relativo e intervalo mínimo entre dois toques. */
+  idleVolume: number;
+  idleMinGapSeconds: number;
+  /** Som do disparo de cada arma; arma fora da lista dispara muda. */
+  weapons: Record<string, WeaponSfx>;
+  /** Só os efeitos que já têm arquivo; os outros ids ficam mudos. */
+  effects: Partial<Record<SfxId, SfxDef>>;
+}
+
+/** Disparo de uma arma: o arquivo, a velocidade (abaixo de 1 é mais grave) e as repetições. */
+export interface WeaponSfx {
+  sound: SfxId;
+  rate?: number;
+  repeat?: number;
 }

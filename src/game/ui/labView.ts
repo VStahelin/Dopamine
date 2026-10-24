@@ -17,6 +17,7 @@ import { addButton } from './button';
 import { addIconSlot, slotSize } from './iconSlot';
 import { statDelta } from './statText';
 import { bodyText, impactText, labelText } from './theme';
+import { sfx } from '../audio/sfx';
 
 type Obj = Phaser.GameObjects.GameObject;
 
@@ -129,7 +130,10 @@ export function renderLabTree(
     const zone = scene.add
       .zone(x + NODE / 2, y + NODE / 2, NODE + 12, NODE + 12)
       .setInteractive({ useHandCursor: true });
-    zone.on('pointerup', () => onSelect(id));
+    zone.on('pointerup', () => {
+      sfx.play('uiTap');
+      onSelect(id);
+    });
     out.push(...slot.objects, zone);
   }
   return out;
@@ -213,6 +217,7 @@ export function renderLabDetail(
         label: can ? `COMPRAR · ${cost} ATP` : `FALTAM ${cost - Math.floor(atp)} ATP`,
         fontSize: 11,
         variant: can ? 'primary' : 'secondary',
+        sound: can ? 'uiBuy' : 'uiError',
         onClick: () => {
           if (can) onBuy(id);
         },

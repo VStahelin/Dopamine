@@ -1,4 +1,7 @@
 import type * as Phaser from 'phaser';
+import type { SfxId } from '../../config';
+import { sfx } from '../audio/sfx';
+import { buttonSound } from '../audio/sfxLogic';
 import { PALETTE, PALETTE_CSS } from '../render/palette';
 import { impactText, withShadow } from './theme';
 
@@ -21,6 +24,8 @@ export interface ButtonOptions {
   onClick: () => void;
   variant?: ButtonVariant;
   fontSize?: number;
+  /** Toque de interface; sem ele, sai do rótulo (voltar, confirmar ou o toque comum). `null` cala. */
+  sound?: SfxId | null;
 }
 
 /**
@@ -120,7 +125,11 @@ export function addButton(scene: Phaser.Scene, opts: ButtonOptions): Phaser.Game
   zone.on('pointerup', (p: Phaser.Input.Pointer) => {
     draw(false);
     // Dentro de uma lista rolável, arrastar para rolar não aperta o botão.
-    if (armed && isTap(p)) opts.onClick();
+    if (armed && isTap(p)) {
+      const sound = opts.sound === undefined ? buttonSound(opts.label) : opts.sound;
+      if (sound) sfx.play(sound);
+      opts.onClick();
+    }
     armed = false;
   });
 

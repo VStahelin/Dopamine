@@ -10,6 +10,7 @@ import {
 import type { RunState } from '../../core/run/state';
 import { statDef } from '../../core/run/stats';
 import { chooseSynapse } from '../../core/run/structures';
+import { sfx } from '../audio/sfx';
 import {
   applyChoice,
   banishChoice,
@@ -796,10 +797,12 @@ export class LevelUpScene extends Phaser.Scene {
     if (this.banishing) {
       if (!banishable(choice)) return;
       this.banishing = false;
+      sfx.play('banish');
       banishChoice(run, choice);
       this.build();
       return;
     }
+    sfx.play('cardPick');
     if (this.data_.synapse) {
       chooseSynapse(run, choice);
       this.data_.onDone();
@@ -818,7 +821,9 @@ export class LevelUpScene extends Phaser.Scene {
 
   private reroll(): void {
     if (this.data_.synapse || !this.ready()) return;
-    if (rerollOffer(this.data_.run)) {
+    if (!rerollOffer(this.data_.run)) sfx.play('uiError');
+    else {
+      sfx.play('reroll');
       this.banishing = false;
       this.focus = 0;
       this.build();
@@ -827,12 +832,19 @@ export class LevelUpScene extends Phaser.Scene {
 
   private skip(): void {
     if (this.data_.synapse || !this.ready()) return;
-    if (skipLevelUp(this.data_.run)) this.next();
+    if (skipLevelUp(this.data_.run)) {
+      sfx.play('uiBack');
+      this.next();
+    } else sfx.play('uiError');
   }
 
   private toggleBanish(): void {
     if (this.data_.synapse || !this.ready()) return;
-    if (!this.banishing && remaining(this.data_.run, 'banishes') === 0) return;
+    if (!this.banishing && remaining(this.data_.run, 'banishes') === 0) {
+      sfx.play('uiError');
+      return;
+    }
+    sfx.play('uiTap');
     this.banishing = !this.banishing;
     this.build();
   }

@@ -107,7 +107,9 @@ export function hitEnemy(state: RunState, e: Enemy, base: number, opts: HitOptio
     const t = state.tally.damageByWeapon;
     t[opts.source] = (t[opts.source] ?? 0) + Math.min(amount, Math.max(0, e.hp));
   }
-  damageEnemy(state, e, amount, crit, affinity, opts.continuous ?? false);
+  const absorbed =
+    opts.source !== undefined && state.rules.weapons[opts.source].pullType === e.type;
+  damageEnemy(state, e, amount, crit, affinity, opts.continuous ?? false, absorbed);
 }
 
 /**
@@ -142,6 +144,7 @@ export function damageEnemy(
   crit = false,
   affinity = 1,
   continuous = false,
+  absorbed = false,
 ): void {
   if (e.hp <= 0) return;
   e.hp -= amount;
@@ -154,7 +157,15 @@ export function damageEnemy(
   t.killsByKind[e.kind] = (t.killsByKind[e.kind] ?? 0) + 1;
   if (e.boss) t.bosses++;
   if (e.aggregate) t.aggregates++;
-  state.events.push({ type: 'kill', x: e.x, y: e.y, kind: e.kind });
+  state.events.push({
+    type: 'kill',
+    x: e.x,
+    y: e.y,
+    kind: e.kind,
+    boss: e.boss,
+    aggregate: e.aggregate,
+    absorbed,
+  });
   dropXp(state, e);
   dropCoin(state, e);
   dropAmpoule(state, e);

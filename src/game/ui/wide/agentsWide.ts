@@ -402,6 +402,7 @@ function agentDetail(
       label,
       fontSize: 16,
       variant: chosen || (locked && !can) ? 'secondary' : 'primary',
+      sound: chosen ? null : !locked ? 'uiConfirm' : can ? 'uiUnlock' : 'uiError',
       onClick: () => {
         if (chosen) return;
         if (!locked) o.onSelect(id);

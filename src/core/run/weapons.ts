@@ -46,25 +46,38 @@ export function updateWeapons(state: RunState, dt: number, grid: SpatialGrid): v
     const def = state.rules.weapons[w.id];
     const p = paramsOf(state, w, i);
     w.cooldown = Math.max(0, w.cooldown - dt);
-    switch (def.kind) {
-      case 'projectile':
-        return fireProjectiles(state, w, def, p);
-      case 'cone':
-        return fireCone(state, w, def, p, grid);
-      case 'orbit':
-        return spinOrbit(state, w, def, p, dt, grid);
-      case 'aura':
-        return tickAura(state, w, def, p, grid);
-      case 'zone':
-        return throwZones(state, w, def, p);
-      case 'beam':
-        return fireBeams(state, w, def, p);
-      case 'pulse':
-        return emitPulse(state, w, p);
-      case 'strike':
-        return strike(state, w, p, grid);
-    }
+    const ready = w.cooldown <= 0;
+    fire(state, w, def, p, dt, grid);
+    if (ready && w.cooldown > 0) state.events.push({ type: 'shoot', weapon: w.id });
   });
+}
+
+function fire(
+  state: RunState,
+  w: WeaponInstance,
+  def: WeaponDef,
+  p: WeaponParams,
+  dt: number,
+  grid: SpatialGrid,
+): void {
+  switch (def.kind) {
+    case 'projectile':
+      return fireProjectiles(state, w, def, p);
+    case 'cone':
+      return fireCone(state, w, def, p, grid);
+    case 'orbit':
+      return spinOrbit(state, w, def, p, dt, grid);
+    case 'aura':
+      return tickAura(state, w, def, p, grid);
+    case 'zone':
+      return throwZones(state, w, def, p);
+    case 'beam':
+      return fireBeams(state, w, def, p);
+    case 'pulse':
+      return emitPulse(state, w, p);
+    case 'strike':
+      return strike(state, w, p, grid);
+  }
 }
 
 /** Valores atuais de uma arma do agente, com atributos e o especial. */
@@ -138,7 +151,6 @@ function fireProjectiles(
     });
   }
   w.cooldown = p.cooldownSeconds;
-  state.events.push({ type: 'shoot', weapon: w.id });
 }
 
 /** Move os disparos e resolve os golpes, com perfuração e Reação em cadeia. */
@@ -415,7 +427,13 @@ function strike(state: RunState, w: WeaponInstance, p: WeaponParams, grid: Spati
     // Sem molécula: o golpe cai no que quebra mais perto, se houver.
     const object = aimPoint(state, agent.x, agent.y, p.rangePx);
     if (!object) return;
-    state.events.push({ type: 'strike', x: object.x, y: object.y, radius: p.areaPx });
+    state.events.push({
+      type: 'strike',
+      x: object.x,
+      y: object.y,
+      radius: p.areaPx,
+      weapon: w.id,
+    });
     w.cooldown = p.cooldownSeconds;
     return;
   }

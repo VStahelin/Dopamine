@@ -26,6 +26,7 @@ import { familyText, floorColor, LOCAL_SHORT } from '../ui/locals';
 import { setupUiLayout } from '../ui/uiLayout';
 import { isWideMenu, menuMinSize } from '../ui/wide/wideLayout';
 import { SCENES } from './keys';
+import { sfx } from '../audio/sfx';
 
 type Obj = Phaser.GameObjects.GameObject;
 
@@ -172,7 +173,10 @@ export class LocalScene extends Phaser.Scene {
         this.add
           .zone(bx + 10 + (c.col + 0.5) * pixel, by + 10 + (c.row + 0.5) * pixel, size, size)
           .setInteractive({ useHandCursor: true })
-          .on('pointerup', () => this.select(env)),
+          .on('pointerup', () => {
+            sfx.play('uiTap');
+            this.select(env);
+          }),
       );
     }
 
@@ -210,7 +214,10 @@ export class LocalScene extends Phaser.Scene {
         this.add
           .zone(lx + listW / 2, y + rowH / 2, listW, rowH)
           .setInteractive({ useHandCursor: true })
-          .on('pointerup', () => this.select(env)),
+          .on('pointerup', () => {
+            sfx.play('uiTap');
+            this.select(env);
+          }),
       );
     });
 
@@ -246,7 +253,10 @@ export class LocalScene extends Phaser.Scene {
     const back = this.add
       .text(wide ? 48 : colX + 14, wide ? 44 : 22, '‹ VOLTAR', labelText(10, PALETTE_CSS.textSoft))
       .setInteractive({ useHandCursor: true })
-      .on('pointerup', () => this.back());
+      .on('pointerup', () => {
+        sfx.play('uiBack');
+        this.back();
+      });
     out.push(back);
     if (wide) {
       out.push(
