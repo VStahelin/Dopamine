@@ -1258,7 +1258,8 @@ export class RunScene extends Phaser.Scene {
         : this.run.synapseOffer
           ? SCENES.levelUp
           : null;
-    if (overlay && !this.overlayOpen && !this.levelUpOpen && !this.run.over) {
+    // Com a pausa aberta, nada abre por cima: o level up ganho pelo modo admin espera a run voltar.
+    if (overlay && !this.paused && !this.overlayOpen && !this.levelUpOpen && !this.run.over) {
       this.overlayOpen = true;
       music.jingle(overlay === SCENES.levelUp ? 'levelup' : 'capsule');
       this.scene.launch(overlay, {
@@ -1271,7 +1272,7 @@ export class RunScene extends Phaser.Scene {
       return;
     }
     if (this.overlayOpen) return;
-    if (this.run.pendingLevelUps > 0 && !this.levelUpOpen && !this.run.over) {
+    if (this.run.pendingLevelUps > 0 && !this.paused && !this.levelUpOpen && !this.run.over) {
       this.levelUpOpen = true;
       music.jingle('levelup');
       this.scene.launch(SCENES.levelUp, {
