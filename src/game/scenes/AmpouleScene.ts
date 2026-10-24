@@ -8,7 +8,7 @@ import { PALETTE, PALETTE_CSS } from '../render/palette';
 import { addIcon, iconTexture } from '../render/textures';
 import { addIconSlot, supplementSlot } from '../ui/iconSlot';
 import { bodyText, hudLabelText, impactText, labelText } from '../ui/theme';
-import { addDim, setupUiLayout } from '../ui/uiLayout';
+import { addDim, cardUiMinSize, setupUiLayout } from '../ui/uiLayout';
 import { SCENES } from './keys';
 
 interface AmpouleData {
@@ -19,7 +19,7 @@ interface AmpouleData {
 /** Ignora toques logo que a tela abre, como no level up. */
 const INPUT_DELAY_MS = 350;
 /** No PC (sem toque), a tela fecha sozinha depois deste tempo. */
-const AUTO_CLOSE_MS = 1500;
+const AUTO_CLOSE_MS = 3000;
 /** O suplemento soa logo depois do vidro quebrar. */
 const REVEAL_DELAY_MS = 180;
 
@@ -53,7 +53,7 @@ export class AmpouleScene extends Phaser.Scene {
     });
     if (!this.sys.game.device.input.touch)
       this.time.delayedCall(AUTO_CLOSE_MS, () => this.done(true));
-    setupUiLayout(this, (w, h) => this.build(w, h));
+    setupUiLayout(this, (w, h) => this.build(w, h), cardUiMinSize);
     const ampoule = data.run.ampoule;
     const def = ampoule ? SUPPLEMENTS.items[ampoule.id] : undefined;
     if (def) {

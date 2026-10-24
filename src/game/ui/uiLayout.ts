@@ -48,6 +48,15 @@ export function uiMinShortSide(width: number, height: number): number {
     : DISPLAY.uiMinShortSidePx;
 }
 
+/**
+ * Tamanho lógico mínimo das telas de cartão por cima da run (ampola, cápsula): em tela grande, o
+ * PC, o zoom sobe para o cartão ocupar um bom pedaço da tela; no celular fica o padrão.
+ */
+export function cardUiMinSize(width: number, height: number): Size | undefined {
+  const cssShort = Math.min(width, height) / Math.min(window.devicePixelRatio || 1, 4);
+  return cssShort >= DISPLAY.largeScreenShortSideCss ? { width: 340, height: 330 } : undefined;
+}
+
 /** Converte a posição de um ponteiro para as coordenadas lógicas de uma cena de interface. */
 export function pointerToUi(
   scene: Phaser.Scene,

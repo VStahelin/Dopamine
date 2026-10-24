@@ -4,6 +4,9 @@ O que mudou em cada versão do Farmaco Battle. O jogo mostra este arquivo em Op�
 
 ## Em desenvolvimento
 
+### Ajustes
+- No PC, a ampola e a cápsula do chefe aparecem maiores na tela, e a ampola fica 3 segundos antes de fechar sozinha (antes, 1,5).
+
 ### Correções
 - Arsenal no PC: os nomes das ações dos agentes ficam dentro da caixa, e o botão de ATP dos receptores bloqueados não cai mais para fora do cartão.
 

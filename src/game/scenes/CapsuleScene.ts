@@ -10,7 +10,7 @@ import { addIcon, iconTexture } from '../render/textures';
 import { addButton } from '../ui/button';
 import { addIconSlot, choiceSlot } from '../ui/iconSlot';
 import { bodyText, hudLabelText, impactText, labelText } from '../ui/theme';
-import { addDim, setupUiLayout } from '../ui/uiLayout';
+import { addDim, cardUiMinSize, setupUiLayout } from '../ui/uiLayout';
 import { describeChoice } from '../ui/upgradeText';
 import { SCENES } from './keys';
 
@@ -50,7 +50,7 @@ export class CapsuleScene extends Phaser.Scene {
     this.openedAt = this.time.now;
     this.input.keyboard?.on('keydown-ENTER', () => this.done());
     this.input.keyboard?.on('keydown-SPACE', () => this.done());
-    setupUiLayout(this, (w, h) => this.build(w, h));
+    setupUiLayout(this, (w, h) => this.build(w, h), cardUiMinSize);
     // A cápsula abre num toque grave e cada item soa ao subir, pela raridade.
     sfx.play('ampouleBreak', { rate: AUDIO.sfx.lowerRate });
     data.run.capsule?.items.forEach((item, i) => {
