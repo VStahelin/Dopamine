@@ -1265,6 +1265,7 @@ export class RunScene extends Phaser.Scene {
         starReward: stars.reward,
         achievements: claimed.earned.map((a) => ({
           name: a.name,
+          icon: a.icon,
           reward: rewardLabel(a, {
             agents: this.run.rules.agents,
             weapons: this.run.rules.weapons,

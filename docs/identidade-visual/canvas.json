@@ -238,6 +238,13 @@
       "h": 800,
       "title": "Novidades no PC",
       "is_interactive": true
+    },
+    "ConquistasIcones.dc.html": {
+      "x": 6400,
+      "y": 12700,
+      "w": 1280,
+      "h": 980,
+      "title": "Ícones das conquistas"
     }
   },
   "createdOnFiles": {
@@ -289,6 +296,7 @@
     "FamiliasChefes.dc.html",
     "ElencoCompleto.dc.html",
     "Conquistas.dc.html",
+    "ConquistasIcones.dc.html",
     "Logo.dc.html",
     "PrimeiraRun.dc.html",
     "Wiki.dc.html",

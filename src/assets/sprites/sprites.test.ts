@@ -39,6 +39,13 @@ describe('sprites', () => {
     expect(missing).toEqual([]);
   });
 
+  it('toda conquista aponta para um ícone que existe', () => {
+    const missing = META.achievements
+      .filter((a) => !(ICONS[a.icon.group] as Record<string, unknown>)[a.icon.id])
+      .map((a) => a.id);
+    expect(missing).toEqual([]);
+  });
+
   it('ícones têm 16×16 pixels e só cores da paleta', () => {
     for (const [group, icons] of Object.entries(ICONS)) {
       for (const [id, grid] of Object.entries(icons)) {

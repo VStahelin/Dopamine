@@ -1,8 +1,9 @@
 import * as Phaser from 'phaser';
-import { ORGANISM, WEAPONS, type Sector, type WeaponId } from '../../config';
+import { ORGANISM, WEAPONS, type AchievementDef, type Sector, type WeaponId } from '../../config';
 import type { RunResult } from '../../core/run/state';
 import type { RecordKind } from '../../core/save/saveData';
 import { PALETTE, PALETTE_CSS } from '../render/palette';
+import { addIcon, iconTexture } from '../render/textures';
 import { addIconSlot, slotSize, weaponIcon } from '../ui/iconSlot';
 import { addButtonColumn } from '../ui/menuLayout';
 import { bodyText, formatTime, impactText, labelText } from '../ui/theme';
@@ -25,7 +26,7 @@ export interface GameOverData {
   /** Linhas do local (fase 5.12): o que veio do setor do local e da sinergia, antes do retorno. */
   healthNotes: string[];
   /** Conquistas ganhas no fim desta run (fase 5.16), com a recompensa já escrita. */
-  achievements: { name: string; reward: string }[];
+  achievements: { name: string; reward: string; icon: AchievementDef['icon'] }[];
   /** Nome do agente libertado pela cápsula de agente nesta run. */
   freedAgent: string | null;
 }
@@ -79,7 +80,7 @@ export class GameOverScene extends Phaser.Scene {
         damage.length * (icon + 4) +
         16 +
         data.healthNotes.length * 14 +
-        (data.achievements.length > 0 ? 18 + data.achievements.length * 16 : 0) +
+        (data.achievements.length > 0 ? 18 + data.achievements.length * 20 : 0) +
         2 * 50;
       const top = Math.max(16, Math.floor((h - total) / 2));
       const width = Math.min(300, w - 32);
@@ -184,10 +185,11 @@ export class GameOverScene extends Phaser.Scene {
         y += 20;
         for (const a of data.achievements) {
           children.push(
-            this.add.text(left, y, a.name, bodyText(10, PALETTE_CSS.text)),
+            addIcon(this, left, y - 1, iconTexture(a.icon.group, a.icon.id), 16),
+            this.add.text(left + 22, y, a.name, bodyText(10, PALETTE_CSS.text)),
             this.add.text(right, y, a.reward, labelText(8, PALETTE_CSS.gold)).setOrigin(1, 0),
           );
-          y += 16;
+          y += 20;
         }
       }
       const { buttons } = addButtonColumn(this, w, y + 12, [

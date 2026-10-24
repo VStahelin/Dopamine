@@ -4,6 +4,9 @@ O que mudou em cada versão do Farmaco Battle. O jogo mostra este arquivo em Op�
 
 ## Em desenvolvimento
 
+### Novidades
+- Cada conquista ganhou um ícone. A que você já fez fica com moldura dourada, e a que ainda não começou aparece apagada. O painel CONQUISTA! do fim da run também mostra o ícone.
+
 ## v0.19.0 · 23/10/2026
 
 ### Novidades

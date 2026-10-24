@@ -33,9 +33,18 @@ export type PixelGrid = readonly string[];
 /**
  * `stats`: atributos sem modificador no level up (só no Laboratório), desenhados no jogo.
  * `items`: itens do mapa da fase 5.5 (prancheta "Itens do mapa (drops)"), ainda sem uso no jogo.
+ * `achievements`: ícones novos das conquistas (prancheta "Ícones das conquistas"); as outras
+ *   conquistas apontam para ícones de outros grupos (`icon` em meta.json).
  */
 export type IconGroup =
-  'weapons' | 'passives' | 'specials' | 'stats' | 'items' | 'supplements' | 'structures';
+  | 'weapons'
+  | 'passives'
+  | 'specials'
+  | 'stats'
+  | 'items'
+  | 'supplements'
+  | 'structures'
+  | 'achievements';
 
 /** Cor em `#RRGGBB` para cada letra das grades de ícone. */
 export const ICON_PALETTE: Readonly<Record<string, string>> = paletteJson;

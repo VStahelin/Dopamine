@@ -687,6 +687,11 @@ export interface AchievementDef {
   name: string;
   description: string;
   goal: AchievementGoal;
+  /** Ícone 16×16 de icons.json: um do grupo `achievements` ou um sprite reaproveitado. */
+  icon: {
+    group: 'passives' | 'specials' | 'items' | 'structures' | 'achievements';
+    id: string;
+  };
   reward: { atp?: number; unlock?: { group: 'agents' | 'weapons'; id: string } };
 }
 

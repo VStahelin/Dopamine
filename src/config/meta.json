@@ -366,6 +366,10 @@
       "id": "firstReaction",
       "name": "Primeira reação",
       "description": "Decompor 100 moléculas",
+      "icon": {
+        "group": "passives",
+        "id": "reactivity"
+      },
       "goal": {
         "kind": "kills",
         "count": 100
@@ -378,6 +382,10 @@
       "id": "basalMetabolism",
       "name": "Metabolismo basal",
       "description": "Decompor 1.000 moléculas",
+      "icon": {
+        "group": "passives",
+        "id": "catalysisPower"
+      },
       "goal": {
         "kind": "kills",
         "count": 1000
@@ -390,6 +398,10 @@
       "id": "catabolism",
       "name": "Catabolismo",
       "description": "Decompor 10.000 moléculas",
+      "icon": {
+        "group": "achievements",
+        "id": "catabolism"
+      },
       "goal": {
         "kind": "kills",
         "count": 10000
@@ -402,6 +414,10 @@
       "id": "lipolysis",
       "name": "Lipólise",
       "description": "Decompor 300 triglicerídeos",
+      "icon": {
+        "group": "specials",
+        "id": "emulsion"
+      },
       "goal": {
         "kind": "kills",
         "molecule": "triglyceride",
@@ -418,6 +434,10 @@
       "id": "glycolysis",
       "name": "Glicólise",
       "description": "Decompor 2.000 açúcares",
+      "icon": {
+        "group": "items",
+        "id": "glucose"
+      },
       "goal": {
         "kind": "kills",
         "family": "sugar",
@@ -434,6 +454,10 @@
       "id": "antioxidant",
       "name": "Antioxidante",
       "description": "Decompor 1.000 radicais livres",
+      "icon": {
+        "group": "items",
+        "id": "vitamin"
+      },
       "goal": {
         "kind": "kills",
         "family": "radical",
@@ -450,6 +474,10 @@
       "id": "detoxification",
       "name": "Desintoxicação",
       "description": "Decompor 800 toxinas",
+      "icon": {
+        "group": "specials",
+        "id": "detox"
+      },
       "goal": {
         "kind": "kills",
         "family": "toxin",
@@ -466,6 +494,10 @@
       "id": "calm",
       "name": "Calma",
       "description": "Decompor 600 moléculas de estresse",
+      "icon": {
+        "group": "specials",
+        "id": "calm"
+      },
       "goal": {
         "kind": "kills",
         "family": "stress",
@@ -482,6 +514,10 @@
       "id": "antiInflammatory",
       "name": "Anti-inflamatório",
       "description": "Decompor 300 moléculas de inflamação",
+      "icon": {
+        "group": "achievements",
+        "id": "antiInflammatory"
+      },
       "goal": {
         "kind": "kills",
         "family": "inflammation",
@@ -495,6 +531,10 @@
       "id": "bossHunter",
       "name": "Caçador de chefes",
       "description": "Decompor 5 chefes",
+      "icon": {
+        "group": "achievements",
+        "id": "bossHunter"
+      },
       "goal": {
         "kind": "bosses",
         "count": 5
@@ -510,6 +550,10 @@
       "id": "endOfCase",
       "name": "Fim do caso",
       "description": "Decompor a Placa de ateroma",
+      "icon": {
+        "group": "achievements",
+        "id": "endOfCase"
+      },
       "goal": {
         "kind": "kills",
         "molecule": "plaque",
@@ -523,6 +567,10 @@
       "id": "aggregates",
       "name": "Agregados",
       "description": "Decompor 10 agregados",
+      "icon": {
+        "group": "achievements",
+        "id": "aggregates"
+      },
       "goal": {
         "kind": "aggregates",
         "count": 10
@@ -538,6 +586,10 @@
       "id": "ampoules",
       "name": "Farmácia",
       "description": "Abrir 20 ampolas",
+      "icon": {
+        "group": "items",
+        "id": "ampoule"
+      },
       "goal": {
         "kind": "ampoules",
         "count": 20
@@ -550,6 +602,10 @@
       "id": "synapses",
       "name": "Plasticidade",
       "description": "Disparar 10 sinapses",
+      "icon": {
+        "group": "structures",
+        "id": "synapse"
+      },
       "goal": {
         "kind": "synapses",
         "count": 10
@@ -562,6 +618,10 @@
       "id": "stamina",
       "name": "Fôlego",
       "description": "Durar 10 minutos numa run",
+      "icon": {
+        "group": "passives",
+        "id": "metabolism"
+      },
       "goal": {
         "kind": "bestTime",
         "seconds": 600
@@ -577,6 +637,10 @@
       "id": "endurance",
       "name": "Resistência",
       "description": "Durar 20 minutos numa run",
+      "icon": {
+        "group": "achievements",
+        "id": "endurance"
+      },
       "goal": {
         "kind": "bestTime",
         "seconds": 1200
@@ -592,6 +656,10 @@
       "id": "hyperfocus",
       "name": "Hiperfoco",
       "description": "Chegar ao nível 30 numa run",
+      "icon": {
+        "group": "specials",
+        "id": "hyperfocus"
+      },
       "goal": {
         "kind": "bestLevel",
         "level": 30
@@ -607,6 +675,10 @@
       "id": "bond",
       "name": "Vínculo",
       "description": "Jogar com 4 agentes diferentes",
+      "icon": {
+        "group": "specials",
+        "id": "bond"
+      },
       "goal": {
         "kind": "agentsPlayed",
         "count": 4
@@ -622,6 +694,10 @@
       "id": "veteran",
       "name": "Veterano",
       "description": "Jogar 50 runs",
+      "icon": {
+        "group": "achievements",
+        "id": "veteran"
+      },
       "goal": {
         "kind": "runs",
         "count": 50
@@ -634,6 +710,10 @@
       "id": "firstDischarge",
       "name": "Primeira ALTA",
       "description": "Dar ALTA a um indivíduo",
+      "icon": {
+        "group": "achievements",
+        "id": "firstDischarge"
+      },
       "goal": {
         "kind": "discharges",
         "count": 1
@@ -646,6 +726,10 @@
       "id": "threeCases",
       "name": "Clínico geral",
       "description": "Dar ALTA a três indivíduos",
+      "icon": {
+        "group": "achievements",
+        "id": "threeCases"
+      },
       "goal": {
         "kind": "discharges",
         "count": 3

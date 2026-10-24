@@ -8,6 +8,7 @@ import {
 } from '../../core/meta/achievements';
 import type { SaveData } from '../../core/save/saveData';
 import { PALETTE, PALETTE_CSS } from '../render/palette';
+import { addIcon, iconTexture } from '../render/textures';
 import { drawInkBox } from './icons';
 import { bodyText, formatTime, labelText, withShadow } from './theme';
 
@@ -23,7 +24,35 @@ function progressText(def: AchievementDef, save: SaveData): string {
   return `${shown.toLocaleString('pt-BR')}/${goal.toLocaleString('pt-BR')}`;
 }
 
-/** Cartão de uma conquista: nome, recompensa, meta, progresso e a barra. */
+const BADGE = 38;
+
+/**
+ * Ícone da conquista numa moldura (prancheta "Ícones das conquistas"): dourada quando feita,
+ * escura em andamento, e o ícone cinza e apagado enquanto não houver progresso nenhum.
+ */
+export function achievementBadge(
+  scene: Phaser.Scene,
+  g: Phaser.GameObjects.Graphics,
+  def: AchievementDef,
+  x: number,
+  y: number,
+  state: 'done' | 'progress' | 'none',
+  iconPx = 32,
+): Phaser.GameObjects.Image {
+  const size = iconPx + 6;
+  g.fillStyle(state === 'done' ? PALETTE.gold : PALETTE.ink).fillRect(x, y, size, size);
+  g.fillStyle(state === 'done' ? PALETTE.goldDark : PALETTE.panelDeep).fillRect(
+    x + 3,
+    y + 3,
+    iconPx,
+    iconPx,
+  );
+  const icon = addIcon(scene, x + 3, y + 3, iconTexture(def.icon.group, def.icon.id), iconPx);
+  if (state === 'none') icon.setTint(PALETTE.stone).setAlpha(0.6);
+  return icon;
+}
+
+/** Cartão de uma conquista: ícone, nome, recompensa, meta, progresso e a barra. */
 function card(
   scene: Phaser.Scene,
   g: Phaser.GameObjects.Graphics,
@@ -36,8 +65,9 @@ function card(
 ): { objects: Obj[]; height: number } {
   const done = save.achievements.includes(def.id);
   const out: Obj[] = [];
+  const textLeft = left + 10 + BADGE + 8;
   const name = scene.add.text(
-    left + 10,
+    textLeft,
     y + 6,
     done ? `${def.name} ✓` : def.name,
     withShadow(bodyText(13, done ? PALETTE_CSS.gold : PALETTE_CSS.text), PALETTE_CSS.ink, 1),
@@ -45,20 +75,20 @@ function card(
   const reward = scene.add
     .text(left + width - 10, y + 9, rewardLabel(def, NAMES), labelText(8, PALETTE_CSS.gold))
     .setOrigin(1, 0);
-  const desc = scene.add.text(
-    left + 10,
-    y + 26,
-    `${def.description} · ${progressText(def, save)}`,
-    { ...bodyText(9, PALETTE_CSS.textSoft), wordWrap: { width: width - 20 } },
-  );
+  const desc = scene.add.text(textLeft, y + 26, `${def.description} · ${progressText(def, save)}`, {
+    ...bodyText(9, PALETTE_CSS.textSoft),
+    wordWrap: { width: left + width - 10 - textLeft },
+  });
   out.push(name, reward, desc);
   const barY = Math.ceil(desc.y + desc.height) + 4;
-  const height = barY - y + 12;
+  const height = Math.max(barY - y + 12, BADGE + 16);
   drawInkBox(g, left, y, width, height, highlight ? PALETTE.panelDeep : PALETTE.panel);
-  const bw = width - 20;
-  g.fillStyle(PALETTE.ink).fillRect(left + 10, barY, bw, 6);
+  const state = done ? 'done' : achievementProgress(def, save).value > 0 ? 'progress' : 'none';
+  out.push(achievementBadge(scene, g, def, left + 10, y + Math.floor((height - BADGE) / 2), state));
+  const bw = left + width - 10 - textLeft;
+  g.fillStyle(PALETTE.ink).fillRect(textLeft, barY, bw, 6);
   g.fillStyle(done ? PALETTE.gold : PALETTE.water).fillRect(
-    left + 11,
+    textLeft + 1,
     barY + 1,
     Math.round((bw - 2) * achievementFraction(def, save)),
     4,

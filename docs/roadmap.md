@@ -467,6 +467,7 @@ A seção [Depois: conquistas](#depois-conquistas) vira fase. Resposta proposta 
 - [x] 21 conquistas que dão ATP ou liberam de graça um agente ou uma arma (`meta.json`, `achievements`). Já comprado, devolve metade do preço.
 - [x] Casos anteriores, já curados, no palco do hub, acima das estrelas ([menu.md](menu.md#palco-o-caso-atual)).
 - [x] Cápsula de agente no mapa que liberta um agente bloqueado, com seta na borda ([lacunas-vs.md](lacunas-vs.md#cápsulas-e-descobertas)).
+- [x] Ícone de cada conquista na tela e no painel CONQUISTA! do fim da run (prancheta "Ícones das conquistas"): 12 reaproveitam sprites do jogo e 9 são novos (`icons.json`, grupo `achievements`).
 - [ ] Validar jogando: a primeira conquista que libera algo sai nas primeiras horas de jogo.
 
 **Critério de saída:** pelo menos um desbloqueio importante chega por jogar, e o jogador sabe qual é a próxima conquista.
