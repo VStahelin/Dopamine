@@ -158,20 +158,4 @@ describe('playtest rodada 2', () => {
     expect(w.level).toBe(3);
     expect(w.boosts[0]).toBe(boosted);
   });
-
-  it('MEC-1: a Dose só aparece com arma que dispara vários objetos', () => {
-    const run = runWithLevelUps(200);
-    run.weapons = [newWeapon('dopaminePulse')];
-    for (let i = 0; i < 200; i++) {
-      run.offer = null;
-      expect(levelUpOffer(run).some((c) => c.kind === 'passive' && c.id === 'dose')).toBe(false);
-    }
-    run.weapons.push(newWeapon('radical'));
-    let seen = false;
-    for (let i = 0; i < 200 && !seen; i++) {
-      run.offer = null;
-      seen = levelUpOffer(run).some((c) => c.kind === 'passive' && c.id === 'dose');
-    }
-    expect(seen).toBe(true);
-  });
 });

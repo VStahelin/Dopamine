@@ -2,7 +2,7 @@ import type { PassiveDef, PassiveId, RunStatKey, WeaponId } from '../../config';
 import type { BaseSource } from './rules';
 import { addBonus, newWeapon, type BonusSource, type RunState } from './state';
 import { agentBonus, computeStats, statDef, type RunStats } from './stats';
-import { COUNT_KINDS, weaponMaxLevel } from './weaponParams';
+import { weaponMaxLevel } from './weaponParams';
 
 export type UpgradeChoice =
   /**
@@ -93,21 +93,11 @@ function availablePassives(state: RunState): PassiveId[] {
   return ids.filter((id) => {
     const level = state.passives[id]?.level ?? 0;
     if (level >= passives[id].maxLevel) return false;
-    if (!receptorUseful(state, passives[id].stat)) return false;
     if (state.banished.includes(`passive:${id}`)) return false;
     // Com os espaços cheios, só melhora o que já tem (ou o que não ocupa espaço).
     if (slotsFull && level === 0 && !passives[id].freeSlot) return false;
     return true;
   });
-}
-
-/**
- * O receptor muda algo nas armas de agora? A Dose só aparece com uma arma que dispara vários
- * objetos; antes, ela vinha para quem só tinha o pulso e parecia upgrade de arma alheia (MEC-1).
- */
-function receptorUseful(state: RunState, stat: RunStatKey): boolean {
-  if (stat !== 'projectiles') return true;
-  return state.weapons.some((w) => COUNT_KINDS.includes(state.rules.weapons[w.id].kind));
 }
 
 /** Evoluções prontas: arma no nível máximo com o reagente que ela pede. */

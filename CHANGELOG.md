@@ -5,6 +5,7 @@ O que mudou em cada versão do Farmaco Battle. O jogo mostra este arquivo em Op�
 ## Em desenvolvimento
 
 ### Ajustes
+- A Dose volta a aparecer no level up mesmo sem arma que dispare vários objetos, para montar a build antes de pegar a arma.
 - As moléculas continuam ganhando velocidade a run toda (+1,2% por minuto), em vez de pararem em 40% mais rápidas.
 - No PC, a ampola e a cápsula do chefe aparecem maiores na tela, e a ampola fica 3 segundos antes de fechar sozinha (antes, 1,5).
 
