@@ -4,4 +4,4 @@ Feedback de quem jogou, anotado como chegou e **ainda não aplicado**. Cada roda
 
 | Rodada | Resumo | Status |
 | --- | --- | --- |
-| [2026-10-23-rodada-2.md](2026-10-23-rodada-2.md) | Interface, bugs de itens e upgrades, mecânicas, balanceamento e desempenho | anotada, nada aplicado |
+| [2026-10-23-rodada-2.md](2026-10-23-rodada-2.md) | Interface, bugs de itens e upgrades, mecânicas, balanceamento e desempenho | aplicada (24/10/2026), menos UI-1 a UI-3 |

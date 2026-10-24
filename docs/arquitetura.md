@@ -108,13 +108,14 @@ Os testes ficam ao lado do código, como `*.test.ts`.
 
 Toda a pixel art fica em `src/assets/sprites/` como dados ([0019](decisoes/0019-sprites-numa-pasta.md)): grades de caracteres para os ícones (as mesmas do canvas de identidade visual), átomos e ligações para as moléculas, números para chão, gema, elétron, disparo e moeda, e as molduras. [spriteArt.ts](../src/game/render/spriteArt.ts) pinta esses dados com retângulos num `Painter`, sem depender do Phaser.
 
-Os PNGs ficam em `public/sprites/`, gerados por `npm run sprites:build` ([0020](decisoes/0020-sprites-em-png-por-tamanho.md)): ícones em pastas por tamanho (16 a 128 px), molduras por escala e sprites do mundo por detail ([0009](decisoes/0009-grade-16px-zoom-inteiro.md)). A lista de arquivos está em [spriteFiles.ts](../src/game/render/spriteFiles.ts); [textures.ts](../src/game/render/textures.ts) carrega no `preload` da abertura só os tamanhos de ícone que o zoom da tela usa. `npm run sprites:check` confere que os PNGs batem com os dados, e um teste confere que toda arma, modificador, especial, agente e inimigo tem sprite.
+Os PNGs ficam em `public/sprites/`, gerados por `npm run sprites:build` ([0020](decisoes/0020-sprites-em-png-por-tamanho.md)): ícones em pastas por tamanho (16 a 128 px), molduras por escala e sprites do mundo por detail ([0009](decisoes/0009-grade-16px-zoom-inteiro.md)). A lista de arquivos está em [spriteFiles.ts](../src/game/render/spriteFiles.ts); [textures.ts](../src/game/render/textures.ts) carrega no `preload` da abertura só os tamanhos de ícone que o zoom da tela usa. O mesmo comando gera os atlas em `public/sprites/atlas/` ([0037](decisoes/0037-sprites-em-atlas.md)): um por tamanho de ícone, um por detail do mundo e um das molduras, cada um com um JSON de chave → retângulo. O jogo baixa só os atlas e recorta cada sprite com a chave de sempre; os PNGs soltos ficam para ver fora do jogo. `npm run sprites:check` confere que os PNGs batem com os dados, e um teste confere que toda arma, modificador, especial, agente e inimigo tem sprite.
 
 ## Princípios
 
 - **Simulação com passo fixo.** O `core` avança em passos de tempo fixos, independentes do FPS, para que a run se comporte igual no PC e no celular e o simulador reproduza os mesmos resultados. ([0012](decisoes/0012-passo-fixo-e-semente.md))
 - **Aleatoriedade com semente.** O `core` usa um gerador de números aleatórios com semente, nunca `Math.random()` direto, para dar para repetir uma run nos testes. O lint barra `Math.random()` no `core` ([0012](decisoes/0012-passo-fixo-e-semente.md)).
-- **Reaproveitamento de objetos.** Inimigos, disparos e gemas saem de pools, sem criar e destruir a cada quadro.
+- **Reaproveitamento de objetos.** Os sprites de inimigos, disparos e gemas, os números de dano e os efeitos saem de pools, sem criar e destruir a cada quadro. No `core`, a grade espacial usa arrays tipados reaproveitados e as listas são compactadas no lugar.
+- **Só o que está na tela.** A cena desenha só o que está na área visível (com folga), e as armas só miram no que está na tela; o resto do mundo segue no `core`.
 - **Pixel art em escala inteira.** Escala 1×, 2× ou 3×, sem suavização.
 
 ## Comandos
@@ -132,6 +133,7 @@ Precisa de Node 20.19 ou mais novo.
 | `npm run preview` | Serve o build de `dist/` localmente, para testar a versão final |
 | `npm run release` | Check completo e publicação local atômica em `releases/` ([atualizacoes.md](atualizacoes.md)) |
 | `node tools/sim/still.mjs` | Robô parado: quanto a run dura sem mexer o agente, por agente |
+| `node tools/sim/late.mjs` | Fim de jogo: robô com o Laboratório no máximo e tudo liberado, minuto a minuto, até a morte (`--still` para de andar aos 5 min; `--agents`, `--seeds`, `--max`) |
 | `npm run sim` | Simulador de progressão: runs seguidas com um robô, compras entre elas, primeiro desbloqueio e paredes de grind (`-- --runs 30 --max 360`) |
 | `npm run sprites:build` | Gera os PNGs de `public/sprites/` a partir dos dados de `src/assets/sprites/` |
 | `python3 tools/audio/music.py` | Corta os loops e converte as músicas de `audio/musicas/` para `public/audio/music/` (precisa de numpy e ffmpeg; [sonoplastia.md](sonoplastia.md#como-entra-no-jogo)) |

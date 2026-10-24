@@ -4,6 +4,21 @@ O que mudou em cada versão do Farmaco Battle. O jogo mostra este arquivo em Op�
 
 ## Em desenvolvimento
 
+### Ajustes
+- A dificuldade cresce de verdade com o tempo: o dano das moléculas dobra a cada 7 minutos, elas ficam até 40% mais rápidas e, depois dos 12 minutos, a vida também dobra a cada 4. Lá pelos 20 minutos a coisa fica feia, e ficar parado não segura mais a run.
+- O empurrão dos golpes ficou na medida: cada molécula só é empurrada de novo depois de um instante, o empurrão enfraquece com o tempo, as fortes resistem e o chefe não sai do lugar. Não precisa mais correr atrás dele.
+- As armas só miram no que está na tela; o chefe longe não leva dano sem você ver.
+- O jogo abre bem mais rápido: os sprites vêm em poucos arquivos, em vez de centenas.
+- Runs cheias de moléculas ficam bem mais leves: o jogo desenha só o que está na tela, limita os números de dano por quadro e a simulação ficou cerca de duas vezes mais rápida.
+- Com muitas gemas ou moedas no chão, as novas se juntam à mais perto, em vez de virar um prêmio escondido longe de você.
+- A Dose só aparece no level up quando você tem uma arma que dispara vários objetos.
+- Recarga menor agora aparece como "ataca mais rápido", e a sinapse explica que o bônus vale até o fim da run.
+
+### Correções
+- A tela de escolha do agente no celular rola com o dedo, e arrastar a lista não escolhe um agente sem querer.
+- Aquaporina e Criopreservação não aparecem mais repetidas: o efeito delas não acumula.
+- Pegar o mesmo nível de arma duas vezes (pelo level up e pela cápsula, por exemplo) não tira mais o ganho de raridade nem disparos da arma.
+
 ## v0.20.0 · 24/10/2026
 
 ### Novidades

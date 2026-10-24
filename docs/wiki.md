@@ -26,10 +26,13 @@ No celular, encoste o dedo em qualquer lugar e arraste: o joystick aparece onde 
 Cada agente tem um especial, disparado pelo botão grande no canto (ou Espaço no PC). Ele recarrega com o tempo; o número no botão diz quantos segundos faltam e o `x1` no canto mostra as cargas guardadas.
 
 ### Experiência e nível
-Moléculas decompostas soltam gemas azuis. Passe perto para coletar. Encheu a barra do topo, você sobe de nível e escolhe uma arma ou um receptor.
+Moléculas decompostas soltam gemas azuis. Passe perto para coletar. Com muitas gemas no chão, as novas se juntam à gema mais perto, que fica valendo mais. Encheu a barra do topo, você sobe de nível e escolhe uma arma ou um receptor.
 
 ### Ondas e chefes
-A dificuldade sobe com o tempo: nascem mais moléculas e cada uma nasce com mais vida. Desde o começo elas aguentam mais de um golpe das armas iniciais, então ficar parado não segura a run. A cada 5 minutos vem um pico de onda (o tempo fica laranja), com mais moléculas, seguido de um respiro curto. A cada 5 minutos também aparece um chefe, que depende do local do corpo (veja Chefes, em Moléculas). Aos 15 minutos chega a Placa de ateroma, o chefe de fim de caso.
+A dificuldade sobe com o tempo: nascem mais moléculas e cada uma nasce com mais vida, mais dano e um pouco mais rápida. O dano de contato dobra a cada 7 minutos, a velocidade sobe até 40% e, depois dos 12 minutos, a vida também dobra a cada 4 minutos: por volta dos 20 minutos as moléculas ficam muito fortes, e só uma build boa e em movimento passa disso. Desde o começo elas aguentam mais de um golpe das armas iniciais, então ficar parado não segura a run. A cada 5 minutos vem um pico de onda (o tempo fica laranja), com mais moléculas, seguido de um respiro curto. A cada 5 minutos também aparece um chefe, que depende do local do corpo (veja Chefes, em Moléculas). Aos 15 minutos chega a Placa de ateroma, o chefe de fim de caso.
+
+### Empurrão
+Os golpes empurram as moléculas um pouco para trás (Repulsão), mas cada molécula só é empurrada de novo depois de um terço de segundo, e o empurrão fica mais fraco com o tempo de run: pela metade aos 8 minutos. Moléculas fortes recebem metade do empurrão, os agregados quase nada, e o chefe não é empurrado.
 
 ### Formações
 A cada 90 segundos vem uma formação, com aviso no topo e uma seta do lado de onde ela vai entrar:
@@ -195,7 +198,7 @@ A cada nível você escolhe uma entre 3 cartas: uma arma nova, o próximo nível
 
 ### Receptores
 O receptor é a proteína da célula onde o remédio se liga. Cada um sobe um atributo só, até o nível 5:
-- **Ataque:** Reatividade (dano), Metabolismo (recarga menor), Difusão (área), Cinética (velocidade dos disparos e alcance), Chance de catálise (crítico) e Dose (mais projéteis, até 3 níveis).
+- **Ataque:** Reatividade (dano), Metabolismo (ataca mais rápido: recarga menor), Difusão (área), Cinética (velocidade dos disparos e alcance), Chance de catálise (crítico) e Dose (mais projéteis, até 3 níveis; só aparece com uma arma de disparos, órbita ou poça).
 - **Defesa:** Interações (vida máxima), Membrana (menos dano por golpe) e Homeostase (recupera interações com o tempo).
 - **Coleta e risco:** Mobilidade, Raio de coleta, Aprendizado (mais XP), Sorte e Estresse. **Estresse** deixa as moléculas mais fortes e mais rápidas, mas dá mais XP: risco por recompensa.
 - **Mutação:** cada nível soma um atributo sorteado, de qualquer tipo.
@@ -216,7 +219,7 @@ Quanto mais Sorte, mais aparecem as raridades altas.
 Cada agente tem um receptor nativo, que não ocupa espaço e sobe sozinho: um nível a cada 10 níveis da run, até o nível 5 no nível 50. Ele aparece primeiro na linha dos receptores, com moldura dourada.
 
 ### Superdosagem
-Quando todas as armas e todos os receptores estão no máximo, o level up passa a oferecer a Superdosagem: bônus pequenos de atributo, sem limite, junto da Nova dose.
+Quando todas as armas e todos os receptores estão no máximo, o level up passa a oferecer a Superdosagem: bônus pequenos de atributo, junto da Nova dose. Cada atributo para de aparecer quando chega ao teto da run; com todos no teto, sobram a Nova dose e a Fosfocreatina (ATP).
 
 ### Rerrolar, Pular e Banir
 - **Rerrolar** sorteia outras cartas.
@@ -262,7 +265,7 @@ A **Citocina** fica parada e solta uma Bradicinina a cada 4 segundos, até 6 por
 Dentro de uma poça tóxica você perde 1 interação por segundo e fica com **Lentidão** (−20% de Mobilidade). A **Adrenalina** dá +30% de Mobilidade por 4 segundos. Os dois aparecem na fila de efeitos, embaixo do retrato.
 
 ### Chefes
-A cada 5 minutos vem o chefe do local: **Partícula de LDL** na Corrente sanguínea (tanque, se quebra em Triglicerídeos e Ácidos graxos), **NAPQI** no Fígado (deixa poças por onde passa), **Amilopectina** no Intestino (solta Glicoses), **Benzopireno** no Pulmão (errático, solta Radicais hidroxila) e **CRH** no Cérebro (aura grande). Aos 15 minutos, em qualquer local, nasce uma vez a **Placa de ateroma**: parada, enorme, soltando Ácidos graxos. Todo chefe solta a cápsula.
+A cada 5 minutos vem o chefe do local: **Partícula de LDL** na Corrente sanguínea (tanque, se quebra em Triglicerídeos e Ácidos graxos), **NAPQI** no Fígado (deixa poças por onde passa), **Amilopectina** no Intestino (solta Glicoses), **Benzopireno** no Pulmão (errático, solta Radicais hidroxila) e **CRH** no Cérebro (aura grande). Aos 15 minutos, em qualquer local, nasce uma vez a **Placa de ateroma**: parada, enorme, soltando Ácidos graxos. Todo chefe solta a cápsula. O chefe não é empurrado pelos golpes.
 
 ---
 
@@ -359,7 +362,7 @@ Uma **câmara** é um anel fechado de obstáculos com uma entrada só e um destr
 *Números de `structures.json`. Uma seta na borda da tela aponta a estrutura mais perto, na cor dela.*
 
 ### Sinapse
-Um círculo rosa no chão. Fique dentro e o anel enche em 6 segundos; fora, ele esvazia devagar, sem zerar. Cheio, abre 3 cartões de bônus de atributo, com raridade pela Sorte, entre todos os atributos do jogo (Rerrolar, Pular e Banir também podem aparecer). A run começa sempre com uma sinapse perto.
+Um círculo rosa no chão. Fique dentro e o anel enche em 6 segundos; fora, ele esvazia devagar, sem zerar. Cheio, abre 3 cartões de bônus de atributo, que valem até o fim da run e não ocupam espaço de receptor, com raridade pela Sorte, entre todos os atributos do jogo (Rerrolar, Pular e Banir também podem aparecer). A run começa sempre com uma sinapse perto.
 
 ### Sinapse potenciada
 Violeta, mais rara. Enche em 10 segundos e só oferece bônus Lendários ou Especiais.
@@ -401,10 +404,10 @@ Creatina (dano), Vitamina (Sorte), Ferro (interações), Quimiotaxia (sinapses),
 
 ### Os de efeito
 - **Nitrogênio líquido:** chance de congelar a molécula atingida por 1 segundo.
-- **Aquaporina:** a cada 60 segundos todas as gemas correm até você.
+- **Aquaporina:** a cada 60 segundos todas as gemas correm até você. Não acumula: depois da primeira, não sai mais.
 - **Eletrodo:** ao decompor, chance de uma faísca que atinge 3 moléculas perto.
 - **Termita:** a molécula decomposta explode e queima as vizinhas.
-- **Criopreservação:** ao perder interações, congela tudo na tela por 2 segundos (uma vez a cada 30).
+- **Criopreservação:** ao perder interações, congela tudo na tela por 2 segundos (uma vez a cada 30). Não acumula: depois da primeira, não sai mais.
 
 ### Reagentes
 Peróxido, Cloro, Ozônio, Coenzima, Argônio, Éter e Urânio saem das ampolas, não mais do level up. Com a arma certa no nível máximo, o reagente dela sai muito mais vezes, e a cápsula de prata faz a evolução.

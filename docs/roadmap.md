@@ -500,6 +500,7 @@ Deixar o jogo com a cara do canvas de identidade visual e pronto para outras pes
 - [ ] PWA: polimento da instalação na tela inicial (os ícones em PNG já entraram na fase 5.13; o offline vem da fase 2.5).
 - [x] Primeira run guiada: um tutorial curto para quem nunca jogou, com cartões que não pausam (prancheta "Primeira run guiada", `tutorial.json`) ([lacunas-desenvolvimento.md](lacunas-desenvolvimento.md#ui-e-telas)).
 - [ ] Layout em telas largas e altas (painéis laterais, mais pista): os menus estão no item 1 acima; a HUD da run e o campo longo vêm depois.
+- [x] Fixes do playtest rodada 2 ([playtests/2026-10-23-rodada-2.md](playtests/2026-10-23-rodada-2.md)): desempenho (atlas de sprites, desenho só do que está na tela, simulação mais leve), dificuldade contínua e empurrão ([0038](decisoes/0038-dificuldade-continua-e-empurrao.md)), bugs de itens e upgrades, rolagem da escolha de agente no celular. Ficam para um conceito no canvas: UI-1 (cenário x barreira), UI-2 (pulso mais visível) e UI-3 (fonte dos números).
 - [ ] Rodada de testes com 2 ou 3 amigos e ajuste dos números.
 - [x] Decidir como o jogo chega aos jogadores: GitHub Pages, publicado por versão ([0018](decisoes/0018-jogo-no-pages-servidor-futuro.md)).
 

@@ -42,3 +42,5 @@ As decisões de design tomadas antes deste registro continuam marcadas como "dec
 | [0034](0034-fases-para-fechar-lacunas.md) | Fases 5.13 a 5.16 para fechar as lacunas (agentes, famílias, chefes, conquistas) antes do lançamento | processo | aceita |
 | [0035](0035-familias-e-chefes-por-local.md) | Comportamento por família de molécula e um chefe por local do corpo | design | proposta |
 | [0036](0036-conquistas-somam-a-loja.md) | Conquistas somam à loja (ATP ou desbloqueio de graça) e a cápsula de agente liberta um agente por jogar (fase 5.16) | design | proposta |
+| [0037](0037-sprites-em-atlas.md) | Sprites carregados em atlas, um por tamanho de ícone e por detail do mundo | técnica | proposta |
+| [0038](0038-dificuldade-continua-e-empurrao.md) | Dificuldade contínua no fim de jogo (dano, vida e velocidade) e empurrão com recarga | design | proposta |
