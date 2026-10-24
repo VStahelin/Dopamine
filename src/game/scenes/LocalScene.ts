@@ -24,6 +24,7 @@ import {
 import { bodyText, formatTime, impactText, labelText, withShadow } from '../ui/theme';
 import { familyText, floorColor, LOCAL_SHORT } from '../ui/locals';
 import { setupUiLayout } from '../ui/uiLayout';
+import { isWideMenu, menuMinSize } from '../ui/wide/wideLayout';
 import { SCENES } from './keys';
 
 type Obj = Phaser.GameObjects.GameObject;
@@ -64,7 +65,7 @@ export class LocalScene extends Phaser.Scene {
         this.size = { w, h };
         this.build();
       },
-      { width: 390, height: 760 },
+      menuMinSize({ width: 390, height: 760 }),
     );
   }
 
@@ -110,33 +111,48 @@ export class LocalScene extends Phaser.Scene {
     const g = this.add.graphics();
     drawGrid(g, 0, 0, w, h);
     const out: Obj[] = [g];
-    const colW = Math.min(w, 420);
-    const colX = Math.floor((w - colW) / 2);
+    // No PC (docs/menu.md, Tela larga): o corpo e a lista à esquerda, o cartão e os botões à
+    // direita, lado a lado e centrados; no celular, tudo numa coluna.
+    const wide = isWideMenu(w, h);
+    let colW = Math.min(w, 420);
+    let colX = Math.floor((w - colW) / 2);
 
     out.push(
       this.add
         .text(
           w / 2,
-          18,
+          wide ? 32 : 18,
           'ONDE AGIR?',
-          withShadow(impactText(24, PALETTE_CSS.logoOrange), PALETTE_CSS.outline, 2),
+          withShadow(impactText(wide ? 36 : 24, PALETTE_CSS.logoOrange), PALETTE_CSS.outline, 2),
         )
         .setOrigin(0.5, 0),
     );
 
     // Embaixo: botões; em cima deles, o cartão do local; o resto é o corpo e a lista.
-    const buttonsY = h - 70;
-    const cardH = 168;
-    const cardY = buttonsY - 10 - cardH;
-    const top = 60;
-    const areaH = cardY - 10 - top;
-    const pixel = Math.max(3, Math.min(7, Math.floor((areaH - 20) / BODY_MAP_SIZE.rows)));
+    let buttonsY = h - 70;
+    const cardH = wide ? 190 : 168;
+    let cardY = buttonsY - 10 - cardH;
+    const top = wide ? 96 : 60;
+    const areaH = wide ? h - top - 48 : cardY - 10 - top;
+    const pixel = Math.max(
+      3,
+      Math.min(wide ? 9 : 7, Math.floor((areaH - 20) / BODY_MAP_SIZE.rows)),
+    );
     const bodyW = BODY_MAP_SIZE.cols * pixel;
     const bodyH = BODY_MAP_SIZE.rows * pixel;
-    const listW = 150;
-    const gap = 14;
+    const listW = wide ? 180 : 150;
+    const gap = wide ? 20 : 14;
     const groupW = bodyW + 20 + gap + listW;
-    const bx = Math.floor(colX + (colW - groupW) / 2);
+    let bx = Math.floor(colX + (colW - groupW) / 2);
+    if (wide) {
+      const cardW = 440;
+      const total = groupW + 48 + cardW;
+      bx = Math.floor((w - total) / 2);
+      colX = bx + groupW + 48 - 12;
+      colW = cardW + 24;
+      cardY = Math.floor(top + (areaH - (cardH + 12 + 54)) / 2);
+      buttonsY = cardY + cardH + 12;
+    }
     const by = Math.floor(top + (areaH - bodyH - 20) / 2);
 
     // Corpo: o local tocado acende no tom 4, os outros no tom 1; barrado fica cinza.
@@ -228,10 +244,22 @@ export class LocalScene extends Phaser.Scene {
       }),
     );
     const back = this.add
-      .text(colX + 14, 22, '‹ VOLTAR', labelText(10, PALETTE_CSS.textSoft))
+      .text(wide ? 48 : colX + 14, wide ? 44 : 22, '‹ VOLTAR', labelText(10, PALETTE_CSS.textSoft))
       .setInteractive({ useHandCursor: true })
       .on('pointerup', () => this.back());
     out.push(back);
+    if (wide) {
+      out.push(
+        this.add
+          .text(
+            w / 2,
+            h - 28,
+            '↑ ↓ ESCOLHEM O LOCAL · ENTER VAI · ESC VOLTA',
+            labelText(8, PALETTE_CSS.textMuted),
+          )
+          .setOrigin(0.5, 0),
+      );
+    }
     this.root = this.add.container(0, 0, out);
   }
 
