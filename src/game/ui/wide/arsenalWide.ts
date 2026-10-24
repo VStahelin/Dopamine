@@ -44,7 +44,7 @@ export function renderArsenalWide(
   );
 
   // Ações dos agentes ficam no pé; as receitas dividem o resto.
-  const actionsH = slotSize(2) + 34;
+  const actionsH = slotSize(2) + 48;
   const rowGap = 6;
   const rowH = Math.min(
     62,
@@ -145,7 +145,7 @@ export function renderArsenalWide(
   const cellW = (leftW - 24) / agents.length;
   agents.forEach((a, i) => {
     const cx = area.x + 12 + cellW * i + cellW / 2;
-    const slot = addIconSlot(scene, cx - slotSize(2) / 2, cy + 8, 2, {
+    const slot = addIconSlot(scene, cx - slotSize(2) / 2, cy + 6, 2, {
       frame: 'passive',
       icon: weaponIcon(a.action as WeaponId).icon,
     });
@@ -203,13 +203,13 @@ function sideColumn(
     const tx = cx + 6 + slot.size + 8;
     out.push(
       ...slot.objects,
-      scene.add.text(tx, cy + cellH / 2 - 15, def.name, {
+      scene.add.text(tx, locked ? cy + 4 : cy + cellH / 2 - 15, def.name, {
         ...bodyText(13, locked ? PALETTE_CSS.muted : PALETTE_CSS.text),
         fontStyle: '600',
       }),
     );
     if (locked) {
-      out.push(buyButton(scene, shop, 'receptors', id, cx + cellW - 76, cy + cellH / 2 + 1, 70));
+      out.push(buyButton(scene, shop, 'receptors', id, cx + cellW - 76, cy + cellH - 24, 70, 20));
     } else {
       out.push(
         scene.add.text(tx, cy + cellH / 2 + 4, receptorGain(def, def.perLevel), {

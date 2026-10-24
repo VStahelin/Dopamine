@@ -46,6 +46,7 @@ export function buyButton(
   x: number,
   y: number,
   width: number,
+  height = 26,
 ): Obj {
   const cost = unlockCost(kind, id);
   const can = shop.atp >= cost;
@@ -53,7 +54,7 @@ export function buyButton(
     x,
     y,
     width,
-    height: 26,
+    height,
     label: `${cost} ATP`,
     fontSize: 10,
     variant: can ? 'primary' : 'secondary',

@@ -4,6 +4,9 @@ O que mudou em cada versão do Farmaco Battle. O jogo mostra este arquivo em Op�
 
 ## Em desenvolvimento
 
+### Correções
+- Arsenal no PC: os nomes das ações dos agentes ficam dentro da caixa, e o botão de ATP dos receptores bloqueados não cai mais para fora do cartão.
+
 ## v0.22.0 · 24/10/2026
 
 ### Novidades
