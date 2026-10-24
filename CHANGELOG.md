@@ -4,6 +4,8 @@ O que mudou em cada versão do Farmaco Battle. O jogo mostra este arquivo em Op�
 
 ## Em desenvolvimento
 
+## v0.22.0 · 24/10/2026
+
 ### Novidades
 - O jogo ganhou som de verdade: cada arma dispara com o próprio som, gemas e ATP tilintam (a gema sobe de tom em sequência), o chefe chega e cai com estrondo, cada agente tem o som do especial, a sinapse zune enquanto enche e todos os botões, compras, ampolas, cápsulas e o level up soam. Os efeitos param na pausa e o volume de Efeitos das Opções vale para todos.
 
