@@ -190,12 +190,16 @@ export class LevelUpScene extends Phaser.Scene {
     this.focusRings = [];
     let y = top;
 
-    const title = synapse ? 'SINAPSE' : this.banishing ? 'BANIR' : `NÍVEL ${run.level}!`;
+    // Vários níveis de uma vez: cada tela mostra o nível que está escolhendo, não o final.
+    const more = run.pendingLevelUps - 1;
+    const title = synapse ? 'SINAPSE' : this.banishing ? 'BANIR' : `NÍVEL ${run.level - more}!`;
     const subtitle = synapse
       ? 'BÔNUS ATÉ O FIM DA RUN · NÃO OCUPA ESPAÇO'
       : this.banishing
         ? 'TOQUE NA OPÇÃO QUE SAI DA RUN'
-        : 'ESCOLHA UMA ARMA OU RECEPTOR';
+        : more > 0
+          ? `ESCOLHA UMA ARMA OU RECEPTOR · MAIS ${more} DEPOIS`
+          : 'ESCOLHA UMA ARMA OU RECEPTOR';
     const titleText = this.add
       .text(
         w / 2,

@@ -10,6 +10,9 @@ O que mudou em cada versão do Farmaco Battle. O jogo mostra este arquivo em Op�
 - No PC, a ampola e a cápsula do chefe aparecem maiores na tela, e a ampola fica 3 segundos antes de fechar sozinha (antes, 1,5).
 
 ### Correções
+- Subindo vários níveis de uma vez, cada tela de level up mostra o nível que você está escolhendo e quantos faltam (antes todas mostravam o nível final, e parecia que só um contava).
+- As poças e auras ficam embaixo dos obstáculos e destrutíveis do mapa, em vez de cobrir as barreiras.
+- Ganhar níveis com a run pausada não trava mais o CONTINUAR.
 - Arsenal no PC: os nomes das ações dos agentes ficam dentro da caixa, e o botão de ATP dos receptores bloqueados não cai mais para fora do cartão.
 
 ## v0.22.0 · 24/10/2026

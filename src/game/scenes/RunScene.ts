@@ -303,7 +303,8 @@ export class RunScene extends Phaser.Scene {
     this.detail = 0;
     this.ground = this.add.tileSprite(0, 0, 1, 1, '__DEFAULT').setOrigin(0).setDepth(-10);
     this.agentSprite = this.add.image(0, 0, '__DEFAULT').setDepth(10);
-    this.fieldGfx = this.add.graphics().setDepth(1);
+    // Poças e auras ficam embaixo dos obstáculos e destrutíveis (profundidade 1).
+    this.fieldGfx = this.add.graphics().setDepth(0.5);
     this.fxGfx = this.add.graphics().setDepth(9);
     this.lifeGfx = this.add.graphics().setDepth(11);
     this.debugGfx = this.add.graphics().setDepth(40);
