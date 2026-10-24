@@ -17,7 +17,7 @@ type Obj = Phaser.GameObjects.GameObject;
 const NAMES = { agents: AGENTS, weapons: WEAPONS };
 
 /** "7:12 de 10:00" nas metas de tempo; "1.240/2.000" nas outras. */
-function progressText(def: AchievementDef, save: SaveData): string {
+export function progressText(def: AchievementDef, save: SaveData): string {
   const { value, goal } = achievementProgress(def, save);
   const shown = Math.min(value, goal);
   if (def.goal.kind === 'bestTime') return `${formatTime(shown)}/${formatTime(goal)}`;

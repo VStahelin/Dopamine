@@ -27,7 +27,7 @@ export const SECTOR_STYLE: Record<Sector, { label: string; color: number }> = {
 /** Ordem das barras do topo: F, M, S, E, como no mockup do menu. */
 export const SECTOR_ORDER: Sector[] = ['physical', 'mental', 'social', 'executive'];
 
-const FAMILY_NAMES: Record<MoleculeType, string> = {
+export const FAMILY_NAMES: Record<MoleculeType, string> = {
   sugar: 'açúcares',
   lipid: 'lipídios',
   stress: 'hormônios do estresse',
@@ -40,7 +40,7 @@ const pct = (v: number) => `${v > 0 ? '+' : '−'}${Math.round(Math.abs(v) * 100
 const int = (v: number) => `${v > 0 ? '+' : '−'}${Math.abs(Math.round(v))}`;
 
 /** Efeito atual de um setor, em texto: "+12 interações", "−10% de recarga do especial". */
-function effectText(sector: Sector, value: number): string {
+export function effectText(sector: Sector, value: number): string {
   return ORGANISM.sectors[sector].effects
     .map((e) => {
       const v = effectValue(e, value);
@@ -60,7 +60,7 @@ function effectText(sector: Sector, value: number): string {
 const dec = (v: number): string => v.toLocaleString('pt-BR', { maximumFractionDigits: 1 });
 
 /** O que mexe num setor, com os números: na run (a cada 10 min), no campo longo (por hora). */
-function sources(sector: Sector): { run: string; idle: string; down: string } {
+export function sources(sector: Sector): { run: string; idle: string; down: string } {
   const run = Object.values(AGENTS)
     .filter((a) => (a.health?.[sector] ?? 0) > 0)
     .map((a) => `${a.name} +${dec(a.health![sector]!)}`);

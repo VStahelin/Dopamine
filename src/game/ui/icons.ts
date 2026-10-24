@@ -227,6 +227,13 @@ export function drawGrid(
 export function drawBadge(g: Phaser.GameObjects.Graphics, x: number, y: number, size = 18): void {
   g.fillStyle(PALETTE.outline).fillRect(x, y, size, size);
   g.fillStyle(PALETTE.interaction).fillRect(x + 3, y + 3, size - 6, size - 6);
+  // O "!" branco do canvas: haste e ponto de 2 px de largura.
+  const inner = size - 6;
+  const sx = x + Math.floor((size - 2) / 2);
+  const stem = Math.max(2, inner - 5);
+  g.fillStyle(0xffffff)
+    .fillRect(sx, y + 4, 2, stem)
+    .fillRect(sx, y + 5 + stem, 2, 2);
 }
 
 /** Cadeado de 5×8 pixels. */

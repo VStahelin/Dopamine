@@ -27,7 +27,7 @@ const ROW_H = 64;
 export const LAB_DETAIL_H = 112;
 
 /** Ícone do nó: o modificador do mesmo atributo; os do especial usam o especial do agente. */
-function nodeIcon(node: LabNode, special: SpecialKind): IconRef {
+export function nodeIcon(node: LabNode, special: SpecialKind): IconRef {
   if (node.stat.startsWith('special.')) return iconTexture('specials', special);
   const passive = (Object.keys(PASSIVES) as PassiveId[]).find(
     (id) => PASSIVES[id].stat === node.stat,
@@ -38,19 +38,19 @@ function nodeIcon(node: LabNode, special: SpecialKind): IconRef {
     : { group: 'ui', id: 'missing' };
 }
 
-function nodeStat(node: LabNode): Stat | undefined {
+export function nodeStat(node: LabNode): Stat | undefined {
   if (node.stat.startsWith('special.')) return STATS.special[node.stat.slice('special.'.length)];
   return Object.entries(STATS).find(([g, group]) => g !== 'special' && group[node.stat])?.[1][
     node.stat
   ];
 }
 
-function statName(node: LabNode): string {
+export function statName(node: LabNode): string {
   return nodeStat(node)?.name ?? node.stat;
 }
 
 /** Efeito de `levels` níveis do nó, curto: `+10%`, `−2%`, `+1`. */
-function effect(node: LabNode, levels: number): string {
+export function effect(node: LabNode, levels: number): string {
   const v = node.perLevel * levels;
   if (node.stat === 'special.charges') return `+${v}`;
   if (node.stat.startsWith('special.')) {

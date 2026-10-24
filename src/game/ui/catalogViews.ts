@@ -52,7 +52,7 @@ export interface Shop {
 }
 
 /** Botão de desbloquear com o custo; apagado e sem ação se faltar ATP. */
-function buyButton(
+export function buyButton(
   scene: Phaser.Scene,
   shop: Shop,
   kind: UnlockKind,
@@ -77,7 +77,7 @@ function buyButton(
   });
 }
 
-const TYPE_NAMES: Record<MoleculeType, string> = {
+export const TYPE_NAMES: Record<MoleculeType, string> = {
   lipid: 'LIPÍDIOS',
   sugar: 'AÇÚCARES',
   radical: 'RADICAIS',
@@ -96,7 +96,7 @@ const TYPE_NAME: Record<MoleculeType, string> = {
   inflammation: 'INFLAMAÇÃO',
 };
 
-const KIND_NAMES: Record<WeaponKind, string> = {
+export const KIND_NAMES: Record<WeaponKind, string> = {
   projectile: 'MIRA AUTOMÁTICA',
   cone: 'GOLPE EM CONE',
   orbit: 'ÓRBITA',

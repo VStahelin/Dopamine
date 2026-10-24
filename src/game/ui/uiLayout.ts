@@ -4,6 +4,8 @@ import { integerZoom } from '../render/pixelScale';
 import { loadIconsForZoom } from '../render/textures';
 import { setTextResolution } from './theme';
 
+type Size = { width: number; height: number };
+
 /**
  * Prepara a câmera de uma cena de interface com zoom inteiro a partir do canto superior
  * esquerdo, e chama `layout` com a largura e a altura lógicas. Chama de novo a cada
@@ -12,11 +14,15 @@ import { setTextResolution } from './theme';
 export function setupUiLayout(
   scene: Phaser.Scene,
   layout: (width: number, height: number) => void,
-  /** Tamanho lógico mínimo que a tela precisa; sem ele, vale `uiMinShortSidePx` no lado menor. */
-  minSize?: { width: number; height: number },
+  /**
+   * Tamanho lógico mínimo que a tela precisa; sem ele, vale `uiMinShortSidePx` no lado menor.
+   * Uma função escolhe pelo tamanho da tela (o menu de PC usa a regra do lado menor).
+   */
+  minSizeOf?: Size | ((width: number, height: number) => Size | undefined),
 ): void {
   const apply = () => {
     const { width, height } = scene.scale;
+    const minSize = typeof minSizeOf === 'function' ? minSizeOf(width, height) : minSizeOf;
     const zoom = minSize
       ? Math.max(1, Math.floor(Math.min(width / minSize.width, height / minSize.height)))
       : integerZoom(width, height, uiMinShortSide(width, height));
@@ -35,7 +41,7 @@ export function setupUiLayout(
 }
 
 /** Lado menor lógico que a interface precisa: maior em telas grandes, como o PC. */
-function uiMinShortSide(width: number, height: number): number {
+export function uiMinShortSide(width: number, height: number): number {
   const cssShort = Math.min(width, height) / Math.min(window.devicePixelRatio || 1, 4);
   return cssShort >= DISPLAY.largeScreenShortSideCss
     ? DISPLAY.uiMinShortSidePxLarge

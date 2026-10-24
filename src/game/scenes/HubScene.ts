@@ -11,7 +11,7 @@ import {
   type AgentId,
   type MapEnvironment,
 } from '../../config';
-import { canEnter, localsUnlocked, synergyOf } from '../../core/organism/local';
+import { canEnter, indicatedLocal, localsUnlocked, synergyOf } from '../../core/organism/local';
 import { LOCAL_SHORT } from '../ui/locals';
 import { claimAchievements } from '../../core/meta/achievements';
 import { dischargeSave } from '../../core/organism/discharge';
@@ -33,8 +33,10 @@ import {
 } from '../../core/meta/progress';
 import { LAB_DETAIL_H, labTreeHeight, renderLabDetail, renderLabTree } from '../ui/labView';
 import {
+  BODY_MAP_SIZE,
   BODY_SIZE,
   drawBody,
+  drawBodyMap,
   drawCoin,
   drawBadge,
   drawCreamSlot,
@@ -49,6 +51,20 @@ import {
 import { TABS, type SectionDef, type TabId } from '../ui/menuContent';
 import { bodyText, formatTime, impactText, labelText, withShadow } from '../ui/theme';
 import { addDim, setupUiLayout } from '../ui/uiLayout';
+import {
+  addZone,
+  drawBlueButton,
+  drawWoodButton,
+  isWideMenu,
+  menuMinSize,
+  WIDE,
+} from '../ui/wide/wideLayout';
+import { renderAgentsWide } from '../ui/wide/agentsWide';
+import { renderArsenalWide } from '../ui/wide/arsenalWide';
+import { renderLabWide } from '../ui/wide/labWide';
+import { renderOrganismWide } from '../ui/wide/organismWide';
+import { renderCaseAgent, renderCaseGoals } from '../ui/wide/caseWide';
+import { isUnlocked } from '../../core/meta/progress';
 import { addButton } from '../ui/button';
 import { collect, type OfflineGain } from '../../core/idle/progress';
 import { idleRunner } from '../idle/idleRunner';
@@ -95,7 +111,14 @@ export class HubScene extends Phaser.Scene {
   private awayReport?: OfflineGain;
   /** Nó do Laboratório mostrado no painel de detalhe. */
   private labSelected = 'interactions';
+  /** Agente aberto na ficha da aba Agentes no PC. */
+  private agentView?: AgentId;
   private size = { w: 0, h: 0 };
+
+  /** Menu no PC (docs/menu.md, Tela larga): trilho de abas à esquerda e colunas. */
+  private get wide(): boolean {
+    return isWideMenu(this.size.w, this.size.h);
+  }
 
   constructor() {
     super(SCENES.hub);
@@ -114,13 +137,22 @@ export class HubScene extends Phaser.Scene {
     updates.enterHub();
     this.time.delayedCall(300, () => this.maybePromptUpdate());
     this.input.keyboard?.on('keydown-ENTER', () => this.play());
+    // Atalhos do menu no PC: 1 a 5 trocam a aba, O abre as Opções e L a escolha do local.
+    this.input.keyboard?.on('keydown', (e: KeyboardEvent) => {
+      if (!this.wide || this.awayReport) return;
+      const index = Number(e.key) - 1;
+      if (TABS[index]) this.setTab(TABS[index].id);
+      else if (e.key === 'o' || e.key === 'O') this.scene.start(SCENES.options, { fromRun: false });
+      else if ((e.key === 'l' || e.key === 'L') && this.localsOpen())
+        this.scene.start(SCENES.local);
+    });
     setupUiLayout(
       this,
       (w, h) => {
         this.size = { w, h };
         this.build();
       },
-      { width: 390, height: 760 },
+      menuMinSize({ width: 390, height: 760 }),
     );
   }
 
@@ -139,7 +171,19 @@ export class HubScene extends Phaser.Scene {
   }
 
   private play(): void {
-    if (this.tab === 'case') this.scene.start(SCENES.run);
+    // No PC o JOGAR fica no pé do trilho em toda aba; no celular, só na aba Caso.
+    if (this.awayReport) return;
+    if (this.tab === 'case' || this.wide) this.scene.start(SCENES.run);
+  }
+
+  private localsOpen(): boolean {
+    const save = getSave(this);
+    return localsUnlocked(save.meta.stars, save.organism);
+  }
+
+  private chooseAgent(id: AgentId): void {
+    setSave(this, { ...getSave(this), selectedAgent: id });
+    this.build();
   }
 
   private selectedAgent(): AgentId {
@@ -216,26 +260,29 @@ export class HubScene extends Phaser.Scene {
           w,
           getSave(this).organism,
           this.confirmDischarge,
-          () => {
-            if (!this.confirmDischarge) {
-              this.confirmDischarge = true;
-              this.build();
-              return;
-            }
-            this.confirmDischarge = false;
-            idleRunner.flush();
-            const next = dischargeSave(getSave(this), Date.now());
-            if (!next) return;
-            // A ALTA conta para as conquistas de casos curados.
-            setSave(this, claimAchievements(next).save);
-            music.jingle('alta');
-            idleRunner.rebuild();
-            this.build();
-          },
+          () => this.discharge(),
         );
       case 'case':
         return [];
     }
+  }
+
+  /** DAR ALTA: o primeiro toque pede confirmação, o segundo dá a alta. */
+  private discharge(): void {
+    if (!this.confirmDischarge) {
+      this.confirmDischarge = true;
+      this.build();
+      return;
+    }
+    this.confirmDischarge = false;
+    idleRunner.flush();
+    const next = dischargeSave(getSave(this), Date.now());
+    if (!next) return;
+    // A ALTA conta para as conquistas de casos curados.
+    setSave(this, claimAchievements(next).save);
+    music.jingle('alta');
+    idleRunner.rebuild();
+    this.build();
   }
 
   private open(def: SectionDef): void {
@@ -247,6 +294,10 @@ export class HubScene extends Phaser.Scene {
     if (this.scroll && this.scrollTab) this.scrollOffsets[this.scrollTab] = this.scroll.offset();
     this.scroll?.destroy();
     this.scroll = undefined;
+    if (this.wide) {
+      this.buildWide();
+      return;
+    }
     const { w, h } = this.size;
     const colW = Math.min(w, COLUMN_W);
     const colX = Math.floor((w - colW) / 2);
@@ -308,6 +359,608 @@ export class HubScene extends Phaser.Scene {
     if (this.awayReport) out.push(...this.awayPanel(w, h, this.awayReport));
     this.root = this.add.container(0, 0, out);
     this.scroll?.isolate();
+  }
+
+  /** Baú das estrelas: abre se tiver ATP guardado; senão explica como encher. */
+  private chest(): void {
+    const save = getSave(this);
+    const goals = ECONOMY.meta.caseStarMinutes;
+    if (save.meta.chest > 0) {
+      const opened = openChest(save.meta, save.atp);
+      setSave(this, { ...save, meta: opened.progress, atp: opened.atp });
+      this.build();
+      return;
+    }
+    this.open({
+      title: 'BAÚ DAS ESTRELAS',
+      icon: 'chest',
+      text: 'Cada estrela nova do caso enche o baú com ATP para o Laboratório e os desbloqueios. Sobreviva 5, 10 e 15 minutos.',
+      phase:
+        save.meta.stars >= goals.length
+          ? 'CASO COMPLETO'
+          : `${save.meta.stars} DE ${goals.length} ESTRELAS`,
+    });
+  }
+
+  /**
+   * Menu no PC (pranchetas "Menu no PC" do canvas): barra de status no topo, as 5 abas num
+   * trilho à esquerda e o conteúdo da aba em colunas, sem rolagem.
+   */
+  private buildWide(): void {
+    const { w, h } = this.size;
+    const g = this.add.graphics();
+    const out: Obj[] = [g];
+    const main = {
+      x: WIDE.railW + WIDE.pad,
+      y: WIDE.topH + WIDE.pad,
+      w: w - WIDE.railW - 2 * WIDE.pad,
+      h: h - WIDE.topH - 2 * WIDE.pad,
+    };
+    drawGrid(g, WIDE.railW, WIDE.topH, w - WIDE.railW, h - WIDE.topH);
+    const save = getSave(this);
+    const shop = this.shop();
+    switch (this.tab) {
+      case 'case':
+        out.push(...this.wideCase(main));
+        break;
+      case 'agents': {
+        const view = this.agentView ?? this.selectedAgent();
+        out.push(
+          ...renderAgentsWide(this, main, {
+            shop,
+            selected: this.selectedAgent(),
+            view,
+            idleUnlocked: save.idle.agents,
+            onView: (id) => {
+              this.agentView = id;
+              this.build();
+            },
+            onSelect: (id) => this.chooseAgent(id),
+          }),
+        );
+        break;
+      }
+      case 'arsenal':
+        out.push(...renderArsenalWide(this, main, shop));
+        break;
+      case 'lab':
+        out.push(
+          ...renderLabWide(this, main, {
+            progress: save.meta,
+            atp: save.atp,
+            special: AGENTS[this.selectedAgent()].special.kind,
+            selected: this.labSelected,
+            onSelect: (id) => {
+              this.labSelected = id;
+              this.build();
+            },
+            onBuy: (id) => this.buyLabNode(id),
+          }),
+        );
+        break;
+      case 'organism':
+        out.push(
+          ...renderOrganismWide(this, main, save.organism, this.confirmDischarge, () =>
+            this.discharge(),
+          ),
+        );
+        break;
+    }
+    out.push(...this.wideTopBar(g, w));
+    out.push(...this.wideRail(h));
+    if (this.awayReport) out.push(...this.awayPanel(w, h, this.awayReport));
+    this.root = this.add.container(0, 0, out);
+  }
+
+  /** Barra de status do PC: retrato, indivíduo e setores, objetivo, ATP e Opções. */
+  private wideTopBar(g: Phaser.GameObjects.Graphics, w: number): Obj[] {
+    const H = WIDE.topH;
+    g.fillStyle(PALETTE.night).fillRect(0, 0, w, H);
+    g.fillStyle(PALETTE.ink).fillRect(0, H - 4, w, 4);
+    const save = getSave(this);
+    const organism = save.organism;
+    const px = WIDE.pad;
+    drawWoodFrame(g, px, 6, 60, 60);
+    g.fillStyle(PALETTE.scanBg).fillRect(px + 7, 13, 46, 46);
+    drawBody(g, px + 7 + Math.floor((46 - BODY_SIZE.cols * 2) / 2), 14, 2);
+    const tx = px + 76;
+    const out: Obj[] = [];
+    const ind = this.add.text(
+      tx,
+      14,
+      `INDIVÍDUO ${organism.individual}`,
+      labelText(13, PALETTE_CSS.text),
+    );
+    out.push(
+      ind,
+      this.add.text(
+        tx + ind.width + 10,
+        17,
+        illnessName(organism.individual).toUpperCase(),
+        labelText(10, PALETTE_CSS.numberHurt),
+      ),
+    );
+    let bx = tx;
+    SECTOR_ORDER.forEach((sector) => {
+      const value = Math.round(organism.sectors[sector]);
+      out.push(
+        this.add.text(bx, 42, SECTOR_STYLE[sector].label, labelText(9, PALETTE_CSS.textSoft)),
+      );
+      g.fillStyle(PALETTE.ink).fillRect(bx + 12, 41, 44, 12);
+      g.fillStyle(PALETTE.panelDeep).fillRect(bx + 14, 43, 40, 8);
+      g.fillStyle(SECTOR_STYLE[sector].color).fillRect(
+        bx + 14,
+        43,
+        Math.round((40 * value) / 100),
+        8,
+      );
+      out.push(this.add.text(bx + 60, 39, String(value), bodyText(12, PALETTE_CSS.text)));
+      bx += 60 + 26;
+    });
+    out.push(
+      this.add.text(
+        bx,
+        36,
+        `${Math.round(averageHealth(organism))}%`,
+        withShadow({ ...bodyText(17, '#FFFFFF'), fontStyle: '700' }, PALETTE_CSS.ink, 2),
+      ),
+    );
+
+    // Opções e ATP à direita.
+    const ox = w - WIDE.pad - 48;
+    drawBlueButton(g, ox, 14, 48, 48);
+    drawIcon(g, 'menu', ox + 12, 26, PALETTE.textLight, 3);
+    out.push(
+      addZone(this, ox, 14, 48, 48, () => this.scene.start(SCENES.options, { fromRun: false })),
+    );
+    const atp = this.add.text(
+      0,
+      18,
+      save.atp.toLocaleString('pt-BR'),
+      withShadow({ ...bodyText(20, '#FFFFFF'), fontStyle: '700' }, PALETTE_CSS.ink, 3),
+    );
+    const chipW = 8 + 24 + 8 + Math.max(atp.width, 30) + 12;
+    const chipX = ox - 12 - chipW;
+    drawBlueButton(g, chipX, 12, chipW, 52);
+    drawCoin(g, chipX + 10, 26, 24);
+    atp.setX(chipX + 42);
+    out.push(atp, this.add.text(chipX + 42, 42, 'ATP', labelText(9, PALETTE_CSS.gold)));
+
+    // Objetivo no meio: a próxima estrela do caso.
+    const best = save.records.bestTimeSeconds;
+    const next = ECONOMY.meta.caseStarMinutes.find((m) => best < m * 60);
+    const left = bx + 70;
+    const right = chipX - 20;
+    const ow = Math.min(420, right - left);
+    if (ow > 160) {
+      const sx = Math.floor(left + (right - left - ow) / 2);
+      drawWoodFrame(g, sx, 15, ow, 46);
+      g.fillStyle(PALETTE.panelDeep).fillRect(sx + 7, 22, ow - 14, 32);
+      out.push(
+        this.add.text(
+          sx + 16,
+          26,
+          next ? `PRÓXIMA ESTRELA: ${next} MIN` : 'CASO COMPLETO',
+          labelText(10, PALETTE_CSS.text),
+        ),
+        this.add
+          .text(
+            sx + ow - 16,
+            25,
+            next ? `faltam ${formatTime(next * 60 - best)}` : '3 estrelas',
+            bodyText(12, PALETTE_CSS.textSoft),
+          )
+          .setOrigin(1, 0),
+      );
+      const progress = next ? Math.min(1, best / (next * 60)) : 1;
+      const barW = ow - 32;
+      g.fillStyle(PALETTE.panel).fillRect(sx + 16, 42, barW, 6);
+      g.fillStyle(PALETTE.progress).fillRect(sx + 16, 42, Math.round(barW * progress), 6);
+      g.fillStyle(PALETTE.progressShade).fillRect(sx + 16, 46, Math.round(barW * progress), 2);
+    }
+    return out;
+  }
+
+  /** Trilho de abas do PC: as 5 abas com a tecla, os atalhos e o JOGAR compacto no pé. */
+  private wideRail(h: number): Obj[] {
+    const W = WIDE.railW;
+    const top = WIDE.topH;
+    const g = this.add.graphics();
+    g.fillStyle(PALETTE.panelDeep).fillRect(0, top, W, h - top);
+    g.fillStyle(PALETTE.ink).fillRect(W - 4, top, 4, h - top);
+    const out: Obj[] = [g];
+    const x = 12;
+    const iw = W - 4 - 24;
+    let y = top + 16;
+    out.push(this.add.text(x + 4, y, 'SEÇÕES', labelText(10, PALETTE_CSS.muted)));
+    y += 20;
+    TABS.forEach((t, i) => {
+      const on = t.id === this.tab;
+      const mid = t.id === 'case';
+      if (on) drawWoodButton(g, x, y, iw, 52);
+      else if (mid) drawWoodButton(g, x, y, iw, 52, true);
+      const bright = on || mid;
+      drawIcon(g, TAB_ICONS[t.id], x + 10, y + 14, bright ? 0xffffff : PALETTE.textSoft, 3);
+      const name =
+        t.id === 'lab' ? 'Laboratório' : t.label.charAt(0) + t.label.slice(1).toLowerCase();
+      out.push(
+        this.add
+          .text(
+            x + 44,
+            y + 26,
+            name,
+            bright
+              ? withShadow(
+                  { ...bodyText(15, '#FFFFFF'), fontStyle: '700' },
+                  PALETTE_CSS.woodOutline,
+                  2,
+                )
+              : { ...bodyText(15, PALETTE_CSS.textSoft), fontStyle: '700' },
+          )
+          .setOrigin(0, 0.5),
+      );
+      // Tecla do atalho num quadradinho.
+      const kx = x + iw - 30;
+      g.fillStyle(bright ? PALETTE.outline : PALETTE.panelHi).fillRect(kx, y + 16, 20, 20);
+      g.fillStyle(bright ? (on ? PALETTE.wood : PALETTE.woodDark) : PALETTE.panelDeep).fillRect(
+        kx + 2,
+        y + 18,
+        16,
+        16,
+      );
+      out.push(
+        this.add
+          .text(
+            kx + 10,
+            y + 26,
+            String(i + 1),
+            labelText(9, bright ? '#FFFFFF' : PALETTE_CSS.muted),
+          )
+          .setOrigin(0.5),
+      );
+      if (!on && this.tabHasBadge(t.id)) drawBadge(g, kx - 22, y + 4, 16);
+      out.push(addZone(this, x, y, iw, 52, () => this.setTab(t.id)));
+      y += 58;
+    });
+
+    y += 10;
+    out.push(this.add.text(x + 4, y, 'ATALHOS', labelText(10, PALETTE_CSS.muted)));
+    y += 20;
+    const save = getSave(this);
+    const shortcut = (
+      label: string,
+      icon: IconName,
+      color: number,
+      right: string,
+      onClick: () => void,
+    ) => {
+      drawBlueButton(g, x, y, iw, 40);
+      drawIcon(g, icon, x + 12, y + 12, color, 2);
+      out.push(
+        this.add
+          .text(x + 36, y + 20, label, { ...bodyText(14, PALETTE_CSS.text), fontStyle: '600' })
+          .setOrigin(0, 0.5),
+        this.add.text(x + iw - 12, y + 20, right, bodyText(12, PALETTE_CSS.gold)).setOrigin(1, 0.5),
+        addZone(this, x, y, iw, 40, onClick),
+      );
+      y += 46;
+    };
+    shortcut('Compêndio', 'book', PALETTE.textLight, '', () =>
+      this.scene.start(SCENES.catalog, { view: 'compendium' }),
+    );
+    shortcut(
+      'Conquistas',
+      'medal',
+      PALETTE.gold,
+      `${save.achievements.length}/${META.achievements.length}`,
+      () => this.scene.start(SCENES.catalog, { view: 'achievements' }),
+    );
+    shortcut('Recordes', 'trophy', PALETTE.gold, '', () => this.scene.start(SCENES.records));
+
+    // Pé do trilho: no Caso, as teclas (o JOGAR grande está no meio); nas outras abas, JOGAR.
+    const bottom = h - 14;
+    if (this.tab === 'case') {
+      const hints = [
+        '1 A 5 TROCAM A ABA',
+        `ENTER JOGA${this.localsOpen() ? ' · L LOCAL' : ''}`,
+        'ESC VOLTA AO TÍTULO',
+      ];
+      const bh = hints.length * 16 + 16;
+      const by = bottom - bh;
+      if (by > y + 6) {
+        g.fillStyle(PALETTE.panelHi);
+        for (let dx = 0; dx < iw; dx += 8) {
+          g.fillRect(x + dx, by, 4, 2).fillRect(x + dx, by + bh - 2, 4, 2);
+        }
+        for (let dy = 0; dy < bh; dy += 8) {
+          g.fillRect(x, by + dy, 2, 4).fillRect(x + iw - 2, by + dy, 2, 4);
+        }
+        hints.forEach((t, i) =>
+          out.push(this.add.text(x + 10, by + 10 + i * 16, t, labelText(8, PALETTE_CSS.muted))),
+        );
+      }
+    } else {
+      const agent = AGENTS[this.selectedAgent()].name.toUpperCase();
+      out.push(...this.playButton(x, Math.max(y + 8, bottom - 76), iw, 72, 30, `${agent} · ENTER`));
+    }
+    return out;
+  }
+
+  /** JOGAR do PC: botão de madeira com sombra que afunda ao apertar. */
+  private playButton(
+    px: number,
+    py: number,
+    pw: number,
+    ph: number,
+    size: number,
+    subText: string,
+  ): Obj[] {
+    const face = this.add.graphics();
+    const label = this.add
+      .text(
+        px + pw / 2,
+        0,
+        'JOGAR',
+        withShadow(
+          { ...impactText(size, '#FFFFFF'), stroke: PALETTE_CSS.woodOutline, strokeThickness: 6 },
+          PALETTE_CSS.woodOutline,
+          4,
+        ),
+      )
+      .setOrigin(0.5, 0);
+    const sub = this.add
+      .text(
+        px + pw / 2,
+        0,
+        subText,
+        withShadow(labelText(9, PALETTE_CSS.woodText), PALETTE_CSS.woodOutline, 2),
+      )
+      .setOrigin(0.5, 0);
+    const bodyH = ph - 6;
+    const draw = (pressed: boolean) => {
+      face.clear();
+      const d = pressed ? 6 : 0;
+      if (!pressed) face.fillStyle(PALETTE.outline).fillRect(px, py + 6, pw, bodyH);
+      face.fillStyle(PALETTE.outline).fillRect(px, py + d, pw, bodyH);
+      face.fillStyle(PALETTE.wood).fillRect(px + 4, py + d + 4, pw - 8, bodyH - 8);
+      if (!pressed) face.fillStyle(PALETTE.woodHi).fillRect(px + 4, py + 4, pw - 8, 5);
+      face.fillStyle(PALETTE.woodShade).fillRect(px + 4, py + d + bodyH - 12, pw - 8, 8);
+      const block = label.height + sub.height - 4;
+      const ty = py + d + Math.floor((bodyH - 8 - block) / 2);
+      label.setY(ty);
+      sub.setY(ty + label.height - 4);
+    };
+    draw(false);
+    const zone = this.add
+      .zone(px + pw / 2, py + ph / 2, pw, ph)
+      .setInteractive({ useHandCursor: true });
+    let armed = false;
+    zone.on('pointerdown', () => {
+      armed = true;
+      draw(true);
+    });
+    zone.on('pointerout', () => {
+      armed = false;
+      draw(false);
+    });
+    zone.on('pointerup', () => {
+      draw(false);
+      if (armed) this.scene.start(SCENES.run);
+      armed = false;
+    });
+    return [face, label, sub, zone];
+  }
+
+  /** Aba Caso no PC: agente à esquerda, o caso e o JOGAR no meio, metas à direita. */
+  private wideCase(main: { x: number; y: number; w: number; h: number }): Obj[] {
+    const side = 288;
+    const save = getSave(this);
+    const out: Obj[] = [];
+    out.push(
+      ...renderCaseAgent(this, { x: main.x, y: main.y, w: side, h: main.h }, save, {
+        selected: this.selectedAgent(),
+        onPick: (id) => {
+          if (isUnlocked(save.meta, 'agents', id)) this.chooseAgent(id);
+          else {
+            this.agentView = id;
+            this.setTab('agents');
+          }
+        },
+        onOpenSheet: () => {
+          this.agentView = this.selectedAgent();
+          this.setTab('agents');
+        },
+      }),
+      ...renderCaseGoals(
+        this,
+        { x: main.x + main.w - side, y: main.y, w: side, h: main.h },
+        save,
+        () => this.setTab('organism'),
+        () => this.scene.start(SCENES.catalog, { view: 'achievements' }),
+        () => this.scene.start(SCENES.records),
+      ),
+    );
+    const cx = main.x + side + WIDE.gap;
+    const cw = main.w - 2 * (side + WIDE.gap);
+    out.push(...this.wideCaseCenter(cx, main.y, cw, main.h));
+    return out;
+  }
+
+  /** Centro do Caso no PC: caso anterior, distintivo, scanner, estrelas e baú, local e JOGAR. */
+  private wideCaseCenter(x: number, y: number, w: number, h: number): Obj[] {
+    const g = this.add.graphics();
+    const out: Obj[] = [g];
+    const save = getSave(this);
+    const organism = save.organism;
+    const mid = x + w / 2;
+    let cy = y;
+
+    // Último caso curado, numa etiqueta.
+    const last = save.cases[save.cases.length - 1];
+    if (last) {
+      const t = this.add.text(
+        0,
+        cy + 5,
+        `Caso ${last.individual} · ${illnessName(last.individual)} · ${last.runs} runs · ${formatTime(last.bestTimeSeconds)}`,
+        bodyText(12, PALETTE_CSS.textSoft),
+      );
+      const tag = this.add.text(0, cy + 7, 'ALTA', labelText(8, PALETTE_CSS.numberHeal));
+      const tw = tag.width + 8 + t.width + 16;
+      const tx = Math.floor(mid - tw / 2);
+      drawInkBox(g, tx, cy, tw, 24, PALETTE.panelDeep);
+      tag.setX(tx + 8);
+      t.setX(tx + 8 + tag.width + 8);
+      out.push(tag, t);
+      cy += 32;
+    }
+
+    // Distintivo e nome do caso.
+    const title = this.add.text(
+      0,
+      cy,
+      illnessName(organism.individual),
+      withShadow(impactText(30, '#FFFFFF'), PALETTE_CSS.outline, 3),
+    );
+    const rowW = 36 + 10 + title.width;
+    const rx = Math.floor(mid - rowW / 2);
+    drawShield(g, rx, cy, 36, 40);
+    out.push(
+      this.add
+        .text(rx + 18, cy + 4, String(organism.individual), impactText(21, PALETTE_CSS.cyan))
+        .setOrigin(0.5, 0),
+    );
+    title.setPosition(rx + 46, cy + 2);
+    out.push(title);
+    cy += 46;
+    const best = save.records.bestTimeSeconds;
+    out.push(
+      this.add
+        .text(
+          mid,
+          cy,
+          `Melhor: ${formatTime(best)}`,
+          withShadow(
+            { ...bodyText(17, PALETTE_CSS.gold), fontStyle: '700' },
+            PALETTE_CSS.outline,
+            2,
+          ),
+        )
+        .setOrigin(0.5, 0),
+    );
+    cy += 30;
+
+    // Pé: local (quando abre) e a linha do campo longo com o JOGAR.
+    const playH = 96;
+    const playY = y + h - playH - 6;
+    const localH = this.localsOpen() ? BAND_H : 0;
+    const localY = playY - 12 - localH;
+
+    // Scanner com os locais (o indicado em vermelho) e, ao lado, estrelas e baú.
+    const scanH = Math.max(140, Math.min(288, localY - 12 - cy));
+    // O grupo do scanner fica no meio do espaço livre entre o título e o local.
+    cy += Math.max(0, Math.floor((localY - 12 - cy - scanH) / 2));
+    const pixel = Math.max(2, Math.min(6, Math.floor((scanH - 16) / BODY_MAP_SIZE.rows)));
+    const scanW = Math.max(BODY_MAP_SIZE.cols * pixel + 28, Math.round((scanH * 168) / 288));
+    const starsW = 3 * 28 + 2 * 14 + 24;
+    const groupW = scanW + 24 + starsW;
+    const sx = Math.floor(mid - groupW / 2);
+    g.fillStyle(PALETTE.ink).fillRect(sx, cy, scanW, scanH);
+    g.fillStyle(PALETTE.scanEdge).fillRect(sx + 4, cy + 4, scanW - 8, scanH - 8);
+    g.fillStyle(PALETTE.scanBg).fillRect(sx + 6, cy + 6, scanW - 12, scanH - 12);
+    g.fillStyle(PALETTE.scanLine);
+    for (let ly = cy + 6; ly < cy + scanH - 6; ly += 6) g.fillRect(sx + 6, ly, scanW - 12, 2);
+    const indicated = indicatedLocal(organism);
+    drawBodyMap(
+      g,
+      Math.floor(sx + (scanW - BODY_MAP_SIZE.cols * pixel) / 2),
+      Math.floor(cy + (scanH - BODY_MAP_SIZE.rows * pixel) / 2),
+      pixel,
+      (env) => (env === indicated ? PALETTE.interaction : PALETTE.bodyFill),
+    );
+    const lowest = [...SECTORS].sort((a, b) => organism.sectors[a] - organism.sectors[b])[0]!;
+    out.push(
+      this.add.text(sx + 10, cy + 10, 'SCAN', labelText(8, PALETTE_CSS.cyan)),
+      this.add
+        .text(
+          sx + scanW - 10,
+          cy + scanH - 10,
+          `${ORGANISM.sectors[lowest].name.toUpperCase()} ${Math.round(organism.sectors[lowest])}`,
+          labelText(8, PALETTE_CSS.alert),
+        )
+        .setOrigin(1, 1),
+    );
+    const goals = ECONOMY.meta.caseStarMinutes;
+    const stX = sx + scanW + 24;
+    const stY = cy + Math.floor(scanH / 2) - 80;
+    drawInkBox(g, stX, stY, starsW, 60, PALETTE.panelDeep);
+    goals.forEach((m, i) => {
+      const px = stX + 12 + i * 42;
+      drawStar(g, px, stY + 8, 28, i < save.meta.stars || best >= m * 60);
+      out.push(
+        this.add
+          .text(px + 14, stY + 40, `${m} MIN`, labelText(8, PALETTE_CSS.textSoft))
+          .setOrigin(0.5, 0),
+      );
+    });
+    const nextStar = goals.find((m) => best < m * 60);
+    out.push(
+      this.add
+        .text(
+          stX + starsW / 2,
+          stY + 70,
+          nextStar ? `Próxima estrela: ${nextStar} min` : 'Caso completo',
+          bodyText(12, PALETTE_CSS.textSoft),
+        )
+        .setOrigin(0.5, 0),
+    );
+    const chestX = Math.floor(stX + starsW / 2 - 28);
+    out.push(this.iconButton(g, chestX, stY + 98, 56, 'chest', PALETTE.gold, () => this.chest()));
+    if (save.meta.chest > 0) {
+      drawBadge(g, chestX + 44, stY + 92, 16);
+      out.push(
+        this.add
+          .text(chestX + 28, stY + 158, `+${save.meta.chest}`, labelText(8, PALETTE_CSS.gold))
+          .setOrigin(0.5, 0),
+      );
+    }
+
+    if (localH > 0) out.push(...this.localBand(g, x - 12, w + 24, localY));
+
+    // Campo longo e JOGAR.
+    const fy = playY + 14;
+    drawWoodFrame(g, x, fy, 88, 76);
+    drawCreamSlot(g, x + 6, fy + 6, 76, 64);
+    [6, 24, 12].forEach((t, i) => {
+      const lx = x + 16 + i * 20;
+      g.fillStyle(PALETTE.sand).fillRect(lx, fy + 10, 14, 56);
+      g.fillStyle(PALETTE.carbon).fillRect(lx + 3, fy + 10 + t, 8, 8);
+      g.fillStyle(PALETTE.water).fillRect(lx + 3, fy + 60, 8, 4);
+    });
+    const pending = Math.floor(save.idle.pending);
+    if (pending > 0) {
+      const tag = this.add
+        .text(x + 44, fy - 10, `+${pending}`, {
+          ...bodyText(13, PALETTE_CSS.outline),
+          fontStyle: '700',
+        })
+        .setOrigin(0.5, 0);
+      g.fillStyle(PALETTE.outline).fillRect(
+        x + 44 - tag.width / 2 - 8,
+        fy - 13,
+        tag.width + 16,
+        22,
+      );
+      g.fillStyle(PALETTE.gold).fillRect(x + 44 - tag.width / 2 - 5, fy - 10, tag.width + 10, 16);
+      out.push(tag);
+    }
+    out.push(
+      this.add
+        .text(x + 44, fy + 80, 'CAMPO LONGO', labelText(8, PALETTE_CSS.text))
+        .setOrigin(0.5, 0),
+      addZone(this, x, fy - 14, 88, 108, () => this.scene.start(SCENES.idle)),
+    );
+    out.push(...this.playButton(x + 88 + 12, playY, w - 100, playH, 46, 'CAMPO CRÔNICO · ENTER'));
+    return out;
   }
 
   /** Painel "Enquanto você estava fora": o que o campo longo produziu com o jogo fechado. */
@@ -582,24 +1235,9 @@ export class HubScene extends Phaser.Scene {
     });
     const meta = getSave(this).meta;
     out.push(
-      this.iconButton(g, rowX + boxW + 10, starsY + 3, 52, 'chest', PALETTE.gold, () => {
-        const save = getSave(this);
-        if (save.meta.chest > 0) {
-          const opened = openChest(save.meta, save.atp);
-          setSave(this, { ...save, meta: opened.progress, atp: opened.atp });
-          this.build();
-          return;
-        }
-        this.open({
-          title: 'BAÚ DAS ESTRELAS',
-          icon: 'chest',
-          text: 'Cada estrela nova do caso enche o baú com ATP para o Laboratório e os desbloqueios. Sobreviva 5, 10 e 15 minutos.',
-          phase:
-            meta.stars >= goals.length
-              ? 'CASO COMPLETO'
-              : `${meta.stars} DE ${goals.length} ESTRELAS`,
-        });
-      }),
+      this.iconButton(g, rowX + boxW + 10, starsY + 3, 52, 'chest', PALETTE.gold, () =>
+        this.chest(),
+      ),
     );
     if (meta.chest > 0) {
       drawBadge(g, rowX + boxW + 10 + 52 - 12, starsY - 4);
