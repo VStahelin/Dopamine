@@ -35,6 +35,9 @@ export class CatalogScene extends Phaser.Scene {
   create(data: { view: CatalogView }): void {
     music.setMain('hub');
     this.view = data.view;
+    // A cena é reaproveitada: a lista volta para o topo a cada vez que a tela abre.
+    this.root = undefined;
+    this.scroll = undefined;
     this.input.keyboard?.on('keydown-ESC', () => this.back());
     setupUiLayout(
       this,
@@ -94,14 +97,11 @@ export class CatalogScene extends Phaser.Scene {
           )
         : renderAchievements(this, 0, 64, w, save);
     const bw = Math.min(w - 32, 220);
-    const scrolls = this.view !== 'agents';
-    if (scrolls) {
-      this.scroll = addScrollArea(this, body, { x: 0, y: 60, width: w, height: h - 132 }, offset);
-    }
+    // As duas listas passam da altura do celular: rolam com o dedo ou a roda do mouse.
+    this.scroll = addScrollArea(this, body, { x: 0, y: 60, width: w, height: h - 132 }, offset);
     this.root = this.add.container(0, 0, [
       bg,
       title,
-      ...(scrolls ? [] : body),
       addButton(this, {
         x: Math.floor((w - bw) / 2),
         y: h - 62,

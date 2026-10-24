@@ -20,7 +20,7 @@ import {
   type MetaProgress,
   type UnlockKind,
 } from '../../core/meta/progress';
-import { addButton } from './button';
+import { addButton, isTap } from './button';
 import { addIconSlot, passiveSlot, slotSize, weaponIcon } from './iconSlot';
 import { nativeGain, receptorGain } from './upgradeText';
 import { drawCreamSlot, drawInkBox, drawLock, drawWoodFrame } from './icons';
@@ -205,7 +205,10 @@ export function renderAgents(
       const zone = scene.add
         .zone(left + width / 2, cy + h / 2, width, h)
         .setInteractive({ useHandCursor: true });
-      zone.on('pointerup', () => onSelect(id));
+      // Na lista rolável, arrastar para rolar não escolhe o agente.
+      zone.on('pointerup', (p: Phaser.Input.Pointer) => {
+        if (isTap(p)) onSelect(id);
+      });
       out.push(zone);
     }
     cy += h + 8;

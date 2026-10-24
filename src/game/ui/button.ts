@@ -2,6 +2,14 @@ import type * as Phaser from 'phaser';
 import { PALETTE, PALETTE_CSS } from '../render/palette';
 import { impactText, withShadow } from './theme';
 
+/**
+ * Toque, não arrasto: o dedo andou menos de 10 pixels CSS entre apertar e soltar. Numa lista
+ * rolável, arrastar para rolar não pode apertar o que está embaixo do dedo.
+ */
+export function isTap(p: Phaser.Input.Pointer): boolean {
+  return p.getDistance() < 10 * Math.min(window.devicePixelRatio || 1, 4);
+}
+
 export type ButtonVariant = 'primary' | 'secondary' | 'danger';
 
 export interface ButtonOptions {
@@ -109,9 +117,10 @@ export function addButton(scene: Phaser.Scene, opts: ButtonOptions): Phaser.Game
     armed = false;
     draw(false);
   });
-  zone.on('pointerup', () => {
+  zone.on('pointerup', (p: Phaser.Input.Pointer) => {
     draw(false);
-    if (armed) opts.onClick();
+    // Dentro de uma lista rolável, arrastar para rolar não aperta o botão.
+    if (armed && isTap(p)) opts.onClick();
     armed = false;
   });
 
