@@ -322,8 +322,10 @@ export class RunScene extends Phaser.Scene {
     this.scale.on(Phaser.Scale.Events.RESIZE, this.applyZoom, this);
 
     this.keyboard = new KeyboardMove(this);
-    this.input.keyboard?.on('keydown-ESC', this.togglePause, this);
-    this.input.keyboard?.on('keydown-P', this.togglePause, this);
+    // A run só abre a pausa; quem fecha é a própria pausa. Os dois ouvindo o mesmo Esc
+    // fechavam e abriam a pausa no mesmo quadro, e o menu parava de responder.
+    this.input.keyboard?.on('keydown-ESC', this.pauseFromOutside, this);
+    this.input.keyboard?.on('keydown-P', this.pauseFromOutside, this);
     this.input.keyboard?.on('keydown-SPACE', this.queueSpecial, this);
     this.game.events.on(Phaser.Core.Events.BLUR, this.pauseFromOutside, this);
     this.game.events.on(Phaser.Core.Events.HIDDEN, this.pauseFromOutside, this);
