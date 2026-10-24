@@ -4,6 +4,8 @@ O que mudou em cada versão do Farmaco Battle. O jogo mostra este arquivo em Op�
 
 ## Em desenvolvimento
 
+## v0.21.0 · 24/10/2026
+
 ### Ajustes
 - A dificuldade cresce de verdade com o tempo: o dano das moléculas dobra a cada 7 minutos, elas ficam até 40% mais rápidas e, depois dos 12 minutos, a vida também dobra a cada 4. Lá pelos 20 minutos a coisa fica feia, e ficar parado não segura mais a run.
 - O empurrão dos golpes ficou na medida: cada molécula só é empurrada de novo depois de um instante, o empurrão enfraquece com o tempo, as fortes resistem e o chefe não sai do lugar. Não precisa mais correr atrás dele.
