@@ -497,7 +497,7 @@ Deixar o jogo com a cara do canvas de identidade visual e pronto para outras pes
   - [ ] Jingles `bossIn` e `crisisIn` (faltam gerar).
   - [x] Efeitos do agente (9) e o volume de Efeitos valendo ([efeitos-sonoros.md](efeitos-sonoros.md#como-entra-no-jogo)).
   - [x] Player completo (altura por uso, sequência que sobe, prioridade, ducking, pausa da run) e todos os ids ligados no jogo; id sem arquivo fica mudo ([efeitos-sonoros.md](efeitos-sonoros.md#como-entra-no-jogo)).
-  - [ ] Os arquivos dos outros efeitos da lista de [efeitos-sonoros.md](efeitos-sonoros.md#para-fazer-depois), primeiro os P1. Aguardando os arquivos do Vitor; cada um entra só com o `source` no `audio.json`.
+  - [x] Os arquivos de todos os efeitos da lista (especiais, armas, combate, coleta, ampolas, sinapses e interface).
 - [ ] PWA: polimento da instalação na tela inicial (os ícones em PNG já entraram na fase 5.13; o offline vem da fase 2.5).
 - [x] Primeira run guiada: um tutorial curto para quem nunca jogou, com cartões que não pausam (prancheta "Primeira run guiada", `tutorial.json`) ([lacunas-desenvolvimento.md](lacunas-desenvolvimento.md#ui-e-telas)).
 - [ ] Layout em telas largas e altas (painéis laterais, mais pista): os menus estão no item 1 acima; a HUD da run e o campo longo vêm depois.

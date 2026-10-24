@@ -32,7 +32,7 @@ const WIDE = 760;
 const VOLUMES: [keyof SoundOptions & `${string}Volume`, string, string][] = [
   ['masterVolume', 'Geral', 'Multiplica música e efeitos'],
   ['musicVolume', 'Música', 'Trilhas do título, hub, run e jingles'],
-  ['sfxVolume', 'Efeitos sonoros', 'O agente; armas, itens e botões chegam em breve'],
+  ['sfxVolume', 'Efeitos sonoros', 'Agente, armas, itens, chefes e botões'],
 ];
 
 /** Texto do botão de atualização para cada estado do gestor. */

@@ -251,6 +251,216 @@
         "source": "specialReady.mp3",
         "volume": 1,
         "rev": 1
+      },
+      "absorb": {
+        "source": "absorb.mp3",
+        "volume": 0.5,
+        "rev": 1
+      },
+      "acidFire": {
+        "source": "acidFire.mp3",
+        "volume": 0.55,
+        "rev": 1
+      },
+      "alarm": {
+        "source": "alarm.mp3",
+        "volume": 0.8,
+        "rev": 1
+      },
+      "ampouleBreak": {
+        "source": "ampouleBreak.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "atp": {
+        "source": "atp.mp3",
+        "volume": 0.6,
+        "rev": 1
+      },
+      "banish": {
+        "source": "banish.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "beam": {
+        "source": "beam.mp3",
+        "volume": 0.55,
+        "rev": 1
+      },
+      "bigBoom": {
+        "source": "bigBoom.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "bossSpawn": {
+        "source": "bossSpawn.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "cardPick": {
+        "source": "cardPick.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "crit": {
+        "source": "crit.mp3",
+        "volume": 0.5,
+        "rev": 1
+      },
+      "explosion": {
+        "source": "explosion.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "freeze": {
+        "source": "freeze.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "gem": {
+        "source": "gem.mp3",
+        "volume": 0.5,
+        "rev": 1
+      },
+      "itemPickup": {
+        "source": "itemPickup.mp3",
+        "volume": 0.8,
+        "rev": 1
+      },
+      "pulse": {
+        "source": "pulse.mp3",
+        "volume": 0.5,
+        "rev": 1
+      },
+      "radicalFire": {
+        "source": "radicalFire.mp3",
+        "volume": 0.45,
+        "rev": 1
+      },
+      "reroll": {
+        "source": "reroll.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "reveal": {
+        "source": "reveal.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "revealLegendary": {
+        "source": "revealLegendary.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "specialAlcoholDehydrogenase": {
+        "source": "specialAlcoholDehydrogenase.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "specialCaffeine": {
+        "source": "specialCaffeine.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "specialDopamine": {
+        "source": "specialDopamine.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "specialInsulin": {
+        "source": "specialInsulin.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "specialLipase": {
+        "source": "specialLipase.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "specialOxytocin": {
+        "source": "specialOxytocin.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "specialSerotonin": {
+        "source": "specialSerotonin.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "specialVenvanse": {
+        "source": "specialVenvanse.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "specialVitaminC": {
+        "source": "specialVitaminC.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "splash": {
+        "source": "splash.mp3",
+        "volume": 0.6,
+        "rev": 1
+      },
+      "strike": {
+        "source": "strike.mp3",
+        "volume": 0.5,
+        "rev": 1
+      },
+      "synapseCharge": {
+        "source": "synapseCharge.mp3",
+        "volume": 0.4,
+        "rev": 1
+      },
+      "synapseFire": {
+        "source": "synapseFire.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "uiBack": {
+        "source": "uiBack.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "uiBuy": {
+        "source": "uiBuy.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "uiConfirm": {
+        "source": "uiConfirm.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "uiError": {
+        "source": "uiError.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "uiTap": {
+        "source": "uiTap.mp3",
+        "volume": 0.6,
+        "rev": 1
+      },
+      "uiUnlock": {
+        "source": "uiUnlock.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "vesicleBreak": {
+        "source": "vesicleBreak.mp3",
+        "volume": 0.7,
+        "rev": 1
+      },
+      "whoosh": {
+        "source": "whoosh.mp3",
+        "volume": 1,
+        "rev": 1
+      },
+      "zap": {
+        "source": "zap.mp3",
+        "volume": 0.5,
+        "rev": 1
       }
     }
   }

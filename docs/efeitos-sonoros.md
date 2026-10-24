@@ -2,22 +2,22 @@
 
 23 de outubro de 2026 · Vitor
 
-A lista enxuta de efeitos sonoros (SFX) do jogo: **45 efeitos**, dos quais os 9 do agente já foram feitos pelo Vitor e **36 faltam gerar**; os especiais dos seis agentes da fase 5.15 ainda não têm som. Cada um tem o id do arquivo, quando toca, duração, prioridade e um prompt pronto para colar num app de geração de efeitos. O tema, a música e a entrega dos arquivos estão em [sonoplastia.md](sonoplastia.md). Os arquivos brutos vão para [audio/efeitos/](../audio/efeitos/README.md). Todos já estão ligados no jogo (veja [Como entra no jogo](#como-entra-no-jogo)); os que ainda não têm arquivo ficam mudos e estão em [Para fazer depois](#para-fazer-depois).
+A lista enxuta de efeitos sonoros (SFX) do jogo: **45 efeitos**, mais os especiais dos seis agentes da fase 5.15: **todos feitos pelo Vitor e tocando no jogo** (24/10/2026). Cada um tem o id do arquivo, quando toca, duração, prioridade e um prompt pronto para colar num app de geração de efeitos. O tema, a música e a entrega dos arquivos estão em [sonoplastia.md](sonoplastia.md). Os arquivos brutos vão para [audio/efeitos/](../audio/efeitos/README.md). Veja [Como entra no jogo](#como-entra-no-jogo); só os jingles `bossIn` e `crisisIn` continuam em [Para fazer depois](#para-fazer-depois).
 
 ## Resumo
 
 | Categoria | Efeitos | Situação |
 | --- | --- | --- |
 | [Agente](#agente) | 9 | Feitos |
-| [Especiais dos agentes](#especiais-dos-agentes) | 3 (+6 depois) | Faltam |
-| [Armas](#armas) | 8 | Faltam |
-| [Combate](#combate) | 3 | Faltam |
-| [Moléculas e chefes](#moléculas-e-chefes) | 2 | Faltam |
-| [Coleta e itens](#coleta-e-itens) | 5 | Faltam |
-| [Ampolas, cápsula e level up](#ampolas-cápsula-e-level-up) | 6 | Faltam |
-| [Sinapses e estruturas](#sinapses-e-estruturas) | 3 | Faltam |
-| [Interface](#interface) | 6 | Faltam |
-| **Total** | **45** | **36 faltam** |
+| [Especiais dos agentes](#especiais-dos-agentes) | 3 (+6 depois) | Feitos |
+| [Armas](#armas) | 8 | Feitos |
+| [Combate](#combate) | 3 | Feitos |
+| [Moléculas e chefes](#moléculas-e-chefes) | 2 | Feitos |
+| [Coleta e itens](#coleta-e-itens) | 5 | Feitos |
+| [Ampolas, cápsula e level up](#ampolas-cápsula-e-level-up) | 6 | Feitos |
+| [Sinapses e estruturas](#sinapses-e-estruturas) | 3 | Feitos |
+| [Interface](#interface) | 6 | Feitos |
+| **Total** | **45** (+6) | **Feitos** |
 
 - **P1:** acontece toda run; sem ele o jogo parece mudo. **P2:** mais raro, mas dá peso a um momento grande.
 - **Um arquivo, vários usos.** A lista caiu de 131 para 47 porque um mesmo efeito serve a várias coisas: o jogo muda a altura, o volume ou repete o som. A coluna "Também toca em" diz quem reaproveita cada arquivo. O que foi fundido ou cortado está em [O que saiu da lista](#o-que-saiu-da-lista).
@@ -171,27 +171,27 @@ Todos em chip puro, sem metal, no mesmo timbre.
 
 ## Para fazer depois
 
-Ficou para depois por decisão do Vitor em 23/10/2026: os efeitos sonoros saíram da fase 5.13 e voltam na [fase 6](roadmap.md#fase-6-arte-polimento-e-lançamento). Faltam 36 efeitos e os 2 jingles. O código já toca todos os ids (24/10/2026); para cada um, falta gerar com o prompt da tabela, salvar em [audio/efeitos/](../audio/efeitos/README.md) com o id como nome, pôr o `source` em `sfx.effects` e rodar `python3 tools/audio/sfx.py`. Comece pelos P1.
+Os efeitos saíram da fase 5.13 e voltaram na [fase 6](roadmap.md#fase-6-arte-polimento-e-lançamento). Todos entraram no jogo em 24/10/2026; faltam só os 2 jingles.
 
 **P1 (26, tocam em toda run):**
 
-- [ ] Especiais: `specialDopamine`, `specialLipase`, `specialInsulin`
-- [ ] Armas: `radicalFire`, `acidFire`, `zap`, `beam`, `pulse`, `strike`, `splash`, `absorb`
-- [ ] Combate e moléculas: `crit`, `bossSpawn`, `bigBoom`
-- [ ] Coleta: `gem`, `atp`, `itemPickup`, `vesicleBreak`
-- [ ] Ampolas e level up: `ampouleBreak`, `reveal`, `cardPick`, `reroll`
-- [ ] Sinapses: `synapseCharge`, `synapseFire`
-- [ ] Interface: `uiTap`, `uiConfirm`, `uiBack`, `uiBuy`, `uiError`
+- [x] Especiais: `specialDopamine`, `specialLipase`, `specialInsulin`
+- [x] Armas: `radicalFire`, `acidFire`, `zap`, `beam`, `pulse`, `strike`, `splash`, `absorb`
+- [x] Combate e moléculas: `crit`, `bossSpawn`, `bigBoom`
+- [x] Coleta: `gem`, `atp`, `itemPickup`, `vesicleBreak`
+- [x] Ampolas e level up: `ampouleBreak`, `reveal`, `cardPick`, `reroll`
+- [x] Sinapses: `synapseCharge`, `synapseFire`
+- [x] Interface: `uiTap`, `uiConfirm`, `uiBack`, `uiBuy`, `uiError`
 
 **P2 (10, momentos grandes):**
 
-- [ ] `freeze`, `explosion`, `whoosh`, `revealLegendary`, `banish`, `alarm`, `uiUnlock`
-- [ ] Especiais dos agentes novos (os agentes entraram na fase 5.15 sem som de especial): `specialVitaminC`, `specialVenvanse`, `specialSerotonin`, `specialOxytocin`, `specialAlcoholDehydrogenase`, `specialCaffeine` (não contam nos 36)
+- [x] `freeze`, `explosion`, `whoosh`, `revealLegendary`, `banish`, `alarm`, `uiUnlock`
+- [x] Especiais dos agentes novos (os agentes entraram na fase 5.15 sem som de especial): `specialVitaminC`, `specialVenvanse`, `specialSerotonin`, `specialOxytocin`, `specialAlcoholDehydrogenase`, `specialCaffeine` (não contam nos 36)
 
 **Música:**
 
 - [ ] Jingles `bossIn` e `crisisIn` ([sonoplastia.md](sonoplastia.md))
-- [ ] Tirar o "chegam em breve" do volume de Efeitos nas Opções quando os efeitos entrarem
+- [x] Tirar o "chegam em breve" do volume de Efeitos nas Opções quando os efeitos entrarem
 
 ## O que saiu da lista
 
@@ -218,7 +218,7 @@ Se algum desses fizer falta quando o som estiver no jogo, ele volta como um arqu
 
 ## Como entra no jogo
 
-Todos os ids da lista já estão ligados no código (24/10/2026). Um id sem arquivo fica mudo; para ele soar, basta o arquivo chegar (veja "Efeito novo ou trocado").
+Todos os ids da lista tocam no jogo (24/10/2026). Os mais frequentes (disparos, gema, ATP, toque) têm `volume` menor no `audio.json`; um id sem arquivo ficaria mudo.
 
 | Id | Quando toca no jogo |
 | --- | --- |
