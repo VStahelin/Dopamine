@@ -1,6 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { ECONOMY } from '../../config';
-import { difficultyAt, waveAt, waveFactorAt, xpToNextLevel } from './progression';
+import {
+  difficultyAt,
+  enemyDamageAt,
+  enemyHpAt,
+  enemySpeedAt,
+  waveAt,
+  waveFactorAt,
+  xpToNextLevel,
+} from './progression';
 
 describe('xpToNextLevel', () => {
   it('segue a tabela da aba Economia até o nível 20', () => {
@@ -57,5 +65,27 @@ describe('waveAt', () => {
     expect(waveAt(0, d)).toEqual({ wave: 1, peak: false });
     expect(waveAt(cycle + 1, d)).toEqual({ wave: 2, peak: true });
     expect(waveAt(cycle + d.peakDurationSeconds + 1, d)).toEqual({ wave: 2, peak: false });
+  });
+});
+
+describe('curva contínua do fim de jogo (decisão 0038)', () => {
+  const d = ECONOMY.difficulty;
+  it('o dano de contato dobra a cada damageDoublingMinutes', () => {
+    expect(enemyDamageAt(0, d)).toBe(1);
+    expect(enemyDamageAt(d.damageDoublingMinutes * 60, d)).toBeCloseTo(2);
+    expect(enemyDamageAt(d.damageDoublingMinutes * 120, d)).toBeCloseTo(4);
+  });
+
+  it('depois de lateMinute, a vida também dobra a cada hpDoublingMinutes', () => {
+    const at = (m: number) => enemyHpAt(m * 60, d) / difficultyAt(m * 60, d);
+    const base = (m: number) => d.hpStart * (1 + d.hpLinear * m + d.hpQuadratic * m * m);
+    expect(at(d.lateMinute) / base(d.lateMinute)).toBeCloseTo(1);
+    const later = d.lateMinute + d.hpDoublingMinutes;
+    expect(at(later) / base(later)).toBeCloseTo(2);
+  });
+
+  it('a velocidade sobe até o teto', () => {
+    expect(enemySpeedAt(0, d)).toBe(1);
+    expect(enemySpeedAt(600 * 60, d)).toBe(d.maxSpeedMultiplier);
   });
 });

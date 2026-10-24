@@ -1,5 +1,5 @@
 import type { WeaponDef, WeaponParams } from '../../config';
-import { aimPoint, hitEnemy, nearestEnemy } from './combat';
+import { aimPoint, hitEnemy, nearestEnemy, onScreen } from './combat';
 import type { SpatialGrid } from './spatialGrid';
 import { actionMods } from './specials';
 import type { Enemy, RunState, WeaponInstance } from './state';
@@ -277,7 +277,10 @@ function throwZones(state: RunState, w: WeaponInstance, def: WeaponDef, p: Weapo
   if (w.cooldown > 0) return;
   const { agent } = state;
   const near = state.enemies.filter(
-    (e) => e.hp > 0 && (e.x - agent.x) ** 2 + (e.y - agent.y) ** 2 <= p.rangePx ** 2,
+    (e) =>
+      e.hp > 0 &&
+      (e.x - agent.x) ** 2 + (e.y - agent.y) ** 2 <= p.rangePx ** 2 &&
+      onScreen(state, e),
   );
   // Sem molécula perto, a poça cai no que quebra (destrutível ou vesícula).
   const object = near.length === 0 ? aimPoint(state, agent.x, agent.y, p.rangePx) : undefined;
@@ -368,7 +371,7 @@ function emitPulse(state: RunState, w: WeaponInstance, p: WeaponParams): void {
     maxRadius: p.areaPx,
     speed: p.speedPxPerSecond,
     damage: p.damage,
-    hits: [],
+    hits: new Set(),
     source: w.id,
   });
   w.cooldown = p.cooldownSeconds;
@@ -381,8 +384,8 @@ export function updatePulses(state: RunState, dt: number, grid: SpatialGrid): vo
     pulse.y = state.agent.y;
     pulse.radius = Math.min(pulse.maxRadius, pulse.radius + pulse.speed * dt);
     eachInRadius(state, grid, pulse.x, pulse.y, pulse.radius, (e) => {
-      if (pulse.hits.includes(e.id)) return;
-      pulse.hits.push(e.id);
+      if (pulse.hits.has(e.id)) return;
+      pulse.hits.add(e.id);
       hitEnemy(state, e, pulse.damage, {
         dirX: e.x - pulse.x,
         dirY: e.y - pulse.y,
@@ -404,6 +407,7 @@ function strike(state: RunState, w: WeaponInstance, p: WeaponParams, grid: Spati
       agent.y,
       p.rangePx,
       targets.map((e) => e.id),
+      true,
     );
     if (t) targets.push(t);
   }

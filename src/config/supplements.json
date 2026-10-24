@@ -122,7 +122,7 @@
     "ginseng": {
       "name": "Ginseng",
       "rarity": "common",
-      "description": "−8% na recarga do especial.",
+      "description": "Especial 8% mais rápido (−8% na recarga).",
       "effect": {
         "kind": "special",
         "stat": "cooldown",
@@ -216,7 +216,8 @@
       "effect": {
         "kind": "gemPulse",
         "seconds": 60
-      }
+      },
+      "unique": true
     },
     "electrode": {
       "name": "Eletrodo",
@@ -268,7 +269,8 @@
         "kind": "cryo",
         "seconds": 2,
         "cooldownSeconds": 30
-      }
+      },
+      "unique": true
     },
     "peroxide": {
       "name": "Peróxido",

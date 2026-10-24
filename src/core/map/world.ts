@@ -106,6 +106,7 @@ export function pushOut(
   x: number,
   y: number,
   radius: number,
+  out: { x: number; y: number } = { x: 0, y: 0 },
 ): { x: number; y: number } {
   let px = x;
   let py = y;
@@ -120,7 +121,9 @@ export function pushOut(
     px = o.x + (dx / d) * min;
     py = o.y + (dy / d) * min;
   });
-  return { x: px, y: py };
+  out.x = px;
+  out.y = py;
+  return out;
 }
 
 /** Quebra um destrutível: lembra no bloco e tira da grade. */

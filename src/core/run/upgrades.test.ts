@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { DEFAULT_RULES } from './rules';
-import { createRun } from './state';
+import { createRun, newWeapon } from './state';
 import { rulesWithoutSpawn } from './testRules';
 import {
   applyChoice,
+  applyUpgrade,
   banishChoice,
   choiceKey,
   levelUpOffer,
@@ -141,5 +142,36 @@ describe('statsAfter', () => {
   it('não prevê arma nem cura', () => {
     const run = runWithLevelUps(1);
     expect(statsAfter(run, { kind: 'heal', amount: 30 })).toBeNull();
+  });
+});
+
+describe('playtest rodada 2', () => {
+  it('BUG-2: carta velha do mesmo nível não rebaixa a arma', () => {
+    const run = createRun(1, rulesWithoutSpawn());
+    run.weapons = [newWeapon('dopaminePulse'), newWeapon('radical')];
+    const w = run.weapons[1]!;
+    const legendary = run.rules.rarities.tiers.length - 2;
+    applyUpgrade(run, { kind: 'weapon', id: 'radical', level: 2, rarity: legendary });
+    const boosted = w.boosts[0];
+    // A mesma carta (nível 2, comum) sorteada antes: vira o nível 3, sem mexer no ganho do 2.
+    applyUpgrade(run, { kind: 'weapon', id: 'radical', level: 2, rarity: 0 });
+    expect(w.level).toBe(3);
+    expect(w.boosts[0]).toBe(boosted);
+  });
+
+  it('MEC-1: a Dose só aparece com arma que dispara vários objetos', () => {
+    const run = runWithLevelUps(200);
+    run.weapons = [newWeapon('dopaminePulse')];
+    for (let i = 0; i < 200; i++) {
+      run.offer = null;
+      expect(levelUpOffer(run).some((c) => c.kind === 'passive' && c.id === 'dose')).toBe(false);
+    }
+    run.weapons.push(newWeapon('radical'));
+    let seen = false;
+    for (let i = 0; i < 200 && !seen; i++) {
+      run.offer = null;
+      seen = levelUpOffer(run).some((c) => c.kind === 'passive' && c.id === 'dose');
+    }
+    expect(seen).toBe(true);
   });
 });

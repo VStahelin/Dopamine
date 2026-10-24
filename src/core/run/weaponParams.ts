@@ -14,6 +14,9 @@ export interface WeaponMods {
 
 export const NO_MODS: WeaponMods = { cooldown: 1, area: 1, damage: 1, count: 1 };
 
+/** Tipos de ataque que disparam vários objetos: só neles a Dose soma projéteis. */
+export const COUNT_KINDS: readonly string[] = ['projectile', 'orbit', 'zone'];
+
 export function weaponMaxLevel(def: WeaponDef): number {
   return def.levels.length + 1;
 }
@@ -63,9 +66,7 @@ export function weaponParams(
   boosts: readonly number[] = [],
 ): WeaponParams {
   const p = levelParams(def, level, boosts);
-  const extraCount = ['projectile', 'orbit', 'zone'].includes(def.kind)
-    ? Math.floor(stats.projectiles)
-    : 0;
+  const extraCount = COUNT_KINDS.includes(def.kind) ? Math.floor(stats.projectiles) : 0;
   return {
     damage: p.damage * stats.damage * mods.damage,
     cooldownSeconds: p.cooldownSeconds * stats.cooldown * mods.cooldown,

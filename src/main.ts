@@ -91,6 +91,9 @@ const onResize = () => {
 window.addEventListener('resize', onResize);
 window.visualViewport?.addEventListener('resize', onResize);
 
+// Só em desenvolvimento: o jogo fica no console, para testes no navegador.
+if (import.meta.env.DEV) Object.assign(globalThis, { game });
+
 // Jogo offline e atualizações controladas (decisão 0016).
 updates.start();
 // Pede para o navegador não apagar o jogo nem o save quando faltar espaço.

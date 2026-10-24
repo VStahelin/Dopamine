@@ -4,18 +4,32 @@ import { addEnemy, type Enemy, type RunState } from './state';
 import { onHit, onKill } from './supplements';
 import { coinValue, nativeLevel } from './upgrades';
 
-/** Inimigo vivo mais perto de (x, y), ignorando os ids em `skip`. */
+/** A molécula aparece na tela (com a borda dela)? As armas só miram nessas (PERF-3). */
+export function onScreen(state: RunState, e: Enemy): boolean {
+  const { agent, viewHalf } = state;
+  return (
+    Math.abs(e.x - agent.x) <= viewHalf.x + e.radius &&
+    Math.abs(e.y - agent.y) <= viewHalf.y + e.radius
+  );
+}
+
+/**
+ * Inimigo vivo mais perto de (x, y), ignorando os ids em `skip`. Com `visible`, só os que estão
+ * na tela: mira de arma não acerta chefe que o jogador não vê.
+ */
 export function nearestEnemy(
   state: RunState,
   x: number,
   y: number,
   maxDistance: number,
   skip: readonly number[] = [],
+  visible = false,
 ): Enemy | undefined {
   let best: Enemy | undefined;
   let bestD2 = maxDistance * maxDistance;
   for (const e of state.enemies) {
     if (e.hp <= 0 || skip.includes(e.id)) continue;
+    if (visible && !onScreen(state, e)) continue;
     const d2 = (e.x - x) ** 2 + (e.y - y) ** 2;
     if (d2 < bestD2) {
       bestD2 = d2;
@@ -36,7 +50,7 @@ export function aimPoint(
   y: number,
   maxDistance: number,
 ): { x: number; y: number; enemy?: Enemy } | undefined {
-  const enemy = nearestEnemy(state, x, y, maxDistance);
+  const enemy = nearestEnemy(state, x, y, maxDistance, [], true);
   const reach = Math.min(maxDistance, state.rules.run.combat.objectAimRangePx);
   let bestD2 = enemy ? (enemy.x - x) ** 2 + (enemy.y - y) ** 2 : reach * reach;
   bestD2 = Math.min(bestD2, reach * reach);
@@ -75,7 +89,7 @@ export interface HitOptions {
  * crítico e empurrão.
  */
 export function hitEnemy(state: RunState, e: Enemy, base: number, opts: HitOptions = {}): void {
-  const { stats, rng, rules } = state;
+  const { stats, rng } = state;
   const affinity = affinityMultiplier(state, e);
   let amount = base * affinity * (1 + e.vulnerability);
   const native = state.rules.agents[state.agentId].nativeReceptor;
@@ -85,12 +99,7 @@ export function hitEnemy(state: RunState, e: Enemy, base: number, opts: HitOptio
   if (!opts.continuous) {
     crit = rng.next() < stats.critChance;
     if (crit) amount *= stats.critDamage;
-    const len = Math.hypot(opts.dirX ?? 0, opts.dirY ?? 0);
-    if (len > 0) {
-      const push = (rules.run.combat.knockbackPx * stats.knockback) / Math.max(1, e.radius / 8);
-      e.x += ((opts.dirX ?? 0) / len) * push;
-      e.y += ((opts.dirY ?? 0) / len) * push;
-    }
+    knockback(state, e, opts.dirX ?? 0, opts.dirY ?? 0);
   }
   if (crit) state.tally.crits++;
   if (!opts.continuous) onHit(state, e);
@@ -99,6 +108,30 @@ export function hitEnemy(state: RunState, e: Enemy, base: number, opts: HitOptio
     t[opts.source] = (t[opts.source] ?? 0) + Math.min(amount, Math.max(0, e.hp));
   }
   damageEnemy(state, e, amount, crit, affinity, opts.continuous ?? false);
+}
+
+/**
+ * Empurrão do golpe (playtest rodada 2, BAL-2 e BAL-3): uma vez a cada recarga por molécula,
+ * menor nas grandes e nas fortes, nenhum no chefe, e caindo com o tempo de run.
+ */
+function knockback(state: RunState, e: Enemy, dirX: number, dirY: number): void {
+  const c = state.rules.run.combat;
+  const len = Math.hypot(dirX, dirY);
+  if (len <= 0 || state.time - e.knockedAt < c.knockbackCooldownSeconds) return;
+  const resist = e.boss
+    ? c.knockbackResist.boss
+    : e.aggregate
+      ? c.knockbackResist.aggregate
+      : e.elite
+        ? c.knockbackResist.strong
+        : 0;
+  if (resist >= 1) return;
+  const falloff = 1 / (1 + state.time / 60 / c.knockbackFalloffMinutes);
+  const push =
+    ((c.knockbackPx * state.stats.knockback * falloff) / Math.max(1, e.radius / 8)) * (1 - resist);
+  e.knockedAt = state.time;
+  e.x += (dirX / len) * push;
+  e.y += (dirY / len) * push;
 }
 
 /** Tira vida; na morte, conta a decomposição, deixa a gema e solta os fragmentos (cascata). */
@@ -199,7 +232,32 @@ function dropCoin(state: RunState, e: Enemy): void {
   if (state.rng.next() >= chance) return;
   let value = coinValue(state);
   if (e.boss) value *= c.bossValueMultiplier;
-  state.coins.push({ x: e.x, y: e.y, value, attracted: false });
+  dropCoinAt(state, e.x, e.y, value);
+}
+
+/** ATP no chão; com o campo cheio, junta à moeda mais perto, como as gemas (PERF-5). */
+export function dropCoinAt(state: RunState, x: number, y: number, value: number): void {
+  const near = nearestDrop(state.coins, x, y);
+  if (near && state.coins.length >= state.rules.run.gems.maxOnField) near.value += value;
+  else state.coins.push({ x, y, value, attracted: false });
+}
+
+/** Gema ou moeda mais perto de (x, y). */
+function nearestDrop<T extends { x: number; y: number }>(
+  list: readonly T[],
+  x: number,
+  y: number,
+): T | undefined {
+  let near: T | undefined;
+  let best = Infinity;
+  for (const g of list) {
+    const d2 = (g.x - x) ** 2 + (g.y - y) ** 2;
+    if (d2 < best) {
+      best = d2;
+      near = g;
+    }
+  }
+  return near;
 }
 
 /**
@@ -266,9 +324,13 @@ function dropAmpoule(state: RunState, e: Enemy): void {
   state.pickups.push({ x: e.x, y: e.y, kind: 'ampoule', attracted: false, minRarity: 'common' });
 }
 
-function dropGem(state: RunState, x: number, y: number, value: number): void {
-  if (state.gems.length >= state.rules.run.gems.maxOnField) {
-    state.gems[0]!.value += value;
+export function dropGem(state: RunState, x: number, y: number, value: number): void {
+  // Campo cheio: a gema se junta à mais perto (PERF-5). Antes ia para a mais antiga, que podia
+  // estar longe e virar um prêmio escondido de dezenas de níveis.
+  const near =
+    state.gems.length >= state.rules.run.gems.maxOnField && nearestDrop(state.gems, x, y);
+  if (near) {
+    near.value += value;
     return;
   }
   state.gems.push({ x, y, value, attracted: false });

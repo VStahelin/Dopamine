@@ -170,16 +170,27 @@ function botMove(run: RunState): { x: number; y: number } {
   return len > 0 ? { x: x / len, y: y / len } : { x: 0, y: 0 };
 }
 
+/** Quando o robô parado para de andar. */
+const STILL_AFTER_SECONDS = 300;
+
 /** Uma run inteira com o robô: escolhe a primeira opção de cada level up. */
 export function botRun(
   rules: RunRules,
   seed: number,
   agent: AgentId,
   maxSeconds: number,
+  onMinute?: (run: RunState, minute: number) => void,
+  still = false,
+  onEvents?: (run: RunState) => void,
 ): RunState {
   const run = createRun(seed, rules, agent);
   let t = 0;
+  let minute = 0;
   while (!run.over && run.time < maxSeconds) {
+    // Ninguém desenha os acontecimentos: sem isso, a lista cresce a run inteira.
+    onEvents?.(run);
+    run.events.length = 0;
+    if (onMinute && run.time >= (minute + 1) * 60) onMinute(run, ++minute);
     if (run.capsule) closeCapsule(run);
     if (run.ampoule) closeAmpoule(run);
     if (run.synapseOffer) chooseSynapse(run, run.synapseOffer[0]!);
@@ -192,10 +203,103 @@ export function botRun(
       if (pick) applyChoice(run, pick);
       continue;
     }
-    stepRun(run, { move: botMove(run), viewRadius: VIEW_RADIUS, special: t % 120 === 0 }, DT);
+    // Parado: joga normal nos primeiros minutos, para montar a build, e depois não sai do lugar.
+    const move = still && run.time >= STILL_AFTER_SECONDS ? { x: 0, y: 0 } : botMove(run);
+    stepRun(run, { move, viewRadius: VIEW_RADIUS, special: t % 120 === 0 }, DT);
     t++;
   }
   return run;
+}
+
+// --- Fim de jogo (playtest rodada 2, BAL-1 e BAL-4) ---
+
+/** Progresso de quem já comprou tudo: Laboratório no máximo, tudo liberado e as 3 estrelas. */
+export function maxedProgress(meta: MetaConfig = META): MetaProgress {
+  const lab: Record<string, number> = {};
+  for (const [id, node] of Object.entries(meta.lab.nodes)) lab[id] = node.maxLevel;
+  return {
+    lab,
+    agents: [...meta.start.agents, ...Object.keys(meta.unlockCost.agents)],
+    weapons: [...meta.start.weapons, ...Object.keys(meta.unlockCost.weapons)],
+    receptors: [...meta.start.receptors, ...Object.keys(meta.unlockCost.receptors)],
+    stars: 3,
+    chest: 0,
+  };
+}
+
+export interface LateMinute {
+  minute: number;
+  /** Interações no fim do minuto, em fração do máximo. */
+  health: number;
+  /** Interações perdidas no minuto. */
+  lost: number;
+  enemies: number;
+  kills: number;
+  level: number;
+}
+
+export interface LateRun {
+  agent: AgentId;
+  seed: number;
+  /** Segundos que cada chefe levou para cair (só os que caíram). */
+  bossSeconds: number[];
+  /** Segundos até o fim da run (ou o teto). */
+  timeSeconds: number;
+  died: boolean;
+  minutes: LateMinute[];
+}
+
+/**
+ * Fim de jogo: o robô joga com o Laboratório no máximo e tudo liberado, anotando a vida e o dano
+ * levado a cada minuto. Com `still`, o robô fica parado, como o jogador que achou a run fácil.
+ */
+export function simulateLate(options: {
+  agents: AgentId[];
+  seeds: number;
+  seed: number;
+  maxSeconds: number;
+  still?: boolean;
+}): LateRun[] {
+  const rules = rulesWithProgress(DEFAULT_RULES, maxedProgress());
+  const out: LateRun[] = [];
+  for (const agent of options.agents) {
+    for (let k = 0; k < options.seeds; k++) {
+      const seed = options.seed + k * 7919;
+      const minutes: LateMinute[] = [];
+      const bossSeconds: number[] = [];
+      const bornAt: number[] = [];
+      let lost = 0;
+      let kills = 0;
+      const run = botRun(
+        rules,
+        seed,
+        agent,
+        options.maxSeconds,
+        (r, minute) => {
+          minutes.push({
+            minute,
+            health: r.agent.interactions / r.stats.maxInteractions,
+            lost: r.tally.interactionsLost - lost,
+            enemies: r.enemies.length,
+            kills: r.kills - kills,
+            level: r.level,
+          });
+          lost = r.tally.interactionsLost;
+          kills = r.kills;
+        },
+        options.still,
+        (r) => {
+          for (const ev of r.events) {
+            if (ev.type === 'boss') bornAt.push(r.time);
+            if (ev.type === 'kill' && r.rules.enemies[ev.kind].boss && bornAt.length > 0)
+              bossSeconds.push(r.time - bornAt.shift()!);
+          }
+        },
+      );
+      out.push({ agent, seed, timeSeconds: run.time, died: run.over, minutes, bossSeconds });
+    }
+  }
+  return out;
 }
 
 interface Offer {

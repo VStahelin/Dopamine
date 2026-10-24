@@ -1,4 +1,5 @@
 import { breakSolid, pushOut, updateMap } from '../map/world';
+import { dropCoinAt, dropGem } from './combat';
 import { weaponHitTest } from './items';
 import type { RunState } from './state';
 import { coinValue } from './upgrades';
@@ -24,11 +25,10 @@ export function collideWithMap(state: RunState): void {
   const a = pushOut(map, agent.x, agent.y, state.rules.run.agent.radiusPx);
   agent.x = a.x;
   agent.y = a.y;
+  // As moléculas escrevem a posição nova em `e` mesmo, sem criar um objeto por passo.
   for (const e of state.enemies) {
     if (e.boss || e.formation || e.hp <= 0) continue;
-    const p = pushOut(map, e.x, e.y, e.radius);
-    e.x = p.x;
-    e.y = p.y;
+    pushOut(map, e.x, e.y, e.radius, e);
   }
 }
 
@@ -61,10 +61,10 @@ export function updateDestructibles(state: RunState, firstEvent: number): void {
     state.events.push({ type: 'destructible', x: b.x, y: b.y });
     switch (env.destructible.drop) {
       case 'atp':
-        state.coins.push({ x: b.x, y: b.y, value: coinValue(state), attracted: false });
+        dropCoinAt(state, b.x, b.y, coinValue(state));
         break;
       case 'gem':
-        state.gems.push({ x: b.x, y: b.y, value: 1, attracted: false });
+        dropGem(state, b.x, b.y, 1);
         break;
       case 'vesicle':
         state.vesicles.push({ x: b.x, y: b.y });

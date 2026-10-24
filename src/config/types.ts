@@ -126,6 +126,15 @@ export interface RunConfig {
   combat: {
     /** Empurrão de um golpe com Repulsão 100%, dividido pelo tamanho do inimigo. */
     knockbackPx: number;
+    /**
+     * Uma molécula só é empurrada de novo depois deste tempo: com muitas armas acertando, os
+     * golpes seguidos não a seguram longe do agente (playtest rodada 2, BAL-2).
+     */
+    knockbackCooldownSeconds: number;
+    /** O empurrão cai com o tempo de run: × 1 / (1 + t / falloffMinutes), t em minutos. */
+    knockbackFalloffMinutes: number;
+    /** Fração do empurrão que cada tipo ignora: 1 = nem se mexe (chefe, BAL-3). */
+    knockbackResist: { strong: number; aggregate: number; boss: number };
     /** Distância máxima do salto da Reação em cadeia. */
     ricochetRangePx: number;
     /** Cada salto causa esta fração do dano anterior. */
@@ -458,6 +467,20 @@ export interface EconomyConfig {
     hpStart: number;
     hpLinear: number;
     hpQuadratic: number;
+    /**
+     * O dano de contato das moléculas dobra a cada tantos minutos de run: × 2^(t / doubling),
+     * fixado quando a molécula nasce (playtest rodada 2, BAL-4).
+     */
+    damageDoublingMinutes: number;
+    /**
+     * Fim de jogo: a partir de `lateMinute`, a vida das moléculas também dobra a cada
+     * `hpDoublingMinutes` (× 2^((t − lateMinute) / hpDoubling)), por cima da curva de cima.
+     */
+    lateMinute: number;
+    hpDoublingMinutes: number;
+    /** Velocidade das moléculas que nascem: × (1 + speedPerMinute × t), até `maxSpeedMultiplier`. */
+    speedPerMinute: number;
+    maxSpeedMultiplier: number;
     /** Limiar programável t*: a partir dele soma cubic × (t − t*)³. */
     thresholdMinute: number;
     cubic: number;
@@ -856,6 +879,8 @@ export interface SupplementDef {
   rarity: SupplementRarity;
   description: string;
   effect: SupplementEffect;
+  /** Efeito que não acumula (Aquaporina, Criopreservação): sai do sorteio depois da primeira cópia. */
+  unique?: boolean;
 }
 
 export interface SupplementsConfig {

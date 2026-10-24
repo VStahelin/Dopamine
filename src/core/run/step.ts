@@ -27,6 +27,11 @@ export interface StepInput {
   move: Vec2;
   /** Distância do agente até a borda mais longe da tela; os inimigos nascem além dela. */
   viewRadius: number;
+  /**
+   * Metade da largura e da altura da tela, em unidades do mundo, com o agente no meio. As armas
+   * só miram no que está nela (PERF-3). Sem isso, vale um quadrado dentro de `viewRadius`.
+   */
+  viewHalf?: { x: number; y: number };
   /** O jogador pediu o especial neste passo. */
   special?: boolean;
 }
@@ -42,6 +47,12 @@ export function stepRun(state: RunState, input: StepInput, dt: number): void {
   if (state.synapseOffer) return;
   state.time += dt;
   state.viewRadius = input.viewRadius;
+  const half = input.viewHalf ?? {
+    x: input.viewRadius / Math.SQRT2,
+    y: input.viewRadius / Math.SQRT2,
+  };
+  state.viewHalf.x = half.x;
+  state.viewHalf.y = half.y;
 
   moveAgent(state, input.move, dt);
   updateRunMap(state);
@@ -207,7 +218,7 @@ function moveEnemies(state: RunState, dt: number): void {
     e.hitFlash = Math.max(0, e.hitFlash - dt);
     const dx = agent.x - e.x;
     const dy = agent.y - e.y;
-    const dist = Math.hypot(dx, dy);
+    const dist = Math.sqrt(dx * dx + dy * dy);
     e.frozen = Math.max(0, e.frozen - dt);
     if (e.straight && !frozen && e.frozen <= 0) {
       e.x += e.dirX * e.speed * e.slow * dt;
@@ -230,9 +241,12 @@ function moveEnemies(state: RunState, dt: number): void {
       if (!o) return;
       const ox = o.x - e.x;
       const oy = o.y - e.y;
-      const d = Math.hypot(ox, oy);
-      const overlap = e.radius + o.radius - d;
-      if (overlap <= 0 || d < 0.001) return;
+      const d2 = ox * ox + oy * oy;
+      const reach = e.radius + o.radius;
+      // Quadrado da distância antes da raiz: a maioria dos vizinhos nem encosta.
+      if (d2 >= reach * reach || d2 < 0.000001) return;
+      const d = Math.sqrt(d2);
+      const overlap = reach - d;
       // O chefe não é empurrado pelos menores.
       const share = e.boss ? 0 : o.boss ? 1 : 0.5;
       const nx = (ox / d) * overlap * push;
@@ -341,12 +355,23 @@ function updateGems(state: RunState, dt: number): void {
 }
 
 function removeDead(state: RunState): void {
-  state.enemies = state.enemies.filter((e) => e.hp > 0);
-  state.projectiles = state.projectiles.filter((p) => p.life > 0);
+  // Compacta no lugar, sem criar listas novas a cada passo.
+  compact(state.enemies, (e) => e.hp > 0);
+  compact(state.projectiles, (p) => p.life > 0);
   // Limpa marcas de golpe de inimigos que já morreram.
   if (Math.floor(state.time) !== Math.floor(state.time - 1 / 60)) {
     const alive = new Set(state.enemies.map((e) => e.id));
     for (const w of state.weapons)
       for (const id of w.lastHit.keys()) if (!alive.has(id)) w.lastHit.delete(id);
   }
+}
+
+/** Tira da lista, no lugar e mantendo a ordem, o que não passa em `keep`. */
+function compact<T>(list: T[], keep: (item: T) => boolean): void {
+  let n = 0;
+  for (let i = 0; i < list.length; i++) {
+    const item = list[i]!;
+    if (keep(item)) list[n++] = item;
+  }
+  list.length = n;
 }

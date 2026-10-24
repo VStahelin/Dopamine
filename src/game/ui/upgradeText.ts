@@ -23,7 +23,8 @@ const plural = (v: number, one: string, many: string) => (Math.abs(v) === 1 ? on
 const STAT_TEXT: Record<RunStatKey, (v: number) => string> = {
   damage: (v) => `+${pct(v)} de dano`,
   projectiles: (v) => `+${num(v)} ${plural(v, 'projétil', 'projéteis')} por disparo`,
-  cooldown: (v) => `−${pct(v)} de recarga`,
+  // "−8% de recarga" era lido como piora (UI-4): o texto diz que fica mais rápido.
+  cooldown: (v) => `Ataca ${pct(v)} mais rápido (−${pct(v)} de recarga)`,
   area: (v) => `+${pct(v)} de área dos disparos`,
   duration: (v) => `+${pct(v)} de duração`,
   projectileSpeed: (v) => `+${pct(v)} de velocidade dos disparos`,
@@ -74,7 +75,7 @@ export function nativeGain(native: AgentDef['nativeReceptor'], typeName = ''): s
 /** O que cada nível de arma soma, em texto. */
 const PARAM_TEXT: Record<keyof WeaponParams, (v: number) => string> = {
   damage: (v) => `+${num(v)} de dano`,
-  cooldownSeconds: (v) => `−${num(v)} s de recarga`,
+  cooldownSeconds: (v) => `ataca mais rápido (−${num(v)} s de recarga)`,
   count: (v) => `+${num(v)} por ativação`,
   areaPx: (v) => `+${num(v)} de área`,
   rangePx: (v) => `+${num(v)} de alcance`,

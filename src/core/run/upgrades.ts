@@ -2,7 +2,7 @@ import type { PassiveDef, PassiveId, RunStatKey, WeaponId } from '../../config';
 import type { BaseSource } from './rules';
 import { addBonus, newWeapon, type BonusSource, type RunState } from './state';
 import { agentBonus, computeStats, statDef, type RunStats } from './stats';
-import { weaponMaxLevel } from './weaponParams';
+import { COUNT_KINDS, weaponMaxLevel } from './weaponParams';
 
 export type UpgradeChoice =
   /**
@@ -93,11 +93,21 @@ function availablePassives(state: RunState): PassiveId[] {
   return ids.filter((id) => {
     const level = state.passives[id]?.level ?? 0;
     if (level >= passives[id].maxLevel) return false;
+    if (!receptorUseful(state, passives[id].stat)) return false;
     if (state.banished.includes(`passive:${id}`)) return false;
     // Com os espaços cheios, só melhora o que já tem (ou o que não ocupa espaço).
     if (slotsFull && level === 0 && !passives[id].freeSlot) return false;
     return true;
   });
+}
+
+/**
+ * O receptor muda algo nas armas de agora? A Dose só aparece com uma arma que dispara vários
+ * objetos; antes, ela vinha para quem só tinha o pulso e parecia upgrade de arma alheia (MEC-1).
+ */
+function receptorUseful(state: RunState, stat: RunStatKey): boolean {
+  if (stat !== 'projectiles') return true;
+  return state.weapons.some((w) => COUNT_KINDS.includes(state.rules.weapons[w.id].kind));
 }
 
 /** Evoluções prontas: arma no nível máximo com o reagente que ela pede. */
@@ -200,8 +210,11 @@ export function applyUpgrade(state: RunState, choice: UpgradeChoice): void {
     case 'weapon': {
       const owned = state.weapons.find((w) => w.id === choice.id);
       if (owned) {
-        owned.level = choice.level;
-        owned.boosts[choice.level - 2] = rarityMultiplier(state, choice.rarity);
+        // Sempre o próximo nível da arma, nunca o da carta: uma carta sorteada antes (level up,
+        // cápsula) com o mesmo nível sobrescrevia o ganho de raridade e tirava disparos (BUG-2).
+        if (owned.level >= weaponMaxLevel(state.rules.weapons[owned.id])) break;
+        owned.level++;
+        owned.boosts[owned.level - 2] = rarityMultiplier(state, choice.rarity);
       } else state.weapons.push(newWeapon(choice.id));
       break;
     }

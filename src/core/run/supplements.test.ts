@@ -41,6 +41,17 @@ describe('suplementos (decisão 0028)', () => {
     for (let i = 0; i < 300; i++) expect(rollSupplement(r)).not.toBe('peroxide');
   });
 
+  it('Aquaporina e Criopreservação não acumulam: saem do sorteio depois da primeira', () => {
+    const r = run();
+    applySupplement(r, 'aquaporin');
+    applySupplement(r, 'cryopreservation');
+    for (let i = 0; i < 300; i++) {
+      const id = rollSupplement(r, 'ultraRare');
+      expect(id).not.toBe('aquaporin');
+      expect(id).not.toBe('cryopreservation');
+    }
+  });
+
   it('o reagente da arma no máximo sai mais vezes', () => {
     const count = (max: boolean) => {
       const r = run();

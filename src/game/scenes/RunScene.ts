@@ -61,6 +61,15 @@ import { hurtSound, lowHealthTick } from '../audio/sfxLogic';
 /** Passos de simulação no máximo por quadro, para não travar depois de uma pausa longa. */
 const MAX_STEPS_PER_FRAME = 8;
 const DAMAGE_TEXT_POOL = 40;
+/**
+ * Números de golpe novos por quadro, no máximo (PERF-1): cada número redesenha um texto, e com
+ * centenas de golpes por segundo isso travava a run. O resto do quadro fica sem número.
+ */
+const MAX_HIT_NUMBERS_PER_FRAME = 6;
+/** Efeitos rápidos (estalo de decomposição, golpe) ao mesmo tempo, no máximo. */
+const MAX_FX = 60;
+/** Folga em volta da tela para desenhar o que está entrando, em unidades do mundo. */
+const CULL_MARGIN = 48;
 /** Golpes contínuos e recuperação são somados e mostrados a cada meio segundo. */
 const SUM_EVERY_SECONDS = 0.5;
 /** Barra de interações embaixo do agente, em unidades do mundo. */
@@ -78,6 +87,8 @@ interface Floater {
   text: Phaser.GameObjects.Text;
   life: number;
   total: number;
+  /** Estilo aplicado por último: trocar fonte, cor ou contorno redesenha o texto. */
+  kind?: NumberKind;
 }
 
 /** Efeito rápido desenhado a partir de um acontecimento do core (cone, feixe, golpe). */
@@ -206,6 +217,10 @@ export class RunScene extends Phaser.Scene {
   /** Dicas da primeira run guiada; `null` fora da primeira run ou depois de Pular. */
   tutorial: TutorialProgress | null = null;
   private floaters: Floater[] = [];
+  /** Números de golpe criados neste quadro. */
+  private hitNumbers = 0;
+  /** Área visível do mundo neste quadro, com a folga de `CULL_MARGIN`. */
+  private view = new Phaser.Geom.Rectangle();
   /** Dano contínuo somado por região do campo, e recuperação somada. */
   private areaSums = new Map<string, { x: number; y: number; amount: number }>();
   private healSum = 0;
@@ -418,6 +433,7 @@ export class RunScene extends Phaser.Scene {
     const input = {
       move: joystick?.active ? joystick.vector : this.keyboard.vector(),
       viewRadius: this.viewRadius(),
+      viewHalf: this.viewHalf(),
     };
     for (let n = 0; this.accumulator >= step && n < MAX_STEPS_PER_FRAME; n++) {
       stepRun(this.run, { ...input, special: this.specialQueued }, step);
@@ -446,6 +462,11 @@ export class RunScene extends Phaser.Scene {
     if (low.play && !this.run.over) sfx.play('lowHealth');
   }
 
+  private viewHalf(): { x: number; y: number } {
+    const cam = this.cameras.main;
+    return { x: cam.width / cam.zoom / 2, y: cam.height / cam.zoom / 2 };
+  }
+
   private viewRadius(): number {
     const cam = this.cameras.main;
     return Math.hypot(cam.width / cam.zoom, cam.height / cam.zoom) / 2;
@@ -453,6 +474,17 @@ export class RunScene extends Phaser.Scene {
 
   private draw(dt: number): void {
     const { agent } = this.run;
+    // Só o que está na tela é desenhado (PERF-3): o resto do mundo segue no core.
+    const wv = this.cameras.main.worldView;
+    this.view.setTo(
+      wv.x - CULL_MARGIN,
+      wv.y - CULL_MARGIN,
+      wv.width + CULL_MARGIN * 2,
+      wv.height + CULL_MARGIN * 2,
+    );
+    this.hitNumbers = 0;
+    const seen = <T extends { x: number; y: number }>(list: readonly T[]) =>
+      list.filter((o) => this.view.contains(o.x, o.y));
     const blink = agent.invulnerableFor > 0 && Math.floor(this.run.time * 20) % 2 === 0;
     this.agentSprite
       .setPosition(agent.x, agent.y)
@@ -462,7 +494,7 @@ export class RunScene extends Phaser.Scene {
     this.drawGround();
     const frozen = this.run.effects.freeze > 0;
 
-    sync(this, this.enemySprites, this.run.enemies, 5, (s, e) => {
+    sync(this, this.enemySprites, seen(this.run.enemies), 5, (s, e) => {
       // O agregado é a mesma molécula, gigante e de outra cor, com brilho (fase 5.10).
       const size = e.aggregate ? RUN.aggregates.sizeMultiplier : 1;
       s.setTexture(this.tex(ENEMY_TEXTURES[e.kind]))
@@ -478,7 +510,9 @@ export class RunScene extends Phaser.Scene {
     });
     const pulse =
       0.5 + 0.5 * Math.sin(this.run.time * Math.PI * 2 * RUN.aggregates.glowPulsesPerSecond);
-    const aggregates = this.run.enemies.filter((e) => e.aggregate && e.hp > 0);
+    const aggregates = this.run.enemies.filter(
+      (e) => e.aggregate && e.hp > 0 && this.view.contains(e.x, e.y),
+    );
     sync(this, this.glowSprites, aggregates, 4.9, (s, e) => {
       s.setTexture(this.tex(ENEMY_TEXTURES[e.kind]))
         .setScale((RUN.aggregates.sizeMultiplier * (1.12 + 0.06 * pulse)) / this.detail)
@@ -500,19 +534,19 @@ export class RunScene extends Phaser.Scene {
         .setScale(1 / this.detail)
         .setPosition(e.x, e.y);
     });
-    sync(this, this.projectileSprites, this.run.projectiles, 8, (s, p) => {
+    sync(this, this.projectileSprites, seen(this.run.projectiles), 8, (s, p) => {
       s.setTexture(this.tex(PROJECTILE_TEXTURES[p.weapon] ?? TEXTURES.shot))
         .setScale((p.weapon === 'fenton' ? 1.3 : 1) / this.detail)
         .setPosition(p.x, p.y)
         .setRotation(Math.atan2(p.vy, p.vx));
     });
-    sync(this, this.coinSprites, this.run.coins, 2, (s, c) => {
+    sync(this, this.coinSprites, seen(this.run.coins), 2, (s, c) => {
       s.setTexture(this.tex(TEXTURES.coin))
         .setScale(1 / this.detail)
         .setPosition(c.x, c.y);
     });
     // Gemas: ciano, verde ou vermelha pelo XP (drops.json gems).
-    sync(this, this.gemSprites, this.run.gems, 2, (s, g) => {
+    sync(this, this.gemSprites, seen(this.run.gems), 2, (s, g) => {
       const id =
         g.value <= DROPS.gems.smallMaxXp
           ? 'gemSmall'
@@ -525,7 +559,7 @@ export class RunScene extends Phaser.Scene {
       this.placeStructureIcon(s, st.kind, st.x, st.y, STRUCTURE_SIZE);
     });
     this.drawEdgeArrows();
-    sync(this, this.vesicleSprites, this.run.vesicles, 2, (s, v) => {
+    sync(this, this.vesicleSprites, seen(this.run.vesicles), 2, (s, v) => {
       this.placeIcon(
         s,
         'vesicle',
@@ -553,6 +587,7 @@ export class RunScene extends Phaser.Scene {
     for (const ev of drainEvents(this.run)) {
       const { agent: a } = this.run;
       if (ev.type === 'damage') {
+        if (!this.view.contains(ev.x, ev.y)) continue;
         const kind = ev.continuous && !ev.crit && ev.affinity > 0 ? 'area' : hitKind(ev);
         if (kind === 'area') this.addAreaDamage(ev.x, ev.y, ev.amount);
         else this.showFloater(ev.x, ev.y, hitLabel(kind, ev.amount), kind);
@@ -582,7 +617,7 @@ export class RunScene extends Phaser.Scene {
         this.agentSprite.setTint(PALETTE.interaction).setTintMode(Phaser.TintModes.FILL);
         this.time.delayedCall(90, () => this.agentSprite.clearTint());
       }
-      if (ev.type === 'kill') this.addPopFx(ev);
+      if (ev.type === 'kill' && this.view.contains(ev.x, ev.y)) this.addPopFx(ev);
       if (ev.type === 'cone') this.addConeFx(ev);
       if (ev.type === 'beam') this.addBeamFx(ev);
       if (ev.type === 'spark') this.addSparkFx(ev);
@@ -765,6 +800,7 @@ export class RunScene extends Phaser.Scene {
       pixelRing(g, agent.x, agent.y, radius, 1, px);
     });
     for (const z of this.run.zones) {
+      if (!this.nearView(z.x, z.y, z.radius)) continue;
       const emulsion = z.kind === 'emulsion';
       const a = Math.min(1, z.life * 2);
       // Redonda, do tamanho da área de dano; disco em linhas que não se sobrepõem, para o
@@ -793,6 +829,7 @@ export class RunScene extends Phaser.Scene {
    */
   private drawEnemyFields(g: Phaser.GameObjects.Graphics, px: number): void {
     for (const h of this.run.hazards) {
+      if (!this.nearView(h.x, h.y, h.radius)) continue;
       const a = Math.min(1, h.life * 2);
       g.fillStyle(PALETTE.toxicPool, 0.35 * a);
       pixelDisc(g, h.x, h.y, h.radius, px);
@@ -803,7 +840,7 @@ export class RunScene extends Phaser.Scene {
     // Calmaria (Serotonina): as auras do estresse ficam desligadas.
     if (specialActive(this.run, 'calm')) return;
     for (const e of this.run.enemies) {
-      if (e.hp <= 0) continue;
+      if (e.hp <= 0 || !this.view.contains(e.x, e.y)) continue;
       const aura = enemies[e.kind].behaviors?.find((b) => b.kind === 'aura');
       if (aura?.kind !== 'aura') continue;
       const spin = this.run.time * 0.15;
@@ -864,6 +901,7 @@ export class RunScene extends Phaser.Scene {
   private drawStructures(g: Phaser.GameObjects.Graphics, px: number): void {
     const r = this.run.rules.structures.radiusPx;
     for (const st of this.run.structures) {
+      if (!this.nearView(st.x, st.y, r)) continue;
       const c = STRUCTURE_COLORS[st.kind];
       g.fillStyle(c.main, 0.16);
       pixelDisc(g, st.x, st.y, r - 6, px);
@@ -990,7 +1028,14 @@ export class RunScene extends Phaser.Scene {
     }
   }
 
+  /** O círculo (x, y, r) encosta na área visível? */
+  private nearView(x: number, y: number, r: number): boolean {
+    const v = this.view;
+    return x + r >= v.x && x - r <= v.right && y + r >= v.y && y - r <= v.bottom;
+  }
+
   private addFx(total: number, draw: Fx['draw']): void {
+    if (this.fx.length >= MAX_FX) return;
     this.fx.push({ draw, life: total, total });
   }
 
@@ -1135,7 +1180,10 @@ export class RunScene extends Phaser.Scene {
     kind: NumberKind,
     seconds = FLOATER_SECONDS,
   ): void {
-    if (!this.showNumbers && HIT_KINDS.has(kind)) return;
+    if (HIT_KINDS.has(kind)) {
+      if (!this.showNumbers || this.hitNumbers >= MAX_HIT_NUMBERS_PER_FRAME) return;
+      this.hitNumbers++;
+    }
     let floater = this.floaters.find((f) => f.life <= 0);
     if (!floater) {
       if (this.floaters.length < DAMAGE_TEXT_POOL) {
@@ -1149,14 +1197,21 @@ export class RunScene extends Phaser.Scene {
         floater = this.floaters.reduce((a, b) => (a.life < b.life ? a : b));
       }
     }
-    const style = NUMBER_STYLES[kind];
     floater.life = seconds;
     floater.total = seconds;
+    // Cada troca de estilo redesenha o texto: só troca quando o tipo muda.
+    if (floater.kind !== kind) {
+      const style = NUMBER_STYLES[kind];
+      floater.kind = kind;
+      floater.text.setStyle({
+        fontFamily: style.font,
+        fontSize: `${style.size}px`,
+        color: style.color,
+        stroke: style.outline,
+        strokeThickness: Math.max(2, Math.round(style.size / 5)),
+      });
+    }
     floater.text
-      .setFontFamily(style.font)
-      .setFontSize(style.size)
-      .setColor(style.color)
-      .setStroke(style.outline, Math.max(2, Math.round(style.size / 5)))
       .setText(label)
       .setPosition(x + Phaser.Math.Between(-4, 4), y - 6)
       .setVisible(true)

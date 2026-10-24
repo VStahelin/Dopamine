@@ -20,23 +20,43 @@ export function copies(state: RunState, id: string): number {
   return state.supplements[id] ?? 0;
 }
 
+type Holding<K extends SupplementEffect['kind']> = {
+  n: number;
+  effect: Extract<SupplementEffect, { kind: K }>;
+}[];
+
+/**
+ * Suplementos de cada efeito, por run. Os ganchos rodam a cada golpe e a cada decomposição; sem
+ * isso, cada golpe varria os suplementos (PERF-1). `applySupplement` limpa a run daqui.
+ */
+const byKind = new WeakMap<RunState, Map<string, Holding<SupplementEffect['kind']>>>();
+
 /** Suplementos que o agente tem com o efeito `kind`: cópias e o efeito de cada um. */
-function holding<K extends SupplementEffect['kind']>(
-  state: RunState,
-  kind: K,
-): { n: number; effect: Extract<SupplementEffect, { kind: K }> }[] {
-  const out: { n: number; effect: Extract<SupplementEffect, { kind: K }> }[] = [];
-  for (const [id, n] of Object.entries(state.supplements)) {
-    const effect = state.rules.supplements.items[id]?.effect;
-    if (effect?.kind === kind)
-      out.push({ n, effect: effect as Extract<SupplementEffect, { kind: K }> });
+function holding<K extends SupplementEffect['kind']>(state: RunState, kind: K): Holding<K> {
+  let kinds = byKind.get(state);
+  if (!kinds) {
+    kinds = new Map();
+    for (const [id, n] of Object.entries(state.supplements)) {
+      const effect = state.rules.supplements.items[id]?.effect;
+      if (!effect) continue;
+      const list = kinds.get(effect.kind) ?? [];
+      list.push({ n, effect });
+      kinds.set(effect.kind, list);
+    }
+    byKind.set(state, kinds);
   }
-  return out;
+  return (kinds.get(kind) ?? NONE) as Holding<K>;
 }
 
-/** Pode sair agora? Reagente só uma cópia; atributo no teto da run sai do sorteio. */
+const NONE: Holding<SupplementEffect['kind']> = [];
+
+/**
+ * Pode sair agora? Reagente e efeito que não acumula só uma cópia; atributo no teto da run sai do
+ * sorteio.
+ */
 function available(state: RunState, id: string): boolean {
   const def = state.rules.supplements.items[id]!;
+  if (def.unique && copies(state, id) > 0) return false;
   const e = def.effect;
   if (e.kind === 'reagent') return (state.passives[e.passive as PassiveId]?.level ?? 0) === 0;
   if (e.kind === 'stat') {
@@ -92,6 +112,7 @@ export function applySupplement(state: RunState, id: string): void {
   const def = state.rules.supplements.items[id];
   if (!def) return;
   state.supplements[id] = copies(state, id) + 1;
+  byKind.delete(state);
   if (!state.seenSupplements.includes(id)) state.seenSupplements.push(id);
   const e = def.effect;
   const before = state.stats.maxInteractions;

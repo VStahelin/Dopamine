@@ -13,7 +13,7 @@ import type {
 import { mapName, mapParams } from '../map/chunk';
 import { createRunMap, type RunMap } from '../map/world';
 import { Rng } from '../random';
-import { xpToNextLevel } from './progression';
+import { enemyDamageAt, enemySpeedAt, xpToNextLevel } from './progression';
 import { DEFAULT_RULES, type RunRules } from './rules';
 import { agentBonus, computeStats, type PassiveLevels, type RunStats } from './stats';
 import type { UpgradeChoice } from './upgrades';
@@ -60,6 +60,8 @@ export interface Enemy {
   actTimer: number;
   /** Quem a gerou (Citocina, chefes); 0 se nasceu sozinha. */
   parent: number;
+  /** Momento do último empurrão; a molécula só é empurrada de novo depois da recarga. */
+  knockedAt: number;
   /** Distância que mantém do agente (Cortisol); 0 se encosta. */
   keepAway: number;
 }
@@ -133,7 +135,8 @@ export interface Pulse {
   maxRadius: number;
   speed: number;
   damage: number;
-  hits: number[];
+  /** Moléculas já atingidas por este anel (conjunto: um anel grande passa por centenas). */
+  hits: Set<number>;
   source: WeaponId;
 }
 
@@ -338,6 +341,8 @@ export interface RunState {
   seenItems: ItemId[];
   /** Distância do agente até a borda mais longe da tela no último passo. */
   viewRadius: number;
+  /** Metade da tela em volta do agente, no último passo: a área em que as armas miram. */
+  viewHalf: { x: number; y: number };
   /** ATP coletado nesta run. */
   atp: number;
   weapons: WeaponInstance[];
@@ -503,6 +508,7 @@ export function createRun(
     freedAgent: null,
     seenItems: [],
     viewRadius: 300,
+    viewHalf: { x: 212, y: 212 },
     atp: 0,
     weapons: [newWeapon(rules.agents[agentId].action as WeaponId)],
     special: {
@@ -567,9 +573,15 @@ export function addEnemy(
     y,
     hp,
     maxHp: hp,
-    speed: def.speedPxPerSecond * (1 + curse * c.speed),
+    speed:
+      def.speedPxPerSecond *
+      (1 + curse * c.speed) *
+      enemySpeedAt(state.time, state.rules.economy.difficulty),
     radius: def.radiusPx,
-    contactDamage: state.rules.run.contactDamage[def.contactDamage],
+    // O dano de contato cresce com o tempo de run (BAL-4); fica o do momento em que nasce.
+    contactDamage:
+      state.rules.run.contactDamage[def.contactDamage] *
+      enemyDamageAt(state.time, state.rules.economy.difficulty),
     xp: def.xp * (1 + curse * c.xp),
     elite: def.contactDamage !== 'common',
     boss: def.boss === true,
@@ -589,6 +601,7 @@ export function addEnemy(
     turnTimer: 0,
     actTimer: 0,
     parent: 0,
+    knockedAt: -Infinity,
     keepAway: def.behaviors?.find((b) => b.kind === 'keepAway')?.distancePx ?? 0,
   };
   state.enemies.push(enemy);

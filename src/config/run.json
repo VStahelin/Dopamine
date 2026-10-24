@@ -27,6 +27,13 @@
   },
   "combat": {
     "knockbackPx": 6,
+    "knockbackCooldownSeconds": 0.35,
+    "knockbackFalloffMinutes": 8,
+    "knockbackResist": {
+      "strong": 0.5,
+      "aggregate": 0.85,
+      "boss": 1
+    },
     "ricochetRangePx": 90,
     "ricochetDamageFactor": 0.85,
     "reviveInvulnerabilitySeconds": 2,

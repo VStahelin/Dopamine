@@ -191,7 +191,7 @@ export class LevelUpScene extends Phaser.Scene {
 
     const title = synapse ? 'SINAPSE' : this.banishing ? 'BANIR' : `NÍVEL ${run.level}!`;
     const subtitle = synapse
-      ? 'ESCOLHA UM BÔNUS'
+      ? 'BÔNUS ATÉ O FIM DA RUN · NÃO OCUPA ESPAÇO'
       : this.banishing
         ? 'TOQUE NA OPÇÃO QUE SAI DA RUN'
         : 'ESCOLHA UMA ARMA OU RECEPTOR';

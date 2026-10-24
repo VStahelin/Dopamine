@@ -20,7 +20,23 @@ export function difficultyAt(timeSeconds: number, d: EconomyConfig['difficulty']
 /** Multiplicador da vida das moléculas que nascem agora: a dificuldade e mais a curva da vida. */
 export function enemyHpAt(timeSeconds: number, d: EconomyConfig['difficulty']): number {
   const m = timeSeconds / 60;
-  return d.hpStart * difficultyAt(timeSeconds, d) * (1 + d.hpLinear * m + d.hpQuadratic * m * m);
+  const late = m > d.lateMinute ? 2 ** ((m - d.lateMinute) / d.hpDoublingMinutes) : 1;
+  return (
+    d.hpStart * difficultyAt(timeSeconds, d) * (1 + d.hpLinear * m + d.hpQuadratic * m * m) * late
+  );
+}
+
+/**
+ * Multiplicador do dano de contato das moléculas que nascem agora: dobra a cada
+ * `damageDoublingMinutes` (playtest rodada 2, BAL-4). Contínuo, para prever o ajuste.
+ */
+export function enemyDamageAt(timeSeconds: number, d: EconomyConfig['difficulty']): number {
+  return 2 ** (timeSeconds / 60 / d.damageDoublingMinutes);
+}
+
+/** Multiplicador da velocidade das moléculas que nascem agora, com teto. */
+export function enemySpeedAt(timeSeconds: number, d: EconomyConfig['difficulty']): number {
+  return Math.min(d.maxSpeedMultiplier, 1 + (d.speedPerMinute * timeSeconds) / 60);
 }
 
 /** Onda atual (uma a cada ciclo do dente de serra) e se está no pico agora. */

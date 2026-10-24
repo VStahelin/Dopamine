@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { hitEnemy } from './combat';
 import { addEnemy, createRun, drainEvents } from './state';
 import { stepRun } from './step';
 import { DT, rulesWithoutSpawn, STILL } from './testRules';
@@ -46,6 +47,29 @@ describe('atributos ofensivos', () => {
     e.speed = 0;
     steps(30, () => stepRun(r, STILL, DT));
     expect(e.x).toBeGreaterThan(60);
+  });
+
+  it('o chefe não é empurrado (BAL-3)', () => {
+    const r = run();
+    r.stats.critChance = 0;
+    const e = addEnemy(r, 'ldl', 60, 0);
+    e.speed = 0;
+    steps(30, () => stepRun(r, STILL, DT));
+    expect(e.hp).toBeLessThan(e.maxHp);
+    expect(e.x).toBe(60);
+  });
+
+  it('a molécula só é empurrada de novo depois da recarga (BAL-2)', () => {
+    const r = run();
+    const e = addEnemy(r, 'triglyceride', 60, 0);
+    e.speed = 0;
+    hitEnemy(r, e, 0.01, { dirX: 1, dirY: 0 });
+    const once = e.x;
+    hitEnemy(r, e, 0.01, { dirX: 1, dirY: 0 });
+    expect(e.x).toBe(once);
+    r.time += r.rules.run.combat.knockbackCooldownSeconds;
+    hitEnemy(r, e, 0.01, { dirX: 1, dirY: 0 });
+    expect(e.x).toBeGreaterThan(once);
   });
 
   it('Reação em cadeia salta para outro inimigo', () => {
