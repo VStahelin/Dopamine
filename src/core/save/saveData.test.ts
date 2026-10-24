@@ -32,6 +32,14 @@ describe('migrateSave', () => {
     });
     expect(save.options.showFps).toBe(false);
   });
+
+  it('marca o Compêndio como não visitado só em save de antes do campo', () => {
+    expect(defaultSave(defaults).compendiumRead).toEqual([]);
+    expect(migrateSave({ seen: ['glucose'] }, defaults).compendiumRead).toBeNull();
+    expect(migrateSave({ compendiumRead: ['molecules:glucose'] }, defaults).compendiumRead).toEqual(
+      ['molecules:glucose'],
+    );
+  });
 });
 
 describe('recordRun', () => {

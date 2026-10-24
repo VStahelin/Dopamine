@@ -1,33 +1,19 @@
 import * as Phaser from 'phaser';
 import {
   AGENTS,
-  DROPS,
   IDLE,
-  ENEMIES,
-  ITEM_IDS,
   MAP,
-  MAP_ENVIRONMENTS,
   ORGANISM,
   PASSIVES,
-  RARITIES,
-  RUN,
-  SUPPLEMENTS,
   WEAPONS,
   type AgentId,
-  type EnemyKind,
   type MoleculeType,
   type PassiveId,
   type WeaponId,
   type WeaponKind,
 } from '../../config';
 import { PALETTE, PALETTE_CSS } from '../render/palette';
-import {
-  addIcon,
-  AGENT_TEXTURES,
-  ENEMY_TEXTURES,
-  iconTexture,
-  textureKey,
-} from '../render/textures';
+import { addIcon, AGENT_TEXTURES, iconTexture, textureKey } from '../render/textures';
 import {
   isUnlocked,
   unlockCost,
@@ -35,9 +21,8 @@ import {
   type UnlockKind,
 } from '../../core/meta/progress';
 import { addButton } from './button';
-import { addIconSlot, passiveSlot, slotSize, supplementSlot, weaponIcon } from './iconSlot';
+import { addIconSlot, passiveSlot, slotSize, weaponIcon } from './iconSlot';
 import { nativeGain, receptorGain } from './upgradeText';
-import { familyText, floorColor } from './locals';
 import { drawCreamSlot, drawInkBox, drawLock, drawWoodFrame } from './icons';
 import { RUN_AGENTS, type ExampleItem } from './menuContent';
 import { bodyText, impactText, labelText, withShadow } from './theme';
@@ -83,16 +68,6 @@ export const TYPE_NAMES: Record<MoleculeType, string> = {
   radical: 'RADICAIS',
   stress: 'ESTRESSE',
   toxin: 'TOXINAS',
-  inflammation: 'INFLAMAÇÃO',
-};
-
-/** Tipo no singular, para a etiqueta de cada molécula do Compêndio. */
-const TYPE_NAME: Record<MoleculeType, string> = {
-  lipid: 'LIPÍDIO',
-  sugar: 'AÇÚCAR',
-  radical: 'RADICAL',
-  stress: 'ESTRESSE',
-  toxin: 'TOXINA',
   inflammation: 'INFLAMAÇÃO',
 };
 
@@ -388,336 +363,4 @@ export function renderArsenal(
     );
   });
   return out;
-}
-
-/** Moléculas já vistas, com tipo e cascata, e os itens do mapa já coletados; o resto em silhueta. */
-export function renderCompendium(
-  scene: Phaser.Scene,
-  x: number,
-  y: number,
-  w: number,
-  seen: readonly string[],
-  seenItems: readonly string[],
-  seenSupplements: readonly string[] = [],
-  seenAggregates: readonly string[] = [],
-  seenFormations: readonly string[] = [],
-  bestByLocal?: Readonly<Record<string, number>>,
-): Obj[] {
-  const { left, width } = column(x, w);
-  const g = scene.add.graphics();
-  const kinds = Object.keys(ENEMIES) as EnemyKind[];
-  const known = kinds.filter((k) => seen.includes(k)).length;
-  const out: Obj[] = [g, header(scene, left, y, `MOLÉCULAS VISTAS · ${known}/${kinds.length}`)];
-  let cy = y + 16;
-  for (const kind of kinds) {
-    const def = ENEMIES[kind];
-    const isSeen = seen.includes(kind);
-    let h = 50;
-    const img = sprite(scene, ENEMY_TEXTURES[kind], left + 23, cy + 23, 30);
-    if (!isSeen) img.setTint(0x15172e).setTintMode(Phaser.TintModes.FILL);
-    out.push(img);
-    if (!isSeen) {
-      out.push(scene.add.text(left + 50, cy + 14, '???', impactText(13, PALETTE_CSS.textMuted)));
-    } else {
-      const name = def.boss ? `${def.name} · CHEFE` : def.name;
-      out.push(
-        scene.add.text(
-          left + 50,
-          cy + 6,
-          name,
-          withShadow(bodyText(14, PALETTE_CSS.text), PALETTE_CSS.ink, 1),
-        ),
-        scene.add
-          .text(left + width - 12, cy + 8, TYPE_NAME[def.type], labelText(8, PALETTE_CSS.cyan))
-          .setOrigin(1, 0),
-      );
-      const frag = (def.fragments ?? [])
-        .map((f) => `${f.count} ${ENEMIES[f.kind as EnemyKind].name.toUpperCase()}`)
-        .join(' + ');
-      const fragText = scene.add.text(
-        left + 50,
-        cy + 26,
-        frag ? `QUEBRA EM ${frag}` : 'DECOMPOSTA POR COMPLETO',
-        {
-          ...labelText(8, frag ? PALETTE_CSS.gold : PALETTE_CSS.textMuted),
-          wordWrap: { width: width - 62 },
-          lineSpacing: 2,
-        },
-      );
-      out.push(fragText);
-      h = Math.max(h, Math.ceil(fragText.y + fragText.height - cy) + 8);
-    }
-    drawInkBox(g, left, cy, width, h, PALETTE.panel);
-    drawCreamSlot(g, left + 6, cy + 6, 34, 34);
-    cy += h + 4;
-  }
-  const aggregates = renderAggregates(scene, g, left, cy + 12, width, seenAggregates);
-  out.push(...aggregates.objects);
-  const formations = renderFormations(
-    scene,
-    g,
-    left,
-    aggregates.bottom + 12,
-    width,
-    seenFormations,
-  );
-  out.push(...formations.objects);
-  const items = renderItems(scene, g, left, formations.bottom + 12, width, seenItems);
-  out.push(...items.objects);
-  const supplements = renderSupplements(scene, g, left, items.bottom + 12, width, seenSupplements);
-  out.push(...supplements.objects);
-  out.push(...renderLocals(scene, g, left, supplements.bottom + 12, width, bestByLocal ?? {}));
-  return out;
-}
-
-/** Seção "Locais do corpo" do Compêndio (fase 5.12): o que cada local dobra e quem tem ✚ ali. */
-function renderLocals(
-  scene: Phaser.Scene,
-  g: Phaser.GameObjects.Graphics,
-  left: number,
-  y: number,
-  width: number,
-  best: Readonly<Record<string, number>>,
-): Obj[] {
-  const played = MAP_ENVIRONMENTS.filter((env) => (best[env] ?? 0) > 0).length;
-  const out: Obj[] = [
-    header(scene, left, y, `LOCAIS DO CORPO · ${played}/${MAP_ENVIRONMENTS.length}`),
-  ];
-  let cy = y + 16;
-  for (const env of MAP_ENVIRONMENTS) {
-    const def = MAP.environments[env];
-    const owners = Object.values(AGENTS)
-      .filter((a) => a.synergy?.env === env)
-      .map((a) => `✚ ${a.name} (${ORGANISM.sectors[a.synergy!.sector].name})`);
-    const barred = Object.values(AGENTS)
-      .filter((a) => env === 'brain' && a.crossesBloodBrainBarrier === false)
-      .map((a) => `⊘ ${a.name}`);
-    const family = familyText(env);
-    const sector = def.sector
-      ? ` · ${ORGANISM.sectors[def.sector].name} ×${String(MAP.locals.sectorMultiplier).replace('.', ',')}`
-      : '';
-    const tx = left + 30;
-    out.push(
-      scene.add.text(
-        tx,
-        cy + 5,
-        def.name,
-        withShadow(bodyText(13, PALETTE_CSS.text), PALETTE_CSS.ink, 1),
-      ),
-    );
-    const desc = scene.add.text(
-      tx,
-      cy + 23,
-      [`${family}${sector}`, [...owners, ...barred].join(' · ') || 'Sinergia: em breve'].join('\n'),
-      { ...bodyText(9, PALETTE_CSS.textSoft), wordWrap: { width: left + width - 8 - tx } },
-    );
-    out.push(desc);
-    const h = Math.ceil(desc.y + desc.height - cy) + 6;
-    drawInkBox(g, left, cy, width, h, PALETTE.panel);
-    g.fillStyle(PALETTE.ink).fillRect(left + 8, cy + 8, 14, 14);
-    g.fillStyle(env === 'blood' ? PALETTE.interaction : floorColor(env, 3)).fillRect(
-      left + 10,
-      cy + 10,
-      10,
-      10,
-    );
-    cy += h + 4;
-  }
-  return out;
-}
-
-/** Seção "Suplementos" do Compêndio, na ordem de supplements.json (fase 5.9). */
-function renderSupplements(
-  scene: Phaser.Scene,
-  g: Phaser.GameObjects.Graphics,
-  left: number,
-  y: number,
-  width: number,
-  seen: readonly string[],
-): { objects: Obj[]; bottom: number } {
-  const ids = Object.keys(SUPPLEMENTS.items);
-  const known = ids.filter((id) => seen.includes(id)).length;
-  const out: Obj[] = [header(scene, left, y, `SUPLEMENTOS · ${known}/${ids.length}`)];
-  let cy = y + 16;
-  for (const id of ids) {
-    const def = SUPPLEMENTS.items[id]!;
-    const isSeen = seen.includes(id);
-    let h = 40;
-    const slot = addIconSlot(scene, left + 6, cy + 6, 1, { ...supplementSlot(id), dim: !isSeen });
-    out.push(...slot.objects);
-    const tx = left + 6 + slot.size + 10;
-    if (!isSeen) {
-      out.push(scene.add.text(tx, cy + 11, '???', impactText(13, PALETTE_CSS.textMuted)));
-    } else {
-      const tier = RARITIES.tiers.find((r) => r.id === SUPPLEMENTS.rarities[def.rarity].tier);
-      out.push(
-        scene.add.text(
-          tx,
-          cy + 4,
-          def.name,
-          withShadow(bodyText(13, PALETTE_CSS.text), PALETTE_CSS.ink, 1),
-        ),
-        scene.add
-          .text(
-            left + width - 10,
-            cy + 6,
-            (tier?.name ?? '').toUpperCase(),
-            labelText(8, tier?.color ?? PALETTE_CSS.cyan),
-          )
-          .setOrigin(1, 0),
-      );
-      const desc = scene.add.text(tx, cy + 22, def.description, {
-        ...bodyText(9, PALETTE_CSS.textSoft),
-        wordWrap: { width: left + width - 8 - tx },
-      });
-      out.push(desc);
-      h = Math.max(h, Math.ceil(desc.y + desc.height - cy) + 6);
-    }
-    drawInkBox(g, left, cy, width, h, PALETTE.panel);
-    cy += h + 4;
-  }
-  return { objects: out, bottom: cy };
-}
-
-/** Seção "Agregados": as moléculas fortes que já vieram como mini chefe (fase 5.10). */
-function renderAggregates(
-  scene: Phaser.Scene,
-  g: Phaser.GameObjects.Graphics,
-  left: number,
-  y: number,
-  width: number,
-  seen: readonly string[],
-): { objects: Obj[]; bottom: number } {
-  const kinds = (Object.keys(ENEMIES) as EnemyKind[]).filter(
-    (k) => ENEMIES[k].contactDamage === 'strong' && !ENEMIES[k].boss,
-  );
-  const known = kinds.filter((k) => seen.includes(k)).length;
-  const out: Obj[] = [header(scene, left, y, `AGREGADOS · ${known}/${kinds.length}`)];
-  let cy = y + 16;
-  for (const kind of kinds) {
-    const isSeen = seen.includes(kind);
-    const h = 50;
-    drawInkBox(g, left, cy, width, h, PALETTE.panel);
-    g.fillStyle(PALETTE.interaction).fillRect(left + 4, cy + 4, 38, 42);
-    drawCreamSlot(g, left + 6, cy + 6, 34, 38);
-    const img = sprite(scene, ENEMY_TEXTURES[kind], left + 23, cy + 25, 32);
-    if (!isSeen) img.setTint(0x15172e).setTintMode(Phaser.TintModes.FILL);
-    out.push(img);
-    out.push(
-      isSeen
-        ? scene.add.text(
-            left + 50,
-            cy + 6,
-            `Agregado de ${ENEMIES[kind].name.toLowerCase()}`,
-            withShadow(bodyText(14, PALETTE_CSS.text), PALETTE_CSS.ink, 1),
-          )
-        : scene.add.text(left + 50, cy + 14, '???', impactText(13, PALETTE_CSS.textMuted)),
-    );
-    if (isSeen) {
-      out.push(
-        scene.add.text(
-          left + 50,
-          cy + 26,
-          'MINI CHEFE · SEMPRE SOLTA AMPOLA',
-          labelText(8, PALETTE_CSS.interaction),
-        ),
-      );
-    }
-    cy += h + 4;
-  }
-  return { objects: out, bottom: cy };
-}
-
-/** Seção "Formações": os grupos programados que a doença escolhe (fase 5.6). */
-function renderFormations(
-  scene: Phaser.Scene,
-  g: Phaser.GameObjects.Graphics,
-  left: number,
-  y: number,
-  width: number,
-  seen: readonly string[],
-): { objects: Obj[]; bottom: number } {
-  const list = RUN.formations.list;
-  const ids = Object.keys(list);
-  const known = ids.filter((id) => seen.includes(id)).length;
-  const out: Obj[] = [header(scene, left, y, `FORMAÇÕES · ${known}/${ids.length}`)];
-  let cy = y + 16;
-  for (const id of ids) {
-    const def = list[id]!;
-    const isSeen = seen.includes(id);
-    let h = 40;
-    if (!isSeen) {
-      out.push(scene.add.text(left + 12, cy + 11, '???', impactText(13, PALETTE_CSS.textMuted)));
-    } else {
-      out.push(
-        scene.add.text(
-          left + 12,
-          cy + 4,
-          def.name,
-          withShadow(bodyText(13, PALETTE_CSS.text), PALETTE_CSS.ink, 1),
-        ),
-        scene.add
-          .text(
-            left + width - 10,
-            cy + 6,
-            TYPE_NAMES[def.family],
-            labelText(8, PALETTE_CSS.logoOrange),
-          )
-          .setOrigin(1, 0),
-      );
-      const desc = scene.add.text(left + 12, cy + 22, def.description, {
-        ...bodyText(9, PALETTE_CSS.textSoft),
-        wordWrap: { width: width - 24 },
-      });
-      out.push(desc);
-      h = Math.max(h, Math.ceil(desc.y + desc.height - cy) + 6);
-    }
-    drawInkBox(g, left, cy, width, h, PALETTE.panel);
-    cy += h + 4;
-  }
-  return { objects: out, bottom: cy };
-}
-
-/** Seção "Itens" do Compêndio: os itens das vesículas (fase 5.5). */
-function renderItems(
-  scene: Phaser.Scene,
-  g: Phaser.GameObjects.Graphics,
-  left: number,
-  y: number,
-  width: number,
-  seen: readonly string[],
-): { objects: Obj[]; bottom: number } {
-  const known = ITEM_IDS.filter((id) => seen.includes(id)).length;
-  const out: Obj[] = [header(scene, left, y, `ITENS · ${known}/${ITEM_IDS.length}`)];
-  let cy = y + 16;
-  for (const id of ITEM_IDS) {
-    const def = DROPS.items[id];
-    const isSeen = seen.includes(id);
-    let h = 40;
-    const icon = addIcon(scene, left + 6, cy + 4, iconTexture('items', id), 32);
-    if (!isSeen) icon.setTint(0x15172e).setTintMode(Phaser.TintModes.FILL);
-    out.push(icon);
-    if (!isSeen) {
-      out.push(scene.add.text(left + 48, cy + 11, '???', impactText(13, PALETTE_CSS.textMuted)));
-    } else {
-      out.push(
-        scene.add.text(
-          left + 48,
-          cy + 4,
-          def.name,
-          withShadow(bodyText(13, PALETTE_CSS.text), PALETTE_CSS.ink, 1),
-        ),
-      );
-      const desc = scene.add.text(left + 48, cy + 22, def.description, {
-        ...bodyText(9, PALETTE_CSS.textSoft),
-        wordWrap: { width: width - 56 },
-      });
-      out.push(desc);
-      h = Math.max(h, Math.ceil(desc.y + desc.height - cy) + 6);
-    }
-    drawInkBox(g, left, cy, width, h, PALETTE.panel);
-    drawCreamSlot(g, left + 6, cy + 4, 32, 32);
-    cy += h + 4;
-  }
-  return { objects: out, bottom: cy };
 }

@@ -91,6 +91,11 @@ export interface SaveData {
   seenAggregates: string[];
   /** Formações já vistas, para o Compêndio (fase 5.6). */
   seenFormations: string[];
+  /**
+   * Verbetes do Compêndio já abertos ("categoria:id"), para o selo NOVO. null num save de antes
+   * do Compêndio novo: a primeira visita marca tudo que já foi encontrado como lido.
+   */
+  compendiumRead: string[] | null;
   /** Cápsulas abertas no save, para a sorte de principiante. */
   capsulesOpened: number;
   /** ATP guardado, ganho nas runs e gasto no Laboratório e nos desbloqueios. */
@@ -131,6 +136,7 @@ export function defaultSave(options: Options): SaveData {
     seenSupplements: [],
     seenAggregates: [],
     seenFormations: [],
+    compendiumRead: [],
     capsulesOpened: 0,
     atp: 0,
     meta: defaultProgress(),
@@ -161,6 +167,7 @@ export function migrateSave(raw: unknown, defaults: Options): SaveData {
     seenSupplements: unknown;
     seenAggregates: unknown;
     seenFormations: unknown;
+    compendiumRead: unknown;
     capsulesOpened: unknown;
     atp: unknown;
     meta: unknown;
@@ -200,6 +207,7 @@ export function migrateSave(raw: unknown, defaults: Options): SaveData {
     seenSupplements: strings(data.seenSupplements) ?? [],
     seenAggregates: strings(data.seenAggregates) ?? [],
     seenFormations: strings(data.seenFormations) ?? [],
+    compendiumRead: strings(data.compendiumRead) ?? null,
     capsulesOpened: num(data.capsulesOpened, 0),
     atp: num(data.atp, 0),
     meta: migrateProgress(data.meta),

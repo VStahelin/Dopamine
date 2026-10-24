@@ -11,7 +11,7 @@ import { IdleScene } from './game/scenes/IdleScene';
 import { AmpouleScene } from './game/scenes/AmpouleScene';
 import { CapsuleScene } from './game/scenes/CapsuleScene';
 import { ChangelogScene } from './game/scenes/ChangelogScene';
-import { WikiScene } from './game/scenes/WikiScene';
+import { CompendiumScene } from './game/scenes/CompendiumScene';
 import { LevelUpScene } from './game/scenes/LevelUpScene';
 import { CatalogScene } from './game/scenes/CatalogScene';
 import { LocalScene } from './game/scenes/LocalScene';
@@ -71,7 +71,7 @@ const game = new Phaser.Game({
     IdleScene,
     OptionsScene,
     ChangelogScene,
-    WikiScene,
+    CompendiumScene,
     RunScene,
     HudScene,
     LevelUpScene,

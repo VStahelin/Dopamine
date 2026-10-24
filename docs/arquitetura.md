@@ -41,6 +41,7 @@ A regra de dependência é verificada pelo ESLint (`no-restricted-imports` em [e
 | `title` | [TitleScene.ts](../src/game/scenes/TitleScene.ts) | Logo e Começar |
 | `hub` | [HubScene.ts](../src/game/scenes/HubScene.ts) | Menu principal ([menu.md](menu.md)): status, caso com estrelas, JOGAR, trilhos e as 5 abas |
 | `placeholder` | [PlaceholderScene.ts](../src/game/scenes/PlaceholderScene.ts) | Telas abertas pelo hub que ainda não têm conteúdo, no formato comum ([sectionView.ts](../src/game/ui/sectionView.ts)) |
+| `compendium` | [CompendiumScene.ts](../src/game/scenes/CompendiumScene.ts) | Compêndio: registro do que já foi encontrado e o Guia do jogo (o docs/wiki.md), montados em [compendium/model.ts](../src/game/ui/compendium/model.ts); índice, lista e verbete no celular, as três lado a lado no PC; busca num `<input>` da página ([htmlInput.ts](../src/game/ui/htmlInput.ts)) |
 | `records`, `options` | [RecordsScene.ts](../src/game/scenes/RecordsScene.ts), [OptionsScene.ts](../src/game/scenes/OptionsScene.ts) | Recordes salvos; opções com as abas Som, Tela e Jogo |
 | `run` | [RunScene.ts](../src/game/scenes/RunScene.ts) | Chama o `stepRun` do `core` em passos fixos e desenha o estado (sprites reaproveitados, números de dano); abre as telas por cima |
 | `hud` | [HudScene.ts](../src/game/scenes/HudScene.ts) | Por cima da run ([ui-cronico.md](ui-cronico.md)): banda com XP, ícones de armas e reagentes, tempo, onda e decompostas; efeitos, chefe e pausa abaixo dela; botão do especial, joystick e FPS |
@@ -49,7 +50,7 @@ A regra de dependência é verificada pelo ESLint (`no-restricted-imports` em [e
 
 A música fica em [src/game/audio/](../src/game/audio/music.ts): um player único em Web Audio, ligado ao contexto de som do Phaser, que baixa as faixas de `public/audio/music/` em segundo plano (OGG ou M4A, o que o navegador tocar), troca com crossfade e repete só o trecho de loop. Cada tela pede a sua faixa no `create`; a run calcula a música a cada quadro com [musicLogic.ts](../src/game/audio/musicLogic.ts) (tempo, crise, chefe, telas por cima). As faixas ficam fora do precache e entram no cache `dopamina-audio` do service worker na primeira vez. Os efeitos sonoros têm um player próprio no mesmo contexto ([sfx.ts](../src/game/audio/sfx.ts)), que baixa `public/audio/sfx/` do mesmo jeito; a run toca cada um pelos eventos do `core` (`hurt`, `heal`, `dodge`, `revive`, `specialReady`).
 
-As telas de interface usam [uiLayout.ts](../src/game/ui/uiLayout.ts): zoom inteiro a partir do canto superior esquerdo e layout refeito a cada redimensionamento.
+As telas de interface usam [uiLayout.ts](../src/game/ui/uiLayout.ts): zoom inteiro a partir do canto superior esquerdo e layout refeito a cada redimensionamento. As telas de menu passam `menuMinSize` de [wide/wideLayout.ts](../src/game/ui/wide/wideLayout.ts): com a tela deitada e larga (pelo menos 1100×600 lógicos, base 1280×720), cada uma monta o layout de PC (pranchetas "Menu no PC"); os desenhos de cada aba no PC ficam em `src/game/ui/wide/`.
 
 ## A run no `core`
 

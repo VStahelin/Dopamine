@@ -478,12 +478,15 @@ Deixar o jogo com a cara do canvas de identidade visual e pronto para outras pes
 
 **Ordem do que falta (Vitor, 23/10/2026):** primeiro os menus no desktop, depois os efeitos sonoros.
 
-1. **Menus no desktop.** A thread "Conceito desktop do menu" desenha as pranchetas no canvas. Depois que o Vitor aprovar, o código segue as pranchetas.
-   - [ ] Conceito no canvas aprovado: menu principal (aba Caso), Agentes, Arsenal, Laboratório, Organismo e Novidades. Pranchetas prontas no canvas (linha "Menu no PC", [menu.md](menu.md#tela-larga-pc-celular-deitado)), esperando o Vitor.
-   - [ ] Menu principal em tela larga: barra de status no topo, abas num trilho à esquerda, laterais com o painel do agente e o do organismo.
-   - [ ] Abas Agentes, Arsenal, Laboratório e Organismo em colunas.
-   - [ ] Novidades em duas colunas: as versões e a versão escolhida.
-   - [ ] Validar em 1280×800 e 1920×1080, e conferir que no celular nada mudou.
+1. **Menus no desktop.** A thread "Conceito desktop do menu" desenhou as pranchetas no canvas e o código segue as pranchetas (tela larga: deitada com pelo menos 1100×600 lógicos).
+   - [x] Conceito no canvas aprovado: menu principal (aba Caso), Agentes, Arsenal, Laboratório, Organismo e Novidades (linha "Menu no PC", [menu.md](menu.md#tela-larga-pc-celular-deitado)).
+   - [x] Menu principal em tela larga: barra de status no topo, abas num trilho à esquerda (teclas 1 a 5, O e L), Caso em três colunas com o agente, o caso e as metas.
+   - [x] Abas Agentes, Arsenal, Laboratório e Organismo em colunas.
+   - [x] Novidades em duas colunas: as versões e a versão escolhida.
+   - [x] "Onde agir?" com o corpo à esquerda e o cartão à direita.
+   - [x] Compêndio novo (pranchetas "Compêndio" e "Compêndio no PC"): índice com o registro e o Guia do jogo (a wiki), lista com filtros, verbete com ficha e ligações, busca e selo NOVO; no PC, as três telas lado a lado.
+   - [x] Conquistas como a prancheta: próxima em moldura dourada, barra verde nas feitas e azul em andamento. Selo "!" branco nas abas.
+   - [x] Validar em 1280×800, 1280×650 e 1920×1080, e conferir que no celular nada mudou.
 2. **Efeitos sonoros.** O Vitor está gerando os arquivos no app dele; nada é sintetizado por código. Quando os arquivos subirem em [audio/efeitos/](../audio/efeitos/README.md), ligar cada id no jogo, primeiro os P1 ([efeitos-sonoros.md](efeitos-sonoros.md#para-fazer-depois)).
 
 - [ ] Acabamento visual de HUD, molduras, botões e fontes da aba Design (a HUD e a pausa de [ui-cronico.md](ui-cronico.md) entram na fase 2.6).

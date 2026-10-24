@@ -17,5 +17,5 @@ export const SCENES = {
   capsule: 'capsule',
   ampoule: 'ampoule',
   changelog: 'changelog',
-  wiki: 'wiki',
+  compendium: 'compendium',
 } as const;

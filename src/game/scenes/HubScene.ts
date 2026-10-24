@@ -646,7 +646,7 @@ export class HubScene extends Phaser.Scene {
       y += 46;
     };
     shortcut('Compêndio', 'book', PALETTE.textLight, '', () =>
-      this.scene.start(SCENES.catalog, { view: 'compendium' }),
+      this.scene.start(SCENES.compendium, {}),
     );
     shortcut(
       'Conquistas',
@@ -753,7 +753,8 @@ export class HubScene extends Phaser.Scene {
 
   /** Aba Caso no PC: agente à esquerda, o caso e o JOGAR no meio, metas à direita. */
   private wideCase(main: { x: number; y: number; w: number; h: number }): Obj[] {
-    const side = 288;
+    // Colunas do lado crescem um pouco em telas muito largas; o meio fica com o resto.
+    const side = Math.max(288, Math.min(400, Math.floor((main.w - 600 - 2 * WIDE.gap) / 2)));
     const save = getSave(this);
     const out: Obj[] = [];
     out.push(
@@ -1259,7 +1260,7 @@ export class HubScene extends Phaser.Scene {
     drawInkBox(g, railX, railY, 60, 140);
     out.push(
       this.iconButton(g, railX + 8, railY + 8, 44, 'book', PALETTE.textLight, () =>
-        this.scene.start(SCENES.catalog, { view: 'compendium' }),
+        this.scene.start(SCENES.compendium, {}),
       ),
       this.add
         .text(railX + 30, railY + 55, 'COMPÊNDIO', labelText(8, PALETTE_CSS.text))

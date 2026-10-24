@@ -4,33 +4,28 @@ import { getSave, setSave } from '../storage/saveStore';
 import { addButton } from '../ui/button';
 import { buyUnlock } from '../../core/meta/progress';
 import { renderAchievements } from '../ui/achievementsView';
-import { renderAgents, renderCompendium } from '../ui/catalogViews';
-import { drawGrid, drawInkBox } from '../ui/icons';
-import { bodyText, impactText, labelText, withShadow } from '../ui/theme';
-import { PALETTE, PALETTE_CSS } from '../render/palette';
-import { WIKI } from './WikiScene';
+import { renderAgents } from '../ui/catalogViews';
+import { drawGrid } from '../ui/icons';
+import { impactText, withShadow } from '../ui/theme';
+import { PALETTE_CSS } from '../render/palette';
 import { addScrollArea, type ScrollArea } from '../ui/scrollArea';
 import { setupUiLayout } from '../ui/uiLayout';
 import { SCENES } from './keys';
 import { music } from '../audio/music';
 
-/** Altura da entrada da wiki no topo do Compêndio, com o espaço até a lista. */
-const WIKI_CARD_H = 54;
-
-export type CatalogView = 'agents' | 'compendium' | 'achievements';
+export type CatalogView = 'agents' | 'achievements';
 
 const TITLES: Record<CatalogView, string> = {
   agents: 'ESCOLHA DO AGENTE',
-  compendium: 'COMPÊNDIO',
   achievements: 'CONQUISTAS',
 };
 
-/** Telas abertas pelo hub com conteúdo de verdade: escolha do agente, Compêndio e Conquistas. */
+/** Telas abertas pelo hub com conteúdo de verdade: escolha do agente e Conquistas. */
 export class CatalogScene extends Phaser.Scene {
   private root?: Phaser.GameObjects.Container;
   private view: CatalogView = 'agents';
   private size = { w: 0, h: 0 };
-  /** Lista do Compêndio e das Conquistas, maior que a tela. */
+  /** Lista das Conquistas, maior que a tela. */
   private scroll?: ScrollArea;
 
   constructor() {
@@ -49,31 +44,6 @@ export class CatalogScene extends Phaser.Scene {
       },
       { width: 390, height: 700 },
     );
-  }
-
-  /** Topo do Compêndio: a entrada da wiki (prancheta "Wiki no Compêndio"). */
-  private wikiCard(w: number): Phaser.GameObjects.GameObject[] {
-    const width = Math.min(w - 24, 420);
-    const left = Math.floor((w - width) / 2);
-    const y = 64;
-    const h = WIKI_CARD_H - 12;
-    const g = this.add.graphics();
-    g.fillStyle(PALETTE.gold).fillRect(left - 3, y - 3, width + 6, h + 6);
-    drawInkBox(g, left, y, width, h, PALETTE.panelDeep);
-    const zone = this.add
-      .zone(left + width / 2, y + h / 2, width, h)
-      .setInteractive({ useHandCursor: true });
-    zone.on('pointerup', (p: Phaser.Input.Pointer) => {
-      if (p.getDistance() < 8) this.scene.start(SCENES.wiki, {});
-    });
-    return [
-      g,
-      this.add.text(left + 12, y + 11, 'Como jogar · Wiki', bodyText(15, PALETTE_CSS.text)),
-      this.add
-        .text(left + width - 12, y + 15, `${WIKI.length} PÁGINAS ›`, labelText(8, PALETTE_CSS.gold))
-        .setOrigin(1, 0),
-      zone,
-    ];
   }
 
   private back(): void {
@@ -122,23 +92,7 @@ export class CatalogScene extends Phaser.Scene {
               },
             },
           )
-        : this.view === 'achievements'
-          ? renderAchievements(this, 0, 64, w, save)
-          : [
-              ...this.wikiCard(w),
-              ...renderCompendium(
-                this,
-                0,
-                64 + WIKI_CARD_H,
-                w,
-                save.seen,
-                save.seenItems,
-                save.seenSupplements,
-                save.seenAggregates,
-                save.seenFormations,
-                save.records.bestTimeByLocal,
-              ),
-            ];
+        : renderAchievements(this, 0, 64, w, save);
     const bw = Math.min(w - 32, 220);
     const scrolls = this.view !== 'agents';
     if (scrolls) {
