@@ -63,6 +63,13 @@ describe('modo admin (decisão 0039)', () => {
     expect(w.boosts).toHaveLength(w.level - 1);
   });
 
+  it('level sobe o nível de verdade, com um level up por nível', () => {
+    const c = ctx();
+    runCommand(c, 'level 5');
+    expect(c.run.level).toBe(6);
+    expect(c.run.pendingLevelUps).toBe(5);
+  });
+
   it('spawn e clear', () => {
     const c = ctx();
     runCommand(c, 'spawn fattyAcid 10');

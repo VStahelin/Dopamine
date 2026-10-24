@@ -348,12 +348,18 @@ function updateGems(state: RunState, dt: number): void {
 
   while (state.xp >= state.xpToNext) {
     state.xp -= state.xpToNext;
-    state.level++;
-    state.xpToNext = xpToNextLevel(state.level, rules.economy.xp);
-    state.pendingLevelUps++;
-    state.events.push({ type: 'levelUp', level: state.level });
-    if (state.level % rules.run.nativeReceptor.everyLevels === 0) refreshStats(state);
+    gainLevel(state);
   }
+}
+
+/** Sobe um nível: o próximo custa mais XP e um level up fica esperando escolha. */
+export function gainLevel(state: RunState): void {
+  const { rules } = state;
+  state.level++;
+  state.xpToNext = xpToNextLevel(state.level, rules.economy.xp);
+  state.pendingLevelUps++;
+  state.events.push({ type: 'levelUp', level: state.level });
+  if (state.level % rules.run.nativeReceptor.everyLevels === 0) refreshStats(state);
 }
 
 function removeDead(state: RunState): void {

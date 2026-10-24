@@ -192,7 +192,11 @@ export class LevelUpScene extends Phaser.Scene {
 
     // Vários níveis de uma vez: cada tela mostra o nível que está escolhendo, não o final.
     const more = run.pendingLevelUps - 1;
-    const title = synapse ? 'SINAPSE' : this.banishing ? 'BANIR' : `NÍVEL ${run.level - more}!`;
+    const title = synapse
+      ? 'SINAPSE'
+      : this.banishing
+        ? 'BANIR'
+        : `NÍVEL ${Math.max(1, run.level - more)}!`;
     const subtitle = synapse
       ? 'BÔNUS ATÉ O FIM DA RUN · NÃO OCUPA ESPAÇO'
       : this.banishing

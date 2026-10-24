@@ -3,6 +3,7 @@ import { damageEnemy } from '../run/combat';
 import { addAggregate } from '../run/aggregates';
 import { enemyHpAt } from '../run/progression';
 import { addEnemy, newWeapon, type RunState } from '../run/state';
+import { gainLevel } from '../run/step';
 import { applySupplement } from '../run/supplements';
 import { passiveAmount, applyUpgrade, refreshStats } from '../run/upgrades';
 import { weaponMaxLevel } from '../run/weaponParams';
@@ -195,7 +196,7 @@ const COMMANDS: Record<string, Command> = {
     run: true,
     exec: (ctx, [n]) => {
       const count = Math.max(1, int(n, 1));
-      ctx.run!.pendingLevelUps += count;
+      for (let i = 0; i < count; i++) gainLevel(ctx.run!);
       return done(ctx, `+${count} level ups.`);
     },
   },
