@@ -4,6 +4,9 @@ O que mudou em cada versão do Farmaco Battle. O jogo mostra este arquivo em Op�
 
 ## Em desenvolvimento
 
+### Ajustes
+- Os agregados (mini chefes) ficaram bem mais fáceis: têm 5 vezes a vida da molécula forte, em vez de 12, que deixava cada um tão duro quanto o chefe do local. Continuam soltando sempre uma ampola Rara ou melhor, e dão um pouco menos de XP.
+
 ## v0.22.1 · 24/10/2026
 
 ### Ajustes

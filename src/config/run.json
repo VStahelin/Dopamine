@@ -65,10 +65,10 @@
   "aggregates": {
     "minGapSeconds": 20,
     "maxGapSeconds": 60,
-    "hpMultiplier": 12,
+    "hpMultiplier": 5,
     "sizeMultiplier": 2.2,
     "speedMultiplier": 0.7,
-    "xpMultiplier": 12,
+    "xpMultiplier": 8,
     "minRarity": "rare",
     "relocateDistanceFactor": 1.5,
     "relocateSpreadRadians": 0.5,
