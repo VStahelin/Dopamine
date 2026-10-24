@@ -179,6 +179,8 @@ const CAPSULE_SIZE = 22;
 
 export class RunScene extends Phaser.Scene {
   run!: RunState;
+  /** Velocidade da simulação (comando `speed` do modo admin); 1 é o normal. */
+  timeScale = 1;
   private paused = false;
   private accumulator = 0;
   private levelUpOpen = false;
@@ -241,6 +243,7 @@ export class RunScene extends Phaser.Scene {
   }
 
   create(): void {
+    this.timeScale = 1;
     // Meta-progressão: Laboratório somado aos atributos, só armas liberadas e agente liberado.
     const save = getSave(this);
     const agentId = playableAgent(
@@ -438,7 +441,7 @@ export class RunScene extends Phaser.Scene {
 
   private simulate(deltaMs: number): void {
     const step = 1 / RUN.ticksPerSecond;
-    this.accumulator += Math.min(deltaMs / 1000, 0.25);
+    this.accumulator += Math.min(deltaMs / 1000, 0.25) * this.timeScale;
     const hud = this.scene.get(SCENES.hud) as HudScene;
     const joystick = hud.joystick;
     const input = {
@@ -446,7 +449,7 @@ export class RunScene extends Phaser.Scene {
       viewRadius: this.viewRadius(),
       viewHalf: this.viewHalf(),
     };
-    for (let n = 0; this.accumulator >= step && n < MAX_STEPS_PER_FRAME; n++) {
+    for (let n = 0; this.accumulator >= step && n < MAX_STEPS_PER_FRAME * this.timeScale; n++) {
       stepRun(this.run, { ...input, special: this.specialQueued }, step);
       this.specialQueued = false;
       this.accumulator -= step;

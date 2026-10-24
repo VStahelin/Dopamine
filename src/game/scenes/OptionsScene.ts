@@ -10,6 +10,7 @@ import type { UpdateStatus } from '../update/updateLogic';
 import { addDim, setupUiLayout } from '../ui/uiLayout';
 import { downloadBackup, exportCode, importBackup, pickBackupFile } from '../storage/backup';
 import { SCENES } from './keys';
+import { disableAdmin, enableAdmin, toggleAdminPanel } from '../admin/admin';
 import type { SoundOptions } from '../../config';
 import type { Options } from '../../core/save/saveData';
 import { music } from '../audio/music';
@@ -69,6 +70,9 @@ export class OptionsScene extends Phaser.Scene {
   private tab: Tab = 'sound';
   /** Aviso do backup (exportado, importado, código inválido). */
   private note = '';
+  /** Toques seguidos na versão, para ligar o modo admin. */
+  private versionTaps = 0;
+  private lastVersionTap = 0;
 
   constructor() {
     super(SCENES.options);
@@ -243,19 +247,13 @@ export class OptionsScene extends Phaser.Scene {
     );
     if (wide) {
       children.push(
-        this.add
-          .text(left, backY + 20, version, labelText(8, PALETTE_CSS.textMuted))
-          .setOrigin(0, 0),
+        this.versionText(left, backY + 20, version).setOrigin(0, 0),
         this.add
           .text(left + width, backY + 20, 'ESC VOLTA · M MUDO', labelText(8, PALETTE_CSS.textMuted))
           .setOrigin(1, 0),
       );
     } else {
-      children.push(
-        this.add
-          .text(w / 2, bottom - 10, version, labelText(8, PALETTE_CSS.textMuted))
-          .setOrigin(0.5, 0),
-      );
+      children.push(this.versionText(w / 2, bottom - 10, version).setOrigin(0.5, 0));
     }
 
     // Painéis com moldura de madeira e o conteúdo rolável: um por aba, ou os três no PC.
@@ -580,7 +578,42 @@ export class OptionsScene extends Phaser.Scene {
     for (const [name, hint, on, toggle] of rows) {
       y = this.toggleRow(out, x, y, width, name, hint, on, toggle);
     }
+    // Modo admin (decisão 0039): só aparece depois de ligado (7 toques na versão ou ?admin=1).
+    if (o.admin) {
+      y = this.toggleRow(out, x, y, width, 'Modo admin', 'F2 ou crase abrem o painel', true, () => {
+        disableAdmin(this);
+        this.build();
+      });
+      out.push(
+        addButton(this, {
+          x,
+          y,
+          width,
+          height: 44,
+          label: 'ABRIR PAINEL ADMIN',
+          fontSize: 12,
+          variant: 'secondary',
+          onClick: () => toggleAdminPanel(this.game),
+        }),
+      );
+    }
     return out;
+  }
+
+  /** Versão no pé; 7 toques seguidos ligam o modo admin (decisão 0039). */
+  private versionText(x: number, y: number, version: string): Phaser.GameObjects.Text {
+    const text = this.add.text(x, y, version, labelText(8, PALETTE_CSS.textMuted));
+    text.setInteractive().on('pointerup', () => {
+      const now = this.time.now;
+      this.versionTaps = now - this.lastVersionTap < 800 ? this.versionTaps + 1 : 1;
+      this.lastVersionTap = now;
+      if (this.versionTaps < 7 || getSave(this).options.admin) return;
+      void enableAdmin(this).then(() => {
+        this.tab = 'screen';
+        this.build();
+      });
+    });
+    return text;
   }
 
   private gameRows(area: { x: number; y: number; width: number }): Obj[] {

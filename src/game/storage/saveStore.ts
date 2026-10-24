@@ -73,6 +73,26 @@ export function setSave(scene: HasRegistry, save: SaveData): void {
   lastWrite = lastWrite.then(() => writeSave(save));
 }
 
+/** Cópia do save guardada ao ligar o modo admin (decisão 0039), para voltar ao save real. */
+const ADMIN_BACKUP_KEY = 'adminBackup';
+
+export async function saveAdminBackup(save: SaveData): Promise<void> {
+  try {
+    await withStore('readwrite', (s) => s.put(save, ADMIN_BACKUP_KEY));
+  } catch (err) {
+    console.warn('Não foi possível guardar a cópia do save:', err);
+  }
+}
+
+export async function loadAdminBackup(): Promise<SaveData | null> {
+  try {
+    const raw: unknown = await withStore('readonly', (s) => s.get(ADMIN_BACKUP_KEY));
+    return raw === undefined ? null : migrateSave(raw, defaults());
+  } catch {
+    return null;
+  }
+}
+
 /** Espera todas as gravações pendentes (antes de trocar de versão). */
 export function flushSave(): Promise<void> {
   return lastWrite;

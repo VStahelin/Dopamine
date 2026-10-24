@@ -24,6 +24,8 @@ import { RecordsScene } from './game/scenes/RecordsScene';
 import { RunScene } from './game/scenes/RunScene';
 import './game/ui/textFix';
 import { UpdatePromptScene } from './game/scenes/UpdatePromptScene';
+import { AdminScene } from './game/scenes/AdminScene';
+import { toggleAdminPanel } from './game/admin/admin';
 import { setLoaderStatus } from './game/ui/loader';
 import { loadFonts } from './game/ui/theme';
 import { updates } from './game/update/updateManager';
@@ -80,6 +82,7 @@ const game = new Phaser.Game({
     PauseScene,
     GameOverScene,
     UpdatePromptScene,
+    AdminScene,
   ],
 });
 
@@ -89,6 +92,14 @@ const onResize = () => {
     game.scale.setGameSize(width, height);
 };
 window.addEventListener('resize', onResize);
+
+// Modo admin (decisão 0039): F2 ou a tecla da crase abrem o painel, se o modo estiver ligado.
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'F2' || e.code === 'Backquote') {
+    e.preventDefault();
+    toggleAdminPanel(game);
+  }
+});
 window.visualViewport?.addEventListener('resize', onResize);
 
 // Só em desenvolvimento: o jogo fica no console, para testes no navegador.

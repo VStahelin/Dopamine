@@ -66,6 +66,8 @@ export interface Options {
   showDamageNumbers: boolean;
   /** Modo debug: hitboxes e números da run por cima do campo (para afinar o jogo). */
   debug?: boolean;
+  /** Modo admin (decisão 0039): libera o painel de comandos. */
+  admin?: boolean;
   /** Aba Som das Opções (docs/menu.md). */
   sound: SoundOptions;
 }
@@ -197,6 +199,7 @@ export function migrateSave(raw: unknown, defaults: Options): SaveData {
           ? o.showDamageNumbers
           : base.options.showDamageNumbers,
       debug: o.debug === true,
+      admin: o.admin === true,
       sound: migrateSound(o.sound, base.options.sound),
     },
     selectedAgent: typeof data.selectedAgent === 'string' ? data.selectedAgent : base.selectedAgent,

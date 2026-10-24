@@ -17,7 +17,14 @@ type Area = { x: number; y: number; width: number; height: number };
 export function addHtmlInput(
   scene: Phaser.Scene,
   start: Area,
-  o: { placeholder: string; value: string; fontSize: number; onInput: (value: string) => void },
+  o: {
+    placeholder: string;
+    value: string;
+    fontSize: number;
+    onInput: (value: string) => void;
+    /** Enter no campo (o painel admin roda o comando). */
+    onEnter?: (value: string) => void;
+  },
 ): HtmlInput {
   let area = start;
   const input = document.createElement('input');
@@ -59,6 +66,7 @@ export function addHtmlInput(
   input.addEventListener('keydown', (e) => {
     e.stopPropagation();
     if (e.key === 'Escape') input.blur();
+    if (e.key === 'Enter') o.onEnter?.(input.value);
   });
   scene.scale.on(Phaser.Scale.Events.RESIZE, place);
   const remove = () => {

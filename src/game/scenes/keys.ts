@@ -18,4 +18,5 @@ export const SCENES = {
   ampoule: 'ampoule',
   changelog: 'changelog',
   compendium: 'compendium',
+  admin: 'admin',
 } as const;
