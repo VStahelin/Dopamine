@@ -183,10 +183,26 @@ export function botRun(
   still = false,
   onEvents?: (run: RunState) => void,
 ): RunState {
-  const run = createRun(seed, rules, agent);
+  return botAdvance(createRun(seed, rules, agent), maxSeconds, { onMinute, still, onEvents });
+}
+
+/**
+ * Avança uma run que já existe com o robô, até `untilSeconds` ou o fim: usado pelo `botRun` e
+ * pelo `ff` do modo admin (decisão 0039).
+ */
+export function botAdvance(
+  run: RunState,
+  untilSeconds: number,
+  options: {
+    onMinute?: (run: RunState, minute: number) => void;
+    still?: boolean;
+    onEvents?: (run: RunState) => void;
+  } = {},
+): RunState {
+  const { onMinute, still = false, onEvents } = options;
   let t = 0;
-  let minute = 0;
-  while (!run.over && run.time < maxSeconds) {
+  let minute = Math.floor(run.time / 60);
+  while (!run.over && run.time < untilSeconds) {
     // Ninguém desenha os acontecimentos: sem isso, a lista cresce a run inteira.
     onEvents?.(run);
     run.events.length = 0;

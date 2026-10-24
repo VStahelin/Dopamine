@@ -8,6 +8,8 @@ import { onHurt } from './supplements';
  */
 export function hurtAgent(state: RunState, hit: number, attacker?: Enemy): void {
   const { agent, stats, rules } = state;
+  // Modo admin sem dano: nada encosta.
+  if (state.admin.god) return;
   agent.invulnerableFor = stats.invulnerabilitySeconds;
   // Escudo antioxidante (Vitamina C): bloqueia o golpe inteiro.
   const sp = state.special;

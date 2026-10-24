@@ -44,3 +44,4 @@ As decisões de design tomadas antes deste registro continuam marcadas como "dec
 | [0036](0036-conquistas-somam-a-loja.md) | Conquistas somam à loja (ATP ou desbloqueio de graça) e a cápsula de agente liberta um agente por jogar (fase 5.16) | design | proposta |
 | [0037](0037-sprites-em-atlas.md) | Sprites carregados em atlas, um por tamanho de ícone e por detail do mundo | técnica | proposta |
 | [0038](0038-dificuldade-continua-e-empurrao.md) | Dificuldade contínua no fim de jogo (dano, vida e velocidade) e empurrão com recarga | design | proposta |
+| [0039](0039-modo-admin.md) | Modo admin com comandos no core, painel no jogo e cópia do save, também na build publicada | técnica | proposta |

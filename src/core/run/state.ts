@@ -397,6 +397,8 @@ export interface RunState {
   seenAggregates: EnemyKind[];
   /** Próximos minutos de chefe já agendados, por índice de `bosses`. */
   bossesSpawned: number[];
+  /** Modo admin (decisão 0039): comandos usados nesta run e o modo sem dano. */
+  admin: { commands: number; god: boolean };
   over: boolean;
   nextEnemyId: number;
   /** Fração acumulada de inimigos a nascer. */
@@ -538,6 +540,7 @@ export function createRun(
     banished: [],
     seen: [],
     bossesSpawned: rules.run.bosses.map(() => 0),
+    admin: { commands: 0, god: false },
     nextAggregateAt: -1,
     map: createRunMap(mapParams(rules.map, seed, rules.mapEnv)),
     structures: [],

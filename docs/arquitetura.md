@@ -147,6 +147,10 @@ Precisa de Node 20.19 ou mais novo.
 
 Com `npm run dev`, a cena da run fica em `globalThis.dopamina` (só em desenvolvimento). Pelo console dá para mexer no estado, por exemplo `dopamina.run.xp = dopamina.run.xpToNext` para forçar um level up.
 
+## Modo admin
+
+Comandos para testar sem jogar horas ([0039](decisoes/0039-modo-admin.md)). Ficam em [src/core/admin/](../src/core/admin/commands.ts), sem Phaser: cada comando recebe a run (se houver) e o save e devolve o save novo e uma mensagem; `parseCommand` lê o texto (`time 20`, `give radical 8`). `help` lista todos. O `ff` usa o `botAdvance` do simulador para avançar a run com o robô, sem desenhar.
+
 ## CI e deploy
 
 [ci.yml](../.github/workflows/ci.yml) roda o `npm run check` em todo PR e push na `main`. [deploy.yml](../.github/workflows/deploy.yml) roda só com tags `vX.Y.Z`: check, build e GitHub Pages ([0017](decisoes/0017-deploy-por-versao.md), [0018](decisoes/0018-jogo-no-pages-servidor-futuro.md)). Servidor só no futuro, para contas e ranking ([servidor.md](servidor.md)).
