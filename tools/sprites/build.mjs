@@ -28,6 +28,9 @@ class PixelPainter {
     return this;
   }
   toPng(width, height) {
+    return encodePng(width, height, this.toRgba(width, height));
+  }
+  toRgba(width, height) {
     const px = new Uint8Array(width * height * 4);
     for (const [x0, y0, w, h, color, alpha] of this.ops) {
       // Retângulos podem cair em meio pixel (efeitos, ligações): arredonda como a placa de vídeo.
@@ -51,8 +54,55 @@ class PixelPainter {
         }
       }
     }
-    return encodePng(width, height, px);
+    return px;
   }
+}
+
+/** Largura máxima de um atlas: cabe em qualquer placa de vídeo de celular. */
+const ATLAS_WIDTH = 2048;
+
+/**
+ * Monta os atlas (PERF-2): prateleiras da mais alta para a mais baixa, na ordem das chaves, para
+ * o resultado não mudar entre uma geração e outra. Devolve o PNG e o mapa chave → [x, y, w, h].
+ */
+function packAtlas(sprites) {
+  const sorted = [...sprites].sort((a, b) => b.height - a.height || (a.key < b.key ? -1 : 1));
+  const frames = {};
+  let x = 0;
+  let y = 0;
+  let shelf = 0;
+  let width = 0;
+  for (const s of sorted) {
+    if (x + s.width > ATLAS_WIDTH) {
+      x = 0;
+      y += shelf;
+      shelf = 0;
+    }
+    frames[s.key] = [x, y, s.width, s.height];
+    x += s.width;
+    width = Math.max(width, x);
+    shelf = Math.max(shelf, s.height);
+  }
+  const height = y + shelf;
+  const rgba = new Uint8Array(width * height * 4);
+  for (const s of sorted) {
+    const [fx, fy] = frames[s.key];
+    for (let row = 0; row < s.height; row++) {
+      rgba.set(
+        s.rgba.subarray(row * s.width * 4, (row + 1) * s.width * 4),
+        ((fy + row) * width + fx) * 4,
+      );
+    }
+  }
+  const ordered = Object.fromEntries(
+    Object.keys(frames)
+      .sort()
+      .map((k) => [k, frames[k]]),
+  );
+  return {
+    png: encodePng(width, height, rgba),
+    json: Buffer.from(JSON.stringify({ frames: ordered }) + '\n'),
+  };
 }
 
 function encodePng(width, height, rgba) {
@@ -110,22 +160,37 @@ const server = await createServer({
   server: { middlewareMode: true, hmr: false },
 });
 try {
-  const { spriteFiles } = await server.ssrLoadModule('/src/game/render/spriteFiles.ts');
+  const { spriteFiles, atlasName } = await server.ssrLoadModule('/src/game/render/spriteFiles.ts');
   const files = spriteFiles();
   const expected = new Set(files.map((f) => join(OUT, f.path)));
   const problems = [];
+  /** Sprites de cada atlas, já pintados. */
+  const atlases = new Map();
   if (!check) rmSync(OUT, { recursive: true, force: true });
+  const write = (path, data) => {
+    const target = join(OUT, path);
+    if (check) {
+      if (!existsSync(target) || !readFileSync(target).equals(data)) problems.push(path);
+      return;
+    }
+    mkdirSync(dirname(target), { recursive: true });
+    writeFileSync(target, data);
+  };
   for (const f of files) {
     const painter = new PixelPainter();
     const size = f.paint(painter);
-    const png = painter.toPng(size.width, size.height);
-    const target = join(OUT, f.path);
-    if (check) {
-      if (!existsSync(target) || !readFileSync(target).equals(png)) problems.push(f.path);
-      continue;
-    }
-    mkdirSync(dirname(target), { recursive: true });
-    writeFileSync(target, png);
+    const rgba = painter.toRgba(size.width, size.height);
+    write(f.path, encodePng(size.width, size.height, rgba));
+    const atlas = atlasName(f);
+    if (!atlas) continue;
+    if (!atlases.has(atlas)) atlases.set(atlas, []);
+    atlases.get(atlas).push({ key: f.key, width: size.width, height: size.height, rgba });
+  }
+  for (const [name, sprites] of atlases) {
+    const { png, json } = packAtlas(sprites);
+    expected.add(join(OUT, `atlas/${name}.png`));
+    write(`atlas/${name}.png`, png);
+    write(`atlas/${name}.json`, json);
   }
   if (check) {
     for (const p of listPngs(OUT))

@@ -82,9 +82,17 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,woff,woff2,png,webmanifest}'],
-        // Artes de loja e a logo em 4× não entram no jogo; ficam fora do precache.
-        globIgnores: ['version.json', 'sprites/store/**', 'sprites/logo/4x/**'],
+        globPatterns: ['**/*.{js,css,html,svg,woff,woff2,png,json,webmanifest}'],
+        // Artes de loja e a logo em 4× não entram no jogo; ficam fora do precache. O jogo carrega
+        // os sprites dos atlas (sprites/atlas/), então os PNGs soltos também ficam de fora.
+        globIgnores: [
+          'version.json',
+          'sprites/store/**',
+          'sprites/logo/4x/**',
+          'sprites/icons/**',
+          'sprites/world/**',
+          'sprites/frames/**',
+        ],
         cleanupOutdatedCaches: true,
         navigateFallback: 'index.html',
         maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,

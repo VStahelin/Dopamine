@@ -12,6 +12,7 @@ import {
 } from '../../config';
 import { integerZoom } from './pixelScale';
 import {
+  atlasName,
   frameFileKey,
   iconFileKey,
   moleculeName,
@@ -86,6 +87,25 @@ function url(file: SpriteFile): string {
   return `${import.meta.env.BASE_URL}sprites/${file.path}`;
 }
 
+/** Chave do atlas inteiro (imagem e mapa), antes de recortar. */
+function atlasKey(name: string): string {
+  return `atlas-${name}`;
+}
+
+function atlasUrl(name: string, ext: 'png' | 'json'): string {
+  return `${import.meta.env.BASE_URL}sprites/atlas/${name}.${ext}`;
+}
+
+/** Arquivos de cada atlas (PERF-2), na ordem de `spriteFiles`. */
+const ATLASES = new Map<string, SpriteFile[]>();
+for (const file of FILES) {
+  const name = atlasName(file);
+  if (!name) continue;
+  const list = ATLASES.get(name) ?? [];
+  list.push(file);
+  ATLASES.set(name, list);
+}
+
 /**
  * Põe na fila do carregador os sprites que a tela atual usa: o mundo, as molduras e os ícones
  * nos tamanhos do zoom. Chame no `preload` da cena de abertura.
@@ -93,6 +113,7 @@ function url(file: SpriteFile): string {
 export function preloadSprites(scene: Phaser.Scene): void {
   const zoom = integerZoom(scene.scale.width, scene.scale.height, DISPLAY.uiMinShortSidePx);
   queueIcons(scene, zoom, true);
+  scene.load.once('complete', () => unpackAtlases(scene));
 }
 
 /**
@@ -101,22 +122,61 @@ export function preloadSprites(scene: Phaser.Scene): void {
  */
 export function loadIconsForZoom(scene: Phaser.Scene, zoom: number, onDone: () => void): boolean {
   if (!queueIcons(scene, zoom, false)) return false;
-  scene.load.once('complete', onDone);
+  scene.load.once('complete', () => {
+    unpackAtlases(scene);
+    onDone();
+  });
   scene.load.start();
   return true;
 }
 
+/**
+ * Os sprites vêm em atlas, um arquivo por tamanho de ícone e por detail do mundo, em vez de um
+ * PNG por sprite: centenas de pedidos viravam poucos (PERF-2). Só a logo vem solta.
+ */
 function queueIcons(scene: Phaser.Scene, zoom: number, everything: boolean): boolean {
   const sizes = iconSizesFor(zoom);
   let queued = false;
+  for (const [name, files] of ATLASES) {
+    const px = files[0]!.iconPx;
+    if (px !== undefined ? !sizes.has(px) : !everything) continue;
+    if (files.every((f) => scene.textures.exists(f.key))) continue;
+    if (scene.textures.exists(atlasKey(name))) continue;
+    scene.load.image(atlasKey(name), atlasUrl(name, 'png'));
+    scene.load.json(atlasKey(name), atlasUrl(name, 'json'));
+    queued = true;
+  }
+  if (!everything) return queued;
   for (const file of FILES) {
-    if (file.preload === false) continue;
-    if (file.iconPx !== undefined ? !sizes.has(file.iconPx) : !everything) continue;
-    if (scene.textures.exists(file.key)) continue;
+    if (file.preload === false || atlasName(file) || scene.textures.exists(file.key)) continue;
     scene.load.image(file.key, url(file));
     queued = true;
   }
   return queued;
+}
+
+/**
+ * Recorta os atlas carregados: cada sprite vira uma textura com a chave dele, como se tivesse
+ * vindo do PNG solto, e o atlas inteiro sai da memória.
+ */
+function unpackAtlases(scene: Phaser.Scene): void {
+  for (const name of ATLASES.keys()) {
+    const key = atlasKey(name);
+    if (!scene.textures.exists(key) || !scene.cache.json.exists(key)) continue;
+    const image = scene.textures.get(key).getSourceImage() as HTMLImageElement;
+    const { frames } = scene.cache.json.get(key) as {
+      frames: Record<string, [number, number, number, number]>;
+    };
+    for (const [frame, [x, y, w, h]] of Object.entries(frames)) {
+      if (scene.textures.exists(frame)) continue;
+      const texture = scene.textures.createCanvas(frame, w, h);
+      if (!texture) continue;
+      texture.context.drawImage(image, x, y, w, h, 0, 0, w, h);
+      texture.refresh();
+    }
+    scene.textures.remove(key);
+    scene.cache.json.remove(key);
+  }
 }
 
 /**

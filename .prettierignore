@@ -5,3 +5,5 @@ package-lock.json
 releases
 .certs
 docs/identidade-visual
+# Atlas gerados pelo npm run sprites:build (decisão 0037).
+public/sprites/atlas/

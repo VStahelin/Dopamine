@@ -59,6 +59,20 @@ export interface SpriteFile {
   preload?: false;
 }
 
+/**
+ * Atlas em que o sprite também entra (PERF-2): uma imagem por tamanho de ícone, uma por detail do
+ * mundo e uma das molduras. O jogo baixa os atlas e recorta cada sprite com a chave dele, em vez
+ * de baixar centenas de PNGs. Logo, PWA e loja ficam soltos.
+ */
+export function atlasName(file: SpriteFile): string | undefined {
+  if (file.preload === false) return undefined;
+  const [top, sub] = file.path.split('/');
+  if (top === 'icons') return `icons-${sub}`;
+  if (top === 'world') return `world-${sub}`;
+  if (top === 'frames') return 'frames';
+  return undefined;
+}
+
 /** Ícone por grupo e id; `ui` guarda o ícone padrão (`missing`) e o cadeado (`locked`). */
 export interface IconRef {
   group: IconGroup | 'ui';
