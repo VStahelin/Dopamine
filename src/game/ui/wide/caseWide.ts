@@ -5,8 +5,8 @@ import { isUnlocked, unlockCost } from '../../../core/meta/progress';
 import type { SaveData } from '../../../core/save/saveData';
 import { PALETTE, PALETTE_CSS } from '../../render/palette';
 import { iconTexture } from '../../render/textures';
-import { progressText } from '../achievementsView';
-import { drawCreamSlot, drawIcon, drawInkBox, drawWoodFrame } from '../icons';
+import { achievementBadge, progressText } from '../achievementsView';
+import { drawCreamSlot, drawInkBox, drawWoodFrame } from '../icons';
 import { addIconSlot, weaponIcon } from '../iconSlot';
 import { SECTOR_ORDER, SECTOR_STYLE } from '../organismView';
 import { bodyText, formatTime, impactText, labelText, withShadow } from '../theme';
@@ -222,7 +222,8 @@ export function renderCaseGoals(
   const next = nextAchievement(save);
   const achTop = cy;
   if (next) {
-    drawIcon(g, 'medal', x + 12, cy + 12, PALETTE.gold, 3);
+    const state = achievementFraction(next, save) > 0 ? 'progress' : 'none';
+    out.push(achievementBadge(scene, g, next, x + 12, cy + 10, state, 26));
     const reward = scene.add
       .text(
         x + w - 12,
@@ -231,14 +232,14 @@ export function renderCaseGoals(
         labelText(8, PALETTE_CSS.gold),
       )
       .setOrigin(1, 0);
-    const name = scene.add.text(x + 46, cy + 10, next.name, {
+    const name = scene.add.text(x + 52, cy + 10, next.name, {
       ...bodyText(15, PALETTE_CSS.text),
       fontStyle: '700',
-      fixedWidth: w - 46 - 16 - reward.width,
+      fixedWidth: w - 52 - 16 - reward.width,
     });
-    const desc = scene.add.text(x + 46, cy + 30, next.description, {
+    const desc = scene.add.text(x + 52, cy + 30, next.description, {
       ...bodyText(12, PALETTE_CSS.textSoft),
-      wordWrap: { width: w - 58 },
+      wordWrap: { width: w - 64 },
     });
     out.push(reward, name, desc);
     cy = Math.max(cy + 46, desc.y + desc.height + 6);

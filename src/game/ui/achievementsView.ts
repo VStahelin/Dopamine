@@ -52,7 +52,11 @@ export function achievementBadge(
   return icon;
 }
 
-/** Cartão de uma conquista: ícone, nome, recompensa, meta, progresso e a barra. */
+/**
+ * Cartão de uma conquista (prancheta "Conquistas"): ícone, nome, recompensa, meta e progresso, e a
+ * barra (verde quando feita, azul em andamento). A próxima ganha moldura e barra douradas, com a
+ * recompensa embaixo da barra.
+ */
 function card(
   scene: Phaser.Scene,
   g: Phaser.GameObjects.Graphics,
@@ -65,33 +69,75 @@ function card(
 ): { objects: Obj[]; height: number } {
   const done = save.achievements.includes(def.id);
   const out: Obj[] = [];
-  const textLeft = left + 10 + BADGE + 8;
+  const pad = highlight ? 12 : 10;
+  const textLeft = left + pad + BADGE + 8;
+  const right = left + width - pad;
+  const reward = highlight
+    ? undefined
+    : scene.add
+        .text(
+          right,
+          y + 10,
+          rewardLabel(def, NAMES),
+          labelText(8, done ? PALETTE_CSS.numberHeal : PALETTE_CSS.gold),
+        )
+        .setOrigin(1, 0);
   const name = scene.add.text(
     textLeft,
-    y + 6,
+    y + (highlight ? 10 : 7),
     done ? `${def.name} ✓` : def.name,
-    withShadow(bodyText(13, done ? PALETTE_CSS.gold : PALETTE_CSS.text), PALETTE_CSS.ink, 1),
+    {
+      ...withShadow(
+        {
+          ...bodyText(highlight ? 15 : 13, done ? PALETTE_CSS.textSoft : '#FFFFFF'),
+          fontStyle: '700',
+        },
+        PALETTE_CSS.ink,
+        1,
+      ),
+      wordWrap: { width: right - (reward ? reward.width + 8 : 0) - textLeft },
+    },
   );
-  const reward = scene.add
-    .text(left + width - 10, y + 9, rewardLabel(def, NAMES), labelText(8, PALETTE_CSS.gold))
-    .setOrigin(1, 0);
-  const desc = scene.add.text(textLeft, y + 26, `${def.description} · ${progressText(def, save)}`, {
-    ...bodyText(9, PALETTE_CSS.textSoft),
-    wordWrap: { width: left + width - 10 - textLeft },
-  });
-  out.push(name, reward, desc);
-  const barY = Math.ceil(desc.y + desc.height) + 4;
-  const height = Math.max(barY - y + 12, BADGE + 16);
-  drawInkBox(g, left, y, width, height, highlight ? PALETTE.panelDeep : PALETTE.panel);
+  const progress = progressText(def, save);
+  const desc = scene.add.text(
+    textLeft,
+    Math.ceil(name.y + name.height) + 2,
+    `${def.description} · ${highlight ? progress.replace('/', ' de ') : progress}`,
+    { ...bodyText(10, PALETTE_CSS.textSoft), wordWrap: { width: right - textLeft } },
+  );
+  out.push(name, desc);
+  if (reward) out.push(reward);
+  const barY = Math.ceil(desc.y + desc.height) + 5;
+  let bottom = barY + 10;
+  if (highlight) {
+    const r = scene.add.text(
+      textLeft,
+      bottom + 6,
+      rewardLabel(def, NAMES),
+      labelText(8, PALETTE_CSS.gold),
+    );
+    out.push(r);
+    bottom = Math.ceil(r.y + r.height);
+  }
+  const height = Math.max(bottom - y + (highlight ? 12 : 9), BADGE + 2 * pad);
+  if (highlight) {
+    g.fillStyle(PALETTE.gold).fillRect(left, y, width, height);
+    g.fillStyle(0x3a2a0c).fillRect(left + 3, y + 3, width - 6, height - 6);
+  } else {
+    drawInkBox(g, left, y, width, height, PALETTE.panel);
+  }
   const state = done ? 'done' : achievementProgress(def, save).value > 0 ? 'progress' : 'none';
-  out.push(achievementBadge(scene, g, def, left + 10, y + Math.floor((height - BADGE) / 2), state));
-  const bw = left + width - 10 - textLeft;
-  g.fillStyle(PALETTE.ink).fillRect(textLeft, barY, bw, 6);
-  g.fillStyle(done ? PALETTE.gold : PALETTE.water).fillRect(
-    textLeft + 1,
-    barY + 1,
-    Math.round((bw - 2) * achievementFraction(def, save)),
-    4,
+  out.push(
+    achievementBadge(scene, g, def, left + pad, y + Math.floor((height - BADGE) / 2), state),
+  );
+  const bw = right - textLeft;
+  g.fillStyle(PALETTE.ink).fillRect(textLeft, barY, bw, 10);
+  g.fillStyle(PALETTE.panelDeep).fillRect(textLeft + 2, barY + 2, bw - 4, 6);
+  g.fillStyle(highlight ? PALETTE.gold : done ? PALETTE.buff : PALETTE.progress).fillRect(
+    textLeft + 2,
+    barY + 2,
+    Math.round((bw - 4) * achievementFraction(def, save)),
+    6,
   );
   return { objects: out, height };
 }
@@ -113,17 +159,19 @@ export function renderAchievements(
   const total = META.achievements.length;
   const out: Obj[] = [
     g,
-    scene.add.text(
-      left,
-      y,
-      `${save.achievements.length} DE ${total} · CADA UMA DÁ ATP OU LIBERA ALGO DE GRAÇA`,
-      { ...labelText(8, PALETTE_CSS.textMuted), wordWrap: { width } },
-    ),
+    scene.add
+      .text(
+        left + width / 2,
+        y,
+        `${save.achievements.length} DE ${total} · CADA UMA DÁ ATP OU LIBERA ALGO DE GRAÇA`,
+        { ...labelText(8, PALETTE_CSS.textMuted), wordWrap: { width }, align: 'center' },
+      )
+      .setOrigin(0.5, 0),
   ];
   let cy = y + 22;
   const next = nextAchievement(save);
   if (next) {
-    out.push(scene.add.text(left, cy, 'PRÓXIMA', labelText(10, PALETTE_CSS.sectionOrange)));
+    out.push(scene.add.text(left, cy, 'PRÓXIMA', labelText(10, PALETTE_CSS.water)));
     const c = card(scene, g, next, save, left, cy + 16, width, true);
     out.push(...c.objects);
     cy += 16 + c.height + 14;
@@ -133,7 +181,7 @@ export function renderAchievements(
   for (const def of META.achievements) {
     const c = card(scene, g, def, save, left, cy, width, false);
     out.push(...c.objects);
-    cy += c.height + 4;
+    cy += c.height + 6;
   }
   return out;
 }
